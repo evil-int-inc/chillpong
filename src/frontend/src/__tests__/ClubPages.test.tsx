@@ -114,7 +114,9 @@ describe("public club directory and tournament board", () => {
     );
     const detail = screen.getByRole("dialog");
     expect(within(detail).getByText("Bring your paddle")).toBeVisible();
-    expect(within(detail).getByText("16 players maximum")).toBeVisible();
+    expect(
+      within(detail).getByText("16 expected players / registration stays open"),
+    ).toBeVisible();
     expect(within(detail).getByText(/21:00 \/ Tbilisi/)).toBeVisible();
     expect(screen.queryByRole("button", { name: "New tournament" })).toBeNull();
     expect(screen.queryByRole("button", { name: /^Edit/ })).toBeNull();
@@ -370,9 +372,9 @@ describe("administrator editors", () => {
     fireEvent.change(editor.getByLabelText(/Start time/), {
       target: { value: "2026-10-09T21:00" },
     });
-    await user.clear(editor.getByLabelText("Player capacity"));
-    await user.type(editor.getByLabelText("Player capacity"), "24");
-    await user.selectOptions(editor.getByLabelText("Format"), "doubles");
+    await user.clear(editor.getByLabelText(/^Expected players/));
+    await user.type(editor.getByLabelText(/^Expected players/), "24");
+    await user.selectOptions(editor.getByLabelText("Game mode"), "doubles");
     await user.type(
       editor.getByLabelText("The details / optional"),
       "  Arrive early  ",

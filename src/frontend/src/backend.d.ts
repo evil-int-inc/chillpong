@@ -57,6 +57,19 @@ export type Error_ = {
         expected: Array<string>;
     };
 };
+export type MatchSource = {
+    __kind__: "bye";
+    bye: null;
+} | {
+    __kind__: "player";
+    player: bigint;
+} | {
+    __kind__: "winner";
+    winner: bigint;
+} | {
+    __kind__: "loser";
+    loser: bigint;
+};
 export interface Result {
     hasMore: boolean;
     rows: Array<Array<Cell>>;
@@ -81,6 +94,106 @@ export interface Tournament {
     capacity: bigint;
     format: TournamentFormat;
 }
+export interface TournamentAction {
+    id: bigint;
+    createdAt: Timestamp;
+    caption: string;
+}
+export type TournamentCommand = {
+    __kind__: "prioritizeMatch";
+    prioritizeMatch: bigint;
+} | {
+    __kind__: "startMatch";
+    startMatch: bigint;
+} | {
+    __kind__: "setMatchPlayers";
+    setMatchPlayers: {
+        matchId: bigint;
+        playerA?: bigint;
+        playerB?: bigint;
+    };
+} | {
+    __kind__: "undo";
+    undo: null;
+} | {
+    __kind__: "placePlayer";
+    placePlayer: {
+        playerId: bigint;
+        slot: TournamentSlot;
+        matchId: bigint;
+    };
+} | {
+    __kind__: "prioritizePlayer";
+    prioritizePlayer: bigint;
+} | {
+    __kind__: "generateBracket";
+    generateBracket: null;
+} | {
+    __kind__: "movePlayer";
+    movePlayer: {
+        playerId: bigint;
+        slot: TournamentSlot;
+        matchId: bigint;
+    };
+} | {
+    __kind__: "swapPlayers";
+    swapPlayers: {
+        firstSlot: TournamentSlot;
+        secondSlot: TournamentSlot;
+        firstMatchId: bigint;
+        secondMatchId: bigint;
+    };
+} | {
+    __kind__: "removePlayer";
+    removePlayer: {
+        playerId: bigint;
+        confirmed: boolean;
+    };
+} | {
+    __kind__: "configure";
+    configure: {
+        elimination: TournamentElimination;
+        tableCount: bigint;
+    };
+} | {
+    __kind__: "assignTable";
+    assignTable: {
+        table?: bigint;
+        matchId: bigint;
+    };
+} | {
+    __kind__: "assignBye";
+    assignBye: {
+        slot: TournamentSlot;
+        matchId: bigint;
+    };
+} | {
+    __kind__: "recordResult";
+    recordResult: {
+        scoreA: bigint;
+        scoreB: bigint;
+        matchId: bigint;
+    };
+} | {
+    __kind__: "resetMatch";
+    resetMatch: {
+        cascade: boolean;
+        matchId: bigint;
+    };
+} | {
+    __kind__: "addPlayer";
+    addPlayer: {
+        name: string;
+        skillLevel: bigint;
+    };
+} | {
+    __kind__: "editPlayer";
+    editPlayer: {
+        playerId: bigint;
+        name: string;
+        skillLevel: bigint;
+    };
+};
 export interface TournamentInput {
     status: TournamentStatus;
     title: string;
@@ -89,6 +202,56 @@ export interface TournamentInput {
     description: string;
     capacity: bigint;
     format: TournamentFormat;
+}
+export interface TournamentMatch {
+    id: bigint;
+    status: TournamentMatchStatus;
+    table?: bigint;
+    winnerId?: bigint;
+    scoreA?: bigint;
+    scoreB?: bigint;
+    loserId?: bigint;
+    manualOverride: boolean;
+    playerA?: bigint;
+    playerB?: bigint;
+    bracket: TournamentBracket;
+    sourceA: MatchSource;
+    sourceB: MatchSource;
+    priority: bigint;
+    position: bigint;
+    round: bigint;
+}
+export interface TournamentPlayer {
+    id: bigint;
+    status: TournamentPlayerStatus;
+    table?: bigint;
+    name: string;
+    seed?: bigint;
+    losses: bigint;
+    registrationNumber: bigint;
+    currentMatchId?: bigint;
+    skillLevel: bigint;
+    registeredAt: Timestamp;
+}
+export interface TournamentState {
+    elimination: TournamentElimination;
+    started: boolean;
+    waitingQueue: Array<bigint>;
+    nextMatches: Array<bigint>;
+    history: Array<TournamentAction>;
+    canUndo: boolean;
+    tables: Array<TournamentTable>;
+    updatedAt: Timestamp;
+    matches: Array<TournamentMatch>;
+    players: Array<TournamentPlayer>;
+    tableCount: bigint;
+    tournamentId: bigint;
+    championId?: bigint;
+}
+export interface TournamentTable {
+    status: TournamentTableStatus;
+    matchId?: bigint;
+    number: bigint;
 }
 export interface User {
     id: UserId;
@@ -133,14 +296,51 @@ export type Value = {
 export enum Role {
     admin = "admin"
 }
+export enum TournamentBracket {
+    losers = "losers",
+    grandFinal = "grandFinal",
+    resetFinal = "resetFinal",
+    winners = "winners"
+}
+export enum TournamentElimination {
+    singleElimination = "singleElimination",
+    doubleElimination = "doubleElimination"
+}
 export enum TournamentFormat {
     doubles = "doubles",
     singles = "singles"
+}
+export enum TournamentMatchStatus {
+    bye = "bye",
+    cancelled = "cancelled",
+    blocked = "blocked",
+    completed = "completed",
+    playing = "playing",
+    ready = "ready"
+}
+export enum TournamentPlayerStatus {
+    advanced = "advanced",
+    playing = "playing",
+    eliminated = "eliminated",
+    champion = "champion",
+    waiting = "waiting",
+    ready = "ready",
+    removed = "removed"
+}
+export enum TournamentSlot {
+    a = "a",
+    b = "b"
 }
 export enum TournamentStatus {
     upcoming = "upcoming",
     live = "live",
     completed = "completed"
+}
+export enum TournamentTableStatus {
+    available = "available",
+    playing = "playing",
+    finished = "finished",
+    waiting = "waiting"
 }
 export enum UserRole {
     admin = "admin",
@@ -148,6 +348,7 @@ export enum UserRole {
     guest = "guest"
 }
 export interface backendInterface {
+    applyTournamentCommand(id: bigint, command: TournamentCommand): Promise<TournamentState>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     bootstrapOwner(): Promise<void>;
     createTournament(input: TournamentInput): Promise<Tournament>;
@@ -158,6 +359,7 @@ export interface backendInterface {
     getCallerUserRole(): Promise<UserRole>;
     getMyRole(): Promise<Role | null>;
     getTournament(id: bigint): Promise<Tournament | null>;
+    getTournamentState(id: bigint): Promise<TournamentState | null>;
     getTournaments(): Promise<Array<Tournament>>;
     getUser(userId: UserId): Promise<User | null>;
     getUserByUsername(username: string): Promise<User | null>;

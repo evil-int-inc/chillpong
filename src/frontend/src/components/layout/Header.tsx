@@ -26,11 +26,15 @@ export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
     }
   }
   const title =
-    pathname === "/users"
-      ? "Users"
-      : pathname === "/admin"
-        ? "Admin"
-        : "Tournaments";
+    pathname === "/players" || pathname === "/users"
+      ? "Players"
+      : pathname === "/admin/accounts"
+        ? "Accounts"
+        : pathname === "/admin"
+          ? "Admin"
+          : pathname.startsWith("/tournaments/")
+            ? "Tournament room"
+            : "Tournaments";
   return (
     <header
       data-ocid="header"

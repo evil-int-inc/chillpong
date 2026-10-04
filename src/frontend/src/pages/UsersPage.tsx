@@ -171,15 +171,15 @@ export function UsersPage() {
     <div data-ocid="users_page" className="club-page">
       <header className="mb-10 flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p className="section-kicker mb-4">CHILLPONG / THE PEOPLE</p>
+          <p className="section-kicker mb-4">CHILLPONG / ADMIN ACCOUNTS</p>
           <h1 className="page-title">
-            THE LOCAL
+            CLUB
             <br />
-            <span className="text-primary">LINEUP.</span>
+            <span className="text-primary">ACCOUNTS.</span>
           </h1>
           <p className="mt-5 max-w-xl text-sm leading-relaxed text-base-content/60">
-            Familiar faces. New challengers. The people who keep the tables
-            moving.
+            Manage member identities and account details. Tournament entrants
+            are listed on the Players page.
           </p>
         </div>
         {isAdmin ? (

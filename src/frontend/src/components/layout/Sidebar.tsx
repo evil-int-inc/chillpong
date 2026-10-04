@@ -22,7 +22,7 @@ export function Sidebar({ onNavigate }: { onNavigate: () => void }) {
     logout,
   } = useAuth();
   const items = [
-    { label: "Users", to: "/users", icon: Users, number: "01" },
+    { label: "Players", to: "/players", icon: Users, number: "01" },
     { label: "Tournaments", to: "/tournaments", icon: Trophy, number: "02" },
     ...(isAdmin
       ? [{ label: "Admin", to: "/admin", icon: ShieldCheck, number: "03" }]
@@ -70,7 +70,7 @@ export function Sidebar({ onNavigate }: { onNavigate: () => void }) {
         <p className="technical-label mb-3 px-3">THE CLUB / INDEX</p>
         <ul className="space-y-2">
           {items.map(({ label, to, icon: Icon, number }) => {
-            const active = pathname === to;
+            const active = pathname === to || pathname.startsWith(`${to}/`);
             return (
               <li key={to}>
                 <Link

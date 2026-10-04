@@ -2,8 +2,10 @@ import { Principal } from "@icp-sdk/core/principal";
 import {
   Role,
   type Tournament,
+  TournamentElimination,
   TournamentFormat,
   TournamentStatus,
+  TournamentTableStatus,
   type User,
   UserRole,
   type UserRoleView,
@@ -129,6 +131,11 @@ export const mockBackend: backendInterface = {
   _initialize_access_control: async () => undefined,
   _internet_identity_sign_in_finish: async () => ({ __kind__: "ok", ok: null }),
   _internet_identity_sign_in_start: async () => new Uint8Array(),
+  applyTournamentCommand: async () => {
+    throw new Error(
+      "Organizer writes require a real canister. This visual fixture is read-only.",
+    );
+  },
   assignCallerUserRole: async (id, role) => {
     if (role !== UserRole.admin) {
       throw new Error("Only the admin role may be assigned.");
@@ -165,6 +172,23 @@ export const mockBackend: backendInterface = {
   getTournament: async (id) => {
     const tournament = tournaments.find((item) => item.id === id);
     return tournament ? { ...tournament } : null;
+  },
+  getTournamentState: async (id) => {
+    if (!tournaments.some((item) => item.id === id)) return null;
+    return {
+      tournamentId: id,
+      elimination: TournamentElimination.singleElimination,
+      tableCount: 1n,
+      started: false,
+      players: [],
+      matches: [],
+      waitingQueue: [],
+      nextMatches: [],
+      tables: [{ number: 1n, status: TournamentTableStatus.available }],
+      history: [],
+      canUndo: false,
+      updatedAt: fixtureTime,
+    };
   },
   getTournaments: async () => tournaments.map((item) => ({ ...item })),
   getUser: async (id) => {

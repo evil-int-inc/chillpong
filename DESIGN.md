@@ -2,7 +2,7 @@
 
 ## Direction
 
-An underground ping-pong tournament in a Tbilisi bar at night. The club feels urban, industrial, energetic, and slightly rebellious. Users and tournaments are the main public sections; Admin handles role management. Only admins create or edit member records and tournaments.
+An underground ping-pong tournament in a Tbilisi bar at night. The club feels urban, industrial, energetic, and slightly rebellious. Players and tournaments are the main public sections; Admin handles account details and role management. Only admins create or edit players, member records and tournaments.
 
 ## Brand
 
@@ -37,9 +37,23 @@ Use oversized display type where it establishes the club identity, balanced with
 - Desktop: fixed club sidebar, slim header, spacious content area, minimal footer.
 - Mobile: branded header and accessible navigation drawer; stack hero and event content.
 - Tournament board: bordered rows with prominent dates, venue/time metadata, and clear live/upcoming/completed states.
-- Members: simple geometric panels with names, handles, avatars, and admin markers.
+- Players: tournament-scoped lineup with permanent registration numbers and times, skill, live status, table and current match. Name search and skill/status/table/current-round filters combine; sorting offers registration order, name, skill and status. Registration order is the default and remains available after every sort. Distinguish winners and losers rounds and derive current rounds from pending matches rather than completed history.
+- Admin accounts: simple geometric panels with names, handles, avatars, and admin markers; keep account editing under Admin.
 - Buttons, inputs, filters, and dialogs: square edges, thin borders, high contrast, and restrained hover changes.
 - Depth: surface tones and hairline dividers; keep shadows minimal.
+
+## Tournament Room
+
+Each event opens a public tournament room with two views:
+
+- **Standard:** ongoing matches at physical tables, the next five decided and playable matches, and the waiting queue.
+- **Extended:** the full knockout map with round labels and dependency connectors. Double elimination includes winners, losers, grand final, and the conditional reset final.
+
+Keep view switching prominent. Large brackets scroll inside their own viewport and offer zoom controls; they must not widen the entire page. Match cards show names, skill levels, original registration numbers, round, table, status, and scores.
+
+Admins manage registrations, elimination format, table count, match results, and manual overrides from the same room. Clearly mark overrides. Explain the consequences of withdrawals and resets before confirming them. Show that changes save automatically, and expose undo for recent actions.
+
+Tournament players are event registrations, separate from application accounts. Their registration numbers and timestamps remain permanent, including after skill edits and queue changes. Expected player count is a planning estimate, not a registration limit.
 
 ## Accessibility and Motion
 

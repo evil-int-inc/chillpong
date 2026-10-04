@@ -26,8 +26,8 @@ module {
     if (input.startsAt <= 0) {
       Runtime.trap("Tournament start time must be a positive timestamp");
     };
-    if (input.capacity < 2 or input.capacity > 256) {
-      Runtime.trap("Tournament capacity must be between 2 and 256 players");
+    if (input.capacity < 2) {
+      Runtime.trap("Expected players must be at least 2");
     };
     { input with title; venue; description };
   };

@@ -277,14 +277,8 @@ export function TournamentsPage() {
       return;
     }
     const playerCount = Number(capacity);
-    if (
-      !Number.isInteger(playerCount) ||
-      playerCount < 2 ||
-      playerCount > 256
-    ) {
-      setFormError(
-        "Capacity must be a whole number between 2 and 256 players.",
-      );
+    if (!Number.isSafeInteger(playerCount) || playerCount < 2) {
+      setFormError("Expected players must be a whole number of at least 2.");
       return;
     }
     saveMutation.mutate({
@@ -569,10 +563,18 @@ export function TournamentsPage() {
                       : "Singles"}
                   </p>
                   <p className="font-mono text-[11px] text-base-content/40">
-                    {tournament.capacity.toString()} players max
+                    {tournament.capacity.toString()} expected players
                   </p>
                 </div>
                 <div className="flex items-center gap-2 sm:flex-col sm:items-end">
+                  <a
+                    href={`/tournaments/${tournament.id.toString()}`}
+                    className="btn btn-primary btn-sm"
+                    aria-label={`Open tournament room for ${tournament.title}`}
+                  >
+                    Open room{" "}
+                    <ArrowUpRight className="size-4" aria-hidden="true" />
+                  </a>
                   <Button
                     data-ocid={`tournaments.details_button.${index + 1}`}
                     variant="outline"
@@ -672,7 +674,7 @@ export function TournamentsPage() {
               </div>
               <div>
                 <dt className="technical-label mb-2 flex items-center gap-2 text-base-content/45">
-                  <Trophy className="size-3.5" aria-hidden="true" /> Format
+                  <Trophy className="size-3.5" aria-hidden="true" /> Game mode
                 </dt>
                 <dd className="text-sm">
                   {detail.format === TournamentFormat.doubles
@@ -682,10 +684,12 @@ export function TournamentsPage() {
               </div>
               <div>
                 <dt className="technical-label mb-2 flex items-center gap-2 text-base-content/45">
-                  <Users className="size-3.5" aria-hidden="true" /> Capacity
+                  <Users className="size-3.5" aria-hidden="true" /> Expected
+                  players
                 </dt>
                 <dd className="text-sm">
-                  {detail.capacity.toString()} players maximum
+                  {detail.capacity.toString()} expected players / registration
+                  stays open
                 </dd>
               </div>
             </dl>
@@ -698,12 +702,19 @@ export function TournamentsPage() {
                 More details will be announced by the crew.
               </p>
             )}
-            <footer className="mt-8 flex justify-end gap-3">
+            <footer className="mt-8 flex flex-wrap justify-end gap-3">
               <Button variant="ghost" onClick={() => setDetail(null)}>
                 Close
               </Button>
+              <a
+                href={`/tournaments/${detail.id.toString()}`}
+                className="btn btn-primary"
+              >
+                Open tournament room{" "}
+                <ArrowUpRight className="size-4" aria-hidden="true" />
+              </a>
               {isAdmin ? (
-                <Button onClick={() => openEditor(detail)}>
+                <Button variant="outline" onClick={() => openEditor(detail)}>
                   <Pencil className="size-4" aria-hidden="true" /> Edit
                   tournament
                 </Button>
@@ -803,7 +814,7 @@ export function TournamentsPage() {
                 </label>
                 <label className="block">
                   <span className="technical-label mb-2 block">
-                    Player capacity
+                    Expected players
                   </span>
                   <input
                     data-ocid="tournaments.capacity_input"
@@ -811,14 +822,16 @@ export function TournamentsPage() {
                     className="input w-full rounded-none"
                     required
                     min={2}
-                    max={256}
                     step={1}
                     value={capacity}
                     onChange={(event) => setCapacity(event.target.value)}
                   />
+                  <span className="mt-2 block text-xs text-base-content/50">
+                    Planning estimate. Registration stays open.
+                  </span>
                 </label>
                 <label className="block">
-                  <span className="technical-label mb-2 block">Format</span>
+                  <span className="technical-label mb-2 block">Game mode</span>
                   <select
                     data-ocid="tournaments.format_select"
                     className="select w-full rounded-none"

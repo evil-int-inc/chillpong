@@ -33201,6 +33201,152 @@ const Error$1 = Variant({
   })
 });
 const Result__1 = Variant({ "ok": Null, "err": Error$1 });
+const TournamentSlot$1 = Variant({ "a": Null, "b": Null });
+const TournamentElimination$1 = Variant({
+  "singleElimination": Null,
+  "doubleElimination": Null
+});
+const TournamentCommand = Variant({
+  "prioritizeMatch": Nat,
+  "startMatch": Nat,
+  "setMatchPlayers": Record({
+    "matchId": Nat,
+    "playerA": Opt(Nat),
+    "playerB": Opt(Nat)
+  }),
+  "undo": Null,
+  "placePlayer": Record({
+    "playerId": Nat,
+    "slot": TournamentSlot$1,
+    "matchId": Nat
+  }),
+  "prioritizePlayer": Nat,
+  "generateBracket": Null,
+  "movePlayer": Record({
+    "playerId": Nat,
+    "slot": TournamentSlot$1,
+    "matchId": Nat
+  }),
+  "swapPlayers": Record({
+    "firstSlot": TournamentSlot$1,
+    "secondSlot": TournamentSlot$1,
+    "firstMatchId": Nat,
+    "secondMatchId": Nat
+  }),
+  "removePlayer": Record({ "playerId": Nat, "confirmed": Bool }),
+  "configure": Record({
+    "elimination": TournamentElimination$1,
+    "tableCount": Nat
+  }),
+  "assignTable": Record({
+    "table": Opt(Nat),
+    "matchId": Nat
+  }),
+  "assignBye": Record({ "slot": TournamentSlot$1, "matchId": Nat }),
+  "recordResult": Record({
+    "scoreA": Nat,
+    "scoreB": Nat,
+    "matchId": Nat
+  }),
+  "resetMatch": Record({ "cascade": Bool, "matchId": Nat }),
+  "addPlayer": Record({ "name": Text, "skillLevel": Nat }),
+  "editPlayer": Record({
+    "playerId": Nat,
+    "name": Text,
+    "skillLevel": Nat
+  })
+});
+const Timestamp = Int;
+const TournamentAction = Record({
+  "id": Nat,
+  "createdAt": Timestamp,
+  "caption": Text
+});
+const TournamentTableStatus = Variant({
+  "available": Null,
+  "playing": Null,
+  "finished": Null,
+  "waiting": Null
+});
+const TournamentTable = Record({
+  "status": TournamentTableStatus,
+  "matchId": Opt(Nat),
+  "number": Nat
+});
+const TournamentMatchStatus = Variant({
+  "bye": Null,
+  "cancelled": Null,
+  "blocked": Null,
+  "completed": Null,
+  "playing": Null,
+  "ready": Null
+});
+const TournamentBracket = Variant({
+  "losers": Null,
+  "grandFinal": Null,
+  "resetFinal": Null,
+  "winners": Null
+});
+const MatchSource = Variant({
+  "bye": Null,
+  "player": Nat,
+  "winner": Nat,
+  "loser": Nat
+});
+const TournamentMatch = Record({
+  "id": Nat,
+  "status": TournamentMatchStatus,
+  "table": Opt(Nat),
+  "winnerId": Opt(Nat),
+  "scoreA": Opt(Nat),
+  "scoreB": Opt(Nat),
+  "loserId": Opt(Nat),
+  "manualOverride": Bool,
+  "playerA": Opt(Nat),
+  "playerB": Opt(Nat),
+  "bracket": TournamentBracket,
+  "sourceA": MatchSource,
+  "sourceB": MatchSource,
+  "priority": Int,
+  "position": Nat,
+  "round": Nat
+});
+const TournamentPlayerStatus = Variant({
+  "advanced": Null,
+  "playing": Null,
+  "eliminated": Null,
+  "champion": Null,
+  "waiting": Null,
+  "ready": Null,
+  "removed": Null
+});
+const TournamentPlayer = Record({
+  "id": Nat,
+  "status": TournamentPlayerStatus,
+  "table": Opt(Nat),
+  "name": Text,
+  "seed": Opt(Nat),
+  "losses": Nat,
+  "registrationNumber": Nat,
+  "currentMatchId": Opt(Nat),
+  "skillLevel": Nat,
+  "registeredAt": Timestamp
+});
+const TournamentState = Record({
+  "elimination": TournamentElimination$1,
+  "started": Bool,
+  "waitingQueue": Vec(Nat),
+  "nextMatches": Vec(Nat),
+  "history": Vec(TournamentAction),
+  "canUndo": Bool,
+  "tables": Vec(TournamentTable),
+  "updatedAt": Timestamp,
+  "matches": Vec(TournamentMatch),
+  "players": Vec(TournamentPlayer),
+  "tableCount": Nat,
+  "tournamentId": Nat,
+  "championId": Opt(Nat)
+});
 const UserRole = Variant({
   "admin": Null,
   "user": Null,
@@ -33211,7 +33357,6 @@ const TournamentStatus$1 = Variant({
   "live": Null,
   "completed": Null
 });
-const Timestamp = Int;
 const TournamentFormat$1 = Variant({
   "doubles": Null,
   "singles": Null
@@ -33303,6 +33448,11 @@ Service({
   "_initialize_access_control": Func([], [], []),
   "_internet_identity_sign_in_finish": Func([], [Result__1], []),
   "_internet_identity_sign_in_start": Func([], [Vec(Nat8)], []),
+  "applyTournamentCommand": Func(
+    [Nat, TournamentCommand],
+    [TournamentState],
+    []
+  ),
   "assignCallerUserRole": Func([Principal2, UserRole], [], []),
   "bootstrapOwner": Func([], [], []),
   "createTournament": Func([TournamentInput], [Tournament], []),
@@ -33313,6 +33463,11 @@ Service({
   "getCallerUserRole": Func([], [UserRole], ["query"]),
   "getMyRole": Func([], [Opt(Role$1)], ["query"]),
   "getTournament": Func([Nat], [Opt(Tournament)], ["query"]),
+  "getTournamentState": Func(
+    [Nat],
+    [Opt(TournamentState)],
+    ["query"]
+  ),
   "getTournaments": Func([], [Vec(Tournament)], ["query"]),
   "getUser": Func([UserId], [Opt(User$1)], ["query"]),
   "getUserByUsername": Func([Text], [Opt(User$1)], ["query"]),
@@ -33359,6 +33514,155 @@ const idlFactory = ({ IDL: IDL2 }) => {
     })
   });
   const Result__12 = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
+  const TournamentSlot2 = IDL2.Variant({ "a": IDL2.Null, "b": IDL2.Null });
+  const TournamentElimination2 = IDL2.Variant({
+    "singleElimination": IDL2.Null,
+    "doubleElimination": IDL2.Null
+  });
+  const TournamentCommand2 = IDL2.Variant({
+    "prioritizeMatch": IDL2.Nat,
+    "startMatch": IDL2.Nat,
+    "setMatchPlayers": IDL2.Record({
+      "matchId": IDL2.Nat,
+      "playerA": IDL2.Opt(IDL2.Nat),
+      "playerB": IDL2.Opt(IDL2.Nat)
+    }),
+    "undo": IDL2.Null,
+    "placePlayer": IDL2.Record({
+      "playerId": IDL2.Nat,
+      "slot": TournamentSlot2,
+      "matchId": IDL2.Nat
+    }),
+    "prioritizePlayer": IDL2.Nat,
+    "generateBracket": IDL2.Null,
+    "movePlayer": IDL2.Record({
+      "playerId": IDL2.Nat,
+      "slot": TournamentSlot2,
+      "matchId": IDL2.Nat
+    }),
+    "swapPlayers": IDL2.Record({
+      "firstSlot": TournamentSlot2,
+      "secondSlot": TournamentSlot2,
+      "firstMatchId": IDL2.Nat,
+      "secondMatchId": IDL2.Nat
+    }),
+    "removePlayer": IDL2.Record({
+      "playerId": IDL2.Nat,
+      "confirmed": IDL2.Bool
+    }),
+    "configure": IDL2.Record({
+      "elimination": TournamentElimination2,
+      "tableCount": IDL2.Nat
+    }),
+    "assignTable": IDL2.Record({
+      "table": IDL2.Opt(IDL2.Nat),
+      "matchId": IDL2.Nat
+    }),
+    "assignBye": IDL2.Record({ "slot": TournamentSlot2, "matchId": IDL2.Nat }),
+    "recordResult": IDL2.Record({
+      "scoreA": IDL2.Nat,
+      "scoreB": IDL2.Nat,
+      "matchId": IDL2.Nat
+    }),
+    "resetMatch": IDL2.Record({ "cascade": IDL2.Bool, "matchId": IDL2.Nat }),
+    "addPlayer": IDL2.Record({ "name": IDL2.Text, "skillLevel": IDL2.Nat }),
+    "editPlayer": IDL2.Record({
+      "playerId": IDL2.Nat,
+      "name": IDL2.Text,
+      "skillLevel": IDL2.Nat
+    })
+  });
+  const Timestamp2 = IDL2.Int;
+  const TournamentAction2 = IDL2.Record({
+    "id": IDL2.Nat,
+    "createdAt": Timestamp2,
+    "caption": IDL2.Text
+  });
+  const TournamentTableStatus2 = IDL2.Variant({
+    "available": IDL2.Null,
+    "playing": IDL2.Null,
+    "finished": IDL2.Null,
+    "waiting": IDL2.Null
+  });
+  const TournamentTable2 = IDL2.Record({
+    "status": TournamentTableStatus2,
+    "matchId": IDL2.Opt(IDL2.Nat),
+    "number": IDL2.Nat
+  });
+  const TournamentMatchStatus2 = IDL2.Variant({
+    "bye": IDL2.Null,
+    "cancelled": IDL2.Null,
+    "blocked": IDL2.Null,
+    "completed": IDL2.Null,
+    "playing": IDL2.Null,
+    "ready": IDL2.Null
+  });
+  const TournamentBracket2 = IDL2.Variant({
+    "losers": IDL2.Null,
+    "grandFinal": IDL2.Null,
+    "resetFinal": IDL2.Null,
+    "winners": IDL2.Null
+  });
+  const MatchSource2 = IDL2.Variant({
+    "bye": IDL2.Null,
+    "player": IDL2.Nat,
+    "winner": IDL2.Nat,
+    "loser": IDL2.Nat
+  });
+  const TournamentMatch2 = IDL2.Record({
+    "id": IDL2.Nat,
+    "status": TournamentMatchStatus2,
+    "table": IDL2.Opt(IDL2.Nat),
+    "winnerId": IDL2.Opt(IDL2.Nat),
+    "scoreA": IDL2.Opt(IDL2.Nat),
+    "scoreB": IDL2.Opt(IDL2.Nat),
+    "loserId": IDL2.Opt(IDL2.Nat),
+    "manualOverride": IDL2.Bool,
+    "playerA": IDL2.Opt(IDL2.Nat),
+    "playerB": IDL2.Opt(IDL2.Nat),
+    "bracket": TournamentBracket2,
+    "sourceA": MatchSource2,
+    "sourceB": MatchSource2,
+    "priority": IDL2.Int,
+    "position": IDL2.Nat,
+    "round": IDL2.Nat
+  });
+  const TournamentPlayerStatus2 = IDL2.Variant({
+    "advanced": IDL2.Null,
+    "playing": IDL2.Null,
+    "eliminated": IDL2.Null,
+    "champion": IDL2.Null,
+    "waiting": IDL2.Null,
+    "ready": IDL2.Null,
+    "removed": IDL2.Null
+  });
+  const TournamentPlayer2 = IDL2.Record({
+    "id": IDL2.Nat,
+    "status": TournamentPlayerStatus2,
+    "table": IDL2.Opt(IDL2.Nat),
+    "name": IDL2.Text,
+    "seed": IDL2.Opt(IDL2.Nat),
+    "losses": IDL2.Nat,
+    "registrationNumber": IDL2.Nat,
+    "currentMatchId": IDL2.Opt(IDL2.Nat),
+    "skillLevel": IDL2.Nat,
+    "registeredAt": Timestamp2
+  });
+  const TournamentState2 = IDL2.Record({
+    "elimination": TournamentElimination2,
+    "started": IDL2.Bool,
+    "waitingQueue": IDL2.Vec(IDL2.Nat),
+    "nextMatches": IDL2.Vec(IDL2.Nat),
+    "history": IDL2.Vec(TournamentAction2),
+    "canUndo": IDL2.Bool,
+    "tables": IDL2.Vec(TournamentTable2),
+    "updatedAt": Timestamp2,
+    "matches": IDL2.Vec(TournamentMatch2),
+    "players": IDL2.Vec(TournamentPlayer2),
+    "tableCount": IDL2.Nat,
+    "tournamentId": IDL2.Nat,
+    "championId": IDL2.Opt(IDL2.Nat)
+  });
   const UserRole2 = IDL2.Variant({
     "admin": IDL2.Null,
     "user": IDL2.Null,
@@ -33369,7 +33673,6 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "live": IDL2.Null,
     "completed": IDL2.Null
   });
-  const Timestamp2 = IDL2.Int;
   const TournamentFormat2 = IDL2.Variant({
     "doubles": IDL2.Null,
     "singles": IDL2.Null
@@ -33461,6 +33764,11 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "_initialize_access_control": IDL2.Func([], [], []),
     "_internet_identity_sign_in_finish": IDL2.Func([], [Result__12], []),
     "_internet_identity_sign_in_start": IDL2.Func([], [IDL2.Vec(IDL2.Nat8)], []),
+    "applyTournamentCommand": IDL2.Func(
+      [IDL2.Nat, TournamentCommand2],
+      [TournamentState2],
+      []
+    ),
     "assignCallerUserRole": IDL2.Func([IDL2.Principal, UserRole2], [], []),
     "bootstrapOwner": IDL2.Func([], [], []),
     "createTournament": IDL2.Func([TournamentInput2], [Tournament2], []),
@@ -33471,6 +33779,11 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "getCallerUserRole": IDL2.Func([], [UserRole2], ["query"]),
     "getMyRole": IDL2.Func([], [IDL2.Opt(Role2)], ["query"]),
     "getTournament": IDL2.Func([IDL2.Nat], [IDL2.Opt(Tournament2)], ["query"]),
+    "getTournamentState": IDL2.Func(
+      [IDL2.Nat],
+      [IDL2.Opt(TournamentState2)],
+      ["query"]
+    ),
     "getTournaments": IDL2.Func([], [IDL2.Vec(Tournament2)], ["query"]),
     "getUser": IDL2.Func([UserId2], [IDL2.Opt(User2)], ["query"]),
     "getUserByUsername": IDL2.Func([IDL2.Text], [IDL2.Opt(User2)], ["query"]),
@@ -33499,11 +33812,21 @@ var Role = /* @__PURE__ */ ((Role2) => {
   Role2["admin"] = "admin";
   return Role2;
 })(Role || {});
+var TournamentElimination = /* @__PURE__ */ ((TournamentElimination2) => {
+  TournamentElimination2["singleElimination"] = "singleElimination";
+  TournamentElimination2["doubleElimination"] = "doubleElimination";
+  return TournamentElimination2;
+})(TournamentElimination || {});
 var TournamentFormat = /* @__PURE__ */ ((TournamentFormat2) => {
   TournamentFormat2["doubles"] = "doubles";
   TournamentFormat2["singles"] = "singles";
   return TournamentFormat2;
 })(TournamentFormat || {});
+var TournamentSlot = /* @__PURE__ */ ((TournamentSlot2) => {
+  TournamentSlot2["a"] = "a";
+  TournamentSlot2["b"] = "b";
+  return TournamentSlot2;
+})(TournamentSlot || {});
 var TournamentStatus = /* @__PURE__ */ ((TournamentStatus2) => {
   TournamentStatus2["upcoming"] = "upcoming";
   TournamentStatus2["live"] = "live";
@@ -33643,17 +33966,31 @@ class Backend {
       return result;
     }
   }
+  async applyTournamentCommand(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.applyTournamentCommand(arg0, to_candid_TournamentCommand_n12(this._uploadFile, this._downloadFile, arg1));
+        return from_candid_TournamentState_n24(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.applyTournamentCommand(arg0, to_candid_TournamentCommand_n12(this._uploadFile, this._downloadFile, arg1));
+      return from_candid_TournamentState_n24(this._uploadFile, this._downloadFile, result);
+    }
+  }
   async assignCallerUserRole(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n12(this._uploadFile, this._downloadFile, arg1));
+        const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n47(this._uploadFile, this._downloadFile, arg1));
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n12(this._uploadFile, this._downloadFile, arg1));
+      const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n47(this._uploadFile, this._downloadFile, arg1));
       return result;
     }
   }
@@ -33674,43 +34011,43 @@ class Backend {
   async createTournament(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.createTournament(to_candid_TournamentInput_n14(this._uploadFile, this._downloadFile, arg0));
-        return from_candid_Tournament_n20(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.createTournament(to_candid_TournamentInput_n49(this._uploadFile, this._downloadFile, arg0));
+        return from_candid_Tournament_n55(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.createTournament(to_candid_TournamentInput_n14(this._uploadFile, this._downloadFile, arg0));
-      return from_candid_Tournament_n20(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.createTournament(to_candid_TournamentInput_n49(this._uploadFile, this._downloadFile, arg0));
+      return from_candid_Tournament_n55(this._uploadFile, this._downloadFile, result);
     }
   }
   async createUser(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.createUser(arg0, to_candid_UserInput_n26(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_User_n28(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.createUser(arg0, to_candid_UserInput_n61(this._uploadFile, this._downloadFile, arg1));
+        return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.createUser(arg0, to_candid_UserInput_n26(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_User_n28(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.createUser(arg0, to_candid_UserInput_n61(this._uploadFile, this._downloadFile, arg1));
+      return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
     }
   }
   async execute(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.execute(arg0);
-        return from_candid_Result_n36(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_n71(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.execute(arg0);
-      return from_candid_Result_n36(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_n71(this._uploadFile, this._downloadFile, result);
     }
   }
   async getApiDoc() {
@@ -33731,112 +34068,126 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.getCallerProfile();
-        return from_candid_opt_n44(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getCallerProfile();
-      return from_candid_opt_n44(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
     }
   }
   async getCallerUserRole() {
     if (this.processError) {
       try {
         const result = await this.actor.getCallerUserRole();
-        return from_candid_UserRole_n45(this._uploadFile, this._downloadFile, result);
+        return from_candid_UserRole_n80(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getCallerUserRole();
-      return from_candid_UserRole_n45(this._uploadFile, this._downloadFile, result);
+      return from_candid_UserRole_n80(this._uploadFile, this._downloadFile, result);
     }
   }
   async getMyRole() {
     if (this.processError) {
       try {
         const result = await this.actor.getMyRole();
-        return from_candid_opt_n31(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n66(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getMyRole();
-      return from_candid_opt_n31(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n66(this._uploadFile, this._downloadFile, result);
     }
   }
   async getTournament(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.getTournament(arg0);
-        return from_candid_opt_n47(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n82(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getTournament(arg0);
-      return from_candid_opt_n47(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n82(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getTournamentState(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getTournamentState(arg0);
+        return from_candid_opt_n83(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getTournamentState(arg0);
+      return from_candid_opt_n83(this._uploadFile, this._downloadFile, result);
     }
   }
   async getTournaments() {
     if (this.processError) {
       try {
         const result = await this.actor.getTournaments();
-        return from_candid_vec_n48(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n84(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getTournaments();
-      return from_candid_vec_n48(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n84(this._uploadFile, this._downloadFile, result);
     }
   }
   async getUser(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.getUser(arg0);
-        return from_candid_opt_n44(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getUser(arg0);
-      return from_candid_opt_n44(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
     }
   }
   async getUserByUsername(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.getUserByUsername(arg0);
-        return from_candid_opt_n44(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getUserByUsername(arg0);
-      return from_candid_opt_n44(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
     }
   }
   async grantAdminRole(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.grantAdminRole(arg0);
-        return from_candid_UserRoleView_n49(this._uploadFile, this._downloadFile, result);
+        return from_candid_UserRoleView_n85(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.grantAdminRole(arg0);
-      return from_candid_UserRoleView_n49(this._uploadFile, this._downloadFile, result);
+      return from_candid_UserRoleView_n85(this._uploadFile, this._downloadFile, result);
     }
   }
   async isCallerAdmin() {
@@ -33857,42 +34208,42 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.listUsers();
-        return from_candid_vec_n51(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n87(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listUsers();
-      return from_candid_vec_n51(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n87(this._uploadFile, this._downloadFile, result);
     }
   }
   async listUsersWithRoles() {
     if (this.processError) {
       try {
         const result = await this.actor.listUsersWithRoles();
-        return from_candid_vec_n52(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n88(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listUsersWithRoles();
-      return from_candid_vec_n52(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n88(this._uploadFile, this._downloadFile, result);
     }
   }
   async revokeAdminRole(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.revokeAdminRole(arg0);
-        return from_candid_UserRoleView_n49(this._uploadFile, this._downloadFile, result);
+        return from_candid_UserRoleView_n85(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.revokeAdminRole(arg0);
-      return from_candid_UserRoleView_n49(this._uploadFile, this._downloadFile, result);
+      return from_candid_UserRoleView_n85(this._uploadFile, this._downloadFile, result);
     }
   }
   async schema() {
@@ -33912,130 +34263,184 @@ class Backend {
   async updateTournament(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.updateTournament(arg0, to_candid_TournamentInput_n14(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_Tournament_n20(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.updateTournament(arg0, to_candid_TournamentInput_n49(this._uploadFile, this._downloadFile, arg1));
+        return from_candid_Tournament_n55(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.updateTournament(arg0, to_candid_TournamentInput_n14(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_Tournament_n20(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.updateTournament(arg0, to_candid_TournamentInput_n49(this._uploadFile, this._downloadFile, arg1));
+      return from_candid_Tournament_n55(this._uploadFile, this._downloadFile, result);
     }
   }
   async updateUser(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.updateUser(arg0, to_candid_UserInput_n26(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_User_n28(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.updateUser(arg0, to_candid_UserInput_n61(this._uploadFile, this._downloadFile, arg1));
+        return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.updateUser(arg0, to_candid_UserInput_n26(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_User_n28(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.updateUser(arg0, to_candid_UserInput_n61(this._uploadFile, this._downloadFile, arg1));
+      return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
     }
   }
 }
-function from_candid_Cell_n40(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n41(_uploadFile, _downloadFile, value);
+function from_candid_Cell_n75(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n76(_uploadFile, _downloadFile, value);
 }
 function from_candid_Error_n10(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n11(_uploadFile, _downloadFile, value);
 }
-async function from_candid_ExternalBlob_n35(_uploadFile, _downloadFile, value) {
+async function from_candid_ExternalBlob_n70(_uploadFile, _downloadFile, value) {
   return await _downloadFile(value);
+}
+function from_candid_MatchSource_n40(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n41(_uploadFile, _downloadFile, value);
 }
 function from_candid_Result__1_n8(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n9(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_n36(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n37(_uploadFile, _downloadFile, value);
+function from_candid_Result_n71(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n72(_uploadFile, _downloadFile, value);
 }
-function from_candid_Role_n32(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n33(_uploadFile, _downloadFile, value);
+function from_candid_Role_n67(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n68(_uploadFile, _downloadFile, value);
 }
-function from_candid_TournamentFormat_n24(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n25(_uploadFile, _downloadFile, value);
+function from_candid_TournamentBracket_n38(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n39(_uploadFile, _downloadFile, value);
 }
-function from_candid_TournamentStatus_n22(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n23(_uploadFile, _downloadFile, value);
+function from_candid_TournamentElimination_n26(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n27(_uploadFile, _downloadFile, value);
 }
-function from_candid_Tournament_n20(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n21(_uploadFile, _downloadFile, value);
+function from_candid_TournamentFormat_n59(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n60(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRoleView_n49(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n50(_uploadFile, _downloadFile, value);
+function from_candid_TournamentMatchStatus_n36(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n37(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRole_n45(_uploadFile, _downloadFile, value) {
+function from_candid_TournamentMatch_n34(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n35(_uploadFile, _downloadFile, value);
+}
+function from_candid_TournamentPlayerStatus_n45(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n46(_uploadFile, _downloadFile, value);
 }
-async function from_candid_User_n28(_uploadFile, _downloadFile, value) {
-  return await from_candid_record_n29(_uploadFile, _downloadFile, value);
+function from_candid_TournamentPlayer_n43(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n44(_uploadFile, _downloadFile, value);
 }
-function from_candid_Value_n42(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n43(_uploadFile, _downloadFile, value);
+function from_candid_TournamentState_n24(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n25(_uploadFile, _downloadFile, value);
+}
+function from_candid_TournamentStatus_n57(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n58(_uploadFile, _downloadFile, value);
+}
+function from_candid_TournamentTableStatus_n31(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n32(_uploadFile, _downloadFile, value);
+}
+function from_candid_TournamentTable_n29(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n30(_uploadFile, _downloadFile, value);
+}
+function from_candid_Tournament_n55(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n56(_uploadFile, _downloadFile, value);
+}
+function from_candid_UserRoleView_n85(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n86(_uploadFile, _downloadFile, value);
+}
+function from_candid_UserRole_n80(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n81(_uploadFile, _downloadFile, value);
+}
+async function from_candid_User_n63(_uploadFile, _downloadFile, value) {
+  return await from_candid_record_n64(_uploadFile, _downloadFile, value);
+}
+function from_candid_Value_n77(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n78(_uploadFile, _downloadFile, value);
 }
 function from_candid__ImmutableObjectStorageRefillResult_n4(_uploadFile, _downloadFile, value) {
   return from_candid_record_n5(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n30(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : value[0];
-}
-function from_candid_opt_n31(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : from_candid_Role_n32(_uploadFile, _downloadFile, value[0]);
-}
-async function from_candid_opt_n34(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : await from_candid_ExternalBlob_n35(_uploadFile, _downloadFile, value[0]);
-}
-async function from_candid_opt_n44(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : await from_candid_User_n28(_uploadFile, _downloadFile, value[0]);
-}
-function from_candid_opt_n47(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : from_candid_Tournament_n20(_uploadFile, _downloadFile, value[0]);
-}
 function from_candid_opt_n6(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n65(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n66(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : from_candid_Role_n67(_uploadFile, _downloadFile, value[0]);
+}
+async function from_candid_opt_n69(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : await from_candid_ExternalBlob_n70(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_opt_n7(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
-function from_candid_record_n21(_uploadFile, _downloadFile, value) {
+async function from_candid_opt_n79(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : await from_candid_User_n63(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n82(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : from_candid_Tournament_n55(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n83(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : from_candid_TournamentState_n24(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_record_n25(_uploadFile, _downloadFile, value) {
   return {
-    id: value.id,
-    status: from_candid_TournamentStatus_n22(_uploadFile, _downloadFile, value.status),
-    title: value.title,
-    venue: value.venue,
-    startsAt: value.startsAt,
-    createdAt: value.createdAt,
-    description: value.description,
+    elimination: from_candid_TournamentElimination_n26(_uploadFile, _downloadFile, value.elimination),
+    started: value.started,
+    waitingQueue: value.waitingQueue,
+    nextMatches: value.nextMatches,
+    history: value.history,
+    canUndo: value.canUndo,
+    tables: from_candid_vec_n28(_uploadFile, _downloadFile, value.tables),
     updatedAt: value.updatedAt,
-    capacity: value.capacity,
-    format: from_candid_TournamentFormat_n24(_uploadFile, _downloadFile, value.format)
+    matches: from_candid_vec_n33(_uploadFile, _downloadFile, value.matches),
+    players: from_candid_vec_n42(_uploadFile, _downloadFile, value.players),
+    tableCount: value.tableCount,
+    tournamentId: value.tournamentId,
+    championId: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.championId))
   };
 }
-async function from_candid_record_n29(_uploadFile, _downloadFile, value) {
+function from_candid_record_n30(_uploadFile, _downloadFile, value) {
+  return {
+    status: from_candid_TournamentTableStatus_n31(_uploadFile, _downloadFile, value.status),
+    matchId: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.matchId)),
+    number: value.number
+  };
+}
+function from_candid_record_n35(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
-    bio: record_opt_to_undefined(from_candid_opt_n30(_uploadFile, _downloadFile, value.bio)),
-    username: value.username,
-    displayName: value.displayName,
-    createdAt: value.createdAt,
-    role: record_opt_to_undefined(from_candid_opt_n31(_uploadFile, _downloadFile, value.role)),
-    avatar: record_opt_to_undefined(await from_candid_opt_n34(_uploadFile, _downloadFile, value.avatar))
+    status: from_candid_TournamentMatchStatus_n36(_uploadFile, _downloadFile, value.status),
+    table: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.table)),
+    winnerId: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.winnerId)),
+    scoreA: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.scoreA)),
+    scoreB: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.scoreB)),
+    loserId: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.loserId)),
+    manualOverride: value.manualOverride,
+    playerA: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.playerA)),
+    playerB: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.playerB)),
+    bracket: from_candid_TournamentBracket_n38(_uploadFile, _downloadFile, value.bracket),
+    sourceA: from_candid_MatchSource_n40(_uploadFile, _downloadFile, value.sourceA),
+    sourceB: from_candid_MatchSource_n40(_uploadFile, _downloadFile, value.sourceB),
+    priority: value.priority,
+    position: value.position,
+    round: value.round
   };
 }
-function from_candid_record_n37(_uploadFile, _downloadFile, value) {
+function from_candid_record_n44(_uploadFile, _downloadFile, value) {
   return {
-    hasMore: value.hasMore,
-    rows: from_candid_vec_n38(_uploadFile, _downloadFile, value.rows)
-  };
-}
-function from_candid_record_n41(_uploadFile, _downloadFile, value) {
-  return {
-    value: from_candid_Value_n42(_uploadFile, _downloadFile, value.value),
-    name: value.name
+    id: value.id,
+    status: from_candid_TournamentPlayerStatus_n45(_uploadFile, _downloadFile, value.status),
+    table: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.table)),
+    name: value.name,
+    seed: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.seed)),
+    losses: value.losses,
+    registrationNumber: value.registrationNumber,
+    currentMatchId: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.currentMatchId)),
+    skillLevel: value.skillLevel,
+    registeredAt: value.registeredAt
   };
 }
 function from_candid_record_n5(_uploadFile, _downloadFile, value) {
@@ -34044,12 +34449,49 @@ function from_candid_record_n5(_uploadFile, _downloadFile, value) {
     topped_up_amount: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.topped_up_amount))
   };
 }
-function from_candid_record_n50(_uploadFile, _downloadFile, value) {
+function from_candid_record_n56(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    status: from_candid_TournamentStatus_n57(_uploadFile, _downloadFile, value.status),
+    title: value.title,
+    venue: value.venue,
+    startsAt: value.startsAt,
+    createdAt: value.createdAt,
+    description: value.description,
+    updatedAt: value.updatedAt,
+    capacity: value.capacity,
+    format: from_candid_TournamentFormat_n59(_uploadFile, _downloadFile, value.format)
+  };
+}
+async function from_candid_record_n64(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    bio: record_opt_to_undefined(from_candid_opt_n65(_uploadFile, _downloadFile, value.bio)),
+    username: value.username,
+    displayName: value.displayName,
+    createdAt: value.createdAt,
+    role: record_opt_to_undefined(from_candid_opt_n66(_uploadFile, _downloadFile, value.role)),
+    avatar: record_opt_to_undefined(await from_candid_opt_n69(_uploadFile, _downloadFile, value.avatar))
+  };
+}
+function from_candid_record_n72(_uploadFile, _downloadFile, value) {
+  return {
+    hasMore: value.hasMore,
+    rows: from_candid_vec_n73(_uploadFile, _downloadFile, value.rows)
+  };
+}
+function from_candid_record_n76(_uploadFile, _downloadFile, value) {
+  return {
+    value: from_candid_Value_n77(_uploadFile, _downloadFile, value.value),
+    name: value.name
+  };
+}
+function from_candid_record_n86(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
     username: value.username,
     displayName: value.displayName,
-    role: record_opt_to_undefined(from_candid_opt_n31(_uploadFile, _downloadFile, value.role))
+    role: record_opt_to_undefined(from_candid_opt_n66(_uploadFile, _downloadFile, value.role))
   };
 }
 function from_candid_variant_n11(_uploadFile, _downloadFile, value) {
@@ -34085,16 +34527,46 @@ function from_candid_variant_n11(_uploadFile, _downloadFile, value) {
     FrontendOriginMismatch: value.FrontendOriginMismatch
   } : value;
 }
-function from_candid_variant_n23(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n27(_uploadFile, _downloadFile, value) {
+  return "singleElimination" in value ? "singleElimination" : "doubleElimination" in value ? "doubleElimination" : value;
+}
+function from_candid_variant_n32(_uploadFile, _downloadFile, value) {
+  return "available" in value ? "available" : "playing" in value ? "playing" : "finished" in value ? "finished" : "waiting" in value ? "waiting" : value;
+}
+function from_candid_variant_n37(_uploadFile, _downloadFile, value) {
+  return "bye" in value ? "bye" : "cancelled" in value ? "cancelled" : "blocked" in value ? "blocked" : "completed" in value ? "completed" : "playing" in value ? "playing" : "ready" in value ? "ready" : value;
+}
+function from_candid_variant_n39(_uploadFile, _downloadFile, value) {
+  return "losers" in value ? "losers" : "grandFinal" in value ? "grandFinal" : "resetFinal" in value ? "resetFinal" : "winners" in value ? "winners" : value;
+}
+function from_candid_variant_n41(_uploadFile, _downloadFile, value) {
+  return "bye" in value ? {
+    __kind__: "bye",
+    bye: value.bye
+  } : "player" in value ? {
+    __kind__: "player",
+    player: value.player
+  } : "winner" in value ? {
+    __kind__: "winner",
+    winner: value.winner
+  } : "loser" in value ? {
+    __kind__: "loser",
+    loser: value.loser
+  } : value;
+}
+function from_candid_variant_n46(_uploadFile, _downloadFile, value) {
+  return "advanced" in value ? "advanced" : "playing" in value ? "playing" : "eliminated" in value ? "eliminated" : "champion" in value ? "champion" : "waiting" in value ? "waiting" : "ready" in value ? "ready" : "removed" in value ? "removed" : value;
+}
+function from_candid_variant_n58(_uploadFile, _downloadFile, value) {
   return "upcoming" in value ? "upcoming" : "live" in value ? "live" : "completed" in value ? "completed" : value;
 }
-function from_candid_variant_n25(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n60(_uploadFile, _downloadFile, value) {
   return "doubles" in value ? "doubles" : "singles" in value ? "singles" : value;
 }
-function from_candid_variant_n33(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n68(_uploadFile, _downloadFile, value) {
   return "admin" in value ? "admin" : value;
 }
-function from_candid_variant_n43(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n78(_uploadFile, _downloadFile, value) {
   return "int" in value ? {
     __kind__: "int",
     int: value.int
@@ -34115,7 +34587,7 @@ function from_candid_variant_n43(_uploadFile, _downloadFile, value) {
     text: value.text
   } : value;
 }
-function from_candid_variant_n46(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n81(_uploadFile, _downloadFile, value) {
   return "admin" in value ? "admin" : "user" in value ? "user" : "guest" in value ? "guest" : value;
 }
 function from_candid_variant_n9(_uploadFile, _downloadFile, value) {
@@ -34127,35 +34599,53 @@ function from_candid_variant_n9(_uploadFile, _downloadFile, value) {
     err: from_candid_Error_n10(_uploadFile, _downloadFile, value.err)
   } : value;
 }
-function from_candid_vec_n38(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_vec_n39(_uploadFile, _downloadFile, x2));
+function from_candid_vec_n28(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_TournamentTable_n29(_uploadFile, _downloadFile, x2));
 }
-function from_candid_vec_n39(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_Cell_n40(_uploadFile, _downloadFile, x2));
+function from_candid_vec_n33(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_TournamentMatch_n34(_uploadFile, _downloadFile, x2));
 }
-function from_candid_vec_n48(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_Tournament_n20(_uploadFile, _downloadFile, x2));
+function from_candid_vec_n42(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_TournamentPlayer_n43(_uploadFile, _downloadFile, x2));
 }
-async function from_candid_vec_n51(_uploadFile, _downloadFile, value) {
-  return await Promise.all(value.map(async (x2) => await from_candid_User_n28(_uploadFile, _downloadFile, x2)));
+function from_candid_vec_n73(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_vec_n74(_uploadFile, _downloadFile, x2));
 }
-function from_candid_vec_n52(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_UserRoleView_n49(_uploadFile, _downloadFile, x2));
+function from_candid_vec_n74(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_Cell_n75(_uploadFile, _downloadFile, x2));
 }
-function to_candid_TournamentFormat_n18(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n19(_uploadFile, _downloadFile, value);
+function from_candid_vec_n84(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_Tournament_n55(_uploadFile, _downloadFile, x2));
 }
-function to_candid_TournamentInput_n14(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n15(_uploadFile, _downloadFile, value);
+async function from_candid_vec_n87(_uploadFile, _downloadFile, value) {
+  return await Promise.all(value.map(async (x2) => await from_candid_User_n63(_uploadFile, _downloadFile, x2)));
 }
-function to_candid_TournamentStatus_n16(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n17(_uploadFile, _downloadFile, value);
+function from_candid_vec_n88(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_UserRoleView_n85(_uploadFile, _downloadFile, x2));
 }
-function to_candid_UserInput_n26(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n27(_uploadFile, _downloadFile, value);
-}
-function to_candid_UserRole_n12(_uploadFile, _downloadFile, value) {
+function to_candid_TournamentCommand_n12(_uploadFile, _downloadFile, value) {
   return to_candid_variant_n13(_uploadFile, _downloadFile, value);
+}
+function to_candid_TournamentElimination_n19(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n20(_uploadFile, _downloadFile, value);
+}
+function to_candid_TournamentFormat_n53(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n54(_uploadFile, _downloadFile, value);
+}
+function to_candid_TournamentInput_n49(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n50(_uploadFile, _downloadFile, value);
+}
+function to_candid_TournamentSlot_n15(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n16(_uploadFile, _downloadFile, value);
+}
+function to_candid_TournamentStatus_n51(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n52(_uploadFile, _downloadFile, value);
+}
+function to_candid_UserInput_n61(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n62(_uploadFile, _downloadFile, value);
+}
+function to_candid_UserRole_n47(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n48(_uploadFile, _downloadFile, value);
 }
 function to_candid__ImmutableObjectStorageRefillInformation_n2(_uploadFile, _downloadFile, value) {
   return to_candid_record_n3(_uploadFile, _downloadFile, value);
@@ -34163,22 +34653,44 @@ function to_candid__ImmutableObjectStorageRefillInformation_n2(_uploadFile, _dow
 function to_candid_opt_n1(_uploadFile, _downloadFile, value) {
   return value === null ? candid_none() : candid_some(to_candid__ImmutableObjectStorageRefillInformation_n2(_uploadFile, _downloadFile, value));
 }
-function to_candid_record_n15(_uploadFile, _downloadFile, value) {
+function to_candid_record_n14(_uploadFile, _downloadFile, value) {
   return {
-    status: to_candid_TournamentStatus_n16(_uploadFile, _downloadFile, value.status),
-    title: value.title,
-    venue: value.venue,
-    startsAt: value.startsAt,
-    description: value.description,
-    capacity: value.capacity,
-    format: to_candid_TournamentFormat_n18(_uploadFile, _downloadFile, value.format)
+    slot: to_candid_TournamentSlot_n15(_uploadFile, _downloadFile, value.slot),
+    matchId: value.matchId
   };
 }
-function to_candid_record_n27(_uploadFile, _downloadFile, value) {
+function to_candid_record_n17(_uploadFile, _downloadFile, value) {
   return {
-    bio: value.bio ? candid_some(value.bio) : candid_none(),
-    username: value.username,
-    displayName: value.displayName
+    table: value.table ? candid_some(value.table) : candid_none(),
+    matchId: value.matchId
+  };
+}
+function to_candid_record_n18(_uploadFile, _downloadFile, value) {
+  return {
+    elimination: to_candid_TournamentElimination_n19(_uploadFile, _downloadFile, value.elimination),
+    tableCount: value.tableCount
+  };
+}
+function to_candid_record_n21(_uploadFile, _downloadFile, value) {
+  return {
+    firstSlot: to_candid_TournamentSlot_n15(_uploadFile, _downloadFile, value.firstSlot),
+    secondSlot: to_candid_TournamentSlot_n15(_uploadFile, _downloadFile, value.secondSlot),
+    firstMatchId: value.firstMatchId,
+    secondMatchId: value.secondMatchId
+  };
+}
+function to_candid_record_n22(_uploadFile, _downloadFile, value) {
+  return {
+    playerId: value.playerId,
+    slot: to_candid_TournamentSlot_n15(_uploadFile, _downloadFile, value.slot),
+    matchId: value.matchId
+  };
+}
+function to_candid_record_n23(_uploadFile, _downloadFile, value) {
+  return {
+    matchId: value.matchId,
+    playerA: value.playerA ? candid_some(value.playerA) : candid_none(),
+    playerB: value.playerB ? candid_some(value.playerB) : candid_none()
   };
 }
 function to_candid_record_n3(_uploadFile, _downloadFile, value) {
@@ -34186,7 +34698,76 @@ function to_candid_record_n3(_uploadFile, _downloadFile, value) {
     proposed_top_up_amount: value.proposed_top_up_amount ? candid_some(value.proposed_top_up_amount) : candid_none()
   };
 }
+function to_candid_record_n50(_uploadFile, _downloadFile, value) {
+  return {
+    status: to_candid_TournamentStatus_n51(_uploadFile, _downloadFile, value.status),
+    title: value.title,
+    venue: value.venue,
+    startsAt: value.startsAt,
+    description: value.description,
+    capacity: value.capacity,
+    format: to_candid_TournamentFormat_n53(_uploadFile, _downloadFile, value.format)
+  };
+}
+function to_candid_record_n62(_uploadFile, _downloadFile, value) {
+  return {
+    bio: value.bio ? candid_some(value.bio) : candid_none(),
+    username: value.username,
+    displayName: value.displayName
+  };
+}
 function to_candid_variant_n13(_uploadFile, _downloadFile, value) {
+  return value.__kind__ === "prioritizeMatch" ? {
+    prioritizeMatch: value.prioritizeMatch
+  } : value.__kind__ === "startMatch" ? {
+    startMatch: value.startMatch
+  } : value.__kind__ === "setMatchPlayers" ? {
+    setMatchPlayers: to_candid_record_n23(_uploadFile, _downloadFile, value.setMatchPlayers)
+  } : value.__kind__ === "undo" ? {
+    undo: value.undo
+  } : value.__kind__ === "placePlayer" ? {
+    placePlayer: to_candid_record_n22(_uploadFile, _downloadFile, value.placePlayer)
+  } : value.__kind__ === "prioritizePlayer" ? {
+    prioritizePlayer: value.prioritizePlayer
+  } : value.__kind__ === "generateBracket" ? {
+    generateBracket: value.generateBracket
+  } : value.__kind__ === "movePlayer" ? {
+    movePlayer: to_candid_record_n22(_uploadFile, _downloadFile, value.movePlayer)
+  } : value.__kind__ === "swapPlayers" ? {
+    swapPlayers: to_candid_record_n21(_uploadFile, _downloadFile, value.swapPlayers)
+  } : value.__kind__ === "removePlayer" ? {
+    removePlayer: value.removePlayer
+  } : value.__kind__ === "configure" ? {
+    configure: to_candid_record_n18(_uploadFile, _downloadFile, value.configure)
+  } : value.__kind__ === "assignTable" ? {
+    assignTable: to_candid_record_n17(_uploadFile, _downloadFile, value.assignTable)
+  } : value.__kind__ === "assignBye" ? {
+    assignBye: to_candid_record_n14(_uploadFile, _downloadFile, value.assignBye)
+  } : value.__kind__ === "recordResult" ? {
+    recordResult: value.recordResult
+  } : value.__kind__ === "resetMatch" ? {
+    resetMatch: value.resetMatch
+  } : value.__kind__ === "addPlayer" ? {
+    addPlayer: value.addPlayer
+  } : value.__kind__ === "editPlayer" ? {
+    editPlayer: value.editPlayer
+  } : value;
+}
+function to_candid_variant_n16(_uploadFile, _downloadFile, value) {
+  return value == "a" ? {
+    a: null
+  } : value == "b" ? {
+    b: null
+  } : value;
+}
+function to_candid_variant_n20(_uploadFile, _downloadFile, value) {
+  return value == "singleElimination" ? {
+    singleElimination: null
+  } : value == "doubleElimination" ? {
+    doubleElimination: null
+  } : value;
+}
+function to_candid_variant_n48(_uploadFile, _downloadFile, value) {
   return value == "admin" ? {
     admin: null
   } : value == "user" ? {
@@ -34195,7 +34776,7 @@ function to_candid_variant_n13(_uploadFile, _downloadFile, value) {
     guest: null
   } : value;
 }
-function to_candid_variant_n17(_uploadFile, _downloadFile, value) {
+function to_candid_variant_n52(_uploadFile, _downloadFile, value) {
   return value == "upcoming" ? {
     upcoming: null
   } : value == "live" ? {
@@ -34204,7 +34785,7 @@ function to_candid_variant_n17(_uploadFile, _downloadFile, value) {
     completed: null
   } : value;
 }
-function to_candid_variant_n19(_uploadFile, _downloadFile, value) {
+function to_candid_variant_n54(_uploadFile, _downloadFile, value) {
   return value == "doubles" ? {
     doubles: null
   } : value == "singles" ? {
@@ -34415,29 +34996,62 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$p = [
+const __iconNode$C = [
   ["path", { d: "M12 5v14", key: "s699le" }],
   ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$p);
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$C);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$o = [
+const __iconNode$B = [
+  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+];
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$B);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$A = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+];
+const ArrowRight = createLucideIcon("arrow-right", __iconNode$A);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$z = [
   ["path", { d: "M7 7h10v10", key: "1tivn9" }],
   ["path", { d: "M7 17 17 7", key: "1vkiza" }]
 ];
-const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$o);
+const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$z);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$n = [
+const __iconNode$y = [
+  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
+  ["path", { d: "M12 19V5", key: "x0mq9r" }]
+];
+const ArrowUp = createLucideIcon("arrow-up", __iconNode$y);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$x = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -34449,67 +35063,99 @@ const __iconNode$n = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M16 18h.01", key: "kzsmim" }]
 ];
-const CalendarDays = createLucideIcon("calendar-days", __iconNode$n);
+const CalendarDays = createLucideIcon("calendar-days", __iconNode$x);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$m = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$m);
+const __iconNode$w = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$w);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$l = [
+const __iconNode$v = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$v);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$u = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
   ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$l);
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$u);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$k = [
+const __iconNode$t = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$k);
+const CircleCheck = createLucideIcon("circle-check", __iconNode$t);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$j = [
+const __iconNode$s = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["polyline", { points: "12 6 12 12 16.5 12", key: "1aq6pp" }]
 ];
-const Clock3 = createLucideIcon("clock-3", __iconNode$j);
+const Clock3 = createLucideIcon("clock-3", __iconNode$s);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$i = [
+const __iconNode$r = [
   ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
   ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
 ];
-const Copy = createLucideIcon("copy", __iconNode$i);
+const Copy = createLucideIcon("copy", __iconNode$r);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$h = [
+const __iconNode$q = [
+  ["path", { d: "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z", key: "i9b6wo" }],
+  ["line", { x1: "4", x2: "4", y1: "22", y2: "15", key: "1cm3nv" }]
+];
+const Flag = createLucideIcon("flag", __iconNode$q);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$p = [
+  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
+  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
+  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
+  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
+];
+const GitBranch = createLucideIcon("git-branch", __iconNode$p);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$o = [
   ["polyline", { points: "22 12 16 12 14 15 10 15 8 12 2 12", key: "o97t9d" }],
   [
     "path",
@@ -34519,46 +35165,46 @@ const __iconNode$h = [
     }
   ]
 ];
-const Inbox = createLucideIcon("inbox", __iconNode$h);
+const Inbox = createLucideIcon("inbox", __iconNode$o);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$g = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$g);
+const __iconNode$n = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$n);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$f = [
+const __iconNode$m = [
   ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
   ["path", { d: "M15 12H3", key: "6jk70r" }],
   ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
 ];
-const LogIn = createLucideIcon("log-in", __iconNode$f);
+const LogIn = createLucideIcon("log-in", __iconNode$m);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$e = [
+const __iconNode$l = [
   ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
   ["path", { d: "M21 12H9", key: "dn1m92" }],
   ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
 ];
-const LogOut = createLucideIcon("log-out", __iconNode$e);
+const LogOut = createLucideIcon("log-out", __iconNode$l);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$d = [
+const __iconNode$k = [
   [
     "path",
     {
@@ -34568,7 +35214,92 @@ const __iconNode$d = [
   ],
   ["circle", { cx: "12", cy: "10", r: "3", key: "ilqhr7" }]
 ];
-const MapPin = createLucideIcon("map-pin", __iconNode$d);
+const MapPin = createLucideIcon("map-pin", __iconNode$k);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$j = [
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "m21 3-7 7", key: "1l2asr" }],
+  ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
+  ["path", { d: "M9 21H3v-6", key: "wtvkvv" }]
+];
+const Maximize2 = createLucideIcon("maximize-2", __iconNode$j);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$i = [
+  ["path", { d: "M4 12h16", key: "1lakjw" }],
+  ["path", { d: "M4 18h16", key: "19g7jn" }],
+  ["path", { d: "M4 6h16", key: "1o0s65" }]
+];
+const Menu = createLucideIcon("menu", __iconNode$i);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$h = [["path", { d: "M5 12h14", key: "1ays0h" }]];
+const Minus = createLucideIcon("minus", __iconNode$h);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$g = [
+  [
+    "path",
+    {
+      d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
+      key: "1a8usu"
+    }
+  ],
+  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
+];
+const Pencil = createLucideIcon("pencil", __iconNode$g);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$f = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "M12 5v14", key: "s699le" }]
+];
+const Plus = createLucideIcon("plus", __iconNode$f);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$e = [
+  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
+  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
+  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
+  ["path", { d: "M8 16H3v5", key: "1cv678" }]
+];
+const RefreshCw = createLucideIcon("refresh-cw", __iconNode$e);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$d = [
+  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
+];
+const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$d);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -34576,11 +35307,10 @@ const MapPin = createLucideIcon("map-pin", __iconNode$d);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$c = [
-  ["path", { d: "M4 12h16", key: "1lakjw" }],
-  ["path", { d: "M4 18h16", key: "19g7jn" }],
-  ["path", { d: "M4 6h16", key: "1o0s65" }]
+  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
 ];
-const Menu = createLucideIcon("menu", __iconNode$c);
+const Search = createLucideIcon("search", __iconNode$c);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -34591,13 +35321,14 @@ const __iconNode$b = [
   [
     "path",
     {
-      d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
-      key: "1a8usu"
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
     }
   ],
-  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
+  ["path", { d: "M12 8v4", key: "1got3b" }],
+  ["path", { d: "M12 16h.01", key: "1drbdi" }]
 ];
-const Pencil = createLucideIcon("pencil", __iconNode$b);
+const ShieldAlert = createLucideIcon("shield-alert", __iconNode$b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -34605,10 +35336,16 @@ const Pencil = createLucideIcon("pencil", __iconNode$b);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$a = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$a);
+const ShieldCheck = createLucideIcon("shield-check", __iconNode$a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -34616,10 +35353,16 @@ const Plus = createLucideIcon("plus", __iconNode$a);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$9 = [
-  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
-  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ],
+  ["path", { d: "M9 12h6", key: "1c52cq" }]
 ];
-const Search = createLucideIcon("search", __iconNode$9);
+const ShieldMinus = createLucideIcon("shield-minus", __iconNode$9);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -34634,10 +35377,10 @@ const __iconNode$8 = [
       key: "oel41y"
     }
   ],
-  ["path", { d: "M12 8v4", key: "1got3b" }],
-  ["path", { d: "M12 16h.01", key: "1drbdi" }]
+  ["path", { d: "M9 12h6", key: "1c52cq" }],
+  ["path", { d: "M12 9v6", key: "199k2o" }]
 ];
-const ShieldAlert = createLucideIcon("shield-alert", __iconNode$8);
+const ShieldPlus = createLucideIcon("shield-plus", __iconNode$8);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -34648,13 +35391,12 @@ const __iconNode$7 = [
   [
     "path",
     {
-      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
-      key: "oel41y"
+      d: "M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18",
+      key: "gugj83"
     }
-  ],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+  ]
 ];
-const ShieldCheck = createLucideIcon("shield-check", __iconNode$7);
+const Table2 = createLucideIcon("table-2", __iconNode$7);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -34662,16 +35404,13 @@ const ShieldCheck = createLucideIcon("shield-check", __iconNode$7);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$6 = [
-  [
-    "path",
-    {
-      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
-      key: "oel41y"
-    }
-  ],
-  ["path", { d: "M9 12h6", key: "1c52cq" }]
+  ["path", { d: "M3 6h18", key: "d0wm0j" }],
+  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
+  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
+  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
+  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
 ];
-const ShieldMinus = createLucideIcon("shield-minus", __iconNode$6);
+const Trash2 = createLucideIcon("trash-2", __iconNode$6);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -34682,24 +35421,6 @@ const __iconNode$5 = [
   [
     "path",
     {
-      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
-      key: "oel41y"
-    }
-  ],
-  ["path", { d: "M9 12h6", key: "1c52cq" }],
-  ["path", { d: "M12 9v6", key: "199k2o" }]
-];
-const ShieldPlus = createLucideIcon("shield-plus", __iconNode$5);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$4 = [
-  [
-    "path",
-    {
       d: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3",
       key: "wmoenq"
     }
@@ -34707,14 +35428,14 @@ const __iconNode$4 = [
   ["path", { d: "M12 9v4", key: "juzpu7" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$4);
+const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$5);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$3 = [
+const __iconNode$4 = [
   ["path", { d: "M6 9H4.5a2.5 2.5 0 0 1 0-5H6", key: "17hqa7" }],
   ["path", { d: "M18 9h1.5a2.5 2.5 0 0 0 0-5H18", key: "lmptdp" }],
   ["path", { d: "M4 22h16", key: "57wxv0" }],
@@ -34722,7 +35443,18 @@ const __iconNode$3 = [
   ["path", { d: "M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22", key: "1np0yb" }],
   ["path", { d: "M18 2H6v7a6 6 0 0 0 12 0V2Z", key: "u46fv3" }]
 ];
-const Trophy = createLucideIcon("trophy", __iconNode$3);
+const Trophy = createLucideIcon("trophy", __iconNode$4);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$3 = [
+  ["path", { d: "M9 14 4 9l5-5", key: "102s5s" }],
+  ["path", { d: "M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11", key: "f3b9sd" }]
+];
+const Undo2 = createLucideIcon("undo-2", __iconNode$3);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42572,7 +43304,7 @@ function Header({ onOpenSidebar }) {
       setCopyNotice("Select the Member ID above to copy it.");
     }
   }
-  const title = pathname === "/users" ? "Users" : pathname === "/admin" ? "Admin" : "Tournaments";
+  const title = pathname === "/players" || pathname === "/users" ? "Players" : pathname === "/admin/accounts" ? "Accounts" : pathname === "/admin" ? "Admin" : pathname.startsWith("/tournaments/") ? "Tournament room" : "Tournaments";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "header",
     {
@@ -42704,7 +43436,7 @@ function Sidebar({ onNavigate }) {
     logout
   } = useAuth();
   const items = [
-    { label: "Users", to: "/users", icon: Users, number: "01" },
+    { label: "Players", to: "/players", icon: Users, number: "01" },
     { label: "Tournaments", to: "/tournaments", icon: Trophy, number: "02" },
     ...isAdmin ? [{ label: "Admin", to: "/admin", icon: ShieldCheck, number: "03" }] : []
   ];
@@ -42757,7 +43489,7 @@ function Sidebar({ onNavigate }) {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("nav", { className: "flex-1 px-4", "aria-label": "Primary", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mb-3 px-3", children: "THE CLUB / INDEX" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "space-y-2", children: items.map(({ label, to, icon: Icon2, number }) => {
-            const active = pathname === to;
+            const active = pathname === to || pathname.startsWith(`${to}/`);
             return /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
               Link,
               {
@@ -42814,7 +43546,7 @@ function Sidebar({ onNavigate }) {
 }
 function MainLayout() {
   const [drawerOpen, setDrawerOpen] = reactExports.useState(false);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "drawer min-h-svh lg:drawer-open", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "drawer min-h-svh overflow-x-clip lg:drawer-open", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "input",
       {
@@ -43079,19 +43811,22 @@ function AdminPage() {
         /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-4xl font-bold uppercase tracking-tight text-foreground", children: "Admin access" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Admins manage the lineup and tournament board. Grant or revoke access below." })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        "span",
-        {
-          "data-ocid": "admin_count",
-          className: "inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-sm text-muted-foreground",
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "size-4", "aria-hidden": "true" }),
-            adminCount,
-            " ",
-            adminCount === 1 ? "admin" : "admins"
-          ]
-        }
-      )
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/admin/accounts", className: "btn btn-outline btn-sm", children: "Manage accounts" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "span",
+          {
+            "data-ocid": "admin_count",
+            className: "inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-sm text-muted-foreground",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "size-4", "aria-hidden": "true" }),
+              adminCount,
+              " ",
+              adminCount === 1 ? "admin" : "admins"
+            ]
+          }
+        )
+      ] })
     ] }),
     notice ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "output",
@@ -43133,7 +43868,7 @@ function AdminPage() {
       {
         icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-7", "aria-hidden": "true" }),
         title: "No users yet",
-        description: "Add users from the Users page to manage their access here."
+        description: "Add members through Manage accounts to manage their access here."
       }
     ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
       "ul",
@@ -43207,6 +43942,1585 @@ function AdminPage() {
     )
   ] }) });
 }
+const SKILL_LEVELS = [
+  "Beginner",
+  "Lower Intermediate",
+  "Intermediate",
+  "Advanced",
+  "Expert"
+];
+const BRACKET_LABELS = {
+  winners: "Winners bracket",
+  losers: "Losers bracket",
+  grandFinal: "Grand final",
+  resetFinal: "Reset final"
+};
+function registrationLabel(registration) {
+  return `#${registration.toString().padStart(3, "0")}`;
+}
+function matchLabel(match) {
+  const lane = match.bracket === "winners" ? "W" : match.bracket === "losers" ? "L" : match.bracket === "grandFinal" ? "GF" : "RF";
+  return `${lane}${match.round}.${match.position}`;
+}
+function playerById(players, id) {
+  return id === void 0 ? void 0 : players.find((player) => player.id === id);
+}
+function playerMovement(view, player) {
+  const fresh = playerById(view.players, player.id) ?? player;
+  const none = { entrant: false, targets: [] };
+  if (fresh.status !== "waiting" && fresh.status !== "ready" && fresh.status !== "advanced")
+    return none;
+  const pending = view.matches.filter(
+    (match) => (match.bracket === "winners" || match.bracket === "losers") && (match.status === "ready" || match.status === "pending")
+  );
+  const contains = (match) => match.playerAId === fresh.id || match.playerBId === fresh.id;
+  const current = pending.find(
+    (match) => match.id === fresh.currentMatchId && contains(match)
+  ) ?? pending.find(contains);
+  if (current) {
+    return {
+      entrant: false,
+      current,
+      targets: pending.filter(
+        (match) => match.bracket === current.bracket && match.round === current.round
+      ).sort(
+        (a2, b2) => Number(a2.id === current.id) - Number(b2.id === current.id)
+      )
+    };
+  }
+  const placed = view.matches.some(
+    (match) => contains(match) || match.sourceA.kind === "player" && match.sourceA.id === fresh.id || match.sourceB.kind === "player" && match.sourceB.id === fresh.id
+  );
+  const entrant = !placed && view.waitingQueue.includes(fresh.id);
+  return {
+    entrant,
+    current: void 0,
+    targets: entrant ? view.matches.filter(
+      (match) => match.bracket === "winners" && match.round >= 1 && match.status !== "playing" && match.status !== "completed" && match.status !== "void"
+    ) : []
+  };
+}
+function sourceLabel(source, matches) {
+  if (source.kind === "bye") return "BYE";
+  if (source.kind === "empty") return "Awaiting player";
+  if (source.kind === "player") return "Awaiting player";
+  const match = matches.find((item) => item.id === source.id);
+  return `${source.kind === "winner" ? "Winner" : "Loser"} / ${match ? matchLabel(match) : `M${source.id}`}`;
+}
+function tbilisiTime(timestamp) {
+  return new Date(Number(timestamp / 1000000n)).toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Tbilisi",
+    hourCycle: "h23"
+  });
+}
+function PlayerForm({
+  view,
+  player,
+  pending,
+  onAction
+}) {
+  const [name, setName] = reactExports.useState((player == null ? void 0 : player.name) ?? "");
+  const [skill, setSkill] = reactExports.useState((player == null ? void 0 : player.skill) ?? 1);
+  const valid = name.trim().length > 0 && name.trim().length <= 80;
+  function save(placeNewPlayer = false) {
+    if (!valid) return;
+    onAction(
+      player ? { kind: "editPlayer", playerId: player.id, name: name.trim(), skill } : { kind: "addPlayer", name: name.trim(), skill },
+      { placeNewPlayer }
+    );
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "form",
+    {
+      className: "space-y-5",
+      onSubmit: (event) => {
+        event.preventDefault();
+        save();
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Player name" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "input",
+            {
+              "data-ocid": "tournament.player_name_input",
+              className: "input w-full rounded-none",
+              required: true,
+              maxLength: 80,
+              value: name,
+              disabled: pending,
+              onChange: (event) => setName(event.target.value),
+              placeholder: "Name on the table"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Skill level" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "select",
+            {
+              "data-ocid": "tournament.player_skill_select",
+              className: "select w-full rounded-none",
+              value: skill,
+              disabled: pending,
+              onChange: (event) => setSkill(Number(event.target.value)),
+              children: SKILL_LEVELS.map((level, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: index2 + 1, children: [
+                "L",
+                index2 + 1,
+                " — ",
+                level
+              ] }, level))
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: player ? `${registrationLabel(player.registrationNumber)} and the original registration time remain unchanged. Skill changes apply to future matchmaking.` : "A new permanent registration number and timestamp are saved automatically. The player joins after earlier registrations." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap justify-end gap-3 border-t border-base-300 pt-5", children: [
+          !player && view.generated ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "outline",
+              disabled: !valid || pending,
+              onClick: () => save(true),
+              children: "Register & place manually"
+            }
+          ) : null,
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              type: "submit",
+              "data-ocid": "tournament.save_player_button",
+              loading: pending,
+              disabled: !valid,
+              children: player ? "Save player" : "Add to waiting queue"
+            }
+          )
+        ] })
+      ]
+    }
+  );
+}
+function MovePlayerForm({
+  view,
+  player,
+  pending,
+  onAction
+}) {
+  var _a2;
+  const { entrant, targets: options } = playerMovement(view, player);
+  const [target, setTarget] = reactExports.useState(((_a2 = options[0]) == null ? void 0 : _a2.id.toString()) ?? "");
+  const [slot, setSlot] = reactExports.useState("a");
+  const validTarget = options.some((match) => match.id.toString() === target);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "form",
+    {
+      className: "space-y-5",
+      onSubmit: (event) => {
+        event.preventDefault();
+        if (validTarget)
+          onAction({
+            kind: entrant ? "placePlayer" : "movePlayer",
+            playerId: player.id,
+            matchId: BigInt(target),
+            slot
+          });
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/60", children: [
+          "Place ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-base-content", children: player.name }),
+          " in",
+          " ",
+          entrant ? "a pending winners-bracket slot" : "their current unplayed bracket round",
+          ". The registration remains",
+          " ",
+          registrationLabel(player.registrationNumber),
+          ".",
+          " ",
+          entrant ? "An empty slot admits them directly. An occupied eligible slot creates a qualifier against its current player or incoming winner, keeping both players in the tournament. Opening qualifiers are round zero." : "An occupied pending slot swaps both incoming bracket positions; an empty slot moves this player. Completed results and original registration details remain unchanged."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Destination match" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "select",
+            {
+              "aria-label": "Destination match",
+              className: "select w-full rounded-none",
+              value: target,
+              disabled: pending,
+              onChange: (event) => setTarget(event.target.value),
+              children: options.length ? options.map((match) => {
+                var _a3, _b2;
+                return /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: match.id.toString(), children: [
+                  matchLabel(match),
+                  " /",
+                  " ",
+                  ((_a3 = playerById(view.players, match.playerAId)) == null ? void 0 : _a3.name) ?? sourceLabel(match.sourceA, view.matches),
+                  " ",
+                  "vs",
+                  " ",
+                  ((_b2 = playerById(view.players, match.playerBId)) == null ? void 0 : _b2.name) ?? sourceLabel(match.sourceB, view.matches)
+                ] }, match.id.toString());
+              }) : /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: "No safe opening slots" })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Destination slot" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "select",
+            {
+              className: "select w-full rounded-none",
+              value: slot,
+              disabled: pending,
+              onChange: (event) => setSlot(event.target.value),
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: "Player A" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: "Player B" })
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-secondary/80", children: "Manual override. The backend rejects changes that would overwrite a played match or an active downstream match." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-end border-t border-base-300 pt-5", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "submit", loading: pending, disabled: !validTarget, children: "Place player" }) })
+      ]
+    }
+  );
+}
+function MatchEditor({
+  view,
+  match,
+  isAdmin,
+  pending,
+  onAction,
+  onOpen
+}) {
+  var _a2, _b2, _c2, _d2, _e2;
+  const [scoreA, setScoreA] = reactExports.useState(((_a2 = match.scoreA) == null ? void 0 : _a2.toString()) ?? "");
+  const [scoreB, setScoreB] = reactExports.useState(((_b2 = match.scoreB) == null ? void 0 : _b2.toString()) ?? "");
+  const [table, setTable] = reactExports.useState(((_c2 = match.table) == null ? void 0 : _c2.toString()) ?? "");
+  const [playerA, setPlayerA] = reactExports.useState(((_d2 = match.playerAId) == null ? void 0 : _d2.toString()) ?? "");
+  const [playerB, setPlayerB] = reactExports.useState(((_e2 = match.playerBId) == null ? void 0 : _e2.toString()) ?? "");
+  const [byeSlot, setByeSlot] = reactExports.useState("b");
+  const [firstSlot, setFirstSlot] = reactExports.useState("a");
+  const [otherMatch, setOtherMatch] = reactExports.useState("");
+  const [otherSlot, setOtherSlot] = reactExports.useState("b");
+  const [validation, setValidation] = reactExports.useState(null);
+  const editableOpening = match.bracket === "winners" && match.round === 1 && match.status !== "playing" && match.status !== "completed";
+  const activePlayers = view.players.filter(
+    (player) => player.status !== "removed" && player.status !== "eliminated"
+  );
+  const canSwapBracket = match.bracket === "winners" || match.bracket === "losers";
+  const swapMatches = view.matches.filter(
+    (item) => canSwapBracket && item.id !== match.id && item.bracket === match.bracket && item.round === match.round && (item.status === "ready" || editableOpening && item.status === "bye")
+  );
+  reactExports.useEffect(() => {
+    var _a3, _b3;
+    setScoreA(((_a3 = match.scoreA) == null ? void 0 : _a3.toString()) ?? "");
+    setScoreB(((_b3 = match.scoreB) == null ? void 0 : _b3.toString()) ?? "");
+  }, [match.scoreA, match.scoreB]);
+  reactExports.useEffect(() => {
+    var _a3;
+    setTable(((_a3 = match.table) == null ? void 0 : _a3.toString()) ?? "");
+  }, [match.table]);
+  reactExports.useEffect(() => {
+    var _a3, _b3;
+    setPlayerA(((_a3 = match.playerAId) == null ? void 0 : _a3.toString()) ?? "");
+    setPlayerB(((_b3 = match.playerBId) == null ? void 0 : _b3.toString()) ?? "");
+  }, [match.playerAId, match.playerBId]);
+  const currentPlayers = [
+    {
+      id: match.playerAId,
+      source: match.sourceA,
+      score: match.scoreA,
+      slot: "a"
+    },
+    {
+      id: match.playerBId,
+      source: match.sourceB,
+      score: match.scoreB,
+      slot: "b"
+    }
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "divide-y divide-base-300 border-y border-base-300", children: currentPlayers.map((side) => {
+      const player = playerById(view.players, side.id);
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "flex items-center justify-between gap-4 py-4",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "p",
+                {
+                  className: `font-display text-2xl font-bold ${side.id !== void 0 && side.id === match.winnerId ? "text-primary" : ""}`,
+                  children: (player == null ? void 0 : player.name) ?? sourceLabel(side.source, view.matches)
+                }
+              ),
+              player ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1 font-mono text-[10px] text-base-content/45", children: [
+                "L",
+                player.skill,
+                " / ",
+                SKILL_LEVELS[player.skill - 1],
+                " /",
+                " ",
+                registrationLabel(player.registrationNumber)
+              ] }) : null
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-3xl", children: side.score ?? "—" })
+          ]
+        },
+        side.slot
+      );
+    }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-5 font-mono text-[10px] uppercase tracking-wider text-base-content/45", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+        "Status / ",
+        match.status
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: match.table ? `Table ${match.table}` : "No table assigned" }),
+      match.manualOverride || match.prioritized ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1 text-secondary", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
+        " Manual override"
+      ] }) : null
+    ] }),
+    isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-3 sm:grid-cols-[1fr_auto_auto]", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Assign table" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "select",
+            {
+              "aria-label": "Assign table",
+              className: "select w-full rounded-none",
+              value: table,
+              disabled: pending || match.status === "completed" || match.status === "bye" || match.status === "void",
+              onChange: (event) => setTable(event.target.value),
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: "Unassigned" }),
+                view.tables.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "option",
+                  {
+                    value: item.number,
+                    disabled: item.matchId !== void 0 && item.matchId !== match.id && (item.status === "playing" || item.status === "waiting"),
+                    children: [
+                      "Table ",
+                      item.number,
+                      " / ",
+                      item.status
+                    ]
+                  },
+                  item.number
+                ))
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            variant: "outline",
+            className: "sm:self-end",
+            disabled: pending || match.status === "completed" || match.status === "bye" || match.status === "void",
+            onClick: () => onAction(
+              {
+                kind: "assignTable",
+                matchId: match.id,
+                table: table ? Number(table) : void 0
+              },
+              { close: false }
+            ),
+            children: "Assign table"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            className: "sm:self-end",
+            disabled: pending || match.status !== "ready" || match.playerAId === void 0 || match.playerBId === void 0 || match.table === void 0,
+            onClick: () => onAction(
+              { kind: "startMatch", matchId: match.id },
+              { close: false }
+            ),
+            children: "Start match"
+          }
+        )
+      ] }),
+      match.status === "playing" || match.status === "completed" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "form",
+        {
+          className: "space-y-4 border border-base-300 p-4",
+          onSubmit: (event) => {
+            event.preventDefault();
+            setValidation(null);
+            const a2 = Number(scoreA);
+            const b2 = Number(scoreB);
+            if (!scoreA || !scoreB || !Number.isSafeInteger(a2) || !Number.isSafeInteger(b2) || a2 < 0 || b2 < 0) {
+              setValidation(
+                "Enter a non-negative whole-number score for both players."
+              );
+              return;
+            }
+            if (a2 === b2) {
+              setValidation(
+                "A knockout match needs a winner. Scores cannot be tied."
+              );
+              return;
+            }
+            onAction({
+              kind: "recordResult",
+              matchId: match.id,
+              scoreA: a2,
+              scoreB: b2
+            });
+          },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-primary", children: match.status === "completed" ? "Correct the result" : "Save the result" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Score A" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "input",
+                  {
+                    type: "number",
+                    className: "input w-full rounded-none font-mono text-xl",
+                    min: 0,
+                    step: 1,
+                    required: true,
+                    value: scoreA,
+                    disabled: pending,
+                    onChange: (event) => setScoreA(event.target.value)
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Score B" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "input",
+                  {
+                    type: "number",
+                    className: "input w-full rounded-none font-mono text-xl",
+                    min: 0,
+                    step: 1,
+                    required: true,
+                    value: scoreB,
+                    disabled: pending,
+                    onChange: (event) => setScoreB(event.target.value)
+                  }
+                )
+              ] })
+            ] }),
+            validation ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { role: "alert", className: "text-xs text-error", children: validation }) : null,
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: "Winners advance and the table is freed automatically. Changing a winner after downstream games requires a confirmed reset." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                type: "submit",
+                "data-ocid": "tournament.save_result_button",
+                loading: pending,
+                children: "Save result"
+              }
+            )
+          ]
+        }
+      ) : null,
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            disabled: pending || match.status !== "ready",
+            onClick: () => onAction(
+              { kind: "prioritizeMatch", matchId: match.id },
+              { close: false }
+            ),
+            children: "Prioritize match"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            variant: "danger",
+            size: "sm",
+            disabled: pending || match.status !== "completed" && match.status !== "playing" && match.status !== "bye",
+            onClick: () => onOpen({ kind: "reset", matchId: match.id }),
+            children: "Reset match / undo result"
+          }
+        )
+      ] }),
+      canSwapBracket ? /* @__PURE__ */ jsxRuntimeExports.jsxs("details", { className: "border-t border-base-300 pt-5", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("summary", { className: "technical-label cursor-pointer text-secondary", children: "Manual override / players & byes" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-5 space-y-5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: "Opening slots can be replaced. Later ready matches can swap opponents within the same bracket and round. Registration numbers never change." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-3 sm:grid-cols-2", children: [
+            {
+              label: "Player A slot",
+              value: playerA,
+              setter: setPlayerA
+            },
+            {
+              label: "Player B slot",
+              value: playerB,
+              setter: setPlayerB
+            }
+          ].map((side) => /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: side.label }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: side.value,
+                disabled: pending || !editableOpening,
+                onChange: (event) => side.setter(event.target.value),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: "BYE / empty slot" }),
+                  activePlayers.map((player) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "option",
+                    {
+                      value: player.id.toString(),
+                      children: [
+                        registrationLabel(player.registrationNumber),
+                        " ",
+                        player.name,
+                        " / L",
+                        player.skill
+                      ]
+                    },
+                    player.id.toString()
+                  ))
+                ]
+              }
+            )
+          ] }, side.label)) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "outline",
+              size: "sm",
+              disabled: pending || !editableOpening || !!playerA && playerA === playerB,
+              onClick: () => onAction(
+                {
+                  kind: "setMatchPlayers",
+                  matchId: match.id,
+                  playerA: playerA ? BigInt(playerA) : void 0,
+                  playerB: playerB ? BigInt(playerB) : void 0
+                },
+                { close: false }
+              ),
+              children: "Change matchup"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-3 sm:grid-cols-[1fr_auto]", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Assign BYE to slot" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "select",
+                {
+                  className: "select w-full rounded-none",
+                  value: byeSlot,
+                  disabled: pending || !editableOpening,
+                  onChange: (event) => setByeSlot(event.target.value),
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: "Player A" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: "Player B" })
+                  ]
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "outline",
+                size: "sm",
+                className: "sm:self-end",
+                disabled: pending || !editableOpening,
+                onClick: () => onAction(
+                  { kind: "assignBye", matchId: match.id, slot: byeSlot },
+                  { close: false }
+                ),
+                children: "Assign BYE"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 border-t border-base-300 pt-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[10px]", children: "Swap players between ready matches" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-3 sm:grid-cols-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: "This match slot" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "select",
+                  {
+                    className: "select w-full rounded-none",
+                    value: firstSlot,
+                    disabled: pending,
+                    onChange: (event) => setFirstSlot(event.target.value),
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: "Player A" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: "Player B" })
+                    ]
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: "Other match" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "select",
+                  {
+                    className: "select w-full rounded-none",
+                    value: otherMatch,
+                    disabled: pending,
+                    onChange: (event) => setOtherMatch(event.target.value),
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: "Choose match" }),
+                      swapMatches.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "option",
+                        {
+                          value: item.id.toString(),
+                          children: matchLabel(item)
+                        },
+                        item.id.toString()
+                      ))
+                    ]
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: "Other match slot" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "select",
+                  {
+                    className: "select w-full rounded-none",
+                    value: otherSlot,
+                    disabled: pending,
+                    onChange: (event) => setOtherSlot(event.target.value),
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: "Player A" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: "Player B" })
+                    ]
+                  }
+                )
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "outline",
+                size: "sm",
+                disabled: pending || !otherMatch || match.status !== "ready" && !editableOpening,
+                onClick: () => onAction(
+                  {
+                    kind: "swapPlayers",
+                    firstMatchId: match.id,
+                    firstSlot,
+                    secondMatchId: BigInt(otherMatch),
+                    secondSlot: otherSlot
+                  },
+                  { close: false }
+                ),
+                children: "Swap players"
+              }
+            )
+          ] })
+        ] })
+      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border-t border-base-300 pt-4 text-xs leading-relaxed text-base-content/45", children: "Finalist positions stay fixed because they determine whether a double elimination reset final is required." })
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-base-content/45", children: "Results and assignments are managed by the tournament organizer." })
+  ] });
+}
+function ResetForm({
+  match,
+  pending,
+  onAction
+}) {
+  const [cascade, setCascade] = reactExports.useState(false);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/65", children: [
+      "Resetting",
+      " ",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-base-content", children: matchLabel(match) }),
+      " ",
+      "clears its score, winner and table assignment. Earlier registration details remain unchanged."
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "flex items-start gap-3 border border-secondary/30 p-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "input",
+        {
+          type: "checkbox",
+          className: "checkbox checkbox-sm mt-0.5 rounded-none",
+          checked: cascade,
+          disabled: pending,
+          onChange: (event) => setCascade(event.target.checked)
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-sm font-semibold", children: "Also reset completed downstream results" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-1 block text-xs leading-relaxed text-base-content/45", children: "This can erase scores in later rounds. Active downstream matches must be resolved first; the backend prevents resetting across a playing match." })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-secondary/80", children: "If later rounds depend on this result, a plain reset is rejected until downstream results are explicitly included." }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Button,
+      {
+        variant: "danger",
+        "data-ocid": "tournament.confirm_reset_button",
+        loading: pending,
+        onClick: () => onAction({ kind: "resetMatch", matchId: match.id, cascade }),
+        children: "Confirm reset"
+      }
+    )
+  ] });
+}
+function OrganizerDialogs({
+  view,
+  modal,
+  isAdmin,
+  pending,
+  error,
+  onClose,
+  onOpen,
+  onAction
+}) {
+  var _a2;
+  const ref = reactExports.useRef(null);
+  const allowed = !!modal && (isAdmin || modal.kind === "match");
+  reactExports.useEffect(() => {
+    var _a3;
+    const dialog = ref.current;
+    if (!dialog) return;
+    if (allowed && modal) {
+      if (!dialog.open) dialog.showModal();
+      (_a3 = dialog.querySelector(
+        "input:not([disabled]), select:not([disabled])"
+      )) == null ? void 0 : _a3.focus();
+    } else if (dialog.open) dialog.close();
+  }, [allowed, modal]);
+  const match = modal && (modal.kind === "match" || modal.kind === "reset") ? view.matches.find((item) => item.id === modal.matchId) : void 0;
+  const lastAction = [...view.history].sort(
+    (a2, b2) => a2.id > b2.id ? -1 : 1
+  )[0];
+  const playerCount = view.players.filter(
+    (player) => player.status !== "removed"
+  ).length;
+  const bracketSize = 2 ** Math.ceil(Math.log2(Math.max(2, playerCount)));
+  const title = !modal ? "Tournament controls" : modal.kind === "player" ? modal.player ? "Edit player." : "Add to the lineup." : modal.kind === "remove" ? "Remove player?" : modal.kind === "move" ? "Move / place player." : modal.kind === "generate" ? "Generate the draw." : modal.kind === "undo" ? "Undo last action?" : modal.kind === "reset" ? "Reset this result?" : `Match ${match ? matchLabel(match) : "unavailable"}`;
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "dialog",
+    {
+      ref,
+      "data-ocid": "tournament.organizer_dialog",
+      className: "modal club-modal",
+      "aria-labelledby": "organizer-dialog-title",
+      onCancel: (event) => {
+        event.preventDefault();
+        if (!pending) onClose();
+      },
+      onKeyDown: (event) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          if (!pending) onClose();
+        }
+      },
+      onClick: (event) => {
+        if (event.target === event.currentTarget && !pending) onClose();
+      },
+      children: allowed && modal ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "modal-box max-w-2xl rounded-none border border-base-300 bg-base-200 p-6 sm:p-8", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-7 flex items-start justify-between gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "section-kicker mb-2", children: [
+              "CHILLPONG /",
+              " ",
+              modal.kind === "match" ? "MATCH FILE" : "ORGANIZER DESK"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "h2",
+              {
+                id: "organizer-dialog-title",
+                className: "font-display text-3xl font-bold uppercase tracking-tight",
+                children: title
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              "aria-label": "Close tournament controls",
+              className: "btn btn-ghost btn-square btn-sm",
+              disabled: pending,
+              onClick: onClose,
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "size-5", "aria-hidden": "true" })
+            }
+          )
+        ] }),
+        modal.kind === "player" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          PlayerForm,
+          {
+            view,
+            player: modal.player,
+            pending,
+            onAction
+          },
+          ((_a2 = modal.player) == null ? void 0 : _a2.id.toString()) ?? "new"
+        ) : null,
+        modal.kind === "move" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          MovePlayerForm,
+          {
+            view,
+            player: modal.player,
+            pending,
+            onAction
+          },
+          modal.player.id.toString()
+        ) : null,
+        modal.kind === "match" && match ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          MatchEditor,
+          {
+            view,
+            match,
+            isAdmin,
+            pending,
+            onAction,
+            onOpen
+          },
+          match.id.toString()
+        ) : null,
+        modal.kind === "reset" && match ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          ResetForm,
+          {
+            match,
+            pending,
+            onAction
+          },
+          match.id.toString()
+        ) : null,
+        modal.kind === "remove" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-display text-xl font-bold", children: [
+            modal.player.name,
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-xs font-normal text-primary", children: registrationLabel(modal.player.registrationNumber) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3 border border-secondary/30 bg-secondary/5 p-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              TriangleAlert,
+              {
+                className: "mt-0.5 size-5 shrink-0 text-secondary",
+                "aria-hidden": "true"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/65", children: [
+              modal.player.status === "playing" ? "This player is currently playing. Their opponent may advance by forfeit when they are removed. " : "The player leaves the waiting queue and unplayed bracket slots. ",
+              "Completed results remain in history. Pending dependencies are updated where safe; active downstream matches can block removal."
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-base-content/45", children: "Their permanent registration number is retained and will not be reused." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "danger",
+              "data-ocid": "tournament.confirm_remove_button",
+              loading: pending,
+              onClick: () => onAction({ kind: "removePlayer", playerId: modal.player.id }),
+              children: "Remove player"
+            }
+          )
+        ] }) : null,
+        modal.kind === "generate" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-display text-2xl font-bold", children: [
+            playerCount,
+            " players / ",
+            bracketSize,
+            " opening slots"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-xs text-primary", children: [
+            bracketSize - playerCount,
+            " BYEs /",
+            " ",
+            view.elimination === "double" ? "Double elimination" : "Single elimination"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/60", children: [
+            "The draw pairs compatible skill levels first, then uses permanent registration order to settle equal choices. Winners advance automatically;",
+            " ",
+            view.elimination === "double" ? "players leave after their second loss." : "one loss eliminates a player."
+          ] }),
+          view.generated ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border border-secondary/30 p-3 text-xs text-secondary/90", children: "This regenerates the unplayed bracket and replaces manual opening assignments. Registered players stay intact." }) : null,
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              "data-ocid": "tournament.confirm_generate_button",
+              loading: pending,
+              disabled: playerCount < 2 || !view.canChangeFormat,
+              onClick: () => onAction({ kind: "generateBracket" }),
+              children: "Generate bracket"
+            }
+          )
+        ] }) : null,
+        modal.kind === "undo" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-base-content/60", children: "Restore the tournament state immediately before the most recent organizer action." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border border-base-300 p-4 font-mono text-xs", children: (lastAction == null ? void 0 : lastAction.label) ?? "Most recent action" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: "Player registration counters continue forward so registration numbers remain permanent. Restored results, assignments and queue positions are saved automatically." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              "data-ocid": "tournament.confirm_undo_button",
+              loading: pending,
+              disabled: !view.canUndo,
+              onClick: () => onAction({ kind: "undo" }),
+              children: "Confirm undo"
+            }
+          )
+        ] }) : null,
+        error ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "p",
+          {
+            "data-ocid": "tournament.action_error",
+            role: "alert",
+            className: "mt-5 border border-error/35 px-4 py-3 text-sm text-error",
+            children: error
+          }
+        ) : null,
+        /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "mt-6 flex justify-end border-t border-base-300 pt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", disabled: pending, onClick: onClose, children: modal.kind === "match" ? "Close" : "Cancel" }) })
+      ] }) : null
+    }
+  );
+}
+const DEFAULT_PLAYER_FILTERS = {
+  search: "",
+  skill: "all",
+  status: "all",
+  table: "all",
+  round: "all",
+  sort: "registration",
+  showRemoved: false
+};
+const PLAYER_STATUSES = [
+  "playing",
+  "ready",
+  "waiting",
+  "advanced",
+  "champion",
+  "eliminated",
+  "removed"
+];
+function currentPlayerMatch(view, player) {
+  const contains = (match) => match.playerAId === player.id || match.playerBId === player.id;
+  const matches = view.matches.filter(
+    (match) => contains(match) && ["playing", "ready", "pending"].includes(match.status)
+  );
+  return matches.find((match) => match.id === player.currentMatchId) ?? matches.find((match) => match.status === "playing") ?? matches.find((match) => match.status === "ready") ?? matches[0];
+}
+function roundKey(match) {
+  return `${match.bracket}:${match.round}`;
+}
+function roundLabel(match) {
+  return match.bracket === "grandFinal" || match.bracket === "resetFinal" ? BRACKET_LABELS[match.bracket] : `${BRACKET_LABELS[match.bracket]} / ${match.round === 0 ? "Qualifiers" : `Round ${match.round}`}`;
+}
+function registrationOrder(a2, b2) {
+  if (a2.registrationNumber !== b2.registrationNumber)
+    return a2.registrationNumber < b2.registrationNumber ? -1 : 1;
+  if (a2.registeredAt !== b2.registeredAt)
+    return a2.registeredAt < b2.registeredAt ? -1 : 1;
+  return a2.id === b2.id ? 0 : a2.id < b2.id ? -1 : 1;
+}
+function selectPlayers(view, filters) {
+  const search = filters.search.trim().toLocaleLowerCase();
+  return view.players.filter((player) => {
+    const match = currentPlayerMatch(view, player);
+    const table = match == null ? void 0 : match.table;
+    return (filters.showRemoved || player.status !== "removed") && (!search || `${player.name} #${player.registrationNumber.toString().padStart(3, "0")}`.toLocaleLowerCase().includes(search)) && (filters.skill === "all" || player.skill === Number(filters.skill)) && (filters.status === "all" || player.status === filters.status) && (filters.table === "all" || (filters.table === "none" ? table === void 0 : table === Number(filters.table))) && (filters.round === "all" || (filters.round === "none" ? !match : !!match && roundKey(match) === filters.round));
+  }).sort((a2, b2) => {
+    const difference = filters.sort === "name" ? a2.name.localeCompare(b2.name, void 0, {
+      sensitivity: "base",
+      numeric: true
+    }) : filters.sort === "skill" ? a2.skill - b2.skill : filters.sort === "status" ? PLAYER_STATUSES.indexOf(a2.status) - PLAYER_STATUSES.indexOf(b2.status) : 0;
+    return difference || registrationOrder(a2, b2);
+  });
+}
+function PlayersPanel({
+  view,
+  isAdmin,
+  pending,
+  onAdd,
+  onEdit,
+  onRemove,
+  onPrioritize,
+  onMove,
+  standalone = false
+}) {
+  const [filters, setFilters] = reactExports.useState(DEFAULT_PLAYER_FILTERS);
+  const players = selectPlayers(view, filters);
+  const rounds = [
+    ...new Map(view.matches.map((match) => [roundKey(match), match])).values()
+  ];
+  const filtered = filters.search !== "" || filters.skill !== "all" || filters.status !== "all" || filters.table !== "all" || filters.round !== "all";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "section",
+    {
+      "aria-labelledby": "players-title",
+      className: standalone ? "mt-6" : "mt-12 border-t border-base-300 pt-8",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex flex-wrap items-center justify-between gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: standalone ? "sr-only" : "section-kicker mb-2", children: "THE LINEUP / PERMANENT REGISTRATION" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "h2",
+              {
+                id: "players-title",
+                className: standalone ? "technical-label text-base-content/60" : "font-display text-2xl font-bold uppercase",
+                children: [
+                  "Players",
+                  " ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono text-sm font-normal text-base-content/30", children: [
+                    "/",
+                    view.players.filter((player) => player.status !== "removed").length
+                  ] })
+                ]
+              }
+            )
+          ] }),
+          isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { "data-ocid": "tournament.add_player_button", onClick: onAdd, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-4", "aria-hidden": "true" }),
+            " Add player"
+          ] }) : null
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-5 flex flex-wrap items-center justify-between gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "club-search flex w-full items-center gap-3 border border-base-300 px-3 sm:w-80", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "size-4 text-base-content/40", "aria-hidden": "true" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "input",
+              {
+                type: "search",
+                "aria-label": "Search tournament players",
+                placeholder: "NAME / REGISTRATION NUMBER",
+                className: "min-w-0 flex-1 bg-transparent py-3 font-mono text-xs outline-none placeholder:text-base-content/35",
+                value: filters.search,
+                onChange: (event) => setFilters((previous) => ({
+                  ...previous,
+                  search: event.target.value
+                }))
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-base-content/45", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "input",
+              {
+                type: "checkbox",
+                className: "checkbox checkbox-xs rounded-none",
+                checked: filters.showRemoved,
+                onChange: (event) => setFilters((previous) => ({
+                  ...previous,
+                  showRemoved: event.target.checked,
+                  status: !event.target.checked && previous.status === "removed" ? "all" : previous.status
+                }))
+              }
+            ),
+            " ",
+            "Include removed players"
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: "Skill level" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: filters.skill,
+                onChange: (event) => setFilters((previous) => ({
+                  ...previous,
+                  skill: event.target.value
+                })),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: "All skill levels" }),
+                  SKILL_LEVELS.map((level, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: index2 + 1, children: [
+                    "L",
+                    index2 + 1,
+                    " / ",
+                    level
+                  ] }, level))
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: "Status" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: filters.status,
+                onChange: (event) => setFilters((previous) => ({
+                  ...previous,
+                  status: event.target.value,
+                  showRemoved: event.target.value === "removed" || previous.showRemoved
+                })),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: "All statuses" }),
+                  PLAYER_STATUSES.map((status) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: status, children: status.charAt(0).toUpperCase() + status.slice(1) }, status))
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: "Table" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: filters.table,
+                onChange: (event) => setFilters((previous) => ({
+                  ...previous,
+                  table: event.target.value
+                })),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: "All tables" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "none", children: "No table assigned" }),
+                  view.tables.map((table) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: table.number, children: [
+                    "Table ",
+                    table.number
+                  ] }, table.number))
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: "Current round" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: filters.round,
+                onChange: (event) => setFilters((previous) => ({
+                  ...previous,
+                  round: event.target.value
+                })),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: "All rounds" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "none", children: "No current round" }),
+                  rounds.map((match) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: roundKey(match), children: roundLabel(match) }, roundKey(match)))
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "col-span-2 sm:col-span-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-primary", children: "Sort by" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: filters.sort,
+                onChange: (event) => setFilters((previous) => ({
+                  ...previous,
+                  sort: event.target.value
+                })),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "registration", children: "Registration order" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "name", children: "Name / A–Z" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "skill", children: "Skill level / L1–L5" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "status", children: "Status / live first" })
+                ]
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-5 flex flex-wrap items-center justify-between gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "p",
+            {
+              className: "font-mono text-[10px] text-base-content/45",
+              "aria-live": "polite",
+              children: [
+                players.length,
+                " /",
+                " ",
+                view.players.filter(
+                  (player) => filters.showRemoved || player.status !== "removed"
+                ).length,
+                " ",
+                "players · Original registration numbers and times stay fixed."
+              ]
+            }
+          ),
+          filtered || filters.sort !== "registration" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              className: "btn btn-ghost btn-xs",
+              onClick: () => setFilters(DEFAULT_PLAYER_FILTERS),
+              children: "Reset filters & sort"
+            }
+          ) : null
+        ] }),
+        players.length ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto border-y border-base-300", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "table",
+          {
+            "data-ocid": "tournament.players_table",
+            className: "w-full min-w-[760px] text-left",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-base-300", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "th",
+                  {
+                    scope: "col",
+                    className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
+                    children: "Reg / time"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "th",
+                  {
+                    scope: "col",
+                    className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
+                    children: "Player"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "th",
+                  {
+                    scope: "col",
+                    className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
+                    children: "Skill"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "th",
+                  {
+                    scope: "col",
+                    className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
+                    children: "Status / losses"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "th",
+                  {
+                    scope: "col",
+                    className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
+                    children: "Match / table / seed"
+                  }
+                ),
+                isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "th",
+                  {
+                    scope: "col",
+                    className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
+                    children: "Organizer controls"
+                  }
+                ) : null
+              ] }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: players.map((player) => {
+                const match = currentPlayerMatch(view, player);
+                const canPrioritize = player.status === "waiting" || player.status === "ready" || player.status === "advanced";
+                return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "tr",
+                  {
+                    className: `player-row border-b border-base-300/70 last:border-b-0 ${player.status === "removed" ? "opacity-40" : ""}`,
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-3 py-4", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs text-primary", children: registrationLabel(player.registrationNumber) }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 font-mono text-[10px] text-base-content/40", children: tbilisiTime(player.registeredAt) })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "th",
+                        {
+                          scope: "row",
+                          className: "max-w-64 break-words px-3 py-4 font-display text-sm font-bold",
+                          children: player.name
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-3 py-4", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-xs", children: [
+                          "L",
+                          player.skill
+                        ] }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-[10px] text-base-content/40", children: SKILL_LEVELS[player.skill - 1] })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-3 py-4", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "p",
+                          {
+                            className: `technical-label text-[9px] ${player.status === "champion" ? "text-primary" : player.status === "playing" ? "text-secondary" : "text-base-content/60"}`,
+                            children: player.status
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1 font-mono text-[10px] text-base-content/35", children: [
+                          player.losses,
+                          " ",
+                          player.losses === 1 ? "loss" : "losses"
+                        ] })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-3 py-4 font-mono text-[10px] text-base-content/45", children: [
+                        match ? matchLabel(match) : "—",
+                        " /",
+                        " ",
+                        (match == null ? void 0 : match.table) ? `T${match.table}` : "—",
+                        player.seed !== void 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1", children: [
+                          "Seed ",
+                          player.seed.toString()
+                        ] }) : null
+                      ] }),
+                      isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "button",
+                          {
+                            type: "button",
+                            className: "btn btn-ghost btn-square btn-xs",
+                            "aria-label": `Edit ${player.name}`,
+                            disabled: pending || player.status === "removed",
+                            onClick: () => onEdit(player),
+                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "size-3.5", "aria-hidden": "true" })
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "button",
+                          {
+                            type: "button",
+                            className: "btn btn-ghost btn-square btn-xs",
+                            "aria-label": `Prioritize ${player.name} in queue`,
+                            disabled: pending || !canPrioritize,
+                            onClick: () => onPrioritize(player),
+                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUp, { className: "size-3.5", "aria-hidden": "true" })
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "button",
+                          {
+                            type: "button",
+                            className: "btn btn-ghost btn-xs font-mono text-[9px]",
+                            disabled: pending || !view.generated || !playerMovement(view, player).targets.length,
+                            onClick: () => onMove(player),
+                            children: [
+                              "Move",
+                              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
+                                " ",
+                                player.name
+                              ] })
+                            ]
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "button",
+                          {
+                            type: "button",
+                            className: "btn btn-ghost btn-square btn-xs text-secondary",
+                            "aria-label": `Remove ${player.name}`,
+                            disabled: pending || player.status === "removed",
+                            onClick: () => onRemove(player),
+                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "size-3.5", "aria-hidden": "true" })
+                          }
+                        )
+                      ] }) }) : null
+                    ]
+                  },
+                  player.id.toString()
+                );
+              }) })
+            ]
+          }
+        ) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border border-dashed border-base-300 px-6 py-10 text-center", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-lg font-bold uppercase", children: view.players.length ? "No matching players." : "An open table. An open lineup." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-base-content/45", children: view.players.length ? "Try another name or adjust the skill, status, table or round filters." : "Players added here receive permanent registration numbers and join the queue." })
+        ] })
+      ]
+    }
+  );
+}
+function normalizeSource(source) {
+  switch (source.__kind__) {
+    case "player":
+      return { kind: "player", id: source.player };
+    case "winner":
+      return { kind: "winner", id: source.winner };
+    case "loser":
+      return { kind: "loser", id: source.loser };
+    case "bye":
+      return { kind: "bye" };
+  }
+}
+function normalizeTournamentState(state, tournament) {
+  return {
+    tournament,
+    elimination: state.elimination === TournamentElimination.doubleElimination ? "double" : "single",
+    tableCount: Number(state.tableCount),
+    started: state.started,
+    generated: state.matches.length > 0,
+    complete: state.championId !== void 0,
+    canChangeFormat: !state.matches.some(
+      (match) => match.status === "playing" || match.status === "completed"
+    ),
+    championId: state.championId,
+    canUndo: state.canUndo,
+    undoCount: state.history.length,
+    history: state.history.map((action) => ({
+      id: action.id,
+      label: action.caption,
+      createdAt: action.createdAt
+    })),
+    waitingQueue: state.waitingQueue,
+    nextMatches: state.nextMatches,
+    tables: state.tables.map((table) => ({
+      number: Number(table.number),
+      status: table.status,
+      matchId: table.matchId
+    })),
+    players: state.players.map((player) => ({
+      id: player.id,
+      name: player.name,
+      skill: Number(player.skillLevel),
+      registrationNumber: player.registrationNumber,
+      registeredAt: player.registeredAt,
+      status: player.status,
+      losses: Number(player.losses),
+      seed: player.seed,
+      currentMatchId: player.currentMatchId,
+      table: player.table === void 0 ? void 0 : Number(player.table),
+      manualOverride: state.matches.some(
+        (match) => match.manualOverride && (match.playerA === player.id || match.playerB === player.id)
+      )
+    })),
+    matches: state.matches.map((match) => ({
+      id: match.id,
+      bracket: match.bracket,
+      round: Number(match.round),
+      position: Number(match.position),
+      sourceA: normalizeSource(match.sourceA),
+      sourceB: normalizeSource(match.sourceB),
+      playerAId: match.playerA,
+      playerBId: match.playerB,
+      scoreA: match.scoreA === void 0 ? void 0 : Number(match.scoreA),
+      scoreB: match.scoreB === void 0 ? void 0 : Number(match.scoreB),
+      winnerId: match.winnerId,
+      table: match.table === void 0 ? void 0 : Number(match.table),
+      status: match.status === "blocked" ? "pending" : match.status === "cancelled" ? "void" : match.status,
+      manualOverride: match.manualOverride,
+      prioritized: match.priority !== 0n
+    }))
+  };
+}
+function toCommand(action) {
+  const slot = (value) => value === "a" ? TournamentSlot.a : TournamentSlot.b;
+  switch (action.kind) {
+    case "configure":
+      return {
+        __kind__: "configure",
+        configure: {
+          elimination: action.elimination === "double" ? TournamentElimination.doubleElimination : TournamentElimination.singleElimination,
+          tableCount: BigInt(action.tableCount)
+        }
+      };
+    case "addPlayer":
+      return {
+        __kind__: "addPlayer",
+        addPlayer: { name: action.name, skillLevel: BigInt(action.skill) }
+      };
+    case "editPlayer":
+      return {
+        __kind__: "editPlayer",
+        editPlayer: {
+          playerId: action.playerId,
+          name: action.name,
+          skillLevel: BigInt(action.skill)
+        }
+      };
+    case "removePlayer":
+      return {
+        __kind__: "removePlayer",
+        removePlayer: { playerId: action.playerId, confirmed: true }
+      };
+    case "generateBracket":
+      return { __kind__: "generateBracket", generateBracket: null };
+    case "placePlayer":
+      return {
+        __kind__: "placePlayer",
+        placePlayer: {
+          playerId: action.playerId,
+          matchId: action.matchId,
+          slot: slot(action.slot)
+        }
+      };
+    case "movePlayer":
+      return {
+        __kind__: "movePlayer",
+        movePlayer: {
+          playerId: action.playerId,
+          matchId: action.matchId,
+          slot: slot(action.slot)
+        }
+      };
+    case "swapPlayers":
+      return {
+        __kind__: "swapPlayers",
+        swapPlayers: {
+          firstMatchId: action.firstMatchId,
+          firstSlot: slot(action.firstSlot),
+          secondMatchId: action.secondMatchId,
+          secondSlot: slot(action.secondSlot)
+        }
+      };
+    case "setMatchPlayers":
+      return {
+        __kind__: "setMatchPlayers",
+        setMatchPlayers: {
+          matchId: action.matchId,
+          playerA: action.playerA,
+          playerB: action.playerB
+        }
+      };
+    case "assignBye":
+      return {
+        __kind__: "assignBye",
+        assignBye: { matchId: action.matchId, slot: slot(action.slot) }
+      };
+    case "assignTable":
+      return {
+        __kind__: "assignTable",
+        assignTable: {
+          matchId: action.matchId,
+          table: action.table === void 0 ? void 0 : BigInt(action.table)
+        }
+      };
+    case "startMatch":
+      return { __kind__: "startMatch", startMatch: action.matchId };
+    case "recordResult":
+      return {
+        __kind__: "recordResult",
+        recordResult: {
+          matchId: action.matchId,
+          scoreA: BigInt(action.scoreA),
+          scoreB: BigInt(action.scoreB)
+        }
+      };
+    case "resetMatch":
+      return {
+        __kind__: "resetMatch",
+        resetMatch: { matchId: action.matchId, cascade: action.cascade }
+      };
+    case "prioritizeMatch":
+      return { __kind__: "prioritizeMatch", prioritizeMatch: action.matchId };
+    case "prioritizePlayer":
+      return {
+        __kind__: "prioritizePlayer",
+        prioritizePlayer: action.playerId
+      };
+    case "undo":
+      return { __kind__: "undo", undo: null };
+  }
+}
+class TournamentManagerService {
+  async get(actor, id) {
+    const [state, tournament] = await Promise.all([
+      actor.getTournamentState(id),
+      actor.getTournament(id)
+    ]);
+    return state && tournament ? normalizeTournamentState(state, tournament) : null;
+  }
+  async apply(actor, id, action, tournament) {
+    const state = await actor.applyTournamentCommand(id, toCommand(action));
+    return normalizeTournamentState(state, tournament);
+  }
+}
+const tournamentManagerService = new TournamentManagerService();
 class TournamentService {
   list(actor) {
     return actor.getTournaments();
@@ -43222,6 +45536,1382 @@ class TournamentService {
   }
 }
 const tournamentService = new TournamentService();
+function PlayersPage() {
+  var _a2;
+  const { actor, isFetching } = useActor(createActor);
+  const { isAdmin } = useAuth();
+  const queryClient2 = useQueryClient();
+  const [selected, setSelected] = reactExports.useState("");
+  const [modal, setModal] = reactExports.useState(null);
+  const [notice, setNotice] = reactExports.useState(null);
+  const tournamentsQuery = useQuery({
+    queryKey: ["tournaments"],
+    queryFn: () => {
+      if (!actor) throw new Error("The tournament board is still connecting.");
+      return tournamentService.list(actor);
+    },
+    enabled: !!actor && !isFetching,
+    refetchInterval: 3e4,
+    refetchIntervalInBackground: false
+  });
+  const tournaments = [...tournamentsQuery.data ?? []].sort((a2, b2) => {
+    const order = ["live", "upcoming", "completed", "cancelled"];
+    const difference = order.indexOf(a2.status) - order.indexOf(b2.status);
+    if (difference) return difference;
+    if (a2.startsAt === b2.startsAt)
+      return a2.id < b2.id ? -1 : a2.id > b2.id ? 1 : 0;
+    return a2.status === "upcoming" ? a2.startsAt < b2.startsAt ? -1 : 1 : a2.startsAt > b2.startsAt ? -1 : 1;
+  });
+  const preferredId = ((_a2 = tournaments[0]) == null ? void 0 : _a2.id.toString()) ?? "";
+  const selectionExists = tournaments.some(
+    (tournament2) => tournament2.id.toString() === selected
+  );
+  reactExports.useEffect(() => {
+    if (!selectionExists) {
+      setSelected(preferredId);
+      setModal(null);
+      setNotice(null);
+    }
+  }, [selectionExists, preferredId]);
+  const tournament = tournaments.find(
+    (item) => item.id.toString() === selected
+  );
+  const queryKey = ["tournamentState", selected];
+  const stateQuery = useQuery({
+    queryKey,
+    queryFn: () => {
+      if (!actor || !tournament) throw new Error("Choose a tournament first.");
+      return tournamentManagerService.get(actor, tournament.id);
+    },
+    enabled: !!actor && !isFetching && !!tournament,
+    refetchInterval: 1e4,
+    refetchIntervalInBackground: false
+  });
+  const view = stateQuery.data;
+  const mutation = useMutation({
+    onMutate: async () => {
+      await queryClient2.cancelQueries({ queryKey });
+    },
+    mutationFn: async ({
+      action
+    }) => {
+      if (!actor || !isAdmin || !view || view.tournament.id !== (tournament == null ? void 0 : tournament.id))
+        throw new Error("Admin access and a selected tournament are required.");
+      return tournamentManagerService.apply(
+        actor,
+        view.tournament.id,
+        action,
+        view.tournament
+      );
+    },
+    onSuccess: (updated, variables) => {
+      var _a3, _b2;
+      queryClient2.setQueryData(queryKey, updated);
+      void queryClient2.invalidateQueries({ queryKey });
+      void queryClient2.invalidateQueries({ queryKey: ["tournaments"] });
+      setNotice("Player changes saved to the tournament.");
+      if (variables.action.kind === "addPlayer" && ((_a3 = variables.options) == null ? void 0 : _a3.placeNewPlayer)) {
+        const added = [...updated.players].sort(
+          (a2, b2) => a2.registrationNumber > b2.registrationNumber ? -1 : 1
+        )[0];
+        if (added) setModal({ kind: "move", player: added });
+      } else if (((_b2 = variables.options) == null ? void 0 : _b2.close) !== false) setModal(null);
+    }
+  });
+  function openModal(next) {
+    if (!isAdmin && next.kind !== "match") return;
+    mutation.reset();
+    setModal(next);
+  }
+  function applyAction(action, options) {
+    if (!isAdmin || mutation.isPending) return;
+    setNotice(null);
+    mutation.mutate({ action, options });
+  }
+  const loading = tournamentsQuery.isLoading || isFetching && !tournamentsQuery.data;
+  const error = mutation.isError ? mutation.error instanceof Error ? mutation.error.message : "Couldn't save this change. Try again." : null;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "players_page", className: "club-page", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-8", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: "CHILLPONG / THE LINEUP" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "page-title", children: [
+        "THE ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "PLAYERS." })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-5 max-w-xl text-sm leading-relaxed text-base-content/60", children: "Find your next opponent. Follow the lineup by skill, status, table and round." })
+    ] }),
+    loading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-state", "aria-busy": "true", "aria-live": "polite", children: "Loading players…" }) : tournamentsQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", role: "alert", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TriangleAlert,
+        {
+          className: "mb-4 size-7 text-secondary",
+          "aria-hidden": "true"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: "The lineup is offline." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: "We couldn't load the tournament board." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Button,
+        {
+          className: "mt-6",
+          onClick: () => void tournamentsQuery.refetch(),
+          children: "Try again"
+        }
+      )
+    ] }) : !tournaments.length ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "mb-4 size-8 text-primary", "aria-hidden": "true" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: "The lineup starts with a tournament." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: "Players appear here when they register for a tournament." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/tournaments", className: "btn btn-outline mt-6", children: "Tournament board" })
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-end justify-between gap-4 border-y border-base-300 py-5", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "w-full sm:max-w-xs", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: "Tournament" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "select",
+            {
+              className: "select w-full rounded-none",
+              value: selected,
+              disabled: mutation.isPending,
+              onChange: (event) => {
+                setSelected(event.target.value);
+                setModal(null);
+                setNotice(null);
+                mutation.reset();
+              },
+              children: tournaments.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: item.id.toString(), children: [
+                item.title,
+                " / ",
+                item.status
+              ] }, item.id.toString()))
+            }
+          )
+        ] }),
+        tournament ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "a",
+          {
+            href: `/tournaments/${tournament.id}`,
+            className: "btn btn-outline btn-sm",
+            children: [
+              "Open tournament room",
+              " ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "size-3.5", "aria-hidden": "true" })
+            ]
+          }
+        ) : null
+      ] }),
+      tournament ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-4 text-xs text-base-content/45", children: [
+        tournament.venue,
+        " · Registration order belongs to this tournament."
+      ] }) : null,
+      notice ? /* @__PURE__ */ jsxRuntimeExports.jsxs("output", { className: "mt-6 flex items-center gap-2 border border-primary/25 bg-primary/5 px-4 py-3 text-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-4 text-primary", "aria-hidden": "true" }),
+        notice
+      ] }) : null,
+      stateQuery.isLoading || !tournament ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: "club-state mt-8",
+          "aria-busy": "true",
+          "aria-live": "polite",
+          children: "Loading the selected lineup…"
+        }
+      ) : stateQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state mt-8", role: "alert", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: "Players unavailable." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: "We couldn't load this tournament's players." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            className: "mt-6",
+            onClick: () => void stateQuery.refetch(),
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "size-4", "aria-hidden": "true" }),
+              "Try again"
+            ]
+          }
+        )
+      ] }) : !view ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state mt-8", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "This tournament is no longer available." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            className: "mt-4",
+            onClick: () => void tournamentsQuery.refetch(),
+            children: "Refresh tournaments"
+          }
+        )
+      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          PlayersPanel,
+          {
+            standalone: true,
+            view,
+            isAdmin,
+            pending: mutation.isPending,
+            onAdd: () => openModal({ kind: "player" }),
+            onEdit: (player) => openModal({ kind: "player", player }),
+            onRemove: (player) => openModal({ kind: "remove", player }),
+            onPrioritize: (player) => applyAction({ kind: "prioritizePlayer", playerId: player.id }),
+            onMove: (player) => openModal({ kind: "move", player })
+          },
+          selected
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          OrganizerDialogs,
+          {
+            view,
+            modal,
+            isAdmin,
+            pending: mutation.isPending,
+            error,
+            onClose: () => {
+              if (!mutation.isPending) setModal(null);
+            },
+            onOpen: openModal,
+            onAction: applyAction
+          }
+        )
+      ] }),
+      error && !modal ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "p",
+        {
+          role: "alert",
+          className: "mt-5 border border-error/40 p-4 text-sm text-error",
+          children: error
+        }
+      ) : null
+    ] })
+  ] });
+}
+function MatchCard({
+  match,
+  players,
+  matches,
+  onSelect,
+  compact = false
+}) {
+  const sides = [
+    {
+      id: match.playerAId,
+      source: match.sourceA,
+      score: match.scoreA,
+      slot: "a"
+    },
+    {
+      id: match.playerBId,
+      source: match.sourceB,
+      score: match.scoreB,
+      slot: "b"
+    }
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "button",
+    {
+      type: "button",
+      "data-ocid": `match.card.${match.id}`,
+      className: `match-card group block w-full border bg-base-200 text-left transition-colors hover:border-primary/60 ${match.status === "playing" ? "border-secondary/65" : match.status === "ready" ? "border-primary/45" : "border-base-300"} ${compact ? "h-[148px] p-3" : "p-5"}`,
+      onClick: () => onSelect(match),
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-3 flex items-center justify-between gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-2 text-[9px] text-base-content/45", children: [
+            compact ? matchLabel(match) : `${BRACKET_LABELS[match.bracket]} / R${match.round}`,
+            compact && (match.manualOverride || match.prioritized) ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { title: "Manual override", className: "text-secondary", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Manual override" })
+            ] }) : null
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "span",
+            {
+              className: `technical-label flex items-center gap-1 text-[9px] ${match.status === "playing" ? "text-secondary" : "text-primary"}`,
+              children: match.table ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Table2, { className: "size-3", "aria-hidden": "true" }),
+                " T",
+                match.table,
+                " /",
+                " ",
+                match.status
+              ] }) : match.status === "completed" ? "Final" : match.status === "bye" ? "BYE" : match.status === "void" ? "Voided" : match.status === "ready" ? "Ready" : "Waiting"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: sides.map((side) => {
+          const player = playerById(players, side.id);
+          const winner = side.id !== void 0 && match.winnerId === side.id;
+          return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              className: `flex items-center justify-between gap-3 ${winner ? "text-primary" : player ? "text-base-content" : "text-base-content/35"}`,
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "p",
+                    {
+                      className: `truncate font-display font-bold ${compact ? "text-sm" : "text-lg"}`,
+                      children: (player == null ? void 0 : player.name) ?? sourceLabel(side.source, matches)
+                    }
+                  ),
+                  player ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-0.5 font-mono text-[9px] font-normal text-base-content/45", children: [
+                    "L",
+                    player.skill,
+                    " /",
+                    " ",
+                    registrationLabel(player.registrationNumber)
+                  ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-0.5 font-mono text-[9px] text-base-content/25", children: side.source.kind === "bye" ? "Automatic advance" : "Bracket dependency" })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "span",
+                  {
+                    className: `shrink-0 font-mono ${compact ? "text-lg" : "text-2xl"}`,
+                    children: side.score ?? "—"
+                  }
+                )
+              ]
+            },
+            side.slot
+          );
+        }) }),
+        !compact ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 flex items-center justify-between border-t border-base-300 pt-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label text-[9px] text-base-content/40", children: [
+            matchLabel(match),
+            " / ",
+            match.status
+          ] }),
+          match.manualOverride || match.prioritized ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-1 text-[8px] text-secondary", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
+            " Manual override"
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+            ArrowUpRight,
+            {
+              className: "size-3.5 text-base-content/35 group-hover:text-primary",
+              "aria-hidden": "true"
+            }
+          )
+        ] }) : null
+      ]
+    }
+  );
+}
+const CARD_WIDTH = 248;
+const CARD_HEIGHT = 148;
+const COLUMN_WIDTH = 316;
+const ROW_HEIGHT = 184;
+const LANES = ["winners", "losers", "grandFinal", "resetFinal"];
+function BracketGraph({
+  matches,
+  players,
+  onSelect
+}) {
+  const [zoom, setZoom] = reactExports.useState(1);
+  const viewportRef = reactExports.useRef(null);
+  const layout = reactExports.useMemo(() => {
+    const nodes = [];
+    const headings = [];
+    let top = 28;
+    let columns = 1;
+    for (const lane of LANES) {
+      let depth = function(match, visiting = /* @__PURE__ */ new Set()) {
+        const id = match.id.toString();
+        const saved = depths.get(id);
+        if (saved !== void 0) return saved;
+        if (visiting.has(id)) return rounds.indexOf(match.round);
+        const path = new Set(visiting).add(id);
+        const incoming = [match.sourceA, match.sourceB].flatMap((source) => {
+          if (source.kind !== "winner" && source.kind !== "loser") return [];
+          const parent = laneById.get(source.id.toString());
+          return parent ? [depth(parent, path) + 1] : [];
+        });
+        const result = Math.max(rounds.indexOf(match.round), ...incoming);
+        depths.set(id, result);
+        return result;
+      };
+      const laneMatches = matches.filter((match) => match.bracket === lane);
+      if (!laneMatches.length) continue;
+      const rounds = [...new Set(laneMatches.map((match) => match.round))].sort(
+        (a2, b2) => a2 - b2
+      );
+      const laneById = new Map(
+        laneMatches.map((match) => [match.id.toString(), match])
+      );
+      const depths = /* @__PURE__ */ new Map();
+      const columnNumbers = [
+        ...new Set(laneMatches.map((match) => depth(match)))
+      ].sort((a2, b2) => a2 - b2);
+      const count = Math.max(
+        ...columnNumbers.map(
+          (column) => laneMatches.filter((match) => depth(match) === column).length
+        )
+      );
+      const sectionHeight = Math.max(ROW_HEIGHT, count * ROW_HEIGHT);
+      headings.push({
+        lane,
+        top,
+        columns: columnNumbers.map((column) => {
+          const groupRounds = [
+            ...new Set(
+              laneMatches.filter((match) => depth(match) === column).map((match) => match.round)
+            )
+          ].sort((a2, b2) => a2 - b2);
+          return {
+            index: column,
+            caption: groupRounds.map(
+              (round) => round === 0 ? "Qualifiers / round 0" : `Round ${round}`
+            ).join(" + ")
+          };
+        })
+      });
+      for (const column of columnNumbers) {
+        const roundMatches = laneMatches.filter((match) => depth(match) === column).sort((a2, b2) => a2.position - b2.position);
+        for (const [index2, match] of roundMatches.entries()) {
+          nodes.push({
+            match,
+            x: 28 + column * COLUMN_WIDTH,
+            y: top + 82 + (index2 + 0.5) * sectionHeight / roundMatches.length - CARD_HEIGHT / 2
+          });
+        }
+      }
+      columns = Math.max(columns, Math.max(...columnNumbers) + 1);
+      top += sectionHeight + 148;
+    }
+    return {
+      nodes,
+      headings,
+      width: 56 + columns * COLUMN_WIDTH - (COLUMN_WIDTH - CARD_WIDTH),
+      height: top
+    };
+  }, [matches]);
+  const byId = new Map(
+    layout.nodes.map((node) => [node.match.id.toString(), node])
+  );
+  if (!matches.length) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-2xl font-bold uppercase", children: "No bracket yet." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: "The full tournament tree appears when the organizer generates the bracket." })
+    ] });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-label": "Complete tournament bracket", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex flex-wrap items-center justify-between gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-wider text-base-content/45", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "span",
+            {
+              className: "w-5 border-t border-primary/60",
+              "aria-hidden": "true"
+            }
+          ),
+          " ",
+          "Winner advances"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "span",
+            {
+              className: "w-5 border-t border-dashed border-secondary/60",
+              "aria-hidden": "true"
+            }
+          ),
+          " ",
+          "Loser drops"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Scroll to pan / select any match" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 border border-base-300 p-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            className: "btn btn-ghost btn-square btn-xs",
+            "aria-label": "Zoom bracket out",
+            disabled: zoom <= 0.1,
+            onClick: () => setZoom(
+              (value) => Math.max(0.1, Math.round((value - 0.1) * 10) / 10)
+            ),
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Minus, { className: "size-3.5", "aria-hidden": "true" })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "output",
+          {
+            className: "w-10 text-center font-mono text-[10px]",
+            "aria-label": "Bracket zoom",
+            children: [
+              Math.round(zoom * 100),
+              "%"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            className: "btn btn-ghost btn-square btn-xs",
+            "aria-label": "Zoom bracket in",
+            disabled: zoom >= 1.6,
+            onClick: () => setZoom(
+              (value) => Math.min(1.6, Math.round((value + 0.1) * 10) / 10)
+            ),
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-3.5", "aria-hidden": "true" })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            className: "btn btn-ghost btn-xs font-mono text-[9px]",
+            onClick: () => {
+              const viewport = viewportRef.current;
+              if (!(viewport == null ? void 0 : viewport.clientWidth) || !viewport.clientHeight) return;
+              setZoom(
+                Math.max(
+                  0.05,
+                  Math.min(
+                    1.6,
+                    viewport.clientWidth / layout.width,
+                    viewport.clientHeight / layout.height
+                  )
+                )
+              );
+              viewport.scrollTo({ top: 0, left: 0 });
+            },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Maximize2, { className: "size-3.5", "aria-hidden": "true" }),
+              " Fit bracket"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            className: "btn btn-ghost btn-square btn-xs",
+            "aria-label": "Reset bracket zoom",
+            onClick: () => setZoom(1),
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { className: "size-3.5", "aria-hidden": "true" })
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        ref: viewportRef,
+        "data-ocid": "tournament.bracket",
+        className: "bracket-viewport max-h-[75vh] overflow-auto border border-base-300 bg-base-100",
+        "aria-label": "Scrollable bracket graph",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            style: { width: layout.width * zoom, height: layout.height * zoom },
+            children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: "bracket-canvas relative origin-top-left",
+                style: {
+                  width: layout.width,
+                  height: layout.height,
+                  transform: `scale(${zoom})`
+                },
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "svg",
+                    {
+                      "aria-hidden": "true",
+                      className: "pointer-events-none absolute inset-0",
+                      width: layout.width,
+                      height: layout.height,
+                      children: layout.nodes.flatMap(
+                        (node) => [
+                          { source: node.match.sourceA, slot: "a", offset: 69 },
+                          { source: node.match.sourceB, slot: "b", offset: 111 }
+                        ].map(({ source, slot, offset }) => {
+                          if (source.kind !== "winner" && source.kind !== "loser")
+                            return null;
+                          const parent = byId.get(source.id.toString());
+                          if (!parent) return null;
+                          const fromX = parent.x + CARD_WIDTH;
+                          const fromY = parent.y + CARD_HEIGHT / 2;
+                          const toX = node.x;
+                          const toY = node.y + offset;
+                          const bend = fromX < toX ? (fromX + toX) / 2 : fromX + 30;
+                          const crossLane = parent.match.bracket !== node.match.bracket;
+                          return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "path",
+                            {
+                              d: `M ${fromX} ${fromY} C ${bend} ${fromY}, ${bend} ${toY}, ${toX} ${toY}`,
+                              fill: "none",
+                              stroke: source.kind === "loser" ? "var(--color-secondary)" : "var(--color-primary)",
+                              strokeWidth: 1,
+                              strokeDasharray: source.kind === "loser" ? "4 5" : void 0,
+                              opacity: crossLane ? 0.2 : 0.45
+                            },
+                            `${node.match.id}-${slot}`
+                          );
+                        })
+                      )
+                    }
+                  ),
+                  layout.headings.map((heading) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                      "h3",
+                      {
+                        className: "absolute left-7 font-display text-lg font-bold uppercase tracking-tight",
+                        style: { top: heading.top },
+                        children: [
+                          BRACKET_LABELS[heading.lane],
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-3 font-mono text-[10px] font-normal text-base-content/30", children: heading.lane === "resetFinal" ? "Only if the unbeaten finalist loses" : heading.lane === "losers" ? "Second loss = elimination" : "" })
+                        ]
+                      }
+                    ),
+                    heading.columns.map((column) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "p",
+                      {
+                        className: "technical-label absolute text-[10px] text-base-content/40",
+                        style: {
+                          left: 28 + column.index * COLUMN_WIDTH,
+                          top: heading.top + 39
+                        },
+                        children: heading.lane === "grandFinal" || heading.lane === "resetFinal" ? "Championship" : column.caption
+                      },
+                      column.index
+                    ))
+                  ] }, heading.lane)),
+                  layout.nodes.map((node) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "div",
+                    {
+                      className: "absolute",
+                      style: {
+                        left: node.x,
+                        top: node.y,
+                        width: CARD_WIDTH,
+                        height: CARD_HEIGHT
+                      },
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        MatchCard,
+                        {
+                          match: node.match,
+                          players,
+                          matches,
+                          onSelect,
+                          compact: true
+                        }
+                      )
+                    },
+                    node.match.id.toString()
+                  ))
+                ]
+              }
+            )
+          }
+        )
+      }
+    )
+  ] });
+}
+function StandardView({
+  view,
+  isAdmin,
+  pending,
+  onSelect,
+  onAssign
+}) {
+  const next = view.nextMatches.map((id) => view.matches.find((match) => match.id === id)).filter((match) => !!match).slice(0, 5);
+  const queue = view.waitingQueue.map((id) => playerById(view.players, id)).filter((player) => player !== void 0);
+  const nextUnassigned = next.find((match) => match.table === void 0);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-10", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-labelledby": "floor-title", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex items-center justify-between gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "h2",
+          {
+            id: "floor-title",
+            className: "font-display text-xl font-bold uppercase",
+            children: "On the floor"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label text-[10px] text-base-content/40", children: [
+          view.tableCount,
+          " ",
+          view.tableCount === 1 ? "physical table" : "physical tables"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          "data-ocid": "tournament.tables",
+          className: "table-floor grid gap-4 md:grid-cols-2 2xl:grid-cols-3",
+          children: view.tables.map((table) => {
+            const match = view.matches.find(
+              (item) => item.id === table.matchId
+            );
+            const available = table.status === "available" || table.status === "finished";
+            return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "article",
+              {
+                className: "border border-base-300 bg-base-200/20 p-4",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-4 flex items-center justify-between", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "technical-label flex items-center gap-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Table2,
+                        {
+                          className: "size-4 text-primary",
+                          "aria-hidden": "true"
+                        }
+                      ),
+                      " ",
+                      "Table ",
+                      table.number
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "span",
+                      {
+                        className: `technical-label text-[9px] ${table.status === "playing" ? "text-secondary" : "text-base-content/40"}`,
+                        children: table.status
+                      }
+                    )
+                  ] }),
+                  match ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    MatchCard,
+                    {
+                      match,
+                      players: view.players,
+                      matches: view.matches,
+                      onSelect
+                    }
+                  ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-h-40 flex-col items-center justify-center border border-dashed border-base-300 text-center", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      Table2,
+                      {
+                        className: "mb-3 size-7 text-base-content/20",
+                        "aria-hidden": "true"
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-lg font-bold uppercase", children: "Table is clear." }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-xs text-base-content/40", children: view.generated ? "Ready for the next rally." : "Waiting for the tournament draw." })
+                  ] }),
+                  isAdmin && available && nextUnassigned ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Button,
+                    {
+                      size: "sm",
+                      variant: "outline",
+                      className: "mt-3 w-full",
+                      loading: pending,
+                      onClick: () => onAssign(nextUnassigned.id, table.number),
+                      children: [
+                        "Assign next match",
+                        " ",
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { className: "size-3.5", "aria-hidden": "true" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
+                          " to table ",
+                          table.number
+                        ] })
+                      ]
+                    }
+                  ) : null
+                ]
+              },
+              table.number
+            );
+          })
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-labelledby": "next-title", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex flex-wrap items-center justify-between gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "h2",
+          {
+            id: "next-title",
+            className: "font-display text-xl font-bold uppercase",
+            children: "Next matches"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[9px] text-base-content/40", children: "Skill compatibility → registration order → bracket availability" })
+      ] }),
+      next.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          "data-ocid": "tournament.next_matches",
+          className: "grid gap-4 md:grid-cols-2 xl:grid-cols-3",
+          children: next.map((match, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "p",
+              {
+                className: `technical-label mb-2 text-[10px] ${index2 === 0 ? "text-primary" : "text-base-content/40"}`,
+                children: ["Next", "Following", "Then", "After that", "On deck"][index2]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              MatchCard,
+              {
+                match,
+                players: view.players,
+                matches: view.matches,
+                onSelect
+              }
+            )
+          ] }, match.id.toString()))
+        }
+      ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3 border border-dashed border-base-300 p-6", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Clock3,
+          {
+            className: "mt-0.5 size-5 shrink-0 text-base-content/35",
+            "aria-hidden": "true"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display font-bold uppercase", children: view.complete ? "The night has a winner." : "No decided matches waiting." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-sm text-base-content/45", children: view.complete ? "The complete results are in the full bracket." : view.generated ? "Upcoming pairings appear as their bracket dependencies finish." : "Add players and generate the bracket to decide the first games." })
+        ] })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-labelledby": "queue-title", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex items-center justify-between gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "h2",
+          {
+            id: "queue-title",
+            className: "font-display text-xl font-bold uppercase",
+            children: "Waiting queue / next to play"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label text-[10px] text-base-content/40", children: [
+          queue.length,
+          " waiting"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-4 text-xs leading-relaxed text-base-content/45", children: "Original registration numbers stay fixed between rounds. Manual priority is shown in the organizer history." }),
+      queue.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "ol",
+        {
+          "data-ocid": "tournament.waiting_queue",
+          className: "grid divide-y divide-base-300 border-y border-base-300",
+          children: queue.map((player, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "li",
+            {
+              className: "flex flex-wrap items-center gap-4 py-4",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-5 font-mono text-[10px] text-base-content/25", children: (index2 + 1).toString().padStart(2, "0") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-12 font-mono text-xs text-primary", children: registrationLabel(player.registrationNumber) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "min-w-0 flex-1 break-words font-display font-bold", children: player.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label border border-base-300 px-2 py-1 text-[10px]", children: [
+                  "L",
+                  player.skill
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono text-[10px] text-base-content/40", children: [
+                  "Registered ",
+                  tbilisiTime(player.registeredAt)
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/35", children: player.status })
+              ]
+            },
+            player.id.toString()
+          ))
+        }
+      ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 border border-dashed border-base-300 p-6 text-sm text-base-content/45", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-5", "aria-hidden": "true" }),
+        view.players.length ? "Everyone is playing, advanced or finished." : "The lineup is open. Players join the queue when registered."
+      ] })
+    ] })
+  ] });
+}
+function OrganizerSetup({
+  view,
+  pending,
+  onAction,
+  onOpen
+}) {
+  const [elimination, setElimination] = reactExports.useState(view.elimination);
+  const [tables, setTables] = reactExports.useState(view.tableCount.toString());
+  const [setupOpen, setSetupOpen] = reactExports.useState(view.canChangeFormat);
+  reactExports.useEffect(() => {
+    setElimination(view.elimination);
+    setTables(view.tableCount.toString());
+  }, [view.elimination, view.tableCount]);
+  reactExports.useEffect(() => {
+    setSetupOpen(view.canChangeFormat);
+  }, [view.canChangeFormat]);
+  const count = Number(tables);
+  const valid = Number.isInteger(count) && count >= 1 && count <= 20;
+  const playerCount = view.players.filter(
+    (player) => player.status !== "removed"
+  ).length;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "section",
+    {
+      "data-ocid": "tournament.organizer_setup",
+      className: "manager-toolbar mb-8 border border-primary/25 bg-primary/[0.025] p-4",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "flex flex-wrap items-center justify-between gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "technical-label flex items-center gap-2 text-primary", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3.5", "aria-hidden": "true" }),
+            " Organizer desk"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "span",
+              {
+                "aria-live": "polite",
+                className: "mr-3 font-mono text-[9px] uppercase tracking-wider text-base-content/35",
+                children: pending ? "Saving…" : "Auto-save on"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              Button,
+              {
+                size: "sm",
+                variant: "ghost",
+                "aria-expanded": setupOpen,
+                "aria-controls": "tournament-setup-fields",
+                onClick: () => setSetupOpen((open) => !open),
+                children: [
+                  "Table setup",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    ChevronDown,
+                    {
+                      className: `size-3.5 transition-transform ${setupOpen ? "rotate-180" : ""}`,
+                      "aria-hidden": "true"
+                    }
+                  )
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              Button,
+              {
+                size: "sm",
+                "data-ocid": "tournament.undo_button",
+                variant: "ghost",
+                disabled: pending || !view.canUndo,
+                onClick: () => onOpen({ kind: "undo" }),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Undo2, { className: "size-3.5", "aria-hidden": "true" }),
+                  " Undo last action"
+                ]
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { id: "tournament-setup-fields", className: "mt-5", hidden: !setupOpen, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "form",
+            {
+              className: "flex flex-wrap items-end gap-4",
+              onSubmit: (event) => {
+                event.preventDefault();
+                if (valid)
+                  onAction({
+                    kind: "configure",
+                    elimination: view.canChangeFormat ? elimination : view.elimination,
+                    tableCount: count
+                  });
+              },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "min-w-48 flex-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Elimination format" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "select",
+                    {
+                      "data-ocid": "tournament.elimination_select",
+                      className: "select w-full rounded-none",
+                      value: view.canChangeFormat ? elimination : view.elimination,
+                      disabled: pending || !view.canChangeFormat,
+                      onChange: (event) => setElimination(event.target.value),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "single", children: "Single elimination" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "double", children: "Double elimination" })
+                      ]
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "w-36", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Number of tables" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "input",
+                    {
+                      "data-ocid": "tournament.table_count_input",
+                      type: "number",
+                      className: "input w-full rounded-none font-mono",
+                      min: 1,
+                      max: 20,
+                      step: 1,
+                      required: true,
+                      value: tables,
+                      disabled: pending,
+                      onChange: (event) => setTables(event.target.value)
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "submit", variant: "outline", disabled: pending || !valid, children: "Save setup" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Button,
+                  {
+                    "data-ocid": "tournament.generate_button",
+                    disabled: pending || playerCount < 2 || !view.canChangeFormat,
+                    onClick: () => onOpen({ kind: "generate" }),
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(GitBranch, { className: "size-4", "aria-hidden": "true" }),
+                      view.generated ? "Regenerate bracket" : "Generate bracket"
+                    ]
+                  }
+                )
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 text-xs leading-relaxed text-base-content/40", children: view.canChangeFormat ? "Choose the format and 1–20 physical tables before the first match starts. Player registrations survive changes to the unplayed draw." : "The elimination format is locked after the first match begins. You can still adjust the table count; occupied tables cannot be removed." })
+        ] })
+      ]
+    }
+  );
+}
+function TournamentDetailPage({
+  tournamentId
+}) {
+  const { actor, isFetching } = useActor(createActor);
+  const { isAdmin } = useAuth();
+  const queryClient2 = useQueryClient();
+  const queryKey = ["tournamentState", tournamentId.toString()];
+  const [display, setDisplay] = reactExports.useState("standard");
+  const [modal, setModal] = reactExports.useState(null);
+  const [notice, setNotice] = reactExports.useState(null);
+  const stateQuery = useQuery({
+    queryKey,
+    queryFn: () => {
+      if (!actor) throw new Error("The tournament is still connecting.");
+      return tournamentManagerService.get(actor, tournamentId);
+    },
+    enabled: !!actor && !isFetching,
+    refetchInterval: 1e4,
+    refetchIntervalInBackground: false
+  });
+  const view = stateQuery.data;
+  const actionMutation = useMutation({
+    onMutate: async () => {
+      await queryClient2.cancelQueries({ queryKey });
+    },
+    mutationFn: async ({
+      action
+    }) => {
+      if (!actor || !isAdmin || !view)
+        throw new Error("Admin access is required.");
+      return tournamentManagerService.apply(
+        actor,
+        tournamentId,
+        action,
+        view.tournament
+      );
+    },
+    onSuccess: (updated, variables) => {
+      var _a2, _b2;
+      queryClient2.setQueryData(queryKey, updated);
+      void queryClient2.invalidateQueries({ queryKey });
+      void queryClient2.invalidateQueries({ queryKey: ["tournaments"] });
+      setNotice(
+        "Saved to the tournament. The floor, draw and queue are up to date."
+      );
+      if (variables.action.kind === "addPlayer" && ((_a2 = variables.options) == null ? void 0 : _a2.placeNewPlayer)) {
+        const newPlayer = [...updated.players].sort(
+          (a2, b2) => a2.registrationNumber > b2.registrationNumber ? -1 : 1
+        )[0];
+        if (newPlayer) setModal({ kind: "move", player: newPlayer });
+      } else if (((_b2 = variables.options) == null ? void 0 : _b2.close) !== false) setModal(null);
+    }
+  });
+  function openModal(next) {
+    if (!isAdmin && next.kind !== "match") return;
+    actionMutation.reset();
+    setModal(next);
+  }
+  function applyAction(action, options) {
+    if (!isAdmin || actionMutation.isPending) return;
+    setNotice(null);
+    actionMutation.mutate({ action, options });
+  }
+  const actionError = actionMutation.isError ? actionMutation.error instanceof Error ? actionMutation.error.message : "This action couldn't be saved. Try again." : null;
+  const loading = stateQuery.isLoading || isFetching && !view;
+  if (loading)
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: "club-page",
+        "data-ocid": "tournament.loading_state",
+        "aria-live": "polite",
+        "aria-busy": "true",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-8 h-4 w-52 animate-pulse bg-base-300" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-8 h-20 w-2/3 animate-pulse bg-base-300" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-4 md:grid-cols-2", children: [1, 2].map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "div",
+            {
+              className: "h-60 animate-pulse border border-base-300 bg-base-200"
+            },
+            item
+          )) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Loading the tournament floor and bracket." })
+        ]
+      }
+    );
+  if (stateQuery.isError)
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        "data-ocid": "tournament.error_state",
+        role: "alert",
+        className: "club-state",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            TriangleAlert,
+            {
+              className: "mb-4 size-7 text-secondary",
+              "aria-hidden": "true"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: "The match desk is offline." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: "We couldn't load the tournament state." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { className: "mt-6", onClick: () => void stateQuery.refetch(), children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "size-4", "aria-hidden": "true" }),
+            " Try again"
+          ] })
+        ]
+      }
+    ) });
+  if (!view)
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: "Tournament not found." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/tournaments", className: "btn btn-outline mt-6", children: "Back to tournaments" })
+    ] }) });
+  const champion = playerById(view.players, view.championId);
+  const activePlayers = view.players.filter(
+    (player) => player.status !== "removed"
+  );
+  const overrides = view.matches.some(
+    (match) => match.manualOverride || match.prioritized
+  );
+  const recentActions = [...view.history].sort((a2, b2) => a2.id > b2.id ? -1 : 1).slice(0, 6);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "tournament.detail_page", className: "club-page", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Link,
+      {
+        to: "/tournaments",
+        className: "technical-label mb-8 inline-flex items-center gap-2 text-base-content/45 hover:text-primary",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "size-3.5", "aria-hidden": "true" }),
+          " Tournament board"
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-8", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex flex-wrap items-center gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "section-kicker", children: [
+          "CHILLPONG / CP ",
+          tournamentId.toString().padStart(3, "0")
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "span",
+          {
+            className: `technical-label border px-2 py-1 text-[9px] ${view.complete ? "border-primary/40 text-primary" : !view.canChangeFormat ? "border-secondary/40 text-secondary" : "border-base-300 text-base-content/45"}`,
+            children: view.complete ? "Completed" : !view.canChangeFormat ? "Live" : view.generated ? "Draw ready" : "Registration open"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "break-words font-display text-4xl font-bold uppercase leading-[0.98] tracking-tighter sm:text-5xl lg:text-6xl", children: view.tournament.title }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-5 flex flex-wrap gap-x-6 gap-y-3 text-xs text-base-content/50", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(MapPin, { className: "size-3.5", "aria-hidden": "true" }),
+          view.tournament.venue
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+          new Date(
+            Number(view.tournament.startsAt / 1000000n)
+          ).toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            timeZone: "Asia/Tbilisi"
+          }),
+          " ",
+          "/ ",
+          tbilisiTime(view.tournament.startsAt),
+          " Tbilisi"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(GitBranch, { className: "size-3.5", "aria-hidden": "true" }),
+          view.elimination === "double" ? "Double elimination" : "Single elimination"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+          activePlayers.length,
+          " players"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Table2, { className: "size-3.5", "aria-hidden": "true" }),
+          view.tableCount,
+          " ",
+          view.tableCount === 1 ? "table" : "tables"
+        ] }),
+        overrides ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1.5 text-secondary", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
+          " Manual override"
+        ] }) : null
+      ] })
+    ] }),
+    champion ? /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mb-8 flex items-center gap-5 border border-primary/35 bg-primary/5 p-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Trophy,
+        {
+          className: "size-10 shrink-0 text-primary",
+          "aria-hidden": "true"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mb-2 text-primary", children: "THE FINAL POINT / TOURNAMENT CHAMPION" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "font-display text-3xl font-bold uppercase", children: [
+          champion.name,
+          " wins."
+        ] })
+      ] })
+    ] }) : null,
+    isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      OrganizerSetup,
+      {
+        view,
+        pending: actionMutation.isPending,
+        onAction: applyAction,
+        onOpen: openModal
+      }
+    ) : null,
+    notice ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "output",
+      {
+        "data-ocid": "tournament.saved_state",
+        className: "mb-6 flex items-center gap-2 border border-primary/25 bg-primary/5 px-4 py-3 text-sm",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-4 shrink-0 text-primary", "aria-hidden": "true" }),
+          notice
+        ]
+      }
+    ) : null,
+    actionError && !modal ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "p",
+      {
+        role: "alert",
+        className: "mb-6 border border-error/35 px-4 py-3 text-sm text-error",
+        children: actionError
+      }
+    ) : null,
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-8 flex flex-wrap items-center justify-between gap-4 border-y border-base-300 py-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            "data-ocid": "tournament.standard_tab",
+            "aria-label": "Standard view",
+            "aria-pressed": display === "standard",
+            className: `club-filter ${display === "standard" ? "is-active" : ""}`,
+            onClick: () => setDisplay("standard"),
+            children: [
+              "Standard",
+              " ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 hidden font-normal opacity-50 sm:inline", children: "/ Live floor" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            "data-ocid": "tournament.extended_tab",
+            "aria-label": "Extended view",
+            "aria-pressed": display === "extended",
+            className: `club-filter ${display === "extended" ? "is-active" : ""}`,
+            onClick: () => setDisplay("extended"),
+            children: [
+              "Extended",
+              " ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 hidden font-normal opacity-50 sm:inline", children: "/ Full bracket" })
+            ]
+          }
+        )
+      ] }),
+      isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Button,
+        {
+          size: "sm",
+          variant: "outline",
+          onClick: () => openModal({ kind: "player" }),
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-3.5", "aria-hidden": "true" }),
+            " Add player"
+          ]
+        }
+      ) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/35", children: "Live tournament / public view" })
+    ] }),
+    display === "standard" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      StandardView,
+      {
+        view,
+        isAdmin,
+        pending: actionMutation.isPending,
+        onSelect: (match) => openModal({ kind: "match", matchId: match.id }),
+        onAssign: (matchId, table) => applyAction({ kind: "assignTable", matchId, table })
+      }
+    ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+      BracketGraph,
+      {
+        matches: view.matches,
+        players: view.players,
+        onSelect: (match) => openModal({ kind: "match", matchId: match.id })
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      PlayersPanel,
+      {
+        view,
+        isAdmin,
+        pending: actionMutation.isPending,
+        onAdd: () => openModal({ kind: "player" }),
+        onEdit: (player) => openModal({ kind: "player", player }),
+        onRemove: (player) => openModal({ kind: "remove", player }),
+        onMove: (player) => openModal({ kind: "move", player }),
+        onPrioritize: (player) => applyAction({ kind: "prioritizePlayer", playerId: player.id })
+      }
+    ),
+    view.tournament.description ? /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mt-8 border-t border-base-300 pt-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "technical-label mb-3 text-base-content/45", children: "The night / organizer notes" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-3xl whitespace-pre-wrap break-words text-sm leading-relaxed text-base-content/60", children: view.tournament.description })
+    ] }) : null,
+    isAdmin && recentActions.length ? /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mt-8 border-t border-base-300 pt-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "technical-label mb-4 text-base-content/45", children: "Recent organizer actions" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("ol", { className: "space-y-3", children: recentActions.map((action) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "li",
+        {
+          className: "flex gap-4 font-mono text-[10px] text-base-content/45",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base-content/25", children: tbilisiTime(action.createdAt) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: action.label })
+          ]
+        },
+        action.id.toString()
+      )) })
+    ] }) : null,
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      OrganizerDialogs,
+      {
+        view,
+        modal,
+        isAdmin,
+        pending: actionMutation.isPending,
+        error: actionError,
+        onClose: () => {
+          if (!actionMutation.isPending) setModal(null);
+        },
+        onOpen: openModal,
+        onAction: applyAction
+      }
+    )
+  ] });
+}
 const TOURNAMENTS_QUERY_KEY = ["tournaments"];
 const TBILISI_TIME_ZONE = "Asia/Tbilisi";
 const FILTERS = ["all", "upcoming", "live", "completed"];
@@ -43485,10 +47175,8 @@ function TournamentsPage() {
       return;
     }
     const playerCount = Number(capacity);
-    if (!Number.isInteger(playerCount) || playerCount < 2 || playerCount > 256) {
-      setFormError(
-        "Capacity must be a whole number between 2 and 256 players."
-      );
+    if (!Number.isSafeInteger(playerCount) || playerCount < 2) {
+      setFormError("Expected players must be a whole number of at least 2.");
       return;
     }
     saveMutation.mutate({
@@ -43754,10 +47442,23 @@ function TournamentsPage() {
                       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[11px] text-base-content/65", children: tournament.format === TournamentFormat.doubles ? "Doubles" : "Singles" }),
                       /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-[11px] text-base-content/40", children: [
                         tournament.capacity.toString(),
-                        " players max"
+                        " expected players"
                       ] })
                     ] }),
                     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 sm:flex-col sm:items-end", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        "a",
+                        {
+                          href: `/tournaments/${tournament.id.toString()}`,
+                          className: "btn btn-primary btn-sm",
+                          "aria-label": `Open tournament room for ${tournament.title}`,
+                          children: [
+                            "Open room",
+                            " ",
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "size-4", "aria-hidden": "true" })
+                          ]
+                        }
+                      ),
                       /* @__PURE__ */ jsxRuntimeExports.jsxs(
                         Button,
                         {
@@ -43880,25 +47581,37 @@ function TournamentsPage() {
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("dt", { className: "technical-label mb-2 flex items-center gap-2 text-base-content/45", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "size-3.5", "aria-hidden": "true" }),
-                " Format"
+                " Game mode"
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "text-sm", children: detail.format === TournamentFormat.doubles ? "Doubles / teams of two" : "Singles / one vs. one" })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("dt", { className: "technical-label mb-2 flex items-center gap-2 text-base-content/45", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-3.5", "aria-hidden": "true" }),
-                " Capacity"
+                " Expected players"
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("dd", { className: "text-sm", children: [
                 detail.capacity.toString(),
-                " players maximum"
+                " expected players / registration stays open"
               ] })
             ] })
           ] }),
           detail.description ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "whitespace-pre-wrap break-words text-sm leading-relaxed text-base-content/70", children: detail.description }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-base-content/45", children: "More details will be announced by the crew." }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "mt-8 flex justify-end gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "mt-8 flex flex-wrap justify-end gap-3", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", onClick: () => setDetail(null), children: "Close" }),
-            isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { onClick: () => openEditor(detail), children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "a",
+              {
+                href: `/tournaments/${detail.id.toString()}`,
+                className: "btn btn-primary",
+                children: [
+                  "Open tournament room",
+                  " ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "size-4", "aria-hidden": "true" })
+                ]
+              }
+            ),
+            isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { variant: "outline", onClick: () => openEditor(detail), children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "size-4", "aria-hidden": "true" }),
               " Edit tournament"
             ] }) : null
@@ -44006,7 +47719,7 @@ function TournamentsPage() {
                     )
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Player capacity" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Expected players" }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
                       "input",
                       {
@@ -44015,15 +47728,15 @@ function TournamentsPage() {
                         className: "input w-full rounded-none",
                         required: true,
                         min: 2,
-                        max: 256,
                         step: 1,
                         value: capacity,
                         onChange: (event) => setCapacity(event.target.value)
                       }
-                    )
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-2 block text-xs text-base-content/50", children: "Planning estimate. Registration stays open." })
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Format" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Game mode" }),
                     /* @__PURE__ */ jsxRuntimeExports.jsxs(
                       "select",
                       {
@@ -44245,13 +47958,13 @@ function UsersPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "users_page", className: "club-page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-10 flex flex-wrap items-end justify-between gap-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: "CHILLPONG / THE PEOPLE" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: "CHILLPONG / ADMIN ACCOUNTS" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "page-title", children: [
-          "THE LOCAL",
+          "CLUB",
           /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "LINEUP." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "ACCOUNTS." })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-5 max-w-xl text-sm leading-relaxed text-base-content/60", children: "Familiar faces. New challengers. The people who keep the tables moving." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-5 max-w-xl text-sm leading-relaxed text-base-content/60", children: "Manage member identities and account details. Tournament entrants are listed on the Players page." })
       ] }),
       isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
         Button,
@@ -44625,27 +48338,57 @@ const indexRoute = createRoute({
     throw redirect({ to: "/tournaments" });
   }
 });
+const playersRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/players",
+  component: PlayersPage
+});
 const usersRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/users",
-  component: UsersPage
+  beforeLoad: () => {
+    throw redirect({ to: "/players" });
+  }
 });
 const tournamentsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/tournaments",
   component: TournamentsPage
 });
+const tournamentDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/tournaments/$tournamentId",
+  component: TournamentRoomRoute
+});
+function TournamentRoomRoute() {
+  const { tournamentId } = tournamentDetailRoute.useParams();
+  if (!/^\d+$/.test(tournamentId)) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-page club-state", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: "Tournament not found." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/tournaments", className: "btn btn-primary mt-6", children: "Back to tournaments" })
+    ] });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(TournamentDetailPage, { tournamentId: BigInt(tournamentId) });
+}
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/admin",
   component: () => /* @__PURE__ */ jsxRuntimeExports.jsx(RequireAdmin, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AdminPage, {}) })
 });
+const accountsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/admin/accounts",
+  component: () => /* @__PURE__ */ jsxRuntimeExports.jsx(RequireAdmin, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(UsersPage, {}) })
+});
 const router = createRouter({
   routeTree: rootRoute.addChildren([
     indexRoute,
+    playersRoute,
     usersRoute,
     tournamentsRoute,
-    adminRoute
+    tournamentDetailRoute,
+    adminRoute,
+    accountsRoute
   ]),
   defaultPreload: "intent"
 });

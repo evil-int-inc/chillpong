@@ -41,6 +41,152 @@ export const Error = IDL.Variant({
   }),
 });
 export const Result__1 = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
+export const TournamentSlot = IDL.Variant({ 'a' : IDL.Null, 'b' : IDL.Null });
+export const TournamentElimination = IDL.Variant({
+  'singleElimination' : IDL.Null,
+  'doubleElimination' : IDL.Null,
+});
+export const TournamentCommand = IDL.Variant({
+  'prioritizeMatch' : IDL.Nat,
+  'startMatch' : IDL.Nat,
+  'setMatchPlayers' : IDL.Record({
+    'matchId' : IDL.Nat,
+    'playerA' : IDL.Opt(IDL.Nat),
+    'playerB' : IDL.Opt(IDL.Nat),
+  }),
+  'undo' : IDL.Null,
+  'placePlayer' : IDL.Record({
+    'playerId' : IDL.Nat,
+    'slot' : TournamentSlot,
+    'matchId' : IDL.Nat,
+  }),
+  'prioritizePlayer' : IDL.Nat,
+  'generateBracket' : IDL.Null,
+  'movePlayer' : IDL.Record({
+    'playerId' : IDL.Nat,
+    'slot' : TournamentSlot,
+    'matchId' : IDL.Nat,
+  }),
+  'swapPlayers' : IDL.Record({
+    'firstSlot' : TournamentSlot,
+    'secondSlot' : TournamentSlot,
+    'firstMatchId' : IDL.Nat,
+    'secondMatchId' : IDL.Nat,
+  }),
+  'removePlayer' : IDL.Record({ 'playerId' : IDL.Nat, 'confirmed' : IDL.Bool }),
+  'configure' : IDL.Record({
+    'elimination' : TournamentElimination,
+    'tableCount' : IDL.Nat,
+  }),
+  'assignTable' : IDL.Record({
+    'table' : IDL.Opt(IDL.Nat),
+    'matchId' : IDL.Nat,
+  }),
+  'assignBye' : IDL.Record({ 'slot' : TournamentSlot, 'matchId' : IDL.Nat }),
+  'recordResult' : IDL.Record({
+    'scoreA' : IDL.Nat,
+    'scoreB' : IDL.Nat,
+    'matchId' : IDL.Nat,
+  }),
+  'resetMatch' : IDL.Record({ 'cascade' : IDL.Bool, 'matchId' : IDL.Nat }),
+  'addPlayer' : IDL.Record({ 'name' : IDL.Text, 'skillLevel' : IDL.Nat }),
+  'editPlayer' : IDL.Record({
+    'playerId' : IDL.Nat,
+    'name' : IDL.Text,
+    'skillLevel' : IDL.Nat,
+  }),
+});
+export const Timestamp = IDL.Int;
+export const TournamentAction = IDL.Record({
+  'id' : IDL.Nat,
+  'createdAt' : Timestamp,
+  'caption' : IDL.Text,
+});
+export const TournamentTableStatus = IDL.Variant({
+  'available' : IDL.Null,
+  'playing' : IDL.Null,
+  'finished' : IDL.Null,
+  'waiting' : IDL.Null,
+});
+export const TournamentTable = IDL.Record({
+  'status' : TournamentTableStatus,
+  'matchId' : IDL.Opt(IDL.Nat),
+  'number' : IDL.Nat,
+});
+export const TournamentMatchStatus = IDL.Variant({
+  'bye' : IDL.Null,
+  'cancelled' : IDL.Null,
+  'blocked' : IDL.Null,
+  'completed' : IDL.Null,
+  'playing' : IDL.Null,
+  'ready' : IDL.Null,
+});
+export const TournamentBracket = IDL.Variant({
+  'losers' : IDL.Null,
+  'grandFinal' : IDL.Null,
+  'resetFinal' : IDL.Null,
+  'winners' : IDL.Null,
+});
+export const MatchSource = IDL.Variant({
+  'bye' : IDL.Null,
+  'player' : IDL.Nat,
+  'winner' : IDL.Nat,
+  'loser' : IDL.Nat,
+});
+export const TournamentMatch = IDL.Record({
+  'id' : IDL.Nat,
+  'status' : TournamentMatchStatus,
+  'table' : IDL.Opt(IDL.Nat),
+  'winnerId' : IDL.Opt(IDL.Nat),
+  'scoreA' : IDL.Opt(IDL.Nat),
+  'scoreB' : IDL.Opt(IDL.Nat),
+  'loserId' : IDL.Opt(IDL.Nat),
+  'manualOverride' : IDL.Bool,
+  'playerA' : IDL.Opt(IDL.Nat),
+  'playerB' : IDL.Opt(IDL.Nat),
+  'bracket' : TournamentBracket,
+  'sourceA' : MatchSource,
+  'sourceB' : MatchSource,
+  'priority' : IDL.Int,
+  'position' : IDL.Nat,
+  'round' : IDL.Nat,
+});
+export const TournamentPlayerStatus = IDL.Variant({
+  'advanced' : IDL.Null,
+  'playing' : IDL.Null,
+  'eliminated' : IDL.Null,
+  'champion' : IDL.Null,
+  'waiting' : IDL.Null,
+  'ready' : IDL.Null,
+  'removed' : IDL.Null,
+});
+export const TournamentPlayer = IDL.Record({
+  'id' : IDL.Nat,
+  'status' : TournamentPlayerStatus,
+  'table' : IDL.Opt(IDL.Nat),
+  'name' : IDL.Text,
+  'seed' : IDL.Opt(IDL.Nat),
+  'losses' : IDL.Nat,
+  'registrationNumber' : IDL.Nat,
+  'currentMatchId' : IDL.Opt(IDL.Nat),
+  'skillLevel' : IDL.Nat,
+  'registeredAt' : Timestamp,
+});
+export const TournamentState = IDL.Record({
+  'elimination' : TournamentElimination,
+  'started' : IDL.Bool,
+  'waitingQueue' : IDL.Vec(IDL.Nat),
+  'nextMatches' : IDL.Vec(IDL.Nat),
+  'history' : IDL.Vec(TournamentAction),
+  'canUndo' : IDL.Bool,
+  'tables' : IDL.Vec(TournamentTable),
+  'updatedAt' : Timestamp,
+  'matches' : IDL.Vec(TournamentMatch),
+  'players' : IDL.Vec(TournamentPlayer),
+  'tableCount' : IDL.Nat,
+  'tournamentId' : IDL.Nat,
+  'championId' : IDL.Opt(IDL.Nat),
+});
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
@@ -51,7 +197,6 @@ export const TournamentStatus = IDL.Variant({
   'live' : IDL.Null,
   'completed' : IDL.Null,
 });
-export const Timestamp = IDL.Int;
 export const TournamentFormat = IDL.Variant({
   'doubles' : IDL.Null,
   'singles' : IDL.Null,
@@ -144,6 +289,11 @@ export const idlService = IDL.Service({
   '_initialize_access_control' : IDL.Func([], [], []),
   '_internet_identity_sign_in_finish' : IDL.Func([], [Result__1], []),
   '_internet_identity_sign_in_start' : IDL.Func([], [IDL.Vec(IDL.Nat8)], []),
+  'applyTournamentCommand' : IDL.Func(
+      [IDL.Nat, TournamentCommand],
+      [TournamentState],
+      [],
+    ),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'bootstrapOwner' : IDL.Func([], [], []),
   'createTournament' : IDL.Func([TournamentInput], [Tournament], []),
@@ -154,6 +304,11 @@ export const idlService = IDL.Service({
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getMyRole' : IDL.Func([], [IDL.Opt(Role)], ['query']),
   'getTournament' : IDL.Func([IDL.Nat], [IDL.Opt(Tournament)], ['query']),
+  'getTournamentState' : IDL.Func(
+      [IDL.Nat],
+      [IDL.Opt(TournamentState)],
+      ['query'],
+    ),
   'getTournaments' : IDL.Func([], [IDL.Vec(Tournament)], ['query']),
   'getUser' : IDL.Func([UserId], [IDL.Opt(User)], ['query']),
   'getUserByUsername' : IDL.Func([IDL.Text], [IDL.Opt(User)], ['query']),
@@ -203,6 +358,155 @@ export const idlFactory = ({ IDL }) => {
     }),
   });
   const Result__1 = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
+  const TournamentSlot = IDL.Variant({ 'a' : IDL.Null, 'b' : IDL.Null });
+  const TournamentElimination = IDL.Variant({
+    'singleElimination' : IDL.Null,
+    'doubleElimination' : IDL.Null,
+  });
+  const TournamentCommand = IDL.Variant({
+    'prioritizeMatch' : IDL.Nat,
+    'startMatch' : IDL.Nat,
+    'setMatchPlayers' : IDL.Record({
+      'matchId' : IDL.Nat,
+      'playerA' : IDL.Opt(IDL.Nat),
+      'playerB' : IDL.Opt(IDL.Nat),
+    }),
+    'undo' : IDL.Null,
+    'placePlayer' : IDL.Record({
+      'playerId' : IDL.Nat,
+      'slot' : TournamentSlot,
+      'matchId' : IDL.Nat,
+    }),
+    'prioritizePlayer' : IDL.Nat,
+    'generateBracket' : IDL.Null,
+    'movePlayer' : IDL.Record({
+      'playerId' : IDL.Nat,
+      'slot' : TournamentSlot,
+      'matchId' : IDL.Nat,
+    }),
+    'swapPlayers' : IDL.Record({
+      'firstSlot' : TournamentSlot,
+      'secondSlot' : TournamentSlot,
+      'firstMatchId' : IDL.Nat,
+      'secondMatchId' : IDL.Nat,
+    }),
+    'removePlayer' : IDL.Record({
+      'playerId' : IDL.Nat,
+      'confirmed' : IDL.Bool,
+    }),
+    'configure' : IDL.Record({
+      'elimination' : TournamentElimination,
+      'tableCount' : IDL.Nat,
+    }),
+    'assignTable' : IDL.Record({
+      'table' : IDL.Opt(IDL.Nat),
+      'matchId' : IDL.Nat,
+    }),
+    'assignBye' : IDL.Record({ 'slot' : TournamentSlot, 'matchId' : IDL.Nat }),
+    'recordResult' : IDL.Record({
+      'scoreA' : IDL.Nat,
+      'scoreB' : IDL.Nat,
+      'matchId' : IDL.Nat,
+    }),
+    'resetMatch' : IDL.Record({ 'cascade' : IDL.Bool, 'matchId' : IDL.Nat }),
+    'addPlayer' : IDL.Record({ 'name' : IDL.Text, 'skillLevel' : IDL.Nat }),
+    'editPlayer' : IDL.Record({
+      'playerId' : IDL.Nat,
+      'name' : IDL.Text,
+      'skillLevel' : IDL.Nat,
+    }),
+  });
+  const Timestamp = IDL.Int;
+  const TournamentAction = IDL.Record({
+    'id' : IDL.Nat,
+    'createdAt' : Timestamp,
+    'caption' : IDL.Text,
+  });
+  const TournamentTableStatus = IDL.Variant({
+    'available' : IDL.Null,
+    'playing' : IDL.Null,
+    'finished' : IDL.Null,
+    'waiting' : IDL.Null,
+  });
+  const TournamentTable = IDL.Record({
+    'status' : TournamentTableStatus,
+    'matchId' : IDL.Opt(IDL.Nat),
+    'number' : IDL.Nat,
+  });
+  const TournamentMatchStatus = IDL.Variant({
+    'bye' : IDL.Null,
+    'cancelled' : IDL.Null,
+    'blocked' : IDL.Null,
+    'completed' : IDL.Null,
+    'playing' : IDL.Null,
+    'ready' : IDL.Null,
+  });
+  const TournamentBracket = IDL.Variant({
+    'losers' : IDL.Null,
+    'grandFinal' : IDL.Null,
+    'resetFinal' : IDL.Null,
+    'winners' : IDL.Null,
+  });
+  const MatchSource = IDL.Variant({
+    'bye' : IDL.Null,
+    'player' : IDL.Nat,
+    'winner' : IDL.Nat,
+    'loser' : IDL.Nat,
+  });
+  const TournamentMatch = IDL.Record({
+    'id' : IDL.Nat,
+    'status' : TournamentMatchStatus,
+    'table' : IDL.Opt(IDL.Nat),
+    'winnerId' : IDL.Opt(IDL.Nat),
+    'scoreA' : IDL.Opt(IDL.Nat),
+    'scoreB' : IDL.Opt(IDL.Nat),
+    'loserId' : IDL.Opt(IDL.Nat),
+    'manualOverride' : IDL.Bool,
+    'playerA' : IDL.Opt(IDL.Nat),
+    'playerB' : IDL.Opt(IDL.Nat),
+    'bracket' : TournamentBracket,
+    'sourceA' : MatchSource,
+    'sourceB' : MatchSource,
+    'priority' : IDL.Int,
+    'position' : IDL.Nat,
+    'round' : IDL.Nat,
+  });
+  const TournamentPlayerStatus = IDL.Variant({
+    'advanced' : IDL.Null,
+    'playing' : IDL.Null,
+    'eliminated' : IDL.Null,
+    'champion' : IDL.Null,
+    'waiting' : IDL.Null,
+    'ready' : IDL.Null,
+    'removed' : IDL.Null,
+  });
+  const TournamentPlayer = IDL.Record({
+    'id' : IDL.Nat,
+    'status' : TournamentPlayerStatus,
+    'table' : IDL.Opt(IDL.Nat),
+    'name' : IDL.Text,
+    'seed' : IDL.Opt(IDL.Nat),
+    'losses' : IDL.Nat,
+    'registrationNumber' : IDL.Nat,
+    'currentMatchId' : IDL.Opt(IDL.Nat),
+    'skillLevel' : IDL.Nat,
+    'registeredAt' : Timestamp,
+  });
+  const TournamentState = IDL.Record({
+    'elimination' : TournamentElimination,
+    'started' : IDL.Bool,
+    'waitingQueue' : IDL.Vec(IDL.Nat),
+    'nextMatches' : IDL.Vec(IDL.Nat),
+    'history' : IDL.Vec(TournamentAction),
+    'canUndo' : IDL.Bool,
+    'tables' : IDL.Vec(TournamentTable),
+    'updatedAt' : Timestamp,
+    'matches' : IDL.Vec(TournamentMatch),
+    'players' : IDL.Vec(TournamentPlayer),
+    'tableCount' : IDL.Nat,
+    'tournamentId' : IDL.Nat,
+    'championId' : IDL.Opt(IDL.Nat),
+  });
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
@@ -213,7 +517,6 @@ export const idlFactory = ({ IDL }) => {
     'live' : IDL.Null,
     'completed' : IDL.Null,
   });
-  const Timestamp = IDL.Int;
   const TournamentFormat = IDL.Variant({
     'doubles' : IDL.Null,
     'singles' : IDL.Null,
@@ -306,6 +609,11 @@ export const idlFactory = ({ IDL }) => {
     '_initialize_access_control' : IDL.Func([], [], []),
     '_internet_identity_sign_in_finish' : IDL.Func([], [Result__1], []),
     '_internet_identity_sign_in_start' : IDL.Func([], [IDL.Vec(IDL.Nat8)], []),
+    'applyTournamentCommand' : IDL.Func(
+        [IDL.Nat, TournamentCommand],
+        [TournamentState],
+        [],
+      ),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'bootstrapOwner' : IDL.Func([], [], []),
     'createTournament' : IDL.Func([TournamentInput], [Tournament], []),
@@ -316,6 +624,11 @@ export const idlFactory = ({ IDL }) => {
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getMyRole' : IDL.Func([], [IDL.Opt(Role)], ['query']),
     'getTournament' : IDL.Func([IDL.Nat], [IDL.Opt(Tournament)], ['query']),
+    'getTournamentState' : IDL.Func(
+        [IDL.Nat],
+        [IDL.Opt(TournamentState)],
+        ['query'],
+      ),
     'getTournaments' : IDL.Func([], [IDL.Vec(Tournament)], ['query']),
     'getUser' : IDL.Func([UserId], [IDL.Opt(User)], ['query']),
     'getUserByUsername' : IDL.Func([IDL.Text], [IDL.Opt(User)], ['query']),

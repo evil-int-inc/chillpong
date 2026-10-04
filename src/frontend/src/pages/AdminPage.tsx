@@ -144,13 +144,18 @@ export function AdminPage() {
               access below.
             </p>
           </div>
-          <span
-            data-ocid="admin_count"
-            className="inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-sm text-muted-foreground"
-          >
-            <ShieldCheck className="size-4" aria-hidden="true" />
-            {adminCount} {adminCount === 1 ? "admin" : "admins"}
-          </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <a href="/admin/accounts" className="btn btn-outline btn-sm">
+              Manage accounts
+            </a>
+            <span
+              data-ocid="admin_count"
+              className="inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-sm text-muted-foreground"
+            >
+              <ShieldCheck className="size-4" aria-hidden="true" />
+              {adminCount} {adminCount === 1 ? "admin" : "admins"}
+            </span>
+          </div>
         </header>
 
         {notice ? (
@@ -188,7 +193,7 @@ export function AdminPage() {
           <EmptyState
             icon={<Users className="size-7" aria-hidden="true" />}
             title="No users yet"
-            description="Add users from the Users page to manage their access here."
+            description="Add members through Manage accounts to manage their access here."
           />
         ) : (
           <ul

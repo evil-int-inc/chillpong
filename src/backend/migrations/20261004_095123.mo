@@ -125,11 +125,101 @@ module {
     updatedAt : Timestamp;
   };
 
+  type TournamentElimination = { #singleElimination; #doubleElimination };
+  type TournamentSlot = { #a; #b };
+  type TournamentBracket = { #winners; #losers; #grandFinal; #resetFinal };
+  type MatchSource = { #player : Nat; #winner : Nat; #loser : Nat; #bye };
+  type TournamentMatchStatus = { #blocked; #ready; #playing; #completed; #bye; #cancelled };
+  type TournamentPlayerStatus = { #waiting; #ready; #playing; #advanced; #eliminated; #champion; #removed };
+  type TournamentTableStatus = { #available; #waiting; #playing; #finished };
+
+  type TournamentPlayerData = {
+    id : Nat;
+    name : Text;
+    skillLevel : Nat;
+    registrationNumber : Nat;
+    registeredAt : Timestamp;
+    removed : Bool;
+    queuePriority : Int;
+  };
+
+  type TournamentPlayer = {
+    id : Nat;
+    name : Text;
+    skillLevel : Nat;
+    registrationNumber : Nat;
+    registeredAt : Timestamp;
+    seed : ?Nat;
+    status : TournamentPlayerStatus;
+    currentMatchId : ?Nat;
+    table : ?Nat;
+    losses : Nat;
+  };
+
+  type TournamentMatch = {
+    id : Nat;
+    bracket : TournamentBracket;
+    round : Nat;
+    position : Nat;
+    sourceA : MatchSource;
+    sourceB : MatchSource;
+    playerA : ?Nat;
+    playerB : ?Nat;
+    scoreA : ?Nat;
+    scoreB : ?Nat;
+    winnerId : ?Nat;
+    loserId : ?Nat;
+    status : TournamentMatchStatus;
+    table : ?Nat;
+    priority : Int;
+    manualOverride : Bool;
+  };
+
+  type TournamentTable = {
+    number : Nat;
+    status : TournamentTableStatus;
+    matchId : ?Nat;
+  };
+
+  type TournamentAction = {
+    id : Nat;
+    caption : Text;
+    createdAt : Timestamp;
+  };
+
+  type TournamentSnapshot = {
+    elimination : TournamentElimination;
+    tableCount : Nat;
+    started : Bool;
+    players : [TournamentPlayerData];
+    matches : [TournamentMatch];
+  };
+
+  type TournamentHistoryEntry = {
+    action : TournamentAction;
+    snapshot : TournamentSnapshot;
+  };
+
+  type TournamentStateData = {
+    elimination : TournamentElimination;
+    tableCount : Nat;
+    started : Bool;
+    players : [TournamentPlayerData];
+    matches : [TournamentMatch];
+    history : [TournamentHistoryEntry];
+    nextRegistrationNumber : Nat;
+    nextMatchId : Nat;
+    nextActionId : Nat;
+    updatedAt : Timestamp;
+  };
+
+
   type NewActor = {
     accessControlState : AccessControl.AccessControlState;
     users : Map.Map<UserId, User>;
     usernames : Map.Map<Text, UserId>;
     tournaments : Map.Map<Nat, Tournament>;
+    tournamentStates : Map.Map<Nat, TournamentStateData>;
     counters : Counters;
     owner : OwnerState;
   };
@@ -142,6 +232,7 @@ module {
       users = old.users;
       usernames = old.usernames;
       tournaments = Map.empty();
+      tournamentStates = Map.empty();
       counters = { var nextTournamentId = 0 };
       owner = old.owner;
     };

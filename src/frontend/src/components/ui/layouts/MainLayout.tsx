@@ -6,7 +6,7 @@ import { useState } from "react";
 export function MainLayout() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   return (
-    <div className="drawer min-h-svh lg:drawer-open">
+    <div className="drawer min-h-svh overflow-x-clip lg:drawer-open">
       <input
         id="sidebar-drawer"
         type="checkbox"

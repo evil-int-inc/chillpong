@@ -27,6 +27,10 @@ export type Error = { 'FrontendOriginsNotConfigured' : null } |
   { 'MissingField' : string } |
   { 'FrontendOriginMismatch' : { 'got' : string, 'expected' : Array<string> } };
 export type ExternalBlob = Uint8Array;
+export type MatchSource = { 'bye' : null } |
+  { 'player' : bigint } |
+  { 'winner' : bigint } |
+  { 'loser' : bigint };
 export interface Result { 'hasMore' : boolean, 'rows' : Array<Array<Cell>> }
 export type Result__1 = { 'ok' : null } |
   { 'err' : Error };
@@ -44,6 +48,76 @@ export interface Tournament {
   'capacity' : bigint,
   'format' : TournamentFormat,
 }
+export interface TournamentAction {
+  'id' : bigint,
+  'createdAt' : Timestamp,
+  'caption' : string,
+}
+export type TournamentBracket = { 'losers' : null } |
+  { 'grandFinal' : null } |
+  { 'resetFinal' : null } |
+  { 'winners' : null };
+export type TournamentCommand = { 'prioritizeMatch' : bigint } |
+  { 'startMatch' : bigint } |
+  {
+    'setMatchPlayers' : {
+      'matchId' : bigint,
+      'playerA' : [] | [bigint],
+      'playerB' : [] | [bigint],
+    }
+  } |
+  { 'undo' : null } |
+  {
+    'placePlayer' : {
+      'playerId' : bigint,
+      'slot' : TournamentSlot,
+      'matchId' : bigint,
+    }
+  } |
+  { 'prioritizePlayer' : bigint } |
+  { 'generateBracket' : null } |
+  {
+    'movePlayer' : {
+      'playerId' : bigint,
+      'slot' : TournamentSlot,
+      'matchId' : bigint,
+    }
+  } |
+  {
+    'swapPlayers' : {
+      'firstSlot' : TournamentSlot,
+      'secondSlot' : TournamentSlot,
+      'firstMatchId' : bigint,
+      'secondMatchId' : bigint,
+    }
+  } |
+  { 'removePlayer' : { 'playerId' : bigint, 'confirmed' : boolean } } |
+  {
+    'configure' : {
+      'elimination' : TournamentElimination,
+      'tableCount' : bigint,
+    }
+  } |
+  { 'assignTable' : { 'table' : [] | [bigint], 'matchId' : bigint } } |
+  { 'assignBye' : { 'slot' : TournamentSlot, 'matchId' : bigint } } |
+  {
+    'recordResult' : {
+      'scoreA' : bigint,
+      'scoreB' : bigint,
+      'matchId' : bigint,
+    }
+  } |
+  { 'resetMatch' : { 'cascade' : boolean, 'matchId' : bigint } } |
+  { 'addPlayer' : { 'name' : string, 'skillLevel' : bigint } } |
+  {
+    'editPlayer' : {
+      'playerId' : bigint,
+      'name' : string,
+      'skillLevel' : bigint,
+    }
+  };
+export type TournamentElimination = { 'singleElimination' : null } |
+  { 'doubleElimination' : null };
 export type TournamentFormat = { 'doubles' : null } |
   { 'singles' : null };
 export interface TournamentInput {
@@ -55,9 +129,78 @@ export interface TournamentInput {
   'capacity' : bigint,
   'format' : TournamentFormat,
 }
+export interface TournamentMatch {
+  'id' : bigint,
+  'status' : TournamentMatchStatus,
+  'table' : [] | [bigint],
+  'winnerId' : [] | [bigint],
+  'scoreA' : [] | [bigint],
+  'scoreB' : [] | [bigint],
+  'loserId' : [] | [bigint],
+  'manualOverride' : boolean,
+  'playerA' : [] | [bigint],
+  'playerB' : [] | [bigint],
+  'bracket' : TournamentBracket,
+  'sourceA' : MatchSource,
+  'sourceB' : MatchSource,
+  'priority' : bigint,
+  'position' : bigint,
+  'round' : bigint,
+}
+export type TournamentMatchStatus = { 'bye' : null } |
+  { 'cancelled' : null } |
+  { 'blocked' : null } |
+  { 'completed' : null } |
+  { 'playing' : null } |
+  { 'ready' : null };
+export interface TournamentPlayer {
+  'id' : bigint,
+  'status' : TournamentPlayerStatus,
+  'table' : [] | [bigint],
+  'name' : string,
+  'seed' : [] | [bigint],
+  'losses' : bigint,
+  'registrationNumber' : bigint,
+  'currentMatchId' : [] | [bigint],
+  'skillLevel' : bigint,
+  'registeredAt' : Timestamp,
+}
+export type TournamentPlayerStatus = { 'advanced' : null } |
+  { 'playing' : null } |
+  { 'eliminated' : null } |
+  { 'champion' : null } |
+  { 'waiting' : null } |
+  { 'ready' : null } |
+  { 'removed' : null };
+export type TournamentSlot = { 'a' : null } |
+  { 'b' : null };
+export interface TournamentState {
+  'elimination' : TournamentElimination,
+  'started' : boolean,
+  'waitingQueue' : Array<bigint>,
+  'nextMatches' : Array<bigint>,
+  'history' : Array<TournamentAction>,
+  'canUndo' : boolean,
+  'tables' : Array<TournamentTable>,
+  'updatedAt' : Timestamp,
+  'matches' : Array<TournamentMatch>,
+  'players' : Array<TournamentPlayer>,
+  'tableCount' : bigint,
+  'tournamentId' : bigint,
+  'championId' : [] | [bigint],
+}
 export type TournamentStatus = { 'upcoming' : null } |
   { 'live' : null } |
   { 'completed' : null };
+export interface TournamentTable {
+  'status' : TournamentTableStatus,
+  'matchId' : [] | [bigint],
+  'number' : bigint,
+}
+export type TournamentTableStatus = { 'available' : null } |
+  { 'playing' : null } |
+  { 'finished' : null } |
+  { 'waiting' : null };
 export interface User {
   'id' : UserId,
   'bio' : [] | [string],
@@ -121,6 +264,10 @@ export interface _SERVICE {
   '_initialize_access_control' : ActorMethod<[], undefined>,
   '_internet_identity_sign_in_finish' : ActorMethod<[], Result__1>,
   '_internet_identity_sign_in_start' : ActorMethod<[], Uint8Array>,
+  'applyTournamentCommand' : ActorMethod<
+    [bigint, TournamentCommand],
+    TournamentState
+  >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'bootstrapOwner' : ActorMethod<[], undefined>,
   'createTournament' : ActorMethod<[TournamentInput], Tournament>,
@@ -131,6 +278,7 @@ export interface _SERVICE {
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getMyRole' : ActorMethod<[], [] | [Role]>,
   'getTournament' : ActorMethod<[bigint], [] | [Tournament]>,
+  'getTournamentState' : ActorMethod<[bigint], [] | [TournamentState]>,
   'getTournaments' : ActorMethod<[], Array<Tournament>>,
   'getUser' : ActorMethod<[UserId], [] | [User]>,
   'getUserByUsername' : ActorMethod<[string], [] | [User]>,

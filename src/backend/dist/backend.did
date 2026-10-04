@@ -1,4 +1,4 @@
-type _ImmutableObjectStorageRefillResult =
+type _ImmutableObjectStorageRefillResult = 
  record {
    success: opt bool;
    topped_up_amount: opt nat;
@@ -6,12 +6,12 @@ type _ImmutableObjectStorageRefillResult =
 type _ImmutableObjectStorageRefillInformation = record {
                                                   proposed_top_up_amount:
                                                    opt nat;};
-type _ImmutableObjectStorageCreateCertificateResult =
+type _ImmutableObjectStorageCreateCertificateResult = 
  record {
    blob_hash: text;
    method: text;
  };
-type Value =
+type Value = 
  variant {
    "bool": bool;
    float: float64;
@@ -20,27 +20,27 @@ type Value =
    "null";
    "text": text;
  };
-type UserRoleView =
+type UserRoleView = 
  record {
    displayName: text;
    id: UserId;
    role: opt Role;
    username: text;
  };
-type UserRole =
+type UserRole = 
  variant {
    admin;
    guest;
    user;
  };
-type UserInput =
+type UserInput = 
  record {
    bio: opt text;
    displayName: text;
    username: text;
  };
 type UserId = principal;
-type User =
+type User = 
  record {
    avatar: opt ExternalBlob;
    bio: opt text;
@@ -50,13 +50,98 @@ type User =
    role: opt Role;
    username: text;
  };
-type TournamentStatus =
+type TournamentTableStatus = 
+ variant {
+   available;
+   finished;
+   playing;
+   waiting;
+ };
+type TournamentTable = 
+ record {
+   matchId: opt nat;
+   number: nat;
+   status: TournamentTableStatus;
+ };
+type TournamentStatus = 
  variant {
    completed;
    live;
    upcoming;
  };
-type TournamentInput =
+type TournamentState = 
+ record {
+   canUndo: bool;
+   championId: opt nat;
+   elimination: TournamentElimination;
+   history: vec TournamentAction;
+   matches: vec TournamentMatch;
+   nextMatches: vec nat;
+   players: vec TournamentPlayer;
+   started: bool;
+   tableCount: nat;
+   tables: vec TournamentTable;
+   tournamentId: nat;
+   updatedAt: Timestamp;
+   waitingQueue: vec nat;
+ };
+type TournamentSlot = 
+ variant {
+   a;
+   b;
+ };
+type TournamentPlayerStatus = 
+ variant {
+   advanced;
+   champion;
+   eliminated;
+   playing;
+   ready;
+   removed;
+   waiting;
+ };
+type TournamentPlayer = 
+ record {
+   currentMatchId: opt nat;
+   id: nat;
+   losses: nat;
+   name: text;
+   registeredAt: Timestamp;
+   registrationNumber: nat;
+   seed: opt nat;
+   skillLevel: nat;
+   status: TournamentPlayerStatus;
+   table: opt nat;
+ };
+type TournamentMatchStatus = 
+ variant {
+   blocked;
+   bye;
+   cancelled;
+   completed;
+   playing;
+   ready;
+ };
+type TournamentMatch = 
+ record {
+   bracket: TournamentBracket;
+   id: nat;
+   loserId: opt nat;
+   manualOverride: bool;
+   playerA: opt nat;
+   playerB: opt nat;
+   position: nat;
+   priority: int;
+   round: nat;
+   scoreA: opt nat;
+   scoreB: opt nat;
+   sourceA: MatchSource;
+   sourceB: MatchSource;
+   status: TournamentMatchStatus;
+   table: opt nat;
+   winnerId: opt nat;
+ };
+type TournamentInput = 
  record {
    capacity: nat;
    description: text;
@@ -66,12 +151,94 @@ type TournamentInput =
    title: text;
    venue: text;
  };
-type TournamentFormat =
+type TournamentFormat = 
  variant {
    doubles;
    singles;
  };
-type Tournament =
+type TournamentElimination = 
+ variant {
+   doubleElimination;
+   singleElimination;
+ };
+type TournamentCommand = 
+ variant {
+   addPlayer: record {
+                name: text;
+                skillLevel: nat;
+              };
+   assignBye: record {
+                matchId: nat;
+                slot: TournamentSlot;
+              };
+   assignTable: record {
+                  matchId: nat;
+                  table: opt nat;
+                };
+   configure: record {
+                elimination: TournamentElimination;
+                tableCount: nat;
+              };
+   editPlayer: record {
+                 name: text;
+                 playerId: nat;
+                 skillLevel: nat;
+               };
+   generateBracket;
+   movePlayer: record {
+                 matchId: nat;
+                 playerId: nat;
+                 slot: TournamentSlot;
+               };
+   placePlayer: record {
+                  matchId: nat;
+                  playerId: nat;
+                  slot: TournamentSlot;
+                };
+   prioritizeMatch: nat;
+   prioritizePlayer: nat;
+   recordResult: record {
+                   matchId: nat;
+                   scoreA: nat;
+                   scoreB: nat;
+                 };
+   removePlayer: record {
+                   confirmed: bool;
+                   playerId: nat;
+                 };
+   resetMatch: record {
+                 cascade: bool;
+                 matchId: nat;
+               };
+   setMatchPlayers: record {
+                      matchId: nat;
+                      playerA: opt nat;
+                      playerB: opt nat;
+                    };
+   startMatch: nat;
+   swapPlayers:
+    record {
+      firstMatchId: nat;
+      firstSlot: TournamentSlot;
+      secondMatchId: nat;
+      secondSlot: TournamentSlot;
+    };
+   undo;
+ };
+type TournamentBracket = 
+ variant {
+   grandFinal;
+   losers;
+   resetFinal;
+   winners;
+ };
+type TournamentAction = 
+ record {
+   caption: text;
+   createdAt: Timestamp;
+   id: nat;
+ };
+type Tournament = 
  record {
    capacity: nat;
    createdAt: Timestamp;
@@ -86,18 +253,25 @@ type Tournament =
  };
 type Timestamp = int;
 type Role = variant {admin;};
-type Result__1 =
+type Result__1 = 
  variant {
    err: Error;
    ok;
  };
-type Result =
+type Result = 
  record {
    hasMore: bool;
    rows: vec vec Cell;
  };
+type MatchSource = 
+ variant {
+   bye;
+   loser: nat;
+   player: nat;
+   winner: nat;
+ };
 type ExternalBlob = blob;
-type Error =
+type Error = 
  variant {
    AmbiguousAttribute: record {
                          field: text;
@@ -119,7 +293,7 @@ type Error =
    UnknownNonce;
    UntrustedSsoSource: record {domain: text;};
  };
-type Cell =
+type Cell = 
  record {
    name: text;
    value: Value;
@@ -137,6 +311,8 @@ service : {
   _initialize_access_control: () -> ();
   _internet_identity_sign_in_finish: () -> (Result__1);
   _internet_identity_sign_in_start: () -> (blob);
+  applyTournamentCommand: (id: nat, command: TournamentCommand) ->
+   (TournamentState);
   assignCallerUserRole: (user: principal, role: UserRole) -> ();
   bootstrapOwner: () -> ();
   createTournament: (input: TournamentInput) -> (Tournament);
@@ -147,6 +323,7 @@ service : {
   getCallerUserRole: () -> (UserRole) query;
   getMyRole: () -> (opt Role) query;
   getTournament: (id: nat) -> (opt Tournament) query;
+  getTournamentState: (id: nat) -> (opt TournamentState) query;
   getTournaments: () -> (vec Tournament) query;
   getUser: (userId: UserId) -> (opt User) query;
   getUserByUsername: (username: text) -> (opt User) query;

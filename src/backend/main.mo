@@ -29,13 +29,14 @@ actor {
   let users : Map.Map<Common.UserId, Users.User>;
   let usernames : Map.Map<Text, Common.UserId>;
   let tournaments : Map.Map<Nat, Tournaments.Tournament>;
+  let tournamentStates : Map.Map<Nat, Tournaments.TournamentStateData>;
   let counters : Common.Counters;
   let owner : Common.OwnerState;
 
   include MixinAuthorization(accessControlState, null);
   include MixinObjectStorage();
   include UsersApi(accessControlState, users, usernames, owner);
-  include TournamentsApi(accessControlState, tournaments, counters);
+  include TournamentsApi(accessControlState, tournaments, tournamentStates, counters);
   include RolesApi(accessControlState, users, owner);
   include ApiDocMixin();
 

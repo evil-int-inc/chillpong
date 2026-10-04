@@ -241,6 +241,33 @@
 .tournament-row:hover {
   background: #20201c;
 }
+.match-card {
+  transition: border-color 150ms, background-color 150ms;
+}
+.match-card:hover {
+  border-color: #666957;
+}
+.bracket-viewport {
+  overscroll-behavior: contain;
+  scrollbar-color: #666957 var(--color-base-100);
+  scrollbar-width: thin;
+  background-image: linear-gradient(#30303055 1px, transparent 1px),
+    linear-gradient(90deg, #30303055 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.bracket-canvas {
+  isolation: isolate;
+}
+.player-row {
+  transition: background-color 150ms;
+}
+.player-row:hover {
+  background-color: #20201c;
+}
+.manager-toolbar {
+  background: var(--color-base-200);
+  border-left: 2px solid var(--color-primary);
+}
 .input,
 .textarea,
 .select {
