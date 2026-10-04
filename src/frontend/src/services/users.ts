@@ -1,42 +1,25 @@
-import { type Backend, ExternalBlob } from "@/backend";
-import type { User, UserId } from "@/types";
+import type { Backend, User, UserId, UserInput } from "@/backend";
 
-/** Input for saving a channel profile. */
-export interface SaveProfileInput {
-  displayName: string;
-  username: string;
-  avatar: ExternalBlob | null;
-  removeAvatar: boolean;
-  bio: string | null;
-}
-
-/** Backend operations for channels and profiles. */
+/** Public member directory and administrator-managed profiles. */
 export class UserService {
-  /** Fetches a channel by its principal id. */
-  getChannel(actor: Backend, userId: UserId): Promise<User | null> {
-    return actor.getChannel(userId);
+  list(actor: Backend): Promise<User[]> {
+    return actor.listUsers();
   }
 
-  /** Fetches a channel by its unique username. */
-  getChannelByUsername(actor: Backend, username: string): Promise<User | null> {
-    return actor.getChannelByUsername(username);
+  get(actor: Backend, userId: UserId): Promise<User | null> {
+    return actor.getUser(userId);
   }
 
-  /** Saves the caller's channel profile. */
-  saveProfile(actor: Backend, input: SaveProfileInput): Promise<User> {
-    return actor.saveProfile(
-      input.displayName,
-      input.username,
-      input.avatar,
-      input.removeAvatar,
-      input.bio,
-    );
+  getByUsername(actor: Backend, username: string): Promise<User | null> {
+    return actor.getUserByUsername(username);
   }
 
-  /** Wraps a selected avatar so generated bindings upload it to object storage. */
-  async createAvatar(file: File): Promise<ExternalBlob> {
-    const bytes = new Uint8Array(await file.arrayBuffer());
-    return ExternalBlob.fromBytes(bytes, file.type, file.name);
+  create(actor: Backend, userId: UserId, input: UserInput): Promise<User> {
+    return actor.createUser(userId, input);
+  }
+
+  update(actor: Backend, userId: UserId, input: UserInput): Promise<User> {
+    return actor.updateUser(userId, input);
   }
 }
 

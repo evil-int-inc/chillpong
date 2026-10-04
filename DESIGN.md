@@ -1,73 +1,50 @@
-# Design Brief
+# ChillPong Design Brief
 
 ## Direction
 
-ChillPong — a dark, video-first streaming platform built 100% on-chain; content is the star, chrome recedes into near-black surfaces.
+An underground ping-pong tournament in a Tbilisi bar at night. The club feels urban, industrial, energetic, and slightly rebellious. Users and tournaments are the main public sections; Admin handles role management. Only admins create or edit member records and tournaments.
 
-## Tone
+## Brand
 
-Bold modern dark — a cinematic, content-forward aesthetic where vivid crimson-red play signals pop against a cool near-black canvas, echoing a polished streaming app rather than a generic SaaS.
+Keep the supplied hedgehog/paddle roundel as the favicon, header logo, and sidebar brand mark. Pair it with large geometric CHILL PONG typography and short club language. Technical court lines, registration numbers, local start times, and subtle grain give the interface a warehouse atmosphere.
 
-## Differentiation
+## Theme and Palette
 
-A single saturated crimson-red "play" accent (hue 25) used only for action, active, and live states — the rest of the UI stays monochrome-cool so video thumbnails own the color.
+Use the daisyUI `black` theme with the overrides in `src/frontend/src/index.css`. Keep the application dark at every viewport size.
 
-## Color Palette
+| Token | Color | Use |
+| --- | --- | --- |
+| base-100 | `#101010` | Main canvas |
+| base-200 | `#171717` | Secondary surfaces |
+| base-300 | `#303030` | Thin dividers and control borders |
+| base-content | `#f3f2ed` | Primary typography |
+| primary / accent | `#d7f347` | Actions, active navigation, display emphasis |
+| secondary | `#ff513d` | Live states and small industrial markers |
+| muted-foreground | `#999993` | Supporting text |
 
-| Token      | OKLCH          | Role                                  |
-| ---------- | -------------- | ------------------------------------- |
-| background | 0.145 0.012 255| near-black cool canvas                |
-| foreground | 0.95 0.01 255  | primary text                          |
-| card       | 0.185 0.014 255| video cards / surfaces                |
-| primary    | 0.5 0.22 25    | crimson-red brand / play / CTA        |
-| accent     | 0.58 0.22 25   | active chips, live badges, highlights |
-| muted      | 0.22 0.02 255  | secondary surfaces, thumb placeholders|
-| border     | 0.28 0.02 255  | hairline dividers                     |
+Keep accents concentrated. White typography and charcoal surfaces carry most of the page. Avoid blue SaaS controls, corporate gradients, and decorative glows.
 
 ## Typography
 
-- Display: Space Grotesk — headings, brand, section titles
-- Body: DM Sans — UI labels, metadata, descriptions
-- Mono: Geist Mono — durations, timestamps, view counts
-- Scale: hero `text-4xl md:text-5xl font-bold tracking-tight`, h2 `text-2xl font-semibold tracking-tight`, label `text-xs font-semibold uppercase tracking-widest`, body `text-sm md:text-base`
+- Space Grotesk: large tightly spaced headlines, brand, and section titles.
+- DM Sans: readable descriptions, forms, and member information.
+- Geist Mono: uppercase labels, event IDs, dates, and small technical details.
 
-## Elevation & Depth
+Use oversized display type where it establishes the club identity, balanced with compact metadata and generous spacing.
 
-Layered near-black surfaces with hairline borders and restrained elevation shadows (`shadow-subtle`, `shadow-elevated`); depth comes from surface lightness steps, not glow.
+## Structure and Components
 
-## Structural Zones
+- Desktop: fixed club sidebar, slim header, spacious content area, minimal footer.
+- Mobile: branded header and accessible navigation drawer; stack hero and event content.
+- Tournament board: bordered rows with prominent dates, venue/time metadata, and clear live/upcoming/completed states.
+- Members: simple geometric panels with names, handles, avatars, and admin markers.
+- Buttons, inputs, filters, and dialogs: square edges, thin borders, high contrast, and restrained hover changes.
+- Depth: surface tones and hairline dividers; keep shadows minimal.
 
-| Zone    | Background   | Border   | Notes                          |
-| ------- | ------------ | -------- | ------------------------------ |
-| Header  | bg-background | border-b | sticky, translucent, logo left |
-| Sidebar | bg-sidebar    | border-r | collapsed rail / flyout        |
-| Content | bg-background | —        | alternating muted sections     |
-| Footer  | bg-muted/40   | border-t | dimmed, minimal                |
+## Accessibility and Motion
 
-## Spacing & Rhythm
+Preserve visible focus outlines, descriptive action labels, keyboard-accessible dialogs, readable contrast, and meaningful empty/error/loading states. Honor reduced-motion preferences. Decorative grain and court geometry must remain subtle and must not obstruct text or interactions.
 
-Generous 16–24px gutters; video grid `gap-4 md:gap-6`; tight 8px micro-spacing inside cards; sections separated by 32–48px for breathing room.
+## Avoid
 
-## Component Patterns
-
-- Buttons: primary = crimson-red pill, `rounded-full`, white text; hover brightens
-- Cards: `rounded-xl`, `bg-card`, `shadow-subtle`, hover `shadow-elevated` + lift
-- Badges: `rounded-full` chips; live/active = red, neutral = muted
-- Thumbnails: `rounded-lg`, 16:9, hover scale + play overlay
-
-## Motion
-
-- Entrance: staggered `fade-up` 0.4s on feed items
-- Hover: card lift + thumbnail scale 0.3s `transition-smooth`
-- Decorative: `shimmer` skeleton for loading thumbnails
-
-## Constraints
-
-- Dark-first; light mode is a faithful inversion, not a separate design
-- Red reserved for action/play/live — never decorative bulk
-- AA+ contrast on all text; thumbnails must stay color-neutral
-- DaisyUI theming via CSS variables / OKLCH only; no raw hex in components
-
-## Signature Detail
-
-The crimson-red play accent: a single saturated hue reserved exclusively for watch/action/live moments, making every interactive element instantly scannable against the monochrome-cool dark canvas.
+Excessive rounded cards, pill-shaped controls, enterprise dashboard polish, childish gaming graphics, and video-platform language. The product should feel like a real local club: good people, bad backhands, late nights.

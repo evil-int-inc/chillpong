@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-// Apply the saved/system DaisyUI theme before the first paint.
+// Apply the underground club theme before the first paint.
 themeService.initialize();
 
 const queryClient = new QueryClient();

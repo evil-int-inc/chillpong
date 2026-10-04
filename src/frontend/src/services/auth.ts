@@ -4,8 +4,8 @@ import type { User } from "@/types";
 /** Backend operations for the authenticated caller. */
 export class AuthService {
   /**
-   * Fetches the authenticated caller's profile (channel).
-   * Returns `null` when the caller has not created a profile yet.
+   * Fetches the authenticated caller's member profile.
+   * Returns `null` when the caller has no member record yet.
    */
   getCallerProfile(actor: Backend): Promise<User | null> {
     return actor.getCallerProfile();

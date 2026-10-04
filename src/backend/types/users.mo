@@ -16,6 +16,12 @@ module {
     role : ?Role;
   };
 
+  public type UserInput = {
+    displayName : Text;
+    username : Text;
+    bio : ?Text;
+  };
+
   // Admin-facing view of a user, including the current role.
   public type UserRoleView = {
     id : Common.UserId;

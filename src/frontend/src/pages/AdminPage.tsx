@@ -80,6 +80,8 @@ export function AdminPage() {
           : `${updated.displayName} is no longer an admin.`,
       );
       void queryClient.invalidateQueries({ queryKey: USERS_QUERY_KEY });
+      void queryClient.invalidateQueries({ queryKey: ["users"] });
+      void queryClient.invalidateQueries({ queryKey: ["myRole"] });
     },
   });
 
@@ -98,14 +100,14 @@ export function AdminPage() {
 
   if (usersQuery.isLoading || (isFetching && !usersQuery.data)) {
     return (
-      <div data-ocid="admin_page" className="p-4 sm:p-6">
-        <div className="mx-auto w-full max-w-3xl space-y-6">
+      <div data-ocid="admin_page" className="club-page">
+        <div className="mx-auto w-full max-w-5xl space-y-6">
           <header className="space-y-1">
-            <h1 className="font-display text-2xl font-semibold text-foreground">
-              Admin management
+            <h1 className="font-display text-4xl font-bold uppercase tracking-tight text-foreground">
+              Admin access
             </h1>
             <p className="text-sm text-muted-foreground">
-              Manage who can administer this workspace.
+              Manage the people behind ChillPong.
             </p>
           </header>
           <AdminSkeleton />
@@ -116,8 +118,8 @@ export function AdminPage() {
 
   if (usersQuery.isError) {
     return (
-      <div data-ocid="admin_page" className="p-4 sm:p-6">
-        <div className="mx-auto w-full max-w-3xl">
+      <div data-ocid="admin_page" className="club-page">
+        <div className="mx-auto w-full max-w-5xl">
           <ErrorState
             title="Couldn't load users"
             message="Something went wrong while fetching the user list. You may not have permission to view it."
@@ -129,20 +131,22 @@ export function AdminPage() {
   }
 
   return (
-    <div data-ocid="admin_page" className="p-4 sm:p-6">
-      <div className="mx-auto w-full max-w-3xl space-y-6">
+    <div data-ocid="admin_page" className="club-page">
+      <div className="mx-auto w-full max-w-5xl space-y-6">
         <header className="flex flex-wrap items-end justify-between gap-3">
           <div className="space-y-1">
-            <h1 className="font-display text-2xl font-semibold text-foreground">
-              Admin management
+            <p className="section-kicker mb-4">CHILLPONG / CONTROL ROOM</p>
+            <h1 className="font-display text-4xl font-bold uppercase tracking-tight text-foreground">
+              Admin access
             </h1>
             <p className="text-sm text-muted-foreground">
-              Grant or revoke admin access for people in this workspace.
+              Admins manage the lineup and tournament board. Grant or revoke
+              access below.
             </p>
           </div>
           <span
             data-ocid="admin_count"
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-base-100 px-3 py-1 text-sm text-muted-foreground"
+            className="inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-sm text-muted-foreground"
           >
             <ShieldCheck className="size-4" aria-hidden="true" />
             {adminCount} {adminCount === 1 ? "admin" : "admins"}
@@ -184,7 +188,7 @@ export function AdminPage() {
           <EmptyState
             icon={<Users className="size-7" aria-hidden="true" />}
             title="No users yet"
-            description="Once people create a channel, they'll appear here so you can manage their access."
+            description="Add users from the Users page to manage their access here."
           />
         ) : (
           <ul
@@ -213,7 +217,7 @@ export function AdminPage() {
                         {user.displayName || user.username}
                       </span>
                       {isSelf ? (
-                        <span className="shrink-0 rounded-full bg-base-300 px-2 py-0.5 text-xs text-muted-foreground">
+                        <span className="shrink-0 rounded-none bg-base-300 px-2 py-0.5 text-xs text-muted-foreground">
                           You
                         </span>
                       ) : null}
@@ -227,8 +231,8 @@ export function AdminPage() {
                     data-ocid={`admin_user.role.${index + 1}`}
                     className={
                       admin
-                        ? "inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
-                        : "inline-flex items-center gap-1.5 rounded-full border border-border bg-base-100 px-3 py-1 text-xs font-medium text-muted-foreground"
+                        ? "inline-flex items-center gap-1.5 rounded-none border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
+                        : "inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-xs font-medium text-muted-foreground"
                     }
                   >
                     {admin ? (
@@ -236,7 +240,7 @@ export function AdminPage() {
                     ) : (
                       <ShieldMinus className="size-3.5" aria-hidden="true" />
                     )}
-                    {admin ? "Admin" : "Regular"}
+                    {admin ? "Admin" : "Member"}
                   </span>
 
                   <Button

@@ -2,125 +2,58 @@ import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "@tanstack/react-router";
 import {
-  Clapperboard,
+  ArrowUpRight,
   LogIn,
   LogOut,
-  type LucideIcon,
   ShieldCheck,
-  Upload,
-  User,
-  UserCog,
+  Trophy,
   Users,
   X,
 } from "lucide-react";
-import type { MouseEvent } from "react";
 
-export interface NavItem {
-  label: string;
-  to: string;
-  icon: LucideIcon;
-  match: string;
-  requiresAuth?: boolean;
-}
-
-export function useNavItems(): NavItem[] {
-  const { profile, isAdmin } = useAuth();
-  const channelPath = profile
-    ? `/channel/${profile.id.toString()}`
-    : "/profile";
-
-  const items: NavItem[] = [
-    { label: "Feed", to: "/feed", icon: Clapperboard, match: "/feed" },
-    {
-      label: "Subscriptions",
-      to: "/subscriptions",
-      icon: Users,
-      match: "/subscriptions",
-    },
-    {
-      label: "Upload video",
-      to: "/upload",
-      icon: Upload,
-      match: "/upload",
-      requiresAuth: true,
-    },
-    {
-      label: "Your channel",
-      to: channelPath,
-      icon: User,
-      match: "/channel",
-      requiresAuth: true,
-    },
-    {
-      label: "Profile settings",
-      to: "/profile",
-      icon: UserCog,
-      match: "/profile",
-      requiresAuth: true,
-    },
-  ];
-
-  if (isAdmin) {
-    items.push({
-      label: "Admin",
-      to: "/admin",
-      icon: ShieldCheck,
-      match: "/admin",
-      requiresAuth: true,
-    });
-  }
-
-  return items;
-}
-
-function isActive(pathname: string, match: string): boolean {
-  return pathname === match || pathname.startsWith(`${match}/`);
-}
-
-interface SidebarProps {
-  onNavigate: () => void;
-}
-
-export function Sidebar({ onNavigate }: SidebarProps) {
-  const navItems = useNavItems();
+export function Sidebar({ onNavigate }: { onNavigate: () => void }) {
   const { pathname } = useLocation();
-  const { isAuthenticated, isInitializing, login, logout } = useAuth();
-
-  function handleProtectedNavigation(
-    event: MouseEvent<HTMLAnchorElement>,
-    requiresAuth?: boolean,
-  ) {
-    if (!requiresAuth || isAuthenticated) {
-      onNavigate();
-      return;
-    }
-
-    event.preventDefault();
-    if (!isInitializing) login();
-    onNavigate();
-  }
-
+  const {
+    isAdmin,
+    isAuthenticated,
+    isInitializing,
+    isLoggingIn,
+    login,
+    logout,
+  } = useAuth();
+  const items = [
+    { label: "Users", to: "/users", icon: Users, number: "01" },
+    { label: "Tournaments", to: "/tournaments", icon: Trophy, number: "02" },
+    ...(isAdmin
+      ? [{ label: "Admin", to: "/admin", icon: ShieldCheck, number: "03" }]
+      : []),
+  ];
   return (
     <aside
       data-ocid="sidebar"
-      className="flex h-svh min-h-0 w-64 flex-col overflow-hidden border-r border-base-300 bg-base-100"
+      className="club-sidebar flex h-svh w-64 flex-col border-r border-base-300 bg-base-100"
     >
-      <div className="flex h-16 items-center justify-between border-b border-base-300 px-4">
+      <div className="flex items-start justify-between px-6 pb-8 pt-7">
         <Link
-          to="/feed"
+          to="/tournaments"
           onClick={onNavigate}
           aria-label="ChillPong home"
-          className="flex items-center gap-2"
+          className="block"
         >
           <img
             src="/logo.jpg"
-            alt=""
-            width={36}
-            height={36}
-            className="size-9 rounded-lg object-cover"
+            alt="ChillPong hedgehog and paddle logo"
+            width={64}
+            height={64}
+            className="size-16 rounded-full object-cover"
           />
-          <span className="text-xl font-bold tracking-tight">
-            Chill<span className="text-brand">Pong</span>
+          <span className="mt-5 block font-display text-[2rem] font-bold leading-[0.95] tracking-[-0.06em]">
+            CHILL
+            <br />
+            <span className="text-primary">PONG.</span>
+          </span>
+          <span className="mt-3 block font-mono text-[9px] tracking-[0.18em] text-base-content/50">
+            UNDERGROUND PING-PONG CLUB
           </span>
         </Link>
         <button
@@ -130,76 +63,72 @@ export function Sidebar({ onNavigate }: SidebarProps) {
           aria-label="Close sidebar"
           data-ocid="layout.sidebar_close"
         >
-          <X className="size-4" aria-hidden="true" />
+          <X className="size-4" />
         </button>
       </div>
-
-      <nav className="min-h-0 flex-1 overflow-y-auto p-3" aria-label="Primary">
-        <ul className="menu menu-lg w-full gap-1 p-0">
-          {navItems.map((item) => {
-            const active = isActive(pathname, item.match);
-            const Icon = item.icon;
-
+      <nav className="flex-1 px-4" aria-label="Primary">
+        <p className="technical-label mb-3 px-3">THE CLUB / INDEX</p>
+        <ul className="space-y-2">
+          {items.map(({ label, to, icon: Icon, number }) => {
+            const active = pathname === to;
             return (
-              <li key={`${item.label}-${item.to}`}>
+              <li key={to}>
                 <Link
-                  to={item.to}
+                  to={to}
+                  onClick={onNavigate}
                   data-ocid="sidebar_link"
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex items-center gap-3",
-                    active && "menu-active",
+                    "club-nav-link flex items-center gap-3 px-3 py-3.5",
+                    active && "is-active",
                   )}
-                  onClick={(event) =>
-                    handleProtectedNavigation(event, item.requiresAuth)
-                  }
                 >
-                  <Icon className="size-5" aria-hidden="true" />
-                  <span className="flex-1">{item.label}</span>
-                  {item.requiresAuth && !isAuthenticated ? (
-                    <LogIn className="size-3.5 opacity-40" aria-hidden="true" />
-                  ) : null}
+                  <Icon className="size-[18px]" aria-hidden="true" />
+                  <span className="flex-1 font-display text-sm font-semibold">
+                    {label}
+                  </span>
+                  <span className="font-mono text-[10px] opacity-50">
+                    {number}
+                  </span>
                 </Link>
               </li>
             );
           })}
         </ul>
       </nav>
-
-      <div className="border-t border-base-300 p-4">
-        {isAuthenticated ? (
-          <button
-            type="button"
-            className="btn btn-neutral btn-sm w-full gap-2"
-            onClick={() => {
-              logout();
-              onNavigate();
-            }}
-            disabled={isInitializing}
-            data-ocid="layout.sidebar_logout"
-          >
-            <LogOut className="size-4" aria-hidden="true" />
-            Sign out
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="btn btn-neutral btn-sm w-full gap-2"
-            onClick={() => {
-              login();
-              onNavigate();
-            }}
-            disabled={isInitializing}
-            data-ocid="layout.sidebar_login"
-          >
-            {isInitializing ? (
-              <span className="loading loading-spinner loading-xs" />
-            ) : (
-              <LogIn className="size-4" aria-hidden="true" />
-            )}
-            Sign in
-          </button>
-        )}
+      <div className="mx-6 mb-6 border-t border-base-300 pt-5">
+        <div className="mb-6 flex items-center justify-between font-mono text-[10px] tracking-widest text-base-content/50">
+          <span>TBILISI, GE</span>
+          <ArrowUpRight className="size-4 text-secondary" aria-hidden="true" />
+        </div>
+        <p className="mb-6 font-display text-lg font-semibold uppercase leading-tight">
+          Good people.
+          <br />
+          Bad backhands.
+        </p>
+        <button
+          type="button"
+          className="btn btn-outline btn-sm w-full"
+          onClick={() => {
+            if (isAuthenticated) logout();
+            else login();
+            onNavigate();
+          }}
+          disabled={isInitializing || isLoggingIn}
+          data-ocid={
+            isAuthenticated ? "layout.sidebar_logout" : "layout.sidebar_login"
+          }
+        >
+          {isAuthenticated ? (
+            <LogOut className="size-4" />
+          ) : (
+            <LogIn className="size-4" />
+          )}
+          {isAuthenticated ? "Sign out" : "Sign in"}
+        </button>
+        <p className="mt-3 text-center font-mono text-[9px] uppercase tracking-widest text-base-content/35">
+          Keep the ball moving.
+        </p>
       </div>
     </aside>
   );

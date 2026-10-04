@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react";
  * Authentication + caller profile/role hook.
  *
  * Wraps Internet Identity state and exposes the authenticated caller's
- * principal, profile (channel), and admin role. After sign-in it calls
+ * principal, member profile, and admin role. After sign-in it calls
  * `bootstrapOwner()` once so the owner account receives the admin role on its
  * first sign-in; the call is idempotent and safe for non-owners.
  */
@@ -28,7 +28,7 @@ export function useAuth() {
   const principal = identity?.getPrincipal().toString() ?? null;
 
   const profileQuery = useQuery({
-    queryKey: ["profile"],
+    queryKey: ["profile", principal],
     queryFn: async () => {
       if (!actor) return null;
       return authService.getCallerProfile(actor);
@@ -37,7 +37,7 @@ export function useAuth() {
   });
 
   const roleQuery = useQuery({
-    queryKey: ["myRole"],
+    queryKey: ["myRole", principal],
     queryFn: async () => {
       if (!actor) return null;
       return authService.getMyRole(actor);
@@ -79,10 +79,10 @@ export function useAuth() {
     isAuthenticated,
     isInitializing,
     isLoggingIn,
-    profile: profileQuery.data ?? null,
+    profile: isAuthenticated ? (profileQuery.data ?? null) : null,
     profileLoading: profileQuery.isLoading,
-    role: roleQuery.data ?? null,
-    isAdmin: roleQuery.data === "admin",
+    role: isAuthenticated ? (roleQuery.data ?? null) : null,
+    isAdmin: isAuthenticated && !isFetching && roleQuery.data === "admin",
     roleLoading: roleQuery.isLoading,
   };
 }

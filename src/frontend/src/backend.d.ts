@@ -13,11 +13,6 @@ export interface Cell {
     value: Value;
     name: string;
 }
-export interface CreateVideoResult {
-    video: Video;
-    playlistId?: bigint;
-}
-export type Cursor = bigint;
 export type Error_ = {
     __kind__: "FrontendOriginsNotConfigured";
     FrontendOriginsNotConfigured: null;
@@ -62,71 +57,6 @@ export type Error_ = {
         expected: Array<string>;
     };
 };
-export interface Notification {
-    id: bigint;
-    kind: NotificationKind;
-    createdAt: Timestamp;
-    read: boolean;
-    recipientId: UserId;
-}
-export type NotificationKind = {
-    __kind__: "newVideo";
-    newVideo: {
-        channelId: UserId;
-        videoId: bigint;
-    };
-} | {
-    __kind__: "newSubscriber";
-    newSubscriber: {
-        channelId: UserId;
-    };
-};
-export interface Page {
-    items: Array<Video>;
-    nextCursor?: Cursor;
-}
-export interface Page_1 {
-    items: Array<Notification>;
-    nextCursor?: Cursor;
-}
-export interface Page_2 {
-    items: Array<PlaylistSummary>;
-    nextCursor?: Cursor;
-}
-export interface Playlist {
-    id: bigint;
-    title: string;
-    ownerId: UserId;
-    createdAt: Timestamp;
-    updatedAt: Timestamp;
-    isPrivate: boolean;
-    videoIds: Array<bigint>;
-}
-export type PlaylistSelection = {
-    __kind__: "new";
-    new: {
-        title: string;
-        isPrivate: boolean;
-    };
-} | {
-    __kind__: "existing";
-    existing: bigint;
-};
-export interface PlaylistSummary {
-    id: bigint;
-    title: string;
-    thumbnail?: ExternalBlob;
-    videoCount: bigint;
-    firstVideoId?: bigint;
-    ownerId: UserId;
-    createdAt: Timestamp;
-    updatedAt: Timestamp;
-    isPrivate: boolean;
-}
-export interface PlaylistView {
-    playlist: PlaylistSummary;
-    videos: Array<Video>;
-}
 export interface Result {
     hasMore: boolean;
     rows: Array<Array<Cell>>;
@@ -139,6 +69,27 @@ export type Result__1 = {
     err: Error_;
 };
 export type Timestamp = bigint;
+export interface Tournament {
+    id: bigint;
+    status: TournamentStatus;
+    title: string;
+    venue: string;
+    startsAt: Timestamp;
+    createdAt: Timestamp;
+    description: string;
+    updatedAt: Timestamp;
+    capacity: bigint;
+    format: TournamentFormat;
+}
+export interface TournamentInput {
+    status: TournamentStatus;
+    title: string;
+    venue: string;
+    startsAt: Timestamp;
+    description: string;
+    capacity: bigint;
+    format: TournamentFormat;
+}
 export interface User {
     id: UserId;
     bio?: string;
@@ -149,6 +100,11 @@ export interface User {
     avatar?: ExternalBlob;
 }
 export type UserId = Principal;
+export interface UserInput {
+    bio?: string;
+    username: string;
+    displayName: string;
+}
 export interface UserRoleView {
     id: UserId;
     username: string;
@@ -174,75 +130,43 @@ export type Value = {
     __kind__: "text";
     text: string;
 };
-export interface Video {
-    id: bigint;
-    status: VideoStatus;
-    title: string;
-    thumbnail?: ExternalBlob;
-    ownerId: UserId;
-    video: ExternalBlob;
-    createdAt: Timestamp;
-    publishedAt?: Timestamp;
-    mimeType: string;
-    description?: string;
-    fileSize: bigint;
-    filename: string;
-    viewCount: bigint;
-    isPrivate: boolean;
-}
 export enum Role {
     admin = "admin"
+}
+export enum TournamentFormat {
+    doubles = "doubles",
+    singles = "singles"
+}
+export enum TournamentStatus {
+    upcoming = "upcoming",
+    live = "live",
+    completed = "completed"
 }
 export enum UserRole {
     admin = "admin",
     user = "user",
     guest = "guest"
 }
-export enum VideoStatus {
-    deleted = "deleted",
-    published = "published",
-    processing = "processing",
-    draft = "draft"
-}
 export interface backendInterface {
-    addVideoToPlaylist(playlistId: bigint, videoId: bigint): Promise<Playlist>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     bootstrapOwner(): Promise<void>;
-    createPlaylist(title: string, isPrivate: boolean, initialVideoId: bigint | null): Promise<Playlist>;
-    createVideo(title: string, description: string | null, video: ExternalBlob, thumbnail: ExternalBlob | null, filename: string, mimeType: string, fileSize: bigint, isPrivate: boolean, playlist: PlaylistSelection | null): Promise<CreateVideoResult>;
-    deleteVideo(videoId: bigint): Promise<void>;
+    createTournament(input: TournamentInput): Promise<Tournament>;
+    createUser(userId: UserId, input: UserInput): Promise<User>;
     execute(qJson: string): Promise<Result>;
     getApiDoc(): Promise<string>;
     getCallerProfile(): Promise<User | null>;
     getCallerUserRole(): Promise<UserRole>;
-    getChannel(userId: UserId): Promise<User | null>;
-    getChannelByUsername(username: string): Promise<User | null>;
-    getChannelPlaylists(userId: UserId, cursor: Cursor, limit: bigint): Promise<Page_2>;
-    getChannelVideos(userId: UserId, cursor: Cursor, limit: bigint): Promise<Page>;
-    getFeed(cursor: Cursor, limit: bigint): Promise<Page>;
-    getMyPlaylists(): Promise<Array<Playlist>>;
     getMyRole(): Promise<Role | null>;
-    getMyVideos(cursor: Cursor, limit: bigint): Promise<Page>;
-    getNotifications(cursor: Cursor, limit: bigint): Promise<Page_1>;
-    getPlaylist(playlistId: bigint): Promise<PlaylistView | null>;
-    getStorageProviders(): Promise<Array<string>>;
-    getSubscribedChannels(): Promise<Array<UserId>>;
-    getSubscriberCount(channelId: UserId): Promise<bigint>;
-    getSubscriptionFeed(cursor: Cursor, limit: bigint): Promise<Page>;
-    getUnreadNotificationCount(): Promise<bigint>;
-    getVideo(videoId: bigint): Promise<Video | null>;
+    getTournament(id: bigint): Promise<Tournament | null>;
+    getTournaments(): Promise<Array<Tournament>>;
+    getUser(userId: UserId): Promise<User | null>;
+    getUserByUsername(username: string): Promise<User | null>;
     grantAdminRole(target: UserId): Promise<UserRoleView>;
     isCallerAdmin(): Promise<boolean>;
-    isSubscribed(channelId: UserId): Promise<boolean>;
+    listUsers(): Promise<Array<User>>;
     listUsersWithRoles(): Promise<Array<UserRoleView>>;
-    markNotificationsRead(): Promise<void>;
-    publishVideo(videoId: bigint): Promise<Video>;
-    recordVideoView(videoId: bigint): Promise<bigint>;
-    registerStorageProvider(providerId: string): Promise<void>;
-    removeVideoFromPlaylist(playlistId: bigint, videoId: bigint): Promise<Playlist>;
     revokeAdminRole(target: UserId): Promise<UserRoleView>;
-    saveProfile(displayName: string, username: string, avatar: ExternalBlob | null, removeAvatar: boolean, bio: string | null): Promise<User>;
     schema(): Promise<string>;
-    subscribe(channelId: UserId): Promise<void>;
-    unsubscribe(channelId: UserId): Promise<void>;
+    updateTournament(id: bigint, input: TournamentInput): Promise<Tournament>;
+    updateUser(userId: UserId, input: UserInput): Promise<User>;
 }

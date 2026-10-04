@@ -41,52 +41,58 @@ export const Error = IDL.Variant({
   }),
 });
 export const Result__1 = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
-export const UserId = IDL.Principal;
-export const Timestamp = IDL.Int;
-export const Playlist = IDL.Record({
-  'id' : IDL.Nat,
-  'title' : IDL.Text,
-  'ownerId' : UserId,
-  'createdAt' : Timestamp,
-  'updatedAt' : Timestamp,
-  'isPrivate' : IDL.Bool,
-  'videoIds' : IDL.Vec(IDL.Nat),
-});
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
-export const ExternalBlob = IDL.Vec(IDL.Nat8);
-export const PlaylistSelection = IDL.Variant({
-  'new' : IDL.Record({ 'title' : IDL.Text, 'isPrivate' : IDL.Bool }),
-  'existing' : IDL.Nat,
+export const TournamentStatus = IDL.Variant({
+  'upcoming' : IDL.Null,
+  'live' : IDL.Null,
+  'completed' : IDL.Null,
 });
-export const VideoStatus = IDL.Variant({
-  'deleted' : IDL.Null,
-  'published' : IDL.Null,
-  'processing' : IDL.Null,
-  'draft' : IDL.Null,
+export const Timestamp = IDL.Int;
+export const TournamentFormat = IDL.Variant({
+  'doubles' : IDL.Null,
+  'singles' : IDL.Null,
 });
-export const Video = IDL.Record({
-  'id' : IDL.Nat,
-  'status' : VideoStatus,
+export const TournamentInput = IDL.Record({
+  'status' : TournamentStatus,
   'title' : IDL.Text,
-  'thumbnail' : IDL.Opt(ExternalBlob),
-  'ownerId' : UserId,
-  'video' : ExternalBlob,
-  'createdAt' : Timestamp,
-  'publishedAt' : IDL.Opt(Timestamp),
-  'mimeType' : IDL.Text,
-  'description' : IDL.Opt(IDL.Text),
-  'fileSize' : IDL.Nat,
-  'filename' : IDL.Text,
-  'viewCount' : IDL.Nat,
-  'isPrivate' : IDL.Bool,
+  'venue' : IDL.Text,
+  'startsAt' : Timestamp,
+  'description' : IDL.Text,
+  'capacity' : IDL.Nat,
+  'format' : TournamentFormat,
 });
-export const CreateVideoResult = IDL.Record({
-  'video' : Video,
-  'playlistId' : IDL.Opt(IDL.Nat),
+export const Tournament = IDL.Record({
+  'id' : IDL.Nat,
+  'status' : TournamentStatus,
+  'title' : IDL.Text,
+  'venue' : IDL.Text,
+  'startsAt' : Timestamp,
+  'createdAt' : Timestamp,
+  'description' : IDL.Text,
+  'updatedAt' : Timestamp,
+  'capacity' : IDL.Nat,
+  'format' : TournamentFormat,
+});
+export const UserId = IDL.Principal;
+export const UserInput = IDL.Record({
+  'bio' : IDL.Opt(IDL.Text),
+  'username' : IDL.Text,
+  'displayName' : IDL.Text,
+});
+export const Role = IDL.Variant({ 'admin' : IDL.Null });
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
+export const User = IDL.Record({
+  'id' : UserId,
+  'bio' : IDL.Opt(IDL.Text),
+  'username' : IDL.Text,
+  'displayName' : IDL.Text,
+  'createdAt' : Timestamp,
+  'role' : IDL.Opt(Role),
+  'avatar' : IDL.Opt(ExternalBlob),
 });
 export const Value = IDL.Variant({
   'int' : IDL.Int,
@@ -100,55 +106,6 @@ export const Cell = IDL.Record({ 'value' : Value, 'name' : IDL.Text });
 export const Result = IDL.Record({
   'hasMore' : IDL.Bool,
   'rows' : IDL.Vec(IDL.Vec(Cell)),
-});
-export const Role = IDL.Variant({ 'admin' : IDL.Null });
-export const User = IDL.Record({
-  'id' : UserId,
-  'bio' : IDL.Opt(IDL.Text),
-  'username' : IDL.Text,
-  'displayName' : IDL.Text,
-  'createdAt' : Timestamp,
-  'role' : IDL.Opt(Role),
-  'avatar' : IDL.Opt(ExternalBlob),
-});
-export const Cursor = IDL.Nat;
-export const PlaylistSummary = IDL.Record({
-  'id' : IDL.Nat,
-  'title' : IDL.Text,
-  'thumbnail' : IDL.Opt(ExternalBlob),
-  'videoCount' : IDL.Nat,
-  'firstVideoId' : IDL.Opt(IDL.Nat),
-  'ownerId' : UserId,
-  'createdAt' : Timestamp,
-  'updatedAt' : Timestamp,
-  'isPrivate' : IDL.Bool,
-});
-export const Page_2 = IDL.Record({
-  'items' : IDL.Vec(PlaylistSummary),
-  'nextCursor' : IDL.Opt(Cursor),
-});
-export const Page = IDL.Record({
-  'items' : IDL.Vec(Video),
-  'nextCursor' : IDL.Opt(Cursor),
-});
-export const NotificationKind = IDL.Variant({
-  'newVideo' : IDL.Record({ 'channelId' : UserId, 'videoId' : IDL.Nat }),
-  'newSubscriber' : IDL.Record({ 'channelId' : UserId }),
-});
-export const Notification = IDL.Record({
-  'id' : IDL.Nat,
-  'kind' : NotificationKind,
-  'createdAt' : Timestamp,
-  'read' : IDL.Bool,
-  'recipientId' : UserId,
-});
-export const Page_1 = IDL.Record({
-  'items' : IDL.Vec(Notification),
-  'nextCursor' : IDL.Opt(Cursor),
-});
-export const PlaylistView = IDL.Record({
-  'playlist' : PlaylistSummary,
-  'videos' : IDL.Vec(Video),
 });
 export const UserRoleView = IDL.Record({
   'id' : UserId,
@@ -187,72 +144,27 @@ export const idlService = IDL.Service({
   '_initialize_access_control' : IDL.Func([], [], []),
   '_internet_identity_sign_in_finish' : IDL.Func([], [Result__1], []),
   '_internet_identity_sign_in_start' : IDL.Func([], [IDL.Vec(IDL.Nat8)], []),
-  'addVideoToPlaylist' : IDL.Func([IDL.Nat, IDL.Nat], [Playlist], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'bootstrapOwner' : IDL.Func([], [], []),
-  'createPlaylist' : IDL.Func(
-      [IDL.Text, IDL.Bool, IDL.Opt(IDL.Nat)],
-      [Playlist],
-      [],
-    ),
-  'createVideo' : IDL.Func(
-      [
-        IDL.Text,
-        IDL.Opt(IDL.Text),
-        ExternalBlob,
-        IDL.Opt(ExternalBlob),
-        IDL.Text,
-        IDL.Text,
-        IDL.Nat,
-        IDL.Bool,
-        IDL.Opt(PlaylistSelection),
-      ],
-      [CreateVideoResult],
-      [],
-    ),
-  'deleteVideo' : IDL.Func([IDL.Nat], [], []),
+  'createTournament' : IDL.Func([TournamentInput], [Tournament], []),
+  'createUser' : IDL.Func([UserId, UserInput], [User], []),
   'execute' : IDL.Func([IDL.Text], [Result], ['query']),
   'getApiDoc' : IDL.Func([], [IDL.Text], ['query']),
   'getCallerProfile' : IDL.Func([], [IDL.Opt(User)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-  'getChannel' : IDL.Func([UserId], [IDL.Opt(User)], ['query']),
-  'getChannelByUsername' : IDL.Func([IDL.Text], [IDL.Opt(User)], ['query']),
-  'getChannelPlaylists' : IDL.Func(
-      [UserId, Cursor, IDL.Nat],
-      [Page_2],
-      ['query'],
-    ),
-  'getChannelVideos' : IDL.Func([UserId, Cursor, IDL.Nat], [Page], ['query']),
-  'getFeed' : IDL.Func([Cursor, IDL.Nat], [Page], ['query']),
-  'getMyPlaylists' : IDL.Func([], [IDL.Vec(Playlist)], ['query']),
   'getMyRole' : IDL.Func([], [IDL.Opt(Role)], ['query']),
-  'getMyVideos' : IDL.Func([Cursor, IDL.Nat], [Page], ['query']),
-  'getNotifications' : IDL.Func([Cursor, IDL.Nat], [Page_1], ['query']),
-  'getPlaylist' : IDL.Func([IDL.Nat], [IDL.Opt(PlaylistView)], ['query']),
-  'getStorageProviders' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-  'getSubscribedChannels' : IDL.Func([], [IDL.Vec(UserId)], ['query']),
-  'getSubscriberCount' : IDL.Func([UserId], [IDL.Nat], ['query']),
-  'getSubscriptionFeed' : IDL.Func([Cursor, IDL.Nat], [Page], ['query']),
-  'getUnreadNotificationCount' : IDL.Func([], [IDL.Nat], ['query']),
-  'getVideo' : IDL.Func([IDL.Nat], [IDL.Opt(Video)], ['query']),
+  'getTournament' : IDL.Func([IDL.Nat], [IDL.Opt(Tournament)], ['query']),
+  'getTournaments' : IDL.Func([], [IDL.Vec(Tournament)], ['query']),
+  'getUser' : IDL.Func([UserId], [IDL.Opt(User)], ['query']),
+  'getUserByUsername' : IDL.Func([IDL.Text], [IDL.Opt(User)], ['query']),
   'grantAdminRole' : IDL.Func([UserId], [UserRoleView], []),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-  'isSubscribed' : IDL.Func([UserId], [IDL.Bool], ['query']),
+  'listUsers' : IDL.Func([], [IDL.Vec(User)], ['query']),
   'listUsersWithRoles' : IDL.Func([], [IDL.Vec(UserRoleView)], ['query']),
-  'markNotificationsRead' : IDL.Func([], [], []),
-  'publishVideo' : IDL.Func([IDL.Nat], [Video], []),
-  'recordVideoView' : IDL.Func([IDL.Nat], [IDL.Nat], []),
-  'registerStorageProvider' : IDL.Func([IDL.Text], [], []),
-  'removeVideoFromPlaylist' : IDL.Func([IDL.Nat, IDL.Nat], [Playlist], []),
   'revokeAdminRole' : IDL.Func([UserId], [UserRoleView], []),
-  'saveProfile' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Bool, IDL.Opt(IDL.Text)],
-      [User],
-      [],
-    ),
   'schema' : IDL.Func([], [IDL.Text], ['query']),
-  'subscribe' : IDL.Func([UserId], [], []),
-  'unsubscribe' : IDL.Func([UserId], [], []),
+  'updateTournament' : IDL.Func([IDL.Nat, TournamentInput], [Tournament], []),
+  'updateUser' : IDL.Func([UserId, UserInput], [User], []),
 });
 
 export const idlInitArgs = [];
@@ -291,52 +203,58 @@ export const idlFactory = ({ IDL }) => {
     }),
   });
   const Result__1 = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
-  const UserId = IDL.Principal;
-  const Timestamp = IDL.Int;
-  const Playlist = IDL.Record({
-    'id' : IDL.Nat,
-    'title' : IDL.Text,
-    'ownerId' : UserId,
-    'createdAt' : Timestamp,
-    'updatedAt' : Timestamp,
-    'isPrivate' : IDL.Bool,
-    'videoIds' : IDL.Vec(IDL.Nat),
-  });
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
-  const ExternalBlob = IDL.Vec(IDL.Nat8);
-  const PlaylistSelection = IDL.Variant({
-    'new' : IDL.Record({ 'title' : IDL.Text, 'isPrivate' : IDL.Bool }),
-    'existing' : IDL.Nat,
+  const TournamentStatus = IDL.Variant({
+    'upcoming' : IDL.Null,
+    'live' : IDL.Null,
+    'completed' : IDL.Null,
   });
-  const VideoStatus = IDL.Variant({
-    'deleted' : IDL.Null,
-    'published' : IDL.Null,
-    'processing' : IDL.Null,
-    'draft' : IDL.Null,
+  const Timestamp = IDL.Int;
+  const TournamentFormat = IDL.Variant({
+    'doubles' : IDL.Null,
+    'singles' : IDL.Null,
   });
-  const Video = IDL.Record({
-    'id' : IDL.Nat,
-    'status' : VideoStatus,
+  const TournamentInput = IDL.Record({
+    'status' : TournamentStatus,
     'title' : IDL.Text,
-    'thumbnail' : IDL.Opt(ExternalBlob),
-    'ownerId' : UserId,
-    'video' : ExternalBlob,
-    'createdAt' : Timestamp,
-    'publishedAt' : IDL.Opt(Timestamp),
-    'mimeType' : IDL.Text,
-    'description' : IDL.Opt(IDL.Text),
-    'fileSize' : IDL.Nat,
-    'filename' : IDL.Text,
-    'viewCount' : IDL.Nat,
-    'isPrivate' : IDL.Bool,
+    'venue' : IDL.Text,
+    'startsAt' : Timestamp,
+    'description' : IDL.Text,
+    'capacity' : IDL.Nat,
+    'format' : TournamentFormat,
   });
-  const CreateVideoResult = IDL.Record({
-    'video' : Video,
-    'playlistId' : IDL.Opt(IDL.Nat),
+  const Tournament = IDL.Record({
+    'id' : IDL.Nat,
+    'status' : TournamentStatus,
+    'title' : IDL.Text,
+    'venue' : IDL.Text,
+    'startsAt' : Timestamp,
+    'createdAt' : Timestamp,
+    'description' : IDL.Text,
+    'updatedAt' : Timestamp,
+    'capacity' : IDL.Nat,
+    'format' : TournamentFormat,
+  });
+  const UserId = IDL.Principal;
+  const UserInput = IDL.Record({
+    'bio' : IDL.Opt(IDL.Text),
+    'username' : IDL.Text,
+    'displayName' : IDL.Text,
+  });
+  const Role = IDL.Variant({ 'admin' : IDL.Null });
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
+  const User = IDL.Record({
+    'id' : UserId,
+    'bio' : IDL.Opt(IDL.Text),
+    'username' : IDL.Text,
+    'displayName' : IDL.Text,
+    'createdAt' : Timestamp,
+    'role' : IDL.Opt(Role),
+    'avatar' : IDL.Opt(ExternalBlob),
   });
   const Value = IDL.Variant({
     'int' : IDL.Int,
@@ -350,55 +268,6 @@ export const idlFactory = ({ IDL }) => {
   const Result = IDL.Record({
     'hasMore' : IDL.Bool,
     'rows' : IDL.Vec(IDL.Vec(Cell)),
-  });
-  const Role = IDL.Variant({ 'admin' : IDL.Null });
-  const User = IDL.Record({
-    'id' : UserId,
-    'bio' : IDL.Opt(IDL.Text),
-    'username' : IDL.Text,
-    'displayName' : IDL.Text,
-    'createdAt' : Timestamp,
-    'role' : IDL.Opt(Role),
-    'avatar' : IDL.Opt(ExternalBlob),
-  });
-  const Cursor = IDL.Nat;
-  const PlaylistSummary = IDL.Record({
-    'id' : IDL.Nat,
-    'title' : IDL.Text,
-    'thumbnail' : IDL.Opt(ExternalBlob),
-    'videoCount' : IDL.Nat,
-    'firstVideoId' : IDL.Opt(IDL.Nat),
-    'ownerId' : UserId,
-    'createdAt' : Timestamp,
-    'updatedAt' : Timestamp,
-    'isPrivate' : IDL.Bool,
-  });
-  const Page_2 = IDL.Record({
-    'items' : IDL.Vec(PlaylistSummary),
-    'nextCursor' : IDL.Opt(Cursor),
-  });
-  const Page = IDL.Record({
-    'items' : IDL.Vec(Video),
-    'nextCursor' : IDL.Opt(Cursor),
-  });
-  const NotificationKind = IDL.Variant({
-    'newVideo' : IDL.Record({ 'channelId' : UserId, 'videoId' : IDL.Nat }),
-    'newSubscriber' : IDL.Record({ 'channelId' : UserId }),
-  });
-  const Notification = IDL.Record({
-    'id' : IDL.Nat,
-    'kind' : NotificationKind,
-    'createdAt' : Timestamp,
-    'read' : IDL.Bool,
-    'recipientId' : UserId,
-  });
-  const Page_1 = IDL.Record({
-    'items' : IDL.Vec(Notification),
-    'nextCursor' : IDL.Opt(Cursor),
-  });
-  const PlaylistView = IDL.Record({
-    'playlist' : PlaylistSummary,
-    'videos' : IDL.Vec(Video),
   });
   const UserRoleView = IDL.Record({
     'id' : UserId,
@@ -437,78 +306,27 @@ export const idlFactory = ({ IDL }) => {
     '_initialize_access_control' : IDL.Func([], [], []),
     '_internet_identity_sign_in_finish' : IDL.Func([], [Result__1], []),
     '_internet_identity_sign_in_start' : IDL.Func([], [IDL.Vec(IDL.Nat8)], []),
-    'addVideoToPlaylist' : IDL.Func([IDL.Nat, IDL.Nat], [Playlist], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'bootstrapOwner' : IDL.Func([], [], []),
-    'createPlaylist' : IDL.Func(
-        [IDL.Text, IDL.Bool, IDL.Opt(IDL.Nat)],
-        [Playlist],
-        [],
-      ),
-    'createVideo' : IDL.Func(
-        [
-          IDL.Text,
-          IDL.Opt(IDL.Text),
-          ExternalBlob,
-          IDL.Opt(ExternalBlob),
-          IDL.Text,
-          IDL.Text,
-          IDL.Nat,
-          IDL.Bool,
-          IDL.Opt(PlaylistSelection),
-        ],
-        [CreateVideoResult],
-        [],
-      ),
-    'deleteVideo' : IDL.Func([IDL.Nat], [], []),
+    'createTournament' : IDL.Func([TournamentInput], [Tournament], []),
+    'createUser' : IDL.Func([UserId, UserInput], [User], []),
     'execute' : IDL.Func([IDL.Text], [Result], ['query']),
     'getApiDoc' : IDL.Func([], [IDL.Text], ['query']),
     'getCallerProfile' : IDL.Func([], [IDL.Opt(User)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-    'getChannel' : IDL.Func([UserId], [IDL.Opt(User)], ['query']),
-    'getChannelByUsername' : IDL.Func([IDL.Text], [IDL.Opt(User)], ['query']),
-    'getChannelPlaylists' : IDL.Func(
-        [UserId, Cursor, IDL.Nat],
-        [Page_2],
-        ['query'],
-      ),
-    'getChannelVideos' : IDL.Func([UserId, Cursor, IDL.Nat], [Page], ['query']),
-    'getFeed' : IDL.Func([Cursor, IDL.Nat], [Page], ['query']),
-    'getMyPlaylists' : IDL.Func([], [IDL.Vec(Playlist)], ['query']),
     'getMyRole' : IDL.Func([], [IDL.Opt(Role)], ['query']),
-    'getMyVideos' : IDL.Func([Cursor, IDL.Nat], [Page], ['query']),
-    'getNotifications' : IDL.Func([Cursor, IDL.Nat], [Page_1], ['query']),
-    'getPlaylist' : IDL.Func([IDL.Nat], [IDL.Opt(PlaylistView)], ['query']),
-    'getStorageProviders' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-    'getSubscribedChannels' : IDL.Func([], [IDL.Vec(UserId)], ['query']),
-    'getSubscriberCount' : IDL.Func([UserId], [IDL.Nat], ['query']),
-    'getSubscriptionFeed' : IDL.Func([Cursor, IDL.Nat], [Page], ['query']),
-    'getUnreadNotificationCount' : IDL.Func([], [IDL.Nat], ['query']),
-    'getVideo' : IDL.Func([IDL.Nat], [IDL.Opt(Video)], ['query']),
+    'getTournament' : IDL.Func([IDL.Nat], [IDL.Opt(Tournament)], ['query']),
+    'getTournaments' : IDL.Func([], [IDL.Vec(Tournament)], ['query']),
+    'getUser' : IDL.Func([UserId], [IDL.Opt(User)], ['query']),
+    'getUserByUsername' : IDL.Func([IDL.Text], [IDL.Opt(User)], ['query']),
     'grantAdminRole' : IDL.Func([UserId], [UserRoleView], []),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-    'isSubscribed' : IDL.Func([UserId], [IDL.Bool], ['query']),
+    'listUsers' : IDL.Func([], [IDL.Vec(User)], ['query']),
     'listUsersWithRoles' : IDL.Func([], [IDL.Vec(UserRoleView)], ['query']),
-    'markNotificationsRead' : IDL.Func([], [], []),
-    'publishVideo' : IDL.Func([IDL.Nat], [Video], []),
-    'recordVideoView' : IDL.Func([IDL.Nat], [IDL.Nat], []),
-    'registerStorageProvider' : IDL.Func([IDL.Text], [], []),
-    'removeVideoFromPlaylist' : IDL.Func([IDL.Nat, IDL.Nat], [Playlist], []),
     'revokeAdminRole' : IDL.Func([UserId], [UserRoleView], []),
-    'saveProfile' : IDL.Func(
-        [
-          IDL.Text,
-          IDL.Text,
-          IDL.Opt(ExternalBlob),
-          IDL.Bool,
-          IDL.Opt(IDL.Text),
-        ],
-        [User],
-        [],
-      ),
     'schema' : IDL.Func([], [IDL.Text], ['query']),
-    'subscribe' : IDL.Func([UserId], [], []),
-    'unsubscribe' : IDL.Func([UserId], [], []),
+    'updateTournament' : IDL.Func([IDL.Nat, TournamentInput], [Tournament], []),
+    'updateUser' : IDL.Func([UserId, UserInput], [User], []),
   });
 };
 

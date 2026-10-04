@@ -1,4 +1,4 @@
-type _ImmutableObjectStorageRefillResult = 
+type _ImmutableObjectStorageRefillResult =
  record {
    success: opt bool;
    topped_up_amount: opt nat;
@@ -6,36 +6,12 @@ type _ImmutableObjectStorageRefillResult =
 type _ImmutableObjectStorageRefillInformation = record {
                                                   proposed_top_up_amount:
                                                    opt nat;};
-type _ImmutableObjectStorageCreateCertificateResult = 
+type _ImmutableObjectStorageCreateCertificateResult =
  record {
    blob_hash: text;
    method: text;
  };
-type VideoStatus = 
- variant {
-   deleted;
-   draft;
-   processing;
-   published;
- };
-type Video = 
- record {
-   createdAt: Timestamp;
-   description: opt text;
-   fileSize: nat;
-   filename: text;
-   id: nat;
-   isPrivate: bool;
-   mimeType: text;
-   ownerId: UserId;
-   publishedAt: opt Timestamp;
-   status: VideoStatus;
-   thumbnail: opt ExternalBlob;
-   title: text;
-   video: ExternalBlob;
-   viewCount: nat;
- };
-type Value = 
+type Value =
  variant {
    "bool": bool;
    float: float64;
@@ -44,21 +20,27 @@ type Value =
    "null";
    "text": text;
  };
-type UserRoleView = 
+type UserRoleView =
  record {
    displayName: text;
    id: UserId;
    role: opt Role;
    username: text;
  };
-type UserRole = 
+type UserRole =
  variant {
    admin;
    guest;
    user;
  };
+type UserInput =
+ record {
+   bio: opt text;
+   displayName: text;
+   username: text;
+ };
 type UserId = principal;
-type User = 
+type User =
  record {
    avatar: opt ExternalBlob;
    bio: opt text;
@@ -68,86 +50,54 @@ type User =
    role: opt Role;
    username: text;
  };
+type TournamentStatus =
+ variant {
+   completed;
+   live;
+   upcoming;
+ };
+type TournamentInput =
+ record {
+   capacity: nat;
+   description: text;
+   format: TournamentFormat;
+   startsAt: Timestamp;
+   status: TournamentStatus;
+   title: text;
+   venue: text;
+ };
+type TournamentFormat =
+ variant {
+   doubles;
+   singles;
+ };
+type Tournament =
+ record {
+   capacity: nat;
+   createdAt: Timestamp;
+   description: text;
+   format: TournamentFormat;
+   id: nat;
+   startsAt: Timestamp;
+   status: TournamentStatus;
+   title: text;
+   updatedAt: Timestamp;
+   venue: text;
+ };
 type Timestamp = int;
 type Role = variant {admin;};
-type Result__1 = 
+type Result__1 =
  variant {
    err: Error;
    ok;
  };
-type Result = 
+type Result =
  record {
    hasMore: bool;
    rows: vec vec Cell;
  };
-type PlaylistView = 
- record {
-   playlist: PlaylistSummary;
-   videos: vec Video;
- };
-type PlaylistSummary = 
- record {
-   createdAt: Timestamp;
-   firstVideoId: opt nat;
-   id: nat;
-   isPrivate: bool;
-   ownerId: UserId;
-   thumbnail: opt ExternalBlob;
-   title: text;
-   updatedAt: Timestamp;
-   videoCount: nat;
- };
-type PlaylistSelection = 
- variant {
-   existing: nat;
-   new: record {
-          isPrivate: bool;
-          title: text;
-        };
- };
-type Playlist = 
- record {
-   createdAt: Timestamp;
-   id: nat;
-   isPrivate: bool;
-   ownerId: UserId;
-   title: text;
-   updatedAt: Timestamp;
-   videoIds: vec nat;
- };
-type Page_2 = 
- record {
-   items: vec PlaylistSummary;
-   nextCursor: opt Cursor;
- };
-type Page_1 = 
- record {
-   items: vec Notification;
-   nextCursor: opt Cursor;
- };
-type Page = 
- record {
-   items: vec Video;
-   nextCursor: opt Cursor;
- };
-type NotificationKind = 
- variant {
-   newSubscriber: record {channelId: UserId;};
-   newVideo: record {
-               channelId: UserId;
-               videoId: nat;
-             };
- };
-type Notification = 
- record {
-   createdAt: Timestamp;
-   id: nat;
-   kind: NotificationKind;
-   read: bool;
-   recipientId: UserId;
- };
 type ExternalBlob = blob;
-type Error = 
+type Error =
  variant {
    AmbiguousAttribute: record {
                          field: text;
@@ -169,13 +119,7 @@ type Error =
    UnknownNonce;
    UntrustedSsoSource: record {domain: text;};
  };
-type Cursor = nat;
-type CreateVideoResult = 
- record {
-   playlistId: opt nat;
-   video: Video;
- };
-type Cell = 
+type Cell =
  record {
    name: text;
    value: Value;
@@ -193,51 +137,25 @@ service : {
   _initialize_access_control: () -> ();
   _internet_identity_sign_in_finish: () -> (Result__1);
   _internet_identity_sign_in_start: () -> (blob);
-  addVideoToPlaylist: (playlistId: nat, videoId: nat) -> (Playlist);
   assignCallerUserRole: (user: principal, role: UserRole) -> ();
   bootstrapOwner: () -> ();
-  createPlaylist: (title: text, isPrivate: bool, initialVideoId: opt nat) ->
-   (Playlist);
-  createVideo: (title: text, description: opt text, video: ExternalBlob,
-   thumbnail: opt ExternalBlob, filename: text, mimeType: text, fileSize:
-   nat, isPrivate: bool, playlist: opt PlaylistSelection) ->
-   (CreateVideoResult);
-  deleteVideo: (videoId: nat) -> ();
+  createTournament: (input: TournamentInput) -> (Tournament);
+  createUser: (userId: UserId, input: UserInput) -> (User);
   execute: (qJson: text) -> (Result) query;
   getApiDoc: () -> (text) query;
   getCallerProfile: () -> (opt User) query;
   getCallerUserRole: () -> (UserRole) query;
-  getChannel: (userId: UserId) -> (opt User) query;
-  getChannelByUsername: (username: text) -> (opt User) query;
-  getChannelPlaylists: (userId: UserId, cursor: Cursor, limit: nat) ->
-   (Page_2) query;
-  getChannelVideos: (userId: UserId, cursor: Cursor, limit: nat) ->
-   (Page) query;
-  getFeed: (cursor: Cursor, limit: nat) -> (Page) query;
-  getMyPlaylists: () -> (vec Playlist) query;
   getMyRole: () -> (opt Role) query;
-  getMyVideos: (cursor: Cursor, limit: nat) -> (Page) query;
-  getNotifications: (cursor: Cursor, limit: nat) -> (Page_1) query;
-  getPlaylist: (playlistId: nat) -> (opt PlaylistView) query;
-  getStorageProviders: () -> (vec text) query;
-  getSubscribedChannels: () -> (vec UserId) query;
-  getSubscriberCount: (channelId: UserId) -> (nat) query;
-  getSubscriptionFeed: (cursor: Cursor, limit: nat) -> (Page) query;
-  getUnreadNotificationCount: () -> (nat) query;
-  getVideo: (videoId: nat) -> (opt Video) query;
+  getTournament: (id: nat) -> (opt Tournament) query;
+  getTournaments: () -> (vec Tournament) query;
+  getUser: (userId: UserId) -> (opt User) query;
+  getUserByUsername: (username: text) -> (opt User) query;
   grantAdminRole: (target: UserId) -> (UserRoleView);
   isCallerAdmin: () -> (bool) query;
-  isSubscribed: (channelId: UserId) -> (bool) query;
+  listUsers: () -> (vec User) query;
   listUsersWithRoles: () -> (vec UserRoleView) query;
-  markNotificationsRead: () -> ();
-  publishVideo: (videoId: nat) -> (Video);
-  recordVideoView: (videoId: nat) -> (nat);
-  registerStorageProvider: (providerId: text) -> ();
-  removeVideoFromPlaylist: (playlistId: nat, videoId: nat) -> (Playlist);
   revokeAdminRole: (target: UserId) -> (UserRoleView);
-  saveProfile: (displayName: text, username: text, avatar: opt ExternalBlob,
-   removeAvatar: bool, bio: opt text) -> (User);
   schema: () -> (text) query;
-  subscribe: (channelId: UserId) -> ();
-  unsubscribe: (channelId: UserId) -> ();
+  updateTournament: (id: nat, input: TournamentInput) -> (Tournament);
+  updateUser: (userId: UserId, input: UserInput) -> (User);
 }

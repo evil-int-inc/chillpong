@@ -46,6 +46,23 @@ vi.mock("@caffeineai/object-storage", () => ({
 // Generated components use `data-ocid` as their test id attribute.
 configure({ testIdAttribute: "data-ocid" });
 
+// jsdom exposes <dialog> but does not implement its native open/close methods.
+// Keep the open attribute in sync so accessible-role queries match the browser.
+Object.defineProperties(HTMLDialogElement.prototype, {
+  showModal: {
+    configurable: true,
+    value(this: HTMLDialogElement) {
+      this.open = true;
+    },
+  },
+  close: {
+    configurable: true,
+    value(this: HTMLDialogElement) {
+      this.open = false;
+    },
+  },
+});
+
 // RTL auto-cleanup relies on a global `afterEach`; enable it explicitly since
 // vitest globals are not turned on.
 afterEach(() => {

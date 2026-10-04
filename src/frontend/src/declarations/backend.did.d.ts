@@ -11,11 +11,6 @@ import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
 export interface Cell { 'value' : Value, 'name' : string }
-export interface CreateVideoResult {
-  'video' : Video,
-  'playlistId' : [] | [bigint],
-}
-export type Cursor = bigint;
 export type Error = { 'FrontendOriginsNotConfigured' : null } |
   {
     'MixedSsoSources' : {
@@ -32,59 +27,37 @@ export type Error = { 'FrontendOriginsNotConfigured' : null } |
   { 'MissingField' : string } |
   { 'FrontendOriginMismatch' : { 'got' : string, 'expected' : Array<string> } };
 export type ExternalBlob = Uint8Array;
-export interface Notification {
-  'id' : bigint,
-  'kind' : NotificationKind,
-  'createdAt' : Timestamp,
-  'read' : boolean,
-  'recipientId' : UserId,
-}
-export type NotificationKind = {
-    'newVideo' : { 'channelId' : UserId, 'videoId' : bigint }
-  } |
-  { 'newSubscriber' : { 'channelId' : UserId } };
-export interface Page { 'items' : Array<Video>, 'nextCursor' : [] | [Cursor] }
-export interface Page_1 {
-  'items' : Array<Notification>,
-  'nextCursor' : [] | [Cursor],
-}
-export interface Page_2 {
-  'items' : Array<PlaylistSummary>,
-  'nextCursor' : [] | [Cursor],
-}
-export interface Playlist {
-  'id' : bigint,
-  'title' : string,
-  'ownerId' : UserId,
-  'createdAt' : Timestamp,
-  'updatedAt' : Timestamp,
-  'isPrivate' : boolean,
-  'videoIds' : Array<bigint>,
-}
-export type PlaylistSelection = {
-    'new' : { 'title' : string, 'isPrivate' : boolean }
-  } |
-  { 'existing' : bigint };
-export interface PlaylistSummary {
-  'id' : bigint,
-  'title' : string,
-  'thumbnail' : [] | [ExternalBlob],
-  'videoCount' : bigint,
-  'firstVideoId' : [] | [bigint],
-  'ownerId' : UserId,
-  'createdAt' : Timestamp,
-  'updatedAt' : Timestamp,
-  'isPrivate' : boolean,
-}
-export interface PlaylistView {
-  'playlist' : PlaylistSummary,
-  'videos' : Array<Video>,
-}
 export interface Result { 'hasMore' : boolean, 'rows' : Array<Array<Cell>> }
 export type Result__1 = { 'ok' : null } |
   { 'err' : Error };
 export type Role = { 'admin' : null };
 export type Timestamp = bigint;
+export interface Tournament {
+  'id' : bigint,
+  'status' : TournamentStatus,
+  'title' : string,
+  'venue' : string,
+  'startsAt' : Timestamp,
+  'createdAt' : Timestamp,
+  'description' : string,
+  'updatedAt' : Timestamp,
+  'capacity' : bigint,
+  'format' : TournamentFormat,
+}
+export type TournamentFormat = { 'doubles' : null } |
+  { 'singles' : null };
+export interface TournamentInput {
+  'status' : TournamentStatus,
+  'title' : string,
+  'venue' : string,
+  'startsAt' : Timestamp,
+  'description' : string,
+  'capacity' : bigint,
+  'format' : TournamentFormat,
+}
+export type TournamentStatus = { 'upcoming' : null } |
+  { 'live' : null } |
+  { 'completed' : null };
 export interface User {
   'id' : UserId,
   'bio' : [] | [string],
@@ -95,6 +68,11 @@ export interface User {
   'avatar' : [] | [ExternalBlob],
 }
 export type UserId = Principal;
+export interface UserInput {
+  'bio' : [] | [string],
+  'username' : string,
+  'displayName' : string,
+}
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
@@ -110,26 +88,6 @@ export type Value = { 'int' : bigint } |
   { 'bool' : boolean } |
   { 'null' : null } |
   { 'text' : string };
-export interface Video {
-  'id' : bigint,
-  'status' : VideoStatus,
-  'title' : string,
-  'thumbnail' : [] | [ExternalBlob],
-  'ownerId' : UserId,
-  'video' : ExternalBlob,
-  'createdAt' : Timestamp,
-  'publishedAt' : [] | [Timestamp],
-  'mimeType' : string,
-  'description' : [] | [string],
-  'fileSize' : bigint,
-  'filename' : string,
-  'viewCount' : bigint,
-  'isPrivate' : boolean,
-}
-export type VideoStatus = { 'deleted' : null } |
-  { 'published' : null } |
-  { 'processing' : null } |
-  { 'draft' : null };
 export interface _ImmutableObjectStorageCreateCertificateResult {
   'method' : string,
   'blob_hash' : string,
@@ -163,62 +121,27 @@ export interface _SERVICE {
   '_initialize_access_control' : ActorMethod<[], undefined>,
   '_internet_identity_sign_in_finish' : ActorMethod<[], Result__1>,
   '_internet_identity_sign_in_start' : ActorMethod<[], Uint8Array>,
-  'addVideoToPlaylist' : ActorMethod<[bigint, bigint], Playlist>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'bootstrapOwner' : ActorMethod<[], undefined>,
-  'createPlaylist' : ActorMethod<[string, boolean, [] | [bigint]], Playlist>,
-  'createVideo' : ActorMethod<
-    [
-      string,
-      [] | [string],
-      ExternalBlob,
-      [] | [ExternalBlob],
-      string,
-      string,
-      bigint,
-      boolean,
-      [] | [PlaylistSelection],
-    ],
-    CreateVideoResult
-  >,
-  'deleteVideo' : ActorMethod<[bigint], undefined>,
+  'createTournament' : ActorMethod<[TournamentInput], Tournament>,
+  'createUser' : ActorMethod<[UserId, UserInput], User>,
   'execute' : ActorMethod<[string], Result>,
   'getApiDoc' : ActorMethod<[], string>,
   'getCallerProfile' : ActorMethod<[], [] | [User]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
-  'getChannel' : ActorMethod<[UserId], [] | [User]>,
-  'getChannelByUsername' : ActorMethod<[string], [] | [User]>,
-  'getChannelPlaylists' : ActorMethod<[UserId, Cursor, bigint], Page_2>,
-  'getChannelVideos' : ActorMethod<[UserId, Cursor, bigint], Page>,
-  'getFeed' : ActorMethod<[Cursor, bigint], Page>,
-  'getMyPlaylists' : ActorMethod<[], Array<Playlist>>,
   'getMyRole' : ActorMethod<[], [] | [Role]>,
-  'getMyVideos' : ActorMethod<[Cursor, bigint], Page>,
-  'getNotifications' : ActorMethod<[Cursor, bigint], Page_1>,
-  'getPlaylist' : ActorMethod<[bigint], [] | [PlaylistView]>,
-  'getStorageProviders' : ActorMethod<[], Array<string>>,
-  'getSubscribedChannels' : ActorMethod<[], Array<UserId>>,
-  'getSubscriberCount' : ActorMethod<[UserId], bigint>,
-  'getSubscriptionFeed' : ActorMethod<[Cursor, bigint], Page>,
-  'getUnreadNotificationCount' : ActorMethod<[], bigint>,
-  'getVideo' : ActorMethod<[bigint], [] | [Video]>,
+  'getTournament' : ActorMethod<[bigint], [] | [Tournament]>,
+  'getTournaments' : ActorMethod<[], Array<Tournament>>,
+  'getUser' : ActorMethod<[UserId], [] | [User]>,
+  'getUserByUsername' : ActorMethod<[string], [] | [User]>,
   'grantAdminRole' : ActorMethod<[UserId], UserRoleView>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
-  'isSubscribed' : ActorMethod<[UserId], boolean>,
+  'listUsers' : ActorMethod<[], Array<User>>,
   'listUsersWithRoles' : ActorMethod<[], Array<UserRoleView>>,
-  'markNotificationsRead' : ActorMethod<[], undefined>,
-  'publishVideo' : ActorMethod<[bigint], Video>,
-  'recordVideoView' : ActorMethod<[bigint], bigint>,
-  'registerStorageProvider' : ActorMethod<[string], undefined>,
-  'removeVideoFromPlaylist' : ActorMethod<[bigint, bigint], Playlist>,
   'revokeAdminRole' : ActorMethod<[UserId], UserRoleView>,
-  'saveProfile' : ActorMethod<
-    [string, string, [] | [ExternalBlob], boolean, [] | [string]],
-    User
-  >,
   'schema' : ActorMethod<[], string>,
-  'subscribe' : ActorMethod<[UserId], undefined>,
-  'unsubscribe' : ActorMethod<[UserId], undefined>,
+  'updateTournament' : ActorMethod<[bigint, TournamentInput], Tournament>,
+  'updateUser' : ActorMethod<[UserId, UserInput], User>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

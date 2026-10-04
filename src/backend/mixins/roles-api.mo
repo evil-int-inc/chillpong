@@ -1,3 +1,4 @@
+import Array "mo:core/Array";
 import Runtime "mo:core/Runtime";
 import Map "mo:core/Map";
 import Principal "mo:core/Principal";
@@ -17,27 +18,15 @@ mixin (
   // as admin once the owner bootstrap has been applied, even before a profile
   // record exists.
   public query ({ caller }) func getMyRole() : async ?Users.Role {
-    switch (UsersLib.getUser(users, caller)) {
-      case (?u) {
-        switch (u.role) {
-          case (?#admin) { ?#admin };
-          case null {
-            if (owner.ownerPrincipal == ?caller and owner.ownerApplied) { ?#admin } else { null };
-          };
-        };
-      };
-      case null {
-        if (owner.ownerPrincipal == ?caller and owner.ownerApplied) { ?#admin } else { null };
-      };
-    };
+    RolesLib.effectiveRole(accessControlState, users, owner, caller);
   };
 
   // Admin-only. Lists every user with their current role.
   public query ({ caller }) func listUsersWithRoles() : async [Users.UserRoleView] {
-    if (not AccessControl.hasPermission(accessControlState, caller, #admin)) {
-      Runtime.trap("Unauthorized: Only admins can perform this action");
-    };
-    UsersLib.listUserRoles(users);
+    RolesLib.requireAdmin(accessControlState, caller);
+    UsersLib.listUserRoles(users).map(func user = {
+      user with role = RolesLib.effectiveRole(accessControlState, users, owner, user.id)
+    });
   };
 
   // Admin-only. Grants the admin role to `target`. Traps when the caller is
@@ -53,6 +42,7 @@ mixin (
   // not an admin, when `target` has no user record, or when `target` is the
   // owner (the owner never loses admin access).
   public shared ({ caller }) func revokeAdminRole(target : Common.UserId) : async Users.UserRoleView {
+    RolesLib.requireAdmin(accessControlState, caller);
     if (owner.ownerPrincipal == ?target) {
       Runtime.trap("Cannot revoke the owner's admin role");
     };
@@ -70,7 +60,10 @@ mixin (
       Runtime.trap("Unauthorized: Only users can perform this action");
     };
     switch (owner.ownerPrincipal) {
-      case null { owner.ownerPrincipal := ?caller };
+      case null {
+        RolesLib.requireAdmin(accessControlState, caller);
+        owner.ownerPrincipal := ?caller;
+      };
       case (?_) {};
     };
     RolesLib.applyOwnerBootstrap(accessControlState, users, owner);

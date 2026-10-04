@@ -1,16 +1,41 @@
 @import "tailwindcss";
-@plugin "daisyui";
-@plugin "daisyui/theme" {
-  /* biome-ignore lint/correctness/noUnknownProperty: DaisyUI theme option */
-  name: "lofi";
-  /* biome-ignore lint/correctness/noUnknownProperty: DaisyUI theme option */
-  default: true;
+@plugin "daisyui" {
+  /* biome-ignore lint/correctness/noUnknownProperty: DaisyUI plugin option */
+  themes: black --default;
 }
 @plugin "daisyui/theme" {
   /* biome-ignore lint/correctness/noUnknownProperty: DaisyUI theme option */
   name: "black";
   /* biome-ignore lint/correctness/noUnknownProperty: DaisyUI theme option */
+  default: true;
+  /* biome-ignore lint/correctness/noUnknownProperty: DaisyUI theme option */
   prefersdark: true;
+  color-scheme: dark;
+  --color-base-100: #101010;
+  --color-base-200: #171717;
+  --color-base-300: #303030;
+  --color-base-content: #f3f2ed;
+  --color-primary: #d7f347;
+  --color-primary-content: #11130a;
+  --color-secondary: #ff513d;
+  --color-secondary-content: #160604;
+  --color-accent: #d7f347;
+  --color-accent-content: #11130a;
+  --color-neutral: #222222;
+  --color-neutral-content: #f3f2ed;
+  --color-info: #c4c4bd;
+  --color-info-content: #101010;
+  --color-success: #d7f347;
+  --color-success-content: #11130a;
+  --color-warning: #d7f347;
+  --color-warning-content: #11130a;
+  --color-error: #ff7565;
+  --color-error-content: #170605;
+  --radius-selector: 0rem;
+  --radius-field: 0rem;
+  --radius-box: 0rem;
+  --depth: 0;
+  --noise: 0;
 }
 
 @font-face {
@@ -18,41 +43,29 @@
   src: url("/assets/fonts/SpaceGrotesk.woff2") format("woff2");
   font-display: swap;
 }
-
 @font-face {
   font-family: "DM Sans";
   src: url("/assets/fonts/DMSans.woff2") format("woff2");
   font-display: swap;
 }
-
 @font-face {
   font-family: "Geist Mono";
   src: url("/assets/fonts/GeistMono.woff2") format("woff2");
   font-display: swap;
 }
 
-/*
- * Compatibility aliases keep the video pages readable while resolving every
- * color through the active DaisyUI theme. New shell code uses base-* tokens
- * directly, matching MemeT's DaisyUI structure.
- */
 @theme inline {
   --font-display: "Space Grotesk", sans-serif;
   --font-body: "DM Sans", sans-serif;
   --font-mono: "Geist Mono", monospace;
-
-  --color-background: var(--color-base-200);
+  --color-background: var(--color-base-100);
   --color-foreground: var(--color-base-content);
-  --color-card: var(--color-base-100);
+  --color-card: var(--color-base-200);
   --color-card-foreground: var(--color-base-content);
-  --color-popover: var(--color-base-100);
+  --color-popover: var(--color-base-200);
   --color-popover-foreground: var(--color-base-content);
   --color-muted: var(--color-base-300);
-  --color-muted-foreground: color-mix(
-    in oklab,
-    var(--color-base-content) 60%,
-    transparent
-  );
+  --color-muted-foreground: #999993;
   --color-border: var(--color-base-300);
   --color-input: var(--color-base-300);
   --color-ring: var(--color-primary);
@@ -61,26 +74,11 @@
   --color-accent-foreground: var(--color-accent-content);
   --color-destructive: var(--color-error);
   --color-destructive-foreground: var(--color-error-content);
-  --color-brand: oklch(45.201% 0.313 264.052);
-
-  --shadow-subtle: 0 1px 2px rgb(0 0 0 / 0.12), 0 2px 8px rgb(0 0 0 / 0.08);
-  --shadow-elevated: 0 4px 12px rgb(0 0 0 / 0.18), 0 12px 32px rgb(0 0 0 / 0.14);
-  --animate-fade-up: fade-up 0.3s ease-out both;
-
-  @keyframes fade-up {
-    from {
-      opacity: 0;
-      transform: translateY(0.75rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+  --color-brand: var(--color-primary);
 }
 
 @utility transition-smooth {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 150ms, background-color 150ms, border-color 150ms;
 }
 
 @layer base {
@@ -89,9 +87,183 @@
   #root {
     min-height: 100%;
   }
-
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-base-200 font-body text-base-content antialiased;
+    @apply bg-base-100 font-body text-base-content antialiased;
     margin: 0;
+  }
+  ::selection {
+    background: #d7f347;
+    color: #101010;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+  }
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:not(:disabled),
+  a {
+    cursor: pointer;
+  }
+}
+
+.club-content {
+  min-height: calc(100svh - 145px);
+  background-color: var(--color-base-100);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23ffffff' opacity='.026' filter='url(%23grain)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+}
+.club-page {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: clamp(24px, 3.2vw, 48px);
+}
+.section-kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .16em;
+  color: var(--color-base-content);
+}
+.section-kicker::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  background: var(--color-secondary);
+}
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(42px, 5.7vw, 82px);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -.065em;
+}
+.technical-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.club-nav-link {
+  border: 1px solid transparent;
+  color: #a5a59e;
+  transition: background-color 150ms, color 150ms;
+}
+.club-nav-link:hover {
+  color: var(--color-base-content);
+  background: var(--color-base-200);
+}
+.club-nav-link.is-active {
+  border-color: #d7f34733;
+  color: var(--color-primary);
+  background: #d7f3470c;
+  box-shadow: inset 2px 0 0 var(--color-primary);
+}
+.club-sidebar {
+  overflow-y: auto;
+}
+.club-filter {
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #a5a59e;
+  border: 1px solid transparent;
+}
+.club-filter:hover {
+  color: var(--color-base-content);
+  background: var(--color-base-200);
+}
+.club-filter.is-active {
+  border-color: var(--color-base-300);
+  color: var(--color-primary);
+  background: var(--color-base-200);
+}
+.club-search:focus-within {
+  border-color: var(--color-primary);
+}
+.club-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--color-base-300);
+  background: #17171780;
+  padding: 64px 24px;
+  text-align: center;
+}
+.club-state p {
+  max-width: 460px;
+}
+.club-modal .modal-box {
+  border: 1px solid #42423d;
+  border-top: 3px solid var(--color-primary);
+  border-radius: 0;
+  box-shadow: 0 24px 80px #0009;
+}
+.club-modal::backdrop {
+  background-color: #000c;
+  backdrop-filter: blur(4px);
+}
+.btn {
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  border-radius: 0;
+  box-shadow: none;
+}
+.btn-primary:hover {
+  background: #e3fa7a;
+  border-color: #e3fa7a;
+}
+.member-panel {
+  transition: border-color 150ms;
+}
+.member-panel:hover {
+  border-color: #55564b;
+}
+.tournament-row {
+  transition: background-color 150ms;
+}
+.tournament-row:hover {
+  background: #20201c;
+}
+.input,
+.textarea,
+.select {
+  background-color: var(--color-base-100);
+  border-color: #41413a;
+}
+@media (max-width: 640px) {
+  .club-page {
+    padding: 28px 20px;
+  }
+  .club-filter {
+    padding: 10px 9px;
+    font-size: 9px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
   }
 }
