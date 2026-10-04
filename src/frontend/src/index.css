@@ -1,0 +1,97 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+  /* biome-ignore lint/correctness/noUnknownProperty: DaisyUI theme option */
+  name: "lofi";
+  /* biome-ignore lint/correctness/noUnknownProperty: DaisyUI theme option */
+  default: true;
+}
+@plugin "daisyui/theme" {
+  /* biome-ignore lint/correctness/noUnknownProperty: DaisyUI theme option */
+  name: "black";
+  /* biome-ignore lint/correctness/noUnknownProperty: DaisyUI theme option */
+  prefersdark: true;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("/assets/fonts/SpaceGrotesk.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("/assets/fonts/DMSans.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/assets/fonts/GeistMono.woff2") format("woff2");
+  font-display: swap;
+}
+
+/*
+ * Compatibility aliases keep the video pages readable while resolving every
+ * color through the active DaisyUI theme. New shell code uses base-* tokens
+ * directly, matching MemeT's DaisyUI structure.
+ */
+@theme inline {
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+  --font-mono: "Geist Mono", monospace;
+
+  --color-background: var(--color-base-200);
+  --color-foreground: var(--color-base-content);
+  --color-card: var(--color-base-100);
+  --color-card-foreground: var(--color-base-content);
+  --color-popover: var(--color-base-100);
+  --color-popover-foreground: var(--color-base-content);
+  --color-muted: var(--color-base-300);
+  --color-muted-foreground: color-mix(
+    in oklab,
+    var(--color-base-content) 60%,
+    transparent
+  );
+  --color-border: var(--color-base-300);
+  --color-input: var(--color-base-300);
+  --color-ring: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-content);
+  --color-secondary-foreground: var(--color-secondary-content);
+  --color-accent-foreground: var(--color-accent-content);
+  --color-destructive: var(--color-error);
+  --color-destructive-foreground: var(--color-error-content);
+  --color-brand: oklch(45.201% 0.313 264.052);
+
+  --shadow-subtle: 0 1px 2px rgb(0 0 0 / 0.12), 0 2px 8px rgb(0 0 0 / 0.08);
+  --shadow-elevated: 0 4px 12px rgb(0 0 0 / 0.18), 0 12px 32px rgb(0 0 0 / 0.14);
+  --animate-fade-up: fade-up 0.3s ease-out both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@utility transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-base-200 font-body text-base-content antialiased;
+    margin: 0;
+  }
+}

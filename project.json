@@ -1,0 +1,18 @@
+{
+  "overview": "A video-sharing platform where users can upload, watch, and organize videos, with admin-managed user roles.",
+  "features": [
+    "Upload and watch videos",
+    "Subscribe to channels and get notifications",
+    "Create and manage playlists",
+    "Admin-only page to grant or revoke admin roles",
+    "Owner account automatically receives admin access"
+  ],
+  "category": "video-platform",
+  "tags": [
+    "video",
+    "social",
+    "content-management",
+    "roles"
+  ],
+  "last_updated": "2026-10-04T09:00:44.197Z"
+}
