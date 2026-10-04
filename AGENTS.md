@@ -10,8 +10,9 @@
 
 ## Verified Commands
 
-- **typecheck**: `mops check --fix`
-- **build**: `mops build`
+- **typecheck**: `pnpm typecheck`
+- **fix**: `pnpm fix`
+- **build**: `pnpm build`
 
 ## Learnings
 
@@ -24,3 +25,7 @@
 - Owner bootstrap with no init args: capture the first bootstrapOwner() caller as ownerPrincipal, mirror the authorization package's #admin onto the app-level User.role, and re-apply idempotently on every sign-in so the owner keeps admin across upgrades.
 - getMyRole must not call AccessControl.isAdmin for unregistered callers (it traps); base it on the User.role field plus an ownerApplied fallback so anonymous/unregistered callers get null instead of a trap.
 - The visual-QA mock shim overrides useActor but not useInternetIdentity, so auth-gated routes (/admin, /profile, /upload) cannot be visually verified in the preview harness.
+- ChillPong favicon is a multi-size ICO (16/32/48) at public/favicon.ico plus public/favicon-192.png and public/apple-touch-icon.png, all linked from index.html; header/sidebar brand mark remains public/logo.jpg.
+- sharp cannot emit .ico; build the ICO container manually from PNG-encoded 16/32/48 frames (6-byte header + 16-byte dir entries + PNG data).
+- bash cp/rm are permission-denied in this environment; use a Node fs script (readFile/writeFile/rmSync) to copy and clean up files.
+- Frontend verification sequence: pnpm typecheck && pnpm fix && pnpm build.

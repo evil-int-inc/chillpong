@@ -21,7 +21,6 @@ check-limit = 1
 [toolchain]
 moc = "1.16.0"
 lintoko = "0.11.0"
-pocket-ic = "15.0.0"
 
 [lint]
 extends = true
