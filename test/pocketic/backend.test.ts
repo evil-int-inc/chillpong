@@ -1002,6 +1002,217 @@ afterAll(async () => {
 });
 
 describe("ChillPong users and tournaments", () => {
+  it("lets authenticated members save either optional profile field or leave both blank", async () => {
+    const principal = createIdentity("optional-self-profile").getPrincipal();
+    actor.setPrincipal(principal);
+    await actor._initialize_access_control();
+    const empty = await actor.saveCallerProfile({
+      displayName: "  ",
+      username: "  ",
+    });
+    expect(empty.id.toText()).toBe(principal.toText());
+    expect(empty.displayName).toBe("");
+    expect(empty.username).toBe("");
+    expect(empty.role).toEqual([]);
+    expect(await actor.getCallerProfile()).toEqual([empty]);
+
+    const named = await actor.saveCallerProfile({
+      displayName: "  Luka  ",
+      username: "",
+    });
+    expect(named.displayName).toBe("Luka");
+    expect(named.username).toBe("");
+    const handled = await actor.saveCallerProfile({
+      displayName: "",
+      username: " SELF_HANDLE ",
+    });
+    expect(handled.displayName).toBe("");
+    expect(handled.username).toBe("self_handle");
+    expect(handled.createdAt).toBe(empty.createdAt);
+    expect((await actor.getUserByUsername("SELF_HANDLE"))[0]?.id.toText()).toBe(
+      principal.toText(),
+    );
+    const cleared = await actor.saveCallerProfile({
+      displayName: "",
+      username: "",
+    });
+    expect(cleared.createdAt).toBe(empty.createdAt);
+    expect(await actor.getUserByUsername("self_handle")).toEqual([]);
+    expect(await actor.getUserByUsername(" ")).toEqual([]);
+    expect(await actor.getMyRole()).toEqual([]);
+
+    const second = createIdentity(
+      "second-optional-self-profile",
+    ).getPrincipal();
+    actor.setPrincipal(second);
+    await actor._initialize_access_control();
+    await actor.saveCallerProfile({ displayName: "", username: "" });
+    await actor.saveCallerProfile({ displayName: "", username: "self_handle" });
+    expect((await actor.getUserByUsername("self_handle"))[0]?.id.toText()).toBe(
+      second.toText(),
+    );
+  });
+
+  it("preserves account metadata and admin access when members edit only their own profile", async () => {
+    const principal = createIdentity("self-profile-admin").getPrincipal();
+    const existing = await actor.createUser(
+      principal,
+      userInput({ username: "self-admin", bio: ["Keep this bio"] }),
+    );
+    await actor.grantAdminRole(principal);
+    const ownerBefore = await actor.getUser(owner);
+    actor.setPrincipal(principal);
+    const saved = await actor.saveCallerProfile({
+      displayName: "My own name",
+      username: "",
+    });
+    expect(saved.id.toText()).toBe(principal.toText());
+    expect(saved.bio).toEqual(existing.bio);
+    expect(saved.avatar).toEqual(existing.avatar);
+    expect(saved.createdAt).toBe(existing.createdAt);
+    expect(saved.role).toEqual([{ admin: null }]);
+    expect(await actor.getMyRole()).toEqual([{ admin: null }]);
+    expect(await actor.getUser(owner)).toEqual(ownerBefore);
+    actor.setPrincipal(owner);
+    expect(
+      (await actor.listUsersWithRoles()).find(
+        (account) => account.id.toText() === principal.toText(),
+      )?.displayName,
+    ).toBe("My own name");
+  });
+
+  it("rejects duplicate self-service usernames atomically", async () => {
+    const principal = createIdentity("duplicate-self-profile").getPrincipal();
+    actor.setPrincipal(principal);
+    await actor._initialize_access_control();
+    const existing = await actor.saveCallerProfile({
+      displayName: "Before",
+      username: "unique-self",
+    });
+    await expect(
+      actor.saveCallerProfile({ displayName: "After", username: " MEMBER " }),
+    ).rejects.toThrow(/Username already taken/);
+    expect(await actor.getCallerProfile()).toEqual([existing]);
+    expect((await actor.getUserByUsername("unique-self"))[0]?.id.toText()).toBe(
+      principal.toText(),
+    );
+    expect((await actor.getUserByUsername("member"))[0]?.id.toText()).toBe(
+      member.toText(),
+    );
+  });
+
+  it.each([
+    { name: "anonymous", principal: anonymous },
+    {
+      name: "unregistered",
+      principal: createIdentity("unregistered-profile").getPrincipal(),
+    },
+  ])("rejects profile saves from $name callers", async ({ principal }) => {
+    actor.setPrincipal(principal);
+    await expect(
+      actor.saveCallerProfile({ displayName: "", username: "" }),
+    ).rejects.toThrow(/Unauthorized/);
+    expect(await actor.getUser(principal)).toEqual([]);
+  });
+
+  it.each([
+    {
+      input: { displayName: "x".repeat(81), username: "" },
+      error: /Display name/,
+    },
+    { input: { displayName: "", username: "ab" }, error: /Username must be/ },
+    {
+      input: { displayName: "", username: "not a handle" },
+      error: /Username may only/,
+    },
+  ])(
+    "validates nonempty self-service profile fields ($error)",
+    async ({ input, error }) => {
+      const principal = createIdentity(
+        `invalid-self-profile-${String(error)}`,
+      ).getPrincipal();
+      actor.setPrincipal(principal);
+      await actor._initialize_access_control();
+      await expect(actor.saveCallerProfile(input)).rejects.toThrow(error);
+      expect(await actor.getCallerProfile()).toEqual([]);
+    },
+  );
+
+  it("lists every authenticated principal without requiring a member profile", async () => {
+    const signedIn = createIdentity("signed-in-without-profile").getPrincipal();
+    const profileOnly = createIdentity(
+      "profile-without-sign-in",
+    ).getPrincipal();
+    await actor.createUser(
+      profileOnly,
+      userInput({ username: "profile-only" }),
+    );
+    actor.setPrincipal(signedIn);
+    await actor._initialize_access_control();
+    await actor._initialize_access_control();
+    expect(await actor.getCallerProfile()).toEqual([]);
+    await expect(actor.listUsersWithRoles()).rejects.toThrow(/Unauthorized/);
+    await expect(actor.grantAdminRole(signedIn)).rejects.toThrow(
+      /Unauthorized/,
+    );
+    await expect(actor.revokeAdminRole(owner)).rejects.toThrow(/Unauthorized/);
+
+    actor.setPrincipal(owner);
+    const accounts = await actor.listUsersWithRoles();
+    expect(
+      accounts.filter((account) => account.id.toText() === signedIn.toText()),
+    ).toEqual([expect.objectContaining({ username: "", role: [] })]);
+    expect(
+      accounts.some((account) => account.id.toText() === profileOnly.toText()),
+    ).toBe(false);
+    expect(
+      accounts.some((account) => account.id.toText() === anonymous.toText()),
+    ).toBe(false);
+    expect((await actor.getUser(member))[0]?.username).toBe("member");
+  });
+
+  it("grants and revokes admin access for a signed-in account without creating a player or profile", async () => {
+    const signedIn = createIdentity("profileless-admin-target").getPrincipal();
+    actor.setPrincipal(signedIn);
+    await actor._initialize_access_control();
+    actor.setPrincipal(owner);
+    const granted = await actor.grantAdminRole(signedIn);
+    expect(granted.id.toText()).toBe(signedIn.toText());
+    expect(granted.role).toEqual([{ admin: null }]);
+    actor.setPrincipal(signedIn);
+    expect(await actor.getMyRole()).toEqual([{ admin: null }]);
+    expect(await actor.isCallerAdmin()).toBe(true);
+    expect(await actor.getCallerProfile()).toEqual([]);
+    expect(
+      (await actor.listUsersWithRoles()).some(
+        (account) => account.id.toText() === signedIn.toText(),
+      ),
+    ).toBe(true);
+
+    actor.setPrincipal(owner);
+    const revoked = await actor.revokeAdminRole(signedIn);
+    expect(revoked.role).toEqual([]);
+    actor.setPrincipal(signedIn);
+    expect(await actor.getMyRole()).toEqual([]);
+    expect(await actor.isCallerAdmin()).toBe(false);
+    expect(await actor.getCallerProfile()).toEqual([]);
+    await expect(actor.listUsersWithRoles()).rejects.toThrow(/Unauthorized/);
+  });
+
+  it("rejects role changes for unknown and anonymous principals", async () => {
+    const unknown = createIdentity("unknown-role-target").getPrincipal();
+    const before = await actor.listUsersWithRoles();
+    for (const target of [unknown, anonymous]) {
+      await expect(actor.grantAdminRole(target)).rejects.toThrow(
+        /User not found/,
+      );
+      await expect(actor.revokeAdminRole(target)).rejects.toThrow(
+        /User not found/,
+      );
+    }
+    expect(await actor.listUsersWithRoles()).toEqual(before);
+  });
+
   it("offers public directory reads and returns no role for anonymous or unregistered callers", async () => {
     actor.setPrincipal(anonymous);
     expect(await actor.getMyRole()).toEqual([]);
@@ -1050,6 +1261,10 @@ describe("ChillPong users and tournaments", () => {
         actor.updateTournament(tournament.id, tournamentInput()),
       ).rejects.toThrow(/Unauthorized/);
       await expect(actor.listUsersWithRoles()).rejects.toThrow(/Unauthorized/);
+      await expect(actor.grantAdminRole(newId)).rejects.toThrow(/Unauthorized/);
+      await expect(actor.revokeAdminRole(owner)).rejects.toThrow(
+        /Unauthorized/,
+      );
       expect(await actor.getUser(newId)).toEqual([]);
       expect((await actor.getUser(member))[0]?.displayName).toBe("Member");
       expect((await actor.getTournament(tournament.id))[0]?.title).toBe(
@@ -1124,7 +1339,10 @@ describe("ChillPong users and tournaments", () => {
   });
 
   it.each([
-    { input: userInput({ displayName: " " }), error: /Display name/ },
+    {
+      input: userInput({ displayName: "x".repeat(81) }),
+      error: /Display name/,
+    },
     { input: userInput({ username: "ab" }), error: /Username must be/ },
     {
       input: userInput({ username: "not a handle" }),

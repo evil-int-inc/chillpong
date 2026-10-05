@@ -1,7 +1,8 @@
-import { RequireAdmin } from "@/components/auth/RequireAuth";
+import { RequireAdmin, RequireAuth } from "@/components/auth/RequireAuth";
 import { MainLayout } from "@/components/ui/layouts/MainLayout";
 import { AdminPage } from "@/pages/AdminPage";
 import { PlayersPage } from "@/pages/PlayersPage";
+import { ProfilePage } from "@/pages/ProfilePage";
 import { TournamentDetailPage } from "@/pages/TournamentDetailPage";
 import { TournamentsPage } from "@/pages/TournamentsPage";
 import { UsersPage } from "@/pages/UsersPage";
@@ -92,6 +93,15 @@ const accountsRoute = createRoute({
     </RequireAdmin>
   ),
 });
+const profileRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/profile",
+  component: () => (
+    <RequireAuth>
+      <ProfilePage />
+    </RequireAuth>
+  ),
+});
 const router = createRouter({
   routeTree: rootRoute.addChildren([
     indexRoute,
@@ -101,6 +111,7 @@ const router = createRouter({
     tournamentDetailRoute,
     adminRoute,
     accountsRoute,
+    profileRoute,
   ]),
   defaultPreload: "intent",
 });

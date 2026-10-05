@@ -1,11 +1,9 @@
-import Array "mo:core/Array";
 import Runtime "mo:core/Runtime";
 import Map "mo:core/Map";
 import Principal "mo:core/Principal";
 import AccessControl "mo:caffeineai-authorization/access-control";
 import Common "../types/common";
 import Users "../types/users";
-import UsersLib "../lib/users";
 import RolesLib "../lib/roles";
 
 mixin (
@@ -21,25 +19,23 @@ mixin (
     RolesLib.effectiveRole(accessControlState, users, owner, caller);
   };
 
-  // Admin-only. Lists every user with their current role.
+  // Admin-only. Lists authenticated accounts, including those without profiles.
   public query ({ caller }) func listUsersWithRoles() : async [Users.UserRoleView] {
     RolesLib.requireAdmin(accessControlState, caller);
-    UsersLib.listUserRoles(users).map(func user = {
-      user with role = RolesLib.effectiveRole(accessControlState, users, owner, user.id)
-    });
+    RolesLib.listAuthenticatedUsers(accessControlState, users, owner);
   };
 
   // Admin-only. Grants the admin role to `target`. Traps when the caller is
-  // not an admin or when `target` has no user record.
+  // not an admin or when `target` is not a known account.
   public shared ({ caller }) func grantAdminRole(target : Common.UserId) : async Users.UserRoleView {
     switch (RolesLib.grantAdmin(accessControlState, users, caller, target)) {
-      case (?u) { { id = u.id; displayName = u.displayName; username = u.username; role = u.role } };
+      case (?u) { u };
       case null { Runtime.trap("User not found") };
     };
   };
 
   // Admin-only. Revokes the admin role from `target`. Traps when the caller is
-  // not an admin, when `target` has no user record, or when `target` is the
+  // not an admin, when `target` is not a known account, or when `target` is the
   // owner (the owner never loses admin access).
   public shared ({ caller }) func revokeAdminRole(target : Common.UserId) : async Users.UserRoleView {
     RolesLib.requireAdmin(accessControlState, caller);
@@ -47,7 +43,7 @@ mixin (
       Runtime.trap("Cannot revoke the owner's admin role");
     };
     switch (RolesLib.revokeAdmin(accessControlState, users, caller, target)) {
-      case (?u) { { id = u.id; displayName = u.displayName; username = u.username; role = u.role } };
+      case (?u) { u };
       case null { Runtime.trap("User not found") };
     };
   };

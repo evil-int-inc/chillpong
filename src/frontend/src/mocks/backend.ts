@@ -216,6 +216,16 @@ export const mockBackend: backendInterface = {
     return roleView(user);
   },
   schema: async () => JSON.stringify({ tables: ["users", "tournaments"] }),
+  saveCallerProfile: async (input) => {
+    const username = input.username.trim().toLowerCase();
+    if (username && users.some((user) => user.id.toString() !== OWNER.toString() && user.username.toLowerCase() === username)) {
+      throw new Error("Username already taken");
+    }
+    const user = requireUser(OWNER);
+    user.displayName = input.displayName.trim();
+    user.username = username;
+    return { ...user };
+  },
   updateTournament: async (id, input) => {
     const tournament = tournaments.find((item) => item.id === id);
     if (!tournament) throw new Error("Tournament not found.");

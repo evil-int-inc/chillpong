@@ -114,6 +114,10 @@ export type MatchSource = {
     __kind__: "loser";
     loser: bigint;
 };
+export interface ProfileInput {
+    username: string;
+    displayName: string;
+}
 export interface Result {
     hasMore: boolean;
     rows: Array<Array<Cell>>;
@@ -432,6 +436,7 @@ export interface backendInterface {
     listUsers(): Promise<Array<User>>;
     listUsersWithRoles(): Promise<Array<UserRoleView>>;
     revokeAdminRole(target: UserId): Promise<UserRoleView>;
+    saveCallerProfile(input: ProfileInput): Promise<User>;
     schema(): Promise<string>;
     updateTournament(id: bigint, input: TournamentInput): Promise<Tournament>;
     updateUser(userId: UserId, input: UserInput): Promise<User>;
@@ -843,6 +848,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.revokeAdminRole(arg0);
             return from_candid_UserRoleView_n85(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async saveCallerProfile(arg0: ProfileInput): Promise<User> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.saveCallerProfile(arg0);
+                return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.saveCallerProfile(arg0);
+            return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
         }
     }
     async schema(): Promise<string> {

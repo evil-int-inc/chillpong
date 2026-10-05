@@ -1,7 +1,14 @@
 import { Avatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { Link, useLocation } from "@tanstack/react-router";
-import { ArrowUpRight, Copy, LogIn, Menu, ShieldCheck } from "lucide-react";
+import {
+  ArrowUpRight,
+  Copy,
+  LogIn,
+  Menu,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
 import { useState } from "react";
 
 export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
@@ -30,11 +37,13 @@ export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
       ? "Players"
       : pathname === "/admin/accounts"
         ? "Accounts"
-        : pathname === "/admin"
-          ? "Admin"
-          : pathname.startsWith("/tournaments/")
-            ? "Tournament room"
-            : "Tournaments";
+        : pathname === "/profile"
+          ? "Profile"
+          : pathname === "/admin"
+            ? "Admin"
+            : pathname.startsWith("/tournaments/")
+              ? "Tournament room"
+              : "Tournaments";
   return (
     <header
       data-ocid="header"
@@ -83,11 +92,11 @@ export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
             >
               <Avatar
                 src={profile?.avatar?.getDirectURL()}
-                name={profile?.displayName || "Member"}
+                name={profile?.displayName || profile?.username || "Member"}
                 size="sm"
               />
               <span className="hidden max-w-36 truncate text-sm sm:block">
-                {profile?.displayName || "Club member"}
+                {profile?.displayName || profile?.username || "Club member"}
               </span>
               {isAdmin ? (
                 <ShieldCheck
@@ -97,6 +106,18 @@ export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
               ) : null}
             </summary>
             <div className="dropdown-content z-50 mt-4 w-72 border border-base-300 bg-base-200 p-5 shadow-lg">
+              <Link
+                to="/profile"
+                className="btn btn-primary btn-sm mb-5 w-full"
+                onClick={(event) =>
+                  event.currentTarget
+                    .closest("details")
+                    ?.removeAttribute("open")
+                }
+              >
+                <UserRound className="size-4" aria-hidden="true" />
+                My profile
+              </Link>
               <p className="technical-label mb-3 text-base-content/60">
                 Your Member ID
               </p>

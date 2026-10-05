@@ -1,4 +1,4 @@
-import type { Backend, Role } from "@/backend";
+import type { Backend, ProfileInput, Role } from "@/backend";
 import type { User } from "@/types";
 
 /** Backend operations for the authenticated caller. */
@@ -9,6 +9,10 @@ export class AuthService {
    */
   getCallerProfile(actor: Backend): Promise<User | null> {
     return actor.getCallerProfile();
+  }
+
+  saveCallerProfile(actor: Backend, input: ProfileInput): Promise<User> {
+    return actor.saveCallerProfile(input);
   }
 
   /**

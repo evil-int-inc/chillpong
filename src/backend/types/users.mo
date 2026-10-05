@@ -9,7 +9,7 @@ module {
   public type User = {
     id : Common.UserId;
     displayName : Text;
-    username : Text; // unique
+    username : Text; // unique when nonempty
     avatar : ?Storage.ExternalBlob;
     bio : ?Text;
     createdAt : Common.Timestamp;
@@ -20,6 +20,12 @@ module {
     displayName : Text;
     username : Text;
     bio : ?Text;
+  };
+
+  // Empty text means the member chose not to provide this optional field.
+  public type ProfileInput = {
+    displayName : Text;
+    username : Text;
   };
 
   // Admin-facing view of a user, including the current role.

@@ -1,6 +1,7 @@
 import Array "mo:core/Array";
 import Map "mo:core/Map";
 import Principal "mo:core/Principal";
+import Runtime "mo:core/Runtime";
 import AccessControl "mo:caffeineai-authorization/access-control";
 import Common "../types/common";
 import Users "../types/users";
@@ -36,6 +37,26 @@ mixin (
   public query ({ caller }) func getCallerProfile() : async ?Users.User {
     if (caller.isAnonymous()) { return null };
     optionalUserView(UsersLib.getUser(users, caller));
+  };
+
+  // The caller supplies no target principal or role: members can edit only
+  // their own optional name/username, preserving all other profile fields.
+  public shared ({ caller }) func saveCallerProfile(input : Users.ProfileInput) : async Users.User {
+    if (caller.isAnonymous() or accessControlState.userRoles.get(caller) == null) {
+      Runtime.trap("Unauthorized: Sign in to edit your profile");
+    };
+    let existing = users.get(caller);
+    let role = RolesLib.effectiveRole(accessControlState, users, owner, caller);
+    let userInput : Users.UserInput = {
+      displayName = input.displayName;
+      username = input.username;
+      bio = switch (existing) { case (?user) { user.bio }; case null { null } };
+    };
+    let saved = switch (existing) {
+      case (?_) { UsersLib.updateUser(users, usernames, caller, userInput) };
+      case null { UsersLib.createUser(users, usernames, caller, userInput, role) };
+    };
+    toUserView(UsersLib.setRole(users, caller, role) ?? saved);
   };
 
   public shared ({ caller }) func createUser(userId : Common.UserId, input : Users.UserInput) : async Users.User {

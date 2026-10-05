@@ -258,6 +258,10 @@ export const UserRoleView = IDL.Record({
   'displayName' : IDL.Text,
   'role' : IDL.Opt(Role),
 });
+export const ProfileInput = IDL.Record({
+  'username' : IDL.Text,
+  'displayName' : IDL.Text,
+});
 
 export const idlService = IDL.Service({
   '_immutableObjectStorageBlobsAreLive' : IDL.Func(
@@ -317,6 +321,7 @@ export const idlService = IDL.Service({
   'listUsers' : IDL.Func([], [IDL.Vec(User)], ['query']),
   'listUsersWithRoles' : IDL.Func([], [IDL.Vec(UserRoleView)], ['query']),
   'revokeAdminRole' : IDL.Func([UserId], [UserRoleView], []),
+  'saveCallerProfile' : IDL.Func([ProfileInput], [User], []),
   'schema' : IDL.Func([], [IDL.Text], ['query']),
   'updateTournament' : IDL.Func([IDL.Nat, TournamentInput], [Tournament], []),
   'updateUser' : IDL.Func([UserId, UserInput], [User], []),
@@ -578,6 +583,10 @@ export const idlFactory = ({ IDL }) => {
     'displayName' : IDL.Text,
     'role' : IDL.Opt(Role),
   });
+  const ProfileInput = IDL.Record({
+    'username' : IDL.Text,
+    'displayName' : IDL.Text,
+  });
   
   return IDL.Service({
     '_immutableObjectStorageBlobsAreLive' : IDL.Func(
@@ -637,6 +646,7 @@ export const idlFactory = ({ IDL }) => {
     'listUsers' : IDL.Func([], [IDL.Vec(User)], ['query']),
     'listUsersWithRoles' : IDL.Func([], [IDL.Vec(UserRoleView)], ['query']),
     'revokeAdminRole' : IDL.Func([UserId], [UserRoleView], []),
+    'saveCallerProfile' : IDL.Func([ProfileInput], [User], []),
     'schema' : IDL.Func([], [IDL.Text], ['query']),
     'updateTournament' : IDL.Func([IDL.Nat, TournamentInput], [Tournament], []),
     'updateUser' : IDL.Func([UserId, UserInput], [User], []),

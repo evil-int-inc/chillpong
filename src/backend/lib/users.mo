@@ -16,8 +16,8 @@ module {
 
   func normalizeInputWithExistingUsername(input : Users.UserInput, existingUsername : ?Text) : Users.UserInput {
     let displayName = input.displayName.trim(#predicate(Char.isWhitespace));
-    if (displayName.size() == 0 or displayName.size() > 80) {
-      Runtime.trap("Display name must be between 1 and 80 characters");
+    if (displayName.size() > 80) {
+      Runtime.trap("Display name must be at most 80 characters");
     };
     let unchangedLegacyUsername = switch (existingUsername) {
       case (?existing) { input.username.trim(#predicate(Char.isWhitespace)) == existing.trim(#predicate(Char.isWhitespace)) };
@@ -27,7 +27,7 @@ module {
       existingUsername ?? input.username;
     } else {
       let normalized = canonicalUsername(input.username);
-      if (normalized.size() < 3 or normalized.size() > 30) {
+      if (normalized.size() != 0 and (normalized.size() < 3 or normalized.size() > 30)) {
         Runtime.trap("Username must be between 3 and 30 characters");
       };
       for (character in normalized.toIter()) {
@@ -56,6 +56,7 @@ module {
 
   func assertUsernameAvailable(users : Map.Map<Common.UserId, Users.User>, username : Text, excludedUser : ?Common.UserId) : () {
     let canonical = canonicalUsername(username);
+    if (canonical == "") { return };
     for (user in users.values()) {
       if (?user.id != excludedUser and canonicalUsername(user.username) == canonical) {
         Runtime.trap("Username already taken");
@@ -88,7 +89,7 @@ module {
       role;
     };
     users.add(id, user);
-    usernames.add(user.username, id);
+    if (user.username != "") { usernames.add(user.username, id) };
     user;
   };
 
@@ -102,6 +103,7 @@ module {
     username : Text,
   ) : ?Users.User {
     let exact = username.trim(#predicate(Char.isWhitespace));
+    if (exact == "") { return null };
     switch (usernames.get(exact)) {
       case (?id) {
         switch (users.get(id)) {
@@ -130,8 +132,8 @@ module {
     let normalized = normalizeInputWithExistingUsername(input, ?existing.username);
     if (existing.username != normalized.username) {
       assertUsernameAvailable(users, normalized.username, ?id);
-      usernames.remove(existing.username);
-      usernames.add(normalized.username, id);
+      if (existing.username != "") { usernames.remove(existing.username) };
+      if (normalized.username != "") { usernames.add(normalized.username, id) };
     };
     let updated = {
       existing with

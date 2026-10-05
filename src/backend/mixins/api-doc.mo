@@ -3,7 +3,8 @@ mixin () {
     "# ChillPong Backend API
 
 ChillPong stores the club's users and ping-pong tournaments. Users and tournament
-records are public to browse. Only admins can create or edit either kind of record.
+records are public to browse. Admins manage records; authenticated members can
+create or edit their own profile through saveCallerProfile().
 
 ## Authentication and roles
 
@@ -15,6 +16,8 @@ App-level roles are null (regular user) or ?{ #admin }. Role management is
 admin-only: listUsersWithRoles(), grantAdminRole(principal), and
 revokeAdminRole(principal). getMyRole() safely returns null for anonymous or
 unregistered visitors.
+listUsersWithRoles() lists registered authentication principals even when they
+have no profile; role grants and revocations work for those accounts too.
 
 For registered accounts, role reads use the authorization package's current
 role, including assignments made through assignCallerUserRole(). The same role
@@ -35,12 +38,17 @@ A user record created for an already registered admin receives the app admin rol
 - getUser(principal) : ?User — public.
 - getUserByUsername(username) : ?User — public.
 - getCallerProfile() : ?User — the caller's record, or null.
+- saveCallerProfile(input : ProfileInput) : User — authenticated, own account only.
 - createUser(principal, input : UserInput) : User — admin-only.
 - updateUser(principal, input : UserInput) : User — admin-only.
 
 UserInput contains displayName, username, and bio : ?Text. Display names are
-trimmed and must contain 1–80 characters. Usernames are trimmed, lowercased,
-unique, and contain 3–30 ASCII letters, digits, underscores, or hyphens. Bios
+optional, trimmed, and limited to 80 characters. Usernames are optional; when
+provided they are trimmed, lowercased, unique, and contain 3–30 ASCII letters,
+digits, underscores, or hyphens. Empty usernames share no index entry and cannot
+be looked up. ProfileInput contains only displayName and username; empty text
+clears either optional field. Self-service saves preserve the principal, avatar,
+bio, creation time, and effective role. Bios
 are optional and limited to 500 characters. Anonymous principals cannot be users.
 Updates preserve the principal, avatar, creation time, and role. Existing avatar
 references remain ExternalBlob values supported by the object-storage mixin.

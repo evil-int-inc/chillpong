@@ -31,6 +31,7 @@ export type MatchSource = { 'bye' : null } |
   { 'player' : bigint } |
   { 'winner' : bigint } |
   { 'loser' : bigint };
+export interface ProfileInput { 'username' : string, 'displayName' : string }
 export interface Result { 'hasMore' : boolean, 'rows' : Array<Array<Cell>> }
 export type Result__1 = { 'ok' : null } |
   { 'err' : Error };
@@ -287,6 +288,7 @@ export interface _SERVICE {
   'listUsers' : ActorMethod<[], Array<User>>,
   'listUsersWithRoles' : ActorMethod<[], Array<UserRoleView>>,
   'revokeAdminRole' : ActorMethod<[UserId], UserRoleView>,
+  'saveCallerProfile' : ActorMethod<[ProfileInput], User>,
   'schema' : ActorMethod<[], string>,
   'updateTournament' : ActorMethod<[bigint, TournamentInput], Tournament>,
   'updateUser' : ActorMethod<[UserId, UserInput], User>,

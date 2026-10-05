@@ -1,5 +1,6 @@
 import Runtime "mo:core/Runtime";
 import Map "mo:core/Map";
+import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import AccessControl "mo:caffeineai-authorization/access-control";
 import Common "../types/common";
@@ -39,19 +40,51 @@ module {
     };
   };
 
+  // A sign-in registers the principal in the authorization map even when the
+  // member has never created a profile. Profile metadata is optional here.
+  public func accountRoleView(
+    accessControlState : AccessControl.AccessControlState,
+    users : Map.Map<Common.UserId, Users.User>,
+    userId : Common.UserId,
+    role : ?Users.Role,
+  ) : ?Users.UserRoleView {
+    if (userId.isAnonymous()) { return null };
+    switch (users.get(userId)) {
+      case (?user) {
+        ?{ id = userId; displayName = user.displayName; username = user.username; role };
+      };
+      case null {
+        switch (accessControlState.userRoles.get(userId)) {
+          case null { null };
+          case (?_) { ?{ id = userId; displayName = "Signed-in member"; username = ""; role } };
+        };
+      };
+    };
+  };
+
+  public func listAuthenticatedUsers(
+    accessControlState : AccessControl.AccessControlState,
+    users : Map.Map<Common.UserId, Users.User>,
+    owner : Common.OwnerState,
+  ) : [Users.UserRoleView] {
+    accessControlState.userRoles.keys().filterMap(func userId = accountRoleView(
+      accessControlState, users, userId, effectiveRole(accessControlState, users, owner, userId)
+    )).toArray();
+  };
+
   // Grants the app-level admin role to `target` and keeps the authorization
-  // package's role in sync (#admin). Returns the updated user, or null when
-  // no user record exists for `target`.
+  // package's role in sync (#admin). A signed-in account needs no profile.
   public func grantAdmin(
     accessControlState : AccessControl.AccessControlState,
     users : Map.Map<Common.UserId, Users.User>,
     caller : Principal,
     target : Common.UserId,
-  ) : ?Users.User {
+  ) : ?Users.UserRoleView {
     requireAdmin(accessControlState, caller);
-    switch (UsersLib.setRole(users, target, ?#admin)) {
+    switch (accountRoleView(accessControlState, users, target, ?#admin)) {
       case (?updated) {
         AccessControl.assignRole(accessControlState, caller, target, #admin);
+        ignore UsersLib.setRole(users, target, ?#admin);
         ?updated;
       };
       case null { null };
@@ -59,18 +92,18 @@ module {
   };
 
   // Revokes the app-level admin role from `target` and keeps the authorization
-  // package's role in sync (#user). Returns the updated user, or null when
-  // no user record exists for `target`.
+  // package's role in sync (#user). A signed-in account needs no profile.
   public func revokeAdmin(
     accessControlState : AccessControl.AccessControlState,
     users : Map.Map<Common.UserId, Users.User>,
     caller : Principal,
     target : Common.UserId,
-  ) : ?Users.User {
+  ) : ?Users.UserRoleView {
     requireAdmin(accessControlState, caller);
-    switch (UsersLib.setRole(users, target, null)) {
+    switch (accountRoleView(accessControlState, users, target, null)) {
       case (?updated) {
         AccessControl.assignRole(accessControlState, caller, target, #user);
+        ignore UsersLib.setRole(users, target, null);
         ?updated;
       };
       case null { null };

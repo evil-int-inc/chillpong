@@ -70,6 +70,10 @@ export type MatchSource = {
     __kind__: "loser";
     loser: bigint;
 };
+export interface ProfileInput {
+    username: string;
+    displayName: string;
+}
 export interface Result {
     hasMore: boolean;
     rows: Array<Array<Cell>>;
@@ -368,6 +372,7 @@ export interface backendInterface {
     listUsers(): Promise<Array<User>>;
     listUsersWithRoles(): Promise<Array<UserRoleView>>;
     revokeAdminRole(target: UserId): Promise<UserRoleView>;
+    saveCallerProfile(input: ProfileInput): Promise<User>;
     schema(): Promise<string>;
     updateTournament(id: bigint, input: TournamentInput): Promise<Tournament>;
     updateUser(userId: UserId, input: UserInput): Promise<User>;

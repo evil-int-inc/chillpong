@@ -83,7 +83,9 @@ export function UsersPage() {
         : userService.update(actor, memberId, input);
     },
     onSuccess: (user) => {
-      setNotice(`${user.displayName}'s member details are saved.`);
+      setNotice(
+        `${user.displayName || user.username || "This member"}'s member details are saved.`,
+      );
       setEditor(null);
       void queryClient.invalidateQueries({ queryKey: USERS_QUERY_KEY });
       void queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
@@ -133,12 +135,13 @@ export function UsersPage() {
       );
       return;
     }
-    if (!displayName.trim() || displayName.trim().length > 80) {
-      setFormError("Display name must contain between 1 and 80 characters.");
+    if (displayName.trim().length > 80) {
+      setFormError("Display name must contain at most 80 characters.");
       return;
     }
     if (
       !keepsExistingUsername &&
+      username.trim() !== "" &&
       !/^[a-z0-9_-]{3,30}$/.test(username.trim().toLowerCase())
     ) {
       setFormError(
@@ -338,7 +341,9 @@ export function UsersPage() {
                         className="size-full object-cover"
                       />
                     ) : (
-                      memberInitials(user.displayName)
+                      memberInitials(
+                        user.displayName || user.username || "Member",
+                      )
                     )}
                   </div>
                   {user.role === Role.admin ? (
@@ -354,10 +359,10 @@ export function UsersPage() {
                   )}
                 </div>
                 <h2 className="break-words font-display text-xl font-bold uppercase tracking-tight">
-                  {user.displayName}
+                  {user.displayName || user.username || "Club member"}
                 </h2>
                 <p className="mt-1 break-words font-mono text-xs text-base-content/50">
-                  @{user.username}
+                  {user.username ? `@${user.username}` : "Username not set"}
                 </p>
                 {user.bio ? (
                   <p className="mt-4 whitespace-pre-wrap break-words text-sm leading-relaxed text-base-content/65">
@@ -376,7 +381,10 @@ export function UsersPage() {
                       onClick={() => openEditor(user)}
                     >
                       <Pencil className="size-3" aria-hidden="true" /> Edit
-                      <span className="sr-only"> {user.displayName}</span>
+                      <span className="sr-only">
+                        {" "}
+                        {user.displayName || user.username || "Club member"}
+                      </span>
                     </button>
                   ) : null}
                 </div>
@@ -464,7 +472,6 @@ export function UsersPage() {
                 <input
                   data-ocid="users.name_input"
                   className="input w-full rounded-none"
-                  required
                   maxLength={80}
                   value={displayName}
                   onChange={(event) => setDisplayName(event.target.value)}
@@ -476,7 +483,6 @@ export function UsersPage() {
                 <input
                   data-ocid="users.username_input"
                   className="input w-full rounded-none font-mono"
-                  required
                   minLength={keepsExistingUsername ? undefined : 3}
                   maxLength={30}
                   value={username}

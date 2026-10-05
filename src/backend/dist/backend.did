@@ -263,6 +263,11 @@ type Result =
    hasMore: bool;
    rows: vec vec Cell;
  };
+type ProfileInput = 
+ record {
+   displayName: text;
+   username: text;
+ };
 type MatchSource = 
  variant {
    bye;
@@ -332,6 +337,7 @@ service : {
   listUsers: () -> (vec User) query;
   listUsersWithRoles: () -> (vec UserRoleView) query;
   revokeAdminRole: (target: UserId) -> (UserRoleView);
+  saveCallerProfile: (input: ProfileInput) -> (User);
   schema: () -> (text) query;
   updateTournament: (id: nat, input: TournamentInput) -> (Tournament);
   updateUser: (userId: UserId, input: UserInput) -> (User);
