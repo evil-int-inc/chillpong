@@ -24224,15 +24224,15 @@ function readContextForConsumer(consumer, context) {
   return value;
 }
 var AbortControllerLocal = "undefined" !== typeof AbortController ? AbortController : function() {
-  var listeners = [], signal = this.signal = {
+  var listeners2 = [], signal = this.signal = {
     aborted: false,
     addEventListener: function(type, listener) {
-      listeners.push(listener);
+      listeners2.push(listener);
     }
   };
   this.abort = function() {
     signal.aborted = true;
-    listeners.forEach(function(listener) {
+    listeners2.forEach(function(listener) {
       return listener();
     });
   };
@@ -24278,33 +24278,33 @@ function entangleAsyncAction(transition, thenable) {
 function pingEngtangledActionScope() {
   if (0 === --currentEntangledPendingCount && null !== currentEntangledListeners) {
     null !== currentEntangledActionThenable && (currentEntangledActionThenable.status = "fulfilled");
-    var listeners = currentEntangledListeners;
+    var listeners2 = currentEntangledListeners;
     currentEntangledListeners = null;
     currentEntangledLane = 0;
     currentEntangledActionThenable = null;
-    for (var i = 0; i < listeners.length; i++) (0, listeners[i])();
+    for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])();
   }
 }
 function chainThenableValue(thenable, result) {
-  var listeners = [], thenableWithOverride = {
+  var listeners2 = [], thenableWithOverride = {
     status: "pending",
     value: null,
     reason: null,
     then: function(resolve) {
-      listeners.push(resolve);
+      listeners2.push(resolve);
     }
   };
   thenable.then(
     function() {
       thenableWithOverride.status = "fulfilled";
       thenableWithOverride.value = result;
-      for (var i = 0; i < listeners.length; i++) (0, listeners[i])(result);
+      for (var i = 0; i < listeners2.length; i++) (0, listeners2[i])(result);
     },
     function(error) {
       thenableWithOverride.status = "rejected";
       thenableWithOverride.reason = error;
-      for (error = 0; error < listeners.length; error++)
-        (0, listeners[error])(void 0);
+      for (error = 0; error < listeners2.length; error++)
+        (0, listeners2[error])(void 0);
     }
   );
   return thenableWithOverride;
@@ -30967,15 +30967,15 @@ function createDispatchListener(instance, listener, currentTarget) {
   };
 }
 function accumulateTwoPhaseListeners(targetFiber, reactName) {
-  for (var captureName = reactName + "Capture", listeners = []; null !== targetFiber; ) {
+  for (var captureName = reactName + "Capture", listeners2 = []; null !== targetFiber; ) {
     var _instance2 = targetFiber, stateNode = _instance2.stateNode;
     _instance2 = _instance2.tag;
-    5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners.unshift(
+    5 !== _instance2 && 26 !== _instance2 && 27 !== _instance2 || null === stateNode || (_instance2 = getListener(targetFiber, captureName), null != _instance2 && listeners2.unshift(
       createDispatchListener(targetFiber, _instance2, stateNode)
-    ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners.push(
+    ), _instance2 = getListener(targetFiber, reactName), null != _instance2 && listeners2.push(
       createDispatchListener(targetFiber, _instance2, stateNode)
     ));
-    if (3 === targetFiber.tag) return listeners;
+    if (3 === targetFiber.tag) return listeners2;
     targetFiber = targetFiber.return;
   }
   return [];
@@ -30988,18 +30988,18 @@ function getParent(inst) {
   return inst ? inst : null;
 }
 function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common2, inCapturePhase) {
-  for (var registrationName = event._reactName, listeners = []; null !== target && target !== common2; ) {
+  for (var registrationName = event._reactName, listeners2 = []; null !== target && target !== common2; ) {
     var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
     _instance3 = _instance3.tag;
     if (null !== alternate && alternate === common2) break;
-    5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners.unshift(
+    5 !== _instance3 && 26 !== _instance3 && 27 !== _instance3 || null === stateNode || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), null != stateNode && listeners2.unshift(
       createDispatchListener(target, stateNode, alternate)
-    )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners.push(
+    )) : inCapturePhase || (stateNode = getListener(target, registrationName), null != stateNode && listeners2.push(
       createDispatchListener(target, stateNode, alternate)
     )));
     target = target.return;
   }
-  0 !== listeners.length && dispatchQueue.push({ event, listeners });
+  0 !== listeners2.length && dispatchQueue.push({ event, listeners: listeners2 });
 }
 var NORMALIZE_NEWLINES_REGEX = /\r\n?/g, NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
 function normalizeMarkupForTextOrAttribute(markup) {
@@ -33168,6 +33168,1337 @@ function checkDCE() {
 }
 var clientExports = client.exports;
 const ReactDOM = /* @__PURE__ */ getDefaultExportFromCjs(clientExports);
+const errorMessages = [
+  "A match cannot finish with a tied score",
+  "A player cannot occupy both sides of a match",
+  "A player is already playing another match",
+  "Anonymous principals cannot be users",
+  "At least 2 active players are required",
+  "At most 4096 active players are supported",
+  "Bio must be at most 500 characters",
+  "Bracket format cannot change after a match has started",
+  "Bracket pairing invariant failed",
+  "Cannot revoke the owner's admin role",
+  "Configure between 1 and 20 tables",
+  "Confirm cascade to reset completed dependent matches",
+  "Confirm removal because this player is assigned to the bracket",
+  "Display name must be at most 80 characters",
+  "Expected players must be at least 2",
+  "First participant is missing",
+  "Manual placement requires a winners-bracket match",
+  "Manual placement requires an opening winners-bracket slot",
+  "Match not found",
+  "Match participant missing",
+  "Move players within their current bracket and round",
+  "No table is available",
+  "Only a ready match can start",
+  "Only a ready or playing match can be assigned a table",
+  "Only a ready, playing, or completed match accepts a score",
+  "Only pending matches can be prioritized",
+  "Player already occupies another bracket slot",
+  "Player already occupies that slot",
+  "Player has no pending bracket slot to move",
+  "Player is already in the bracket; use Move player",
+  "Player is already removed",
+  "Player missing",
+  "Player name must be between 1 and 80 characters",
+  "Player not found",
+  "Release occupied tables before reducing the table count",
+  "Removed players cannot be placed",
+  "Reset a playing match before releasing its table",
+  "Reset completed or playing dependent matches before changing the bracket",
+  "Reset dependent matches before changing the winner",
+  "Reset playing dependent matches first",
+  "Scores must be at most 999",
+  "Second participant is missing",
+  "Select two different slots",
+  "Skill level must be between 1 and 5",
+  "Swap opening slots or ready matches in the same bracket round",
+  "Table is already occupied",
+  "Table must be between 1 and the configured table count",
+  "There is no action to undo",
+  "Tournament description must be at most 2000 characters",
+  "Tournament not found",
+  "Tournament start time must be a positive timestamp",
+  "Tournament title must be between 1 and 100 characters",
+  "Tournament venue must be between 1 and 150 characters",
+  "Unauthorized: Only admins can perform this action",
+  "Unauthorized: Only users can perform this action",
+  "Unauthorized: Sign in to edit your profile",
+  "Undo must be handled before reducing a command",
+  "User already exists",
+  "User not found",
+  "Username already taken",
+  "Username may only contain letters, numbers, underscores, and hyphens",
+  "Username must be between 3 and 30 characters"
+];
+const ka = {
+  "Clear search": "ძებნის გასუფთავება",
+  "Match started at table {table}": "მატჩი დაიწყო მაგიდასთან {table}",
+  "Bracket generated": "ბადე შექმნილია",
+  "{count} waiting": "რიგში: {count}",
+  "{matched} of {total} accounts match": "ნაპოვნია: {matched}, სულ: {total}",
+  "Original registration numbers and times stay fixed.": "რეგისტრაციის ნომრები და დრო უცვლელია.",
+  "registration stays open": "რეგისტრაცია ღია რჩება",
+  ". The registration remains": ". რეგისტრაციის ნომერი უცვლელია",
+  "/ Full bracket": "/ სრული ბადე",
+  "/ IN THE CLUB": "/ კლუბში",
+  "/ L": "/ L",
+  "/ Live floor": "/ მიმდინარე თამაშები",
+  "/ Tbilisi": "/ თბილისი",
+  "3–30 letters, numbers, underscores or hyphens. Saved in lowercase.": "3–30 ლათინური ასო, ციფრი, ქვედა ტირე ან დეფისი. ინახება პატარა ასოებით.",
+  "404 / OUT OF BOUNDS": "404 / მაგიდის მიღმა",
+  "A few words about this member.": "რამდენიმე სიტყვა ამ წევრის შესახებ.",
+  "A knockout match needs a winner. Scores cannot be tied.": "გამოთიშვის მატჩს გამარჯვებული სჭირდება. ფრე დაუშვებელია.",
+  "A match cannot finish with a tied score": "მატჩი ფრედ ვერ დასრულდება",
+  "A name for the club. A handle for the crew. Both are optional.": "სახელი კლუბისთვის. მეტსახელი მეგობრებისთვის. ორივე ველი არასავალდებულოა.",
+  "A new permanent registration number and timestamp are saved automatically. The player joins after earlier registrations.": "მუდმივი ნომერი და რეგისტრაციის დრო ავტომატურად ინახება. მოთამაშე რიგში ადრე რეგისტრირებულების შემდეგ დგება.",
+  "A player cannot occupy both sides of a match": "მოთამაშე მატჩის ორივე მხარეს ვერ დაიკავებს",
+  "A player is already playing another match": "მოთამაშე უკვე სხვა მატჩს თამაშობს",
+  "ACCOUNTS.": "ანგარიშები.",
+  "AFTER DARK.": "შებინდების შემდეგ.",
+  "Account details": "ანგარიშის მონაცემები",
+  Accounts: "ანგარიშები",
+  "Accounts appear automatically after signing in to ChillPong.": "ანგარიშები ChillPong-ში შესვლის შემდეგ ავტომატურად ჩნდება.",
+  "Add player": "მოთამაშის დამატება",
+  "Add players and generate the bracket to decide the first games.": "პირველი მატჩების დასადგენად დაამატეთ მოთამაშეები და შექმენით ბადე.",
+  "Add the first members and build the ChillPong community.": "დაამატეთ ChillPong-ის საზოგადოების პირველი წევრები.",
+  "Add to the lineup.": "შეუერთდი თამაშს.",
+  "Add to waiting queue": "რიგში დამატება",
+  "Add user": "მომხმარებლის დამატება",
+  Admin: "ადმინი",
+  "Admin access": "ადმინისტრატორის წვდომა",
+  "Admin access and a selected tournament are required.": "საჭიროა ადმინისტრატორის წვდომა და არჩეული ტურნირი.",
+  "Admin access is required.": "საჭიროა ადმინისტრატორის წვდომა.",
+  "Admin account": "ადმინისტრატორის ანგარიში",
+  Admins: "ადმინისტრატორები",
+  "Admins only": "მხოლოდ ადმინისტრატორებისთვის",
+  Advanced: "მაღალი დონე",
+  "After that": "ამის შემდეგ",
+  "All rounds": "ყველა რაუნდი",
+  "All signed-in accounts and their member IDs. Assign or revoke admin access here.": "ყველა ავტორიზებული ანგარიში და წევრის ID. აქ შეგიძლიათ მიანიჭოთ ან გააუქმოთ ადმინისტრატორის წვდომა.",
+  "All skill levels": "ყველა დონე",
+  "All start times are local to Tbilisi / UTC +04:00": "დაწყების დრო მითითებულია თბილისის დროით / UTC +04:00",
+  "All statuses": "ყველა სტატუსი",
+  "All tables": "ყველა მაგიდა",
+  "All tournaments": "ყველა ტურნირი",
+  "All users": "ყველა მომხმარებელი",
+  "Also reset completed downstream results": "შემდგომი დასრულებული მატჩების შედეგების განულებაც",
+  "An empty slot admits them directly. An occupied eligible slot creates a qualifier against its current player or incoming winner, keeping both players in the tournament. Opening qualifiers are round zero.": "ცარიელ პოზიციაზე მოთამაშე პირდაპირ ხვდება. დაკავებული დასაშვები პოზიცია ქმნის შესარჩევ მატჩს მიმდინარე მოთამაშესთან ან მომავალ გამარჯვებულთან. ორივე ტურნირში რჩება. საწყისი შესარჩევი მატჩები ნულოვანი რაუნდია.",
+  "An occupied pending slot swaps both incoming bracket positions; an empty slot moves this player. Completed results and original registration details remain unchanged.": "დაკავებული მომლოდინე პოზიცია მონაწილეებს ადგილებს უცვლის; ცარიელი კი მოთამაშეს გადაადგილებს. დასრულებული შედეგები და რეგისტრაციის მონაცემები უცვლელია.",
+  "An open table. An open lineup.": "მაგიდა თავისუფალია. სია ღიაა.",
+  "Anonymous principals cannot be users": "ანონიმური principal მომხმარებელი ვერ იქნება",
+  "Ask the member to sign in and copy their Member ID from the account menu.": "სთხოვეთ წევრს, შევიდეს და ანგარიშის მენიუდან თავისი ID დააკოპიროს.",
+  "Assign BYE": "თამაშის გარეშე გასვლის მინიჭება",
+  "Assign BYE to slot": "პოზიციაზე თამაშის გარეშე გასვლის მინიჭება",
+  "Assign admin": "ადმინად დანიშვნა",
+  "Assign admin to {id}": "ადმინად დანიშვნა: {id}",
+  "Assign manual bye": "თამაშის გარეშე გასვლის ხელით მინიჭება",
+  "Assign next match": "შემდეგი მატჩის დანიშვნა",
+  "Assign table": "მაგიდის დანიშვნა",
+  "At least 2 active players are required": "საჭიროა სულ მცირე 2 აქტიური მოთამაშე",
+  "At most 4096 active players are supported": "მხარდაჭერილია მაქსიმუმ 4096 აქტიური მოთამაშე",
+  "Authenticated accounts and their admin access.": "ავტორიზებული ანგარიშები და ადმინისტრატორის წვდომა.",
+  "Auto-save on": "ავტომატური შენახვა ჩართულია",
+  "Automatic advance": "ავტომატური გასვლა",
+  "Awaiting player": "მოთამაშის მოლოდინში",
+  BYE: "თამაშის გარეშე",
+  "BYE / empty slot": "თამაშის გარეშე / ცარიელი პოზიცია",
+  "BYEs /": "თამაშის გარეშე გასვლა /",
+  "Back to tournaments": "ტურნირებზე დაბრუნება",
+  "Backend is not ready": "სერვერთან კავშირი ჯერ მზად არ არის",
+  "Bad backhands.": "ცუდი ბექჰენდები.",
+  "Bar name / address": "ბარის სახელი / მისამართი",
+  Beginner: "დამწყები",
+  "Bio / optional": "ჩემ შესახებ / არასავალდებულო",
+  "Bio must be at most 500 characters": "აღწერა მაქსიმუმ 500 სიმბოლოს უნდა შეიცავდეს",
+  "Bracket dependency": "წინა მატჩზეა დამოკიდებული",
+  "Bracket format cannot change after a match has started": "მატჩის დაწყების შემდეგ ბადის ფორმატი ვერ შეიცვლება",
+  "Bracket pairing invariant failed": "ბადეში წყვილების შედგენა ვერ მოხერხდა",
+  "Bracket zoom": "ბადის მასშტაბი",
+  "Built with caffeine.ai ↗": "caffeine.ai-ს დახმარებით ↗",
+  "CHILLPONG /": "CHILLPONG /",
+  "CHILLPONG / ADMIN ACCOUNTS": "CHILLPONG / ანგარიშები",
+  "CHILLPONG / CONTROL ROOM": "CHILLPONG / მართვის ოთახი",
+  "CHILLPONG / MEMBER FILE": "CHILLPONG / წევრის პროფილი",
+  "CHILLPONG / SET THE NIGHT": "CHILLPONG / დაგეგმე საღამო",
+  "CHILLPONG / TBILISI UNDERGROUND": "CHILLPONG / თბილისის ანდერგრაუნდი",
+  "CHILLPONG / THE LINEUP": "CHILLPONG / მონაწილეები",
+  "CHILLPONG / TOURNAMENT": "CHILLPONG / ტურნირი",
+  CLUB: "კლუბის",
+  "CP /": "CP /",
+  Cancel: "გაუქმება",
+  "Cannot revoke the owner's admin role": "მფლობელის ადმინისტრატორის როლის გაუქმება შეუძლებელია",
+  Champion: "ჩემპიონი",
+  Championship: "საჩემპიონო მატჩი",
+  "Change language": "ენის შეცვლა",
+  "Change matchup": "წყვილის შეცვლა",
+  "Checking permissions": "უფლებების შემოწმება",
+  "ChillPong / Tbilisi": "ChillPong / თბილისი",
+  "ChillPong hedgehog and paddle logo": "ChillPong-ის ლოგო ზღარბითა და ჩოგნით",
+  "ChillPong home": "ChillPong-ის მთავარი გვერდი",
+  "Choose a tournament first.": "ჯერ აირჩიეთ ტურნირი.",
+  "Choose a valid start date and time in Tbilisi.": "აირჩიეთ დაწყების სწორი თარიღი და დრო თბილისის დროით.",
+  "Choose match": "აირჩიეთ მატჩი",
+  "Choose the format and 1–20 physical tables before the first match starts. Player registrations survive changes to the unplayed draw.": "პირველი მატჩის დაწყებამდე აირჩიეთ ფორმატი და 1–20 მაგიდა. უთამაშებელი ბადის ცვლილებისას მოთამაშეთა რეგისტრაცია ნარჩუნდება.",
+  Close: "დახურვა",
+  "Close member editor": "წევრის რედაქტორის დახურვა",
+  "Close sidebar": "მენიუს დახურვა",
+  "Close tournament controls": "ტურნირის მართვის დახურვა",
+  "Close tournament details": "ტურნირის დეტალების დახურვა",
+  "Close tournament editor": "ტურნირის რედაქტორის დახურვა",
+  "Club member": "კლუბის წევრი",
+  "Club members will appear here once the crew is added.": "კლუბის წევრები დამატების შემდეგ აქ გამოჩნდებიან.",
+  "Complete tournament bracket": "ტურნირის სრული ბადე",
+  Completed: "დასრულებული",
+  "Completed results remain in history. Pending dependencies are updated where safe; active downstream matches can block removal.": "დასრულებული შედეგები ისტორიაში რჩება. დაკავშირებული მომლოდინე მატჩები უსაფრთხოების შემთხვევაში განახლდება; აქტიურმა შემდგომმა მატჩებმა შეიძლება წაშლა დაბლოკოს.",
+  "Configure between 1 and 20 tables": "მიუთითეთ 1-დან 20-მდე მაგიდა",
+  "Configure tournament": "ტურნირის პარამეტრების შეცვლა",
+  "Confirm cascade to reset completed dependent matches": "დაადასტურეთ დასრულებული დაკავშირებული მატჩების განულებაც",
+  "Confirm removal because this player is assigned to the bracket": "დაადასტურეთ წაშლა: მოთამაშე უკვე ბადეშია",
+  "Confirm reset": "განულების დადასტურება",
+  "Confirm undo": "უკან დაბრუნების დადასტურება",
+  Connecting: "დაკავშირება",
+  "Connecting…": "დაკავშირება…",
+  "Copy member ID": "წევრის ID-ის კოპირება",
+  "Copy member ID {v1}": "წევრის ID-ის კოპირება: {v1}",
+  "Correct the result": "შედეგის შესწორება",
+  "Couldn't copy the member ID. You can select and copy it below.": "ID ვერ დაკოპირდა. მონიშნეთ და დააკოპირეთ ქვემოთ.",
+  "Couldn't load accounts": "ანგარიშები ვერ ჩაიტვირთა",
+  "Couldn't load your profile": "პროფილი ვერ ჩაიტვირთა",
+  "Couldn't save this change. Try again.": "ცვლილება ვერ შეინახა. სცადეთ ხელახლა.",
+  "Couldn't save this member. Try again.": "წევრის მონაცემები ვერ შეინახა. სცადეთ ხელახლა.",
+  "Couldn't save this tournament. Try again.": "ტურნირი ვერ შეინახა. სცადეთ ხელახლა.",
+  "Couldn't save your profile. Try again.": "პროფილი ვერ შეინახა. სცადეთ ხელახლა.",
+  "Couldn't update that role. Please try again.": "როლი ვერ შეიცვალა. სცადეთ ხელახლა.",
+  "Create tournament": "ტურნირის შექმნა",
+  "Current round": "მიმდინარე რაუნდი",
+  "Date / time": "თარიღი / დრო",
+  "Destination match": "სამიზნე მატჩი",
+  "Destination slot": "სამიზნე პოზიცია",
+  Details: "დეტალები",
+  "Directory unavailable.": "სია მიუწვდომელია.",
+  "Display name": "სახელი",
+  "Display name must be at most 80 characters": "სახელი მაქსიმუმ 80 სიმბოლოს უნდა შეიცავდეს",
+  "Display name must contain at most 80 characters.": "სახელი მაქსიმუმ 80 სიმბოლოს უნდა შეიცავდეს.",
+  "Double elimination": "ორ წაგებამდე",
+  Doubles: "წყვილთა თამაში",
+  "Doubles / teams of two": "წყვილთა თამაში / ორკაციანი გუნდები",
+  "Draw ready": "ბადე მზადაა",
+  Edit: "რედაქტირება",
+  "Edit member.": "წევრის რედაქტირება.",
+  "Edit player.": "მოთამაშის რედაქტირება.",
+  "Edit profiles": "პროფილების რედაქტირება",
+  "Edit tournament": "ტურნირის რედაქტირება",
+  "Edit tournament.": "ტურნირის რედაქტირება.",
+  "Edit {name}": "რედაქტირება: {name}",
+  "Edit {v1}": "რედაქტირება: {v1}",
+  Eliminated: "გამოთიშულია",
+  "Elimination format": "გამოთიშვის ფორმატი",
+  "Enter a non-negative whole-number score for both players.": "ორივე მოთამაშის ანგარიში შეიყვანეთ არაუარყოფითი მთელი რიცხვით.",
+  "Enter a valid Internet Identity principal for this member.": "შეიყვანეთ წევრის სწორი Internet Identity principal.",
+  "Everyone is playing, advanced or finished.": "ყველა თამაშობს, შემდეგ ეტაპზე გავიდა ან დაასრულა.",
+  "Expected players": "მოსალოდნელი მოთამაშეები",
+  "Expected players must be a whole number of at least 2.": "მოთამაშეთა მოსალოდნელი რაოდენობა უნდა იყოს მთელი რიცხვი, სულ მცირე 2.",
+  "Expected players must be at least 2": "მოსალოდნელია სულ მცირე 2 მოთამაშე",
+  Expert: "ექსპერტი",
+  "Explore tournaments": "ტურნირების ნახვა",
+  Extended: "გაფართოებული",
+  "Extended view": "გაფართოებული ხედი",
+  "FIND A TOURNAMENT": "ტურნირის ძებნა",
+  "FIND YOUR PEOPLE": "მოძებნე შენი ხალხი",
+  "Filter members": "წევრების ფილტრი",
+  "Filter tournaments": "ტურნირების ფილტრი",
+  Final: "საბოლოო შედეგი",
+  "Finalist positions stay fixed because they determine whether a double elimination reset final is required.": "ფინალისტების პოზიციები უცვლელია: ისინი განსაზღვრავენ, საჭიროა თუ არა განმეორებითი ფინალი ორ წაგებამდე ფორმატში.",
+  "Find your next opponent. Follow the lineup by skill, status, table and round.": "იპოვე შემდეგი მეტოქე. ნახე მონაწილეები დონის, სტატუსის, მაგიდისა და რაუნდის მიხედვით.",
+  "Find your next tournament and meet us at the table.": "იპოვე შემდეგი ტურნირი. მაგიდასთან შევხვდებით.",
+  "First participant is missing": "პირველი მონაწილე არ არის",
+  "Fit bracket": "ბადის სრულად ჩვენება",
+  Following: "მომდევნო",
+  "GAME ON.": "თამაში იწყება.",
+  "Game mode": "თამაშის რეჟიმი",
+  "Generate bracket": "ბადის შექმნა",
+  "Generate the draw.": "ბადის შექმნა.",
+  "Give the night a name": "დაარქვი სახელი ამ საღამოს",
+  "Good people.": "კარგი ხალხი.",
+  "Grand final": "გრანდ ფინალი",
+  "If later rounds depend on this result, a plain reset is rejected until downstream results are explicitly included.": "თუ შემდგომი რაუნდები ამ შედეგზეა დამოკიდებული, განულება მხოლოდ მათი შედეგების ჩათვლითაა შესაძლებელი.",
+  "Include removed players": "წაშლილი მოთამაშეების ჩვენება",
+  Intermediate: "საშუალო დონე",
+  Joined: "შემოუერთდა",
+  "Keep the ball moving.": "ბურთი მოძრაობაში გქონდეს.",
+  "Keep the bio to 500 characters or fewer.": "აღწერა მაქსიმუმ 500 სიმბოლოს უნდა შეიცავდეს.",
+  "Keep the description to 2,000 characters or fewer.": "აღწერა მაქსიმუმ 2000 სიმბოლოს უნდა შეიცავდეს.",
+  "Keep this handle, or choose a new one.": "დატოვეთ ეს მეტსახელი ან აირჩიეთ ახალი.",
+  "Keep this username, choose another one, or leave it blank.": "დატოვეთ ეს მეტსახელი, აირჩიეთ სხვა ან ველი ცარიელი დატოვეთ.",
+  "Keep your name to 80 characters or fewer.": "სახელი მაქსიმუმ 80 სიმბოლოს უნდა შეიცავდეს.",
+  Language: "ენა",
+  "Leave blank if you prefer. Up to 80 characters.": "შეგიძლიათ ცარიელი დატოვოთ. მაქსიმუმ 80 სიმბოლო.",
+  Live: "მიმდინარე",
+  "Live now": "მიმდინარეობს",
+  "Live tournament / public view": "მიმდინარე ტურნირი / საჯარო ხედი",
+  Loading: "იტვირთება",
+  "Loading players…": "მოთამაშეები იტვირთება…",
+  "Loading the member directory.": "წევრების სია იტვირთება.",
+  "Loading the selected lineup…": "არჩეული სია იტვირთება…",
+  "Loading the tournament board.": "ტურნირების სია იტვირთება.",
+  "Loading the tournament floor and bracket.": "ტურნირის თამაშები და ბადე იტვირთება.",
+  "Loading tournaments": "ტურნირები იტვირთება",
+  "Loading users": "მომხმარებლები იტვირთება",
+  "Loading your profile": "პროფილი იტვირთება",
+  Loser: "დამარცხებული",
+  "Loser drops": "დამარცხებული ქვედა ბადეში გადადის",
+  "Losers bracket": "დამარცხებულთა ბადე",
+  "Lower Intermediate": "საშუალოზე დაბალი",
+  "MATCH FILE": "მატჩის მონაცემები",
+  "Manage member identities and account details. Tournament entrants are listed on the Players page.": "მართეთ წევრების ანგარიშები და მონაცემები. ტურნირის მონაწილეები „მოთამაშეების“ გვერდზეა.",
+  "Manual override": "ხელით ცვლილება",
+  "Manual override / players & byes": "ხელით ცვლილება / მოთამაშეები და თამაშის გარეშე გასვლა",
+  "Manual override. The backend rejects changes that would overwrite a played match or an active downstream match.": "ხელით ცვლილება. სისტემა უარყოფს ცვლილებებს, რომლებიც ითამაშებულ ან აქტიურ შემდგომ მატჩს შეცვლის.",
+  "Manual placement requires a winners-bracket match": "ხელით განთავსებას გამარჯვებულთა ბადის მატჩი სჭირდება",
+  "Manual placement requires an opening winners-bracket slot": "ხელით განთავსებისთვის გამარჯვებულთა ბადეში საწყისი პოზიციაა საჭირო",
+  "Match / table / seed": "მატჩი / მაგიდა / განთესვა",
+  "Match not found": "მატჩი ვერ მოიძებნა",
+  "Match participant missing": "მატჩის მონაწილე არ არის",
+  "Match {match}": "მატჩი {match}",
+  Member: "წევრი",
+  "Member ID / Principal ID": "წევრის ID / Principal ID",
+  "Member ID copied.": "წევრის ID დაკოპირებულია.",
+  "Member principal": "წევრის principal",
+  "More details will be announced by the crew.": "ორგანიზატორები დეტალებს მოგვიანებით გამოაცხადებენ.",
+  "Most recent action": "ბოლო მოქმედება",
+  Move: "გადაადგილება",
+  "Move / place player.": "მოთამაშის გადაადგილება / განთავსება.",
+  "Move player manually": "მოთამაშის ხელით გადაადგილება",
+  "Move player to front of queue": "მოთამაშის რიგის თავში გადაყვანა",
+  "Move players within their current bracket and round": "მოთამაშეები მხოლოდ მიმდინარე ბადესა და რაუნდში გადაადგილეთ",
+  "My profile": "ჩემი პროფილი",
+  "NAME / REGISTRATION NUMBER": "სახელი / რეგისტრაციის ნომერი",
+  "Name / A–Z": "სახელი / ანბანით",
+  "Name / optional": "სახელი / არასავალდებულო",
+  "Name at the table": "სახელი მაგიდასთან",
+  "Name on the table": "სახელი მაგიდასთან",
+  "New tournament": "ახალი ტურნირი",
+  "New tournament.": "ახალი ტურნირი.",
+  "New tournaments will land here. Check back for the next night at the table.": "აქ ახალი ტურნირები გამოჩნდება. შემოიხედე და გაიგე შემდეგი სათამაშო საღამოს შესახებ.",
+  Next: "შემდეგი",
+  "Next matches": "შემდეგი მატჩები",
+  "No bracket yet.": "ბადე ჯერ არ არის.",
+  "No current round": "მიმდინარე რაუნდის გარეშე",
+  "No decided matches waiting.": "მზად მყოფი მატჩები ჯერ არ არის.",
+  "No games in this corner.": "აქ თამაშები ჯერ არ არის.",
+  "No matches.": "ვერავინ მოიძებნა.",
+  "No matching member ID": "წევრის ID ვერ მოიძებნა",
+  "No matching players.": "მოთამაშეები ვერ მოიძებნა.",
+  "No safe opening slots": "უსაფრთხო საწყისი პოზიციები არ არის",
+  "No signed-in accounts yet": "ავტორიზებული ანგარიშები ჯერ არ არის",
+  "No table assigned": "მაგიდა არ არის დანიშნული",
+  "No table is available": "თავისუფალი მაგიდა არ არის",
+  "Number of tables": "მაგიდების რაოდენობა",
+  "ORGANIZER DESK": "ორგანიზატორის პანელი",
+  "On deck": "რიგში",
+  "On the floor": "მაგიდებთან",
+  "Only a ready match can start": "მხოლოდ მზად მყოფი მატჩი დაიწყება",
+  "Only a ready or playing match can be assigned a table": "მაგიდა მხოლოდ მზად მყოფ ან მიმდინარე მატჩს ენიჭება",
+  "Only a ready, playing, or completed match accepts a score": "ანგარიში მხოლოდ მზად მყოფ, მიმდინარე ან დასრულებულ მატჩში შეიყვანება",
+  "Only admins can manage account access": "ანგარიშის წვდომას მხოლოდ ადმინისტრატორები მართავენ",
+  "Only if the unbeaten finalist loses": "მხოლოდ თუ დაუმარცხებელი ფინალისტი წააგებს",
+  "Only pending matches can be prioritized": "პრიორიტეტი მხოლოდ მომლოდინე მატჩებს ენიჭება",
+  "Open room": "ოთახის გახსნა",
+  "Open sidebar": "მენიუს გახსნა",
+  "Open tournament room": "ტურნირის ოთახის გახსნა",
+  "Open tournament room for {v1}": "ტურნირის ოთახის გახსნა: {v1}",
+  "Opening slots can be replaced. Later ready matches can swap opponents within the same bracket and round. Registration numbers never change.": "საწყისი პოზიციები შეცვლადია. მოგვიანებით მზად მყოფ მატჩებში მეტოქეთა გაცვლა ერთ ბადესა და რაუნდში შეიძლება. რეგისტრაციის ნომრები არ იცვლება.",
+  "Optional. If provided, use 3–30 letters, numbers, underscores or hyphens. Saved in lowercase.": "არასავალდებულო. გამოიყენეთ 3–30 ლათინური ასო, ციფრი, ქვედა ტირე ან დეფისი. ინახება პატარა ასოებით.",
+  "Organizer controls": "ორგანიზატორის მართვა",
+  "Organizer desk": "ორგანიზატორის პანელი",
+  "Original registration numbers stay fixed between rounds. Manual priority is shown in the organizer history.": "რეგისტრაციის ნომრები რაუნდებს შორის უცვლელია. ხელით მინიჭებული პრიორიტეტი ორგანიზატორის ისტორიაში ჩანს.",
+  "Other match": "სხვა მატჩი",
+  "Other match slot": "სხვა მატჩის პოზიცია",
+  "PLAYERS.": "მოთამაშეები.",
+  "PROFILE.": "პროფილი.",
+  "Paddles up. Phones down.": "ჩოგნები მაღლა. ტელეფონები დაბლა.",
+  "Past games": "წარსული თამაშები",
+  "Paste a principal ID or part of it": "ჩასვით principal ID ან მისი ნაწილი",
+  Place: "განათავსეთ",
+  "Place player": "მოთამაშის განთავსება",
+  "Place player manually": "მოთამაშის ხელით განთავსება",
+  "Planning estimate. Registration stays open.": "საორიენტაციო რაოდენობა. რეგისტრაცია ღია რჩება.",
+  Player: "მოთამაშე",
+  "Player A": "მოთამაშე A",
+  "Player A slot": "მოთამაშე A-ს პოზიცია",
+  "Player B": "მოთამაშე B",
+  "Player B slot": "მოთამაშე B-ს პოზიცია",
+  "Player already occupies another bracket slot": "მოთამაშე უკვე ბადის სხვა პოზიციაზეა",
+  "Player already occupies that slot": "მოთამაშე უკვე ამ პოზიციაზეა",
+  "Player changes saved to the tournament.": "მოთამაშეთა ცვლილებები ტურნირში შენახულია.",
+  "Player has no pending bracket slot to move": "მოთამაშეს გადასაადგილებელი მომლოდინე პოზიცია არ აქვს",
+  "Player is already in the bracket; use Move player": "მოთამაშე უკვე ბადეშია. გამოიყენეთ „მოთამაშის გადაადგილება“",
+  "Player is already removed": "მოთამაშე უკვე წაშლილია",
+  "Player missing": "მოთამაშე არ არის",
+  "Player name": "მოთამაშის სახელი",
+  "Player name must be between 1 and 80 characters": "მოთამაშის სახელი 1-დან 80-მდე სიმბოლოს უნდა შეიცავდეს",
+  "Player not found": "მოთამაშე ვერ მოიძებნა",
+  "Player registration counters continue forward so registration numbers remain permanent. Restored results, assignments and queue positions are saved automatically.": "რეგისტრაციის მთვლელი ზრდას აგრძელებს, ამიტომ ნომრები მუდმივია. აღდგენილი შედეგები, დანიშვნები და რიგის პოზიციები ავტომატურად ინახება.",
+  Players: "მოთამაშეები",
+  "Players added here receive permanent registration numbers and join the queue.": "დამატებული მოთამაშეები იღებენ მუდმივ რეგისტრაციის ნომრებს და რიგში დგებიან.",
+  "Players appear here when they register for a tournament.": "მოთამაშეები აქ ტურნირზე რეგისტრაციის შემდეგ ჩნდებიან.",
+  "Players unavailable.": "მოთამაშეები მიუწვდომელია.",
+  Playing: "თამაშობს",
+  Primary: "მთავარი მენიუ",
+  "Prioritize match": "მატჩის პრიორიტეტის გაზრდა",
+  "Prioritize {v1} in queue": "რიგში პრიორიტეტის გაზრდა: {v1}",
+  Profile: "პროფილი",
+  "Profile saved.": "პროფილი შენახულია.",
+  Qualifiers: "შესარჩევი",
+  "Qualifiers / round 0": "შესარჩევი / რაუნდი 0",
+  Ready: "მზადაა",
+  "Ready for the next rally.": "მზადაა შემდეგი გათამაშებისთვის.",
+  "Recent organizer actions": "ორგანიზატორის ბოლო მოქმედებები",
+  "Record match result": "მატჩის შედეგის შენახვა",
+  "Refresh accounts": "ანგარიშების განახლება",
+  "Refresh tournaments": "ტურნირების განახლება",
+  "Reg / time": "რეგ / დრო",
+  "Regenerate bracket": "ბადის ხელახლა შექმნა",
+  "Register & place manually": "რეგისტრაცია და ხელით განთავსება",
+  "Register {name}": "რეგისტრაცია: {name}",
+  Registered: "რეგისტრირებულია",
+  "Registration open": "რეგისტრაცია ღიაა",
+  "Registration order": "რეგისტრაციის რიგი",
+  "Release occupied tables before reducing the table count": "რაოდენობის შემცირებამდე გაათავისუფლეთ დაკავებული მაგიდები",
+  "Remove player": "მოთამაშის წაშლა",
+  "Remove player?": "წავშალოთ მოთამაშე?",
+  "Remove {v1}": "წაშლა: {v1}",
+  Removed: "წაშლილია",
+  "Removed players cannot be placed": "წაშლილ მოთამაშეებს ვერ განათავსებთ",
+  "Reset a playing match before releasing its table": "მაგიდის გათავისუფლებამდე განულეთ მიმდინარე მატჩი",
+  "Reset bracket zoom": "ბადის მასშტაბის აღდგენა",
+  "Reset completed or playing dependent matches before changing the bracket": "ბადის შეცვლამდე განულეთ დასრულებული ან მიმდინარე დაკავშირებული მატჩები",
+  "Reset dependent matches before changing the winner": "გამარჯვებულის შეცვლამდე განულეთ დაკავშირებული მატჩები",
+  "Reset filters": "ფილტრების გასუფთავება",
+  "Reset filters & sort": "ფილტრებისა და დალაგების გასუფთავება",
+  "Reset final": "განმეორებითი ფინალი",
+  "Reset match / undo result": "მატჩის განულება / შედეგის გაუქმება",
+  "Reset match and advancement": "მატჩისა და შემდეგ ეტაპზე გასვლის განულება",
+  "Reset playing dependent matches first": "ჯერ განულეთ მიმდინარე დაკავშირებული მატჩები",
+  "Reset this result?": "განულდეს ეს შედეგი?",
+  Resetting: "განულება",
+  "Restore the tournament state immediately before the most recent organizer action.": "ტურნირის მდგომარეობის აღდგენა ორგანიზატორის ბოლო მოქმედებამდე.",
+  "Results and assignments are managed by the tournament organizer.": "შედეგებსა და დანიშვნებს ტურნირის ორგანიზატორი მართავს.",
+  "Revoke admin": "ადმინის უფლებების გაუქმება",
+  "Revoke admin from {id}": "ადმინის უფლებების გაუქმება: {id}",
+  "Round {round}": "რაუნდი {round}",
+  "Rules, arrival instructions, entry details. Everything the players need.": "წესები, მოსვლის ინსტრუქცია, მონაწილეობის დეტალები. ყველაფერი მოთამაშეებისთვის.",
+  "Save changes": "ცვლილებების შენახვა",
+  "Save player": "მოთამაშის შენახვა",
+  "Save profile": "პროფილის შენახვა",
+  "Save result": "შედეგის შენახვა",
+  "Save setup": "პარამეტრების შენახვა",
+  "Save the result": "შედეგის შენახვა",
+  "Saved to the tournament. The floor, draw and queue are up to date.": "ტურნირში შენახულია. მაგიდები, ბადე და რიგი განახლებულია.",
+  "Saving…": "ინახება…",
+  "Score A": "ანგარიში A",
+  "Score B": "ანგარიში B",
+  "Scores must be at most 999": "ანგარიში მაქსიმუმ 999 უნდა იყოს",
+  "Scroll to pan / select any match": "გადაადგილება სქროლით / აირჩიეთ ნებისმიერი მატჩი",
+  "Scrollable bracket graph": "გადასაადგილებელი ტურნირის ბადე",
+  "Search by member ID": "ძებნა წევრის ID-ით",
+  "Search tournament players": "ტურნირის მოთამაშეების ძებნა",
+  "Search tournaments": "ტურნირების ძებნა",
+  "Search users": "მომხმარებლების ძებნა",
+  "Second loss = elimination": "მეორე წაგება = გამოთიშვა",
+  "Second participant is missing": "მეორე მონაწილე არ არის",
+  Seed: "განთესვა",
+  "Select a member to edit.": "აირჩიეთ შესაცვლელი წევრი.",
+  "Select a tournament to edit.": "აირჩიეთ შესაცვლელი ტურნირი.",
+  "Select the Member ID above to copy it.": "კოპირებისთვის ზემოთ მოცემული წევრის ID მონიშნეთ.",
+  "Select two different slots": "აირჩიეთ ორი განსხვავებული პოზიცია",
+  "Serve. Rally. Repeat.": "ჩაწოდება. გათამაშება. გამეორება.",
+  "Set custom matchup": "წყვილის ხელით დანიშვნა",
+  "Set the venue, pick a date and put the first tournament on the board.": "აირჩიე ბარი, თარიღი და დაამატე პირველი ტურნირი.",
+  "Share this ID with an admin to join the lineup.": "მონაწილეობისთვის ეს ID ადმინისტრატორს გაუზიარეთ.",
+  "Sidebar visibility": "მენიუს ხილვადობა",
+  "Sign in": "შესვლა",
+  "Sign out": "გასვლა",
+  "Signed-in member": "ავტორიზებული წევრი",
+  "Signing in": "შესვლა",
+  "Single elimination": "ერთ წაგებამდე",
+  Singles: "ინდივიდუალური თამაში",
+  "Singles / one vs. one": "ინდივიდუალური თამაში / ერთი ერთზე",
+  Skill: "დონე",
+  "Skill compatibility → registration order → bracket availability": "მსგავსი დონე → რეგისტრაციის რიგი → ბადის მზადყოფნა",
+  "Skill level": "თამაშის დონე",
+  "Skill level / L1–L5": "თამაშის დონე / L1–L5",
+  "Skill level must be between 1 and 5": "თამაშის დონე 1-დან 5-მდე უნდა იყოს",
+  "Something went wrong": "შეცდომა მოხდა",
+  "Something went wrong while fetching authenticated accounts.": "ავტორიზებული ანგარიშების ჩატვირთვისას შეცდომა მოხდა.",
+  "Something went wrong. Please try again.": "შეცდომა მოხდა. სცადეთ ხელახლა.",
+  "Sort by": "დალაგება",
+  Standard: "სტანდარტული",
+  "Standard view": "სტანდარტული ხედი",
+  "Start match": "მატჩის დაწყება",
+  "Start time / Tbilisi (UTC+04)": "დაწყება / თბილისი (UTC+04)",
+  Status: "სტატუსი",
+  "Status /": "სტატუსი /",
+  "Status / live first": "სტატუსი / მიმდინარე პირველ რიგში",
+  "Status / losses": "სტატუსი / წაგებები",
+  "Swap bracket players": "ბადის მოთამაშეთა გაცვლა",
+  "Swap opening slots or ready matches in the same bracket round": "გაცვალეთ საწყისი პოზიციები ან ერთი რაუნდის მზად მყოფი მატჩები",
+  "Swap players": "მოთამაშეების გაცვლა",
+  "Swap players between ready matches": "მოთამაშეთა გაცვლა მზად მყოფ მატჩებს შორის",
+  "TBILISI / AFTER HOURS": "თბილისი / გვიან ღამით",
+  "TBILISI, GE": "თბილისი, GE",
+  THE: "ჩვენი",
+  "THE CLUB / INDEX": "კლუბი / მენიუ",
+  "THE FINAL POINT / TOURNAMENT CHAMPION": "ბოლო ქულა / ტურნირის ჩემპიონი",
+  "THE LINEUP / PERMANENT REGISTRATION": "მონაწილეები / მუდმივი რეგისტრაცია",
+  "THE TABLE IS THE DANCE FLOOR.": "ეს მაგიდა საცეკვაო მოედანია.",
+  Table: "მაგიდა",
+  "Table is already occupied": "მაგიდა უკვე დაკავებულია",
+  "Table is clear.": "მაგიდა თავისუფალია.",
+  "Table must be between 1 and the configured table count": "მაგიდის ნომერი მითითებული რაოდენობის ფარგლებში უნდა იყოს",
+  "Table setup": "მაგიდების პარამეტრები",
+  "Table {v1}": "მაგიდა {v1}",
+  Tbilisi: "თბილისი",
+  "Tbilisi / After hours": "თბილისი / გვიან ღამით",
+  "The board is offline.": "ტურნირების დაფა მიუწვდომელია.",
+  "The club directory is still connecting.": "კლუბის სია ჯერ უკავშირდება სერვერს.",
+  "The complete results are in the full bracket.": "ყველა შედეგი სრულ ბადეშია.",
+  "The details / optional": "დეტალები / არასავალდებულო",
+  "The draw pairs compatible skill levels first, then uses permanent registration order to settle equal choices. Winners advance automatically;": "ბადე ჯერ მსგავსი დონის მოთამაშეებს აწყვილებს, შემდეგ რეგისტრაციის რიგს იყენებს. გამარჯვებულები ავტომატურად გადიან;",
+  "The elimination format is locked after the first match begins. You can still adjust the table count; occupied tables cannot be removed.": "ფორმატი პირველი მატჩის დაწყების შემდეგ ფიქსირდება. მაგიდების რაოდენობა შეცვლადია; დაკავებულ მაგიდებს ვერ წაშლით.",
+  "The full tournament tree appears when the organizer generates the bracket.": "ტურნირის სრული ბადე ორგანიზატორის მიერ შექმნის შემდეგ გამოჩნდება.",
+  "The lineup is offline.": "მონაწილეთა სია მიუწვდომელია.",
+  "The lineup is open. Players join the queue when registered.": "სია ღიაა. რეგისტრირებული მოთამაშეები რიგში დგებიან.",
+  "The lineup starts here.": "სია აქ იწყება.",
+  "The lineup starts with a tournament.": "მონაწილეთა სია ტურნირით იწყება.",
+  "The match desk is offline.": "მატჩების პანელი მიუწვდომელია.",
+  "The next night is loading.": "შემდეგი საღამო მზადდება.",
+  "The night / organizer notes": "საღამო / ორგანიზატორის შენიშვნები",
+  "The night has a winner.": "ამ საღამოს გამარჯვებული ჰყავს.",
+  "The player leaves the waiting queue and unplayed bracket slots.": "მოთამაშე ტოვებს რიგსა და ბადის უთამაშებელ პოზიციებს.",
+  "The tournament board": "ტურნირების დაფა",
+  "The tournament board is still connecting.": "ტურნირების დაფა ჯერ უკავშირდება სერვერს.",
+  "The tournament is still connecting.": "ტურნირი ჯერ უკავშირდება სერვერს.",
+  "Their permanent registration number is retained and will not be reused.": "მუდმივი რეგისტრაციის ნომერი ნარჩუნდება და ხელახლა არ გამოიყენება.",
+  Then: "შემდეგ",
+  "There is no action to undo": "უკან დასაბრუნებელი მოქმედება არ არის",
+  "This action couldn't be saved. Try again.": "მოქმედება ვერ შეინახა. სცადეთ ხელახლა.",
+  "This can erase scores in later rounds. Active downstream matches must be resolved first; the backend prevents resetting across a playing match.": "ამან შეიძლება შემდგომი რაუნდების ანგარიშები წაშალოს. ჯერ დაასრულეთ აქტიური დაკავშირებული მატჩები: სისტემა მიმდინარე თამაშის დროს განულებას კრძალავს.",
+  "This identity stays attached to the member.": "ეს იდენტობა წევრთან დაკავშირებული რჩება.",
+  "This match slot": "ამ მატჩის პოზიცია",
+  "This member": "ეს წევრი",
+  "This player is currently playing. Their opponent may advance by forfeit when they are removed.": "მოთამაშე ახლა თამაშობს. მისი წაშლისას მეტოქე შეიძლება ავტომატურად გავიდეს შემდეგ ეტაპზე.",
+  "This regenerates the unplayed bracket and replaces manual opening assignments. Registered players stay intact.": "ეს უთამაშებელ ბადეს ხელახლა შექმნის და ხელით საწყის დანიშვნებს შეცვლის. მოთამაშეთა რეგისტრაცია შენარჩუნდება.",
+  "This tournament is no longer available.": "ეს ტურნირი აღარ არის ხელმისაწვდომი.",
+  Tournament: "ტურნირი",
+  "Tournament board": "ტურნირების დაფა",
+  "Tournament controls": "ტურნირის მართვა",
+  "Tournament description must be at most 2000 characters": "ტურნირის აღწერა მაქსიმუმ 2000 სიმბოლოს უნდა შეიცავდეს",
+  "Tournament not found": "ტურნირი ვერ მოიძებნა",
+  "Tournament not found.": "ტურნირი ვერ მოიძებნა.",
+  "Tournament room": "ტურნირის ოთახი",
+  "Tournament start time must be a positive timestamp": "მიუთითეთ ტურნირის დაწყების სწორი დრო",
+  "Tournament title": "ტურნირის სახელი",
+  "Tournament title must be between 1 and 100 characters": "ტურნირის სახელი 1-დან 100-მდე სიმბოლოს უნდა შეიცავდეს",
+  "Tournament title must contain between 1 and 100 characters.": "ტურნირის სახელი 1-დან 100-მდე სიმბოლოს უნდა შეიცავდეს.",
+  "Tournament venue must be between 1 and 150 characters": "ადგილის სახელი 1-დან 150-მდე სიმბოლოს უნდა შეიცავდეს",
+  Tournaments: "ტურნირები",
+  "Try a different filter or search to find your tournament.": "ტურნირის საპოვნელად შეცვალეთ ფილტრი ან საძიებო ტექსტი.",
+  "Try a different principal ID or clear the search.": "სცადეთ სხვა principal ID ან გაასუფთავეთ ძებნა.",
+  "Try again": "ხელახლა ცდა",
+  "Try another name or adjust the skill, status, table or round filters.": "სცადეთ სხვა სახელი ან შეცვალეთ დონის, სტატუსის, მაგიდის ან რაუნდის ფილტრები.",
+  "Try another name or switch the member filter.": "სცადეთ სხვა სახელი ან შეცვალეთ წევრების ფილტრი.",
+  "UNDERGROUND PING-PONG CLUB": "ანდერგრაუნდ პინგ-პონგ კლუბი",
+  Unassigned: "არ არის დანიშნული",
+  "Unauthorized: Only admins can perform this action": "ეს მოქმედება მხოლოდ ადმინისტრატორებისთვისაა",
+  "Unauthorized: Only users can perform this action": "ეს მოქმედება მხოლოდ ავტორიზებული მომხმარებლებისთვისაა",
+  "Unauthorized: Sign in to edit your profile": "პროფილის შესაცვლელად შედით",
+  "Underground ping-pong. Tbilisi nights.": "ანდერგრაუნდ პინგ-პონგი. თბილისის ღამეები.",
+  "Undo last action": "ბოლო მოქმედების უკან დაბრუნება",
+  "Undo last action?": "დავაბრუნოთ ბოლო მოქმედება?",
+  "Undo must be handled before reducing a command": "მოქმედების უკან დაბრუნება ვერ მოხერხდა",
+  Upcoming: "მომავალი",
+  "Upcoming pairings appear as their bracket dependencies finish.": "შემდეგი წყვილები წინა მატჩების დასრულების შემდეგ გამოჩნდება.",
+  "Use the member's signed-in principal, not an anonymous identity.": "გამოიყენეთ ავტორიზებული წევრის principal და არა ანონიმური იდენტობა.",
+  "Use the principal shown to this member after signing in.": "გამოიყენეთ principal, რომელსაც წევრი შესვლის შემდეგ ხედავს.",
+  "User already exists": "მომხმარებელი უკვე არსებობს",
+  "User not found": "მომხმარებელი ვერ მოიძებნა",
+  Username: "მომხმარებლის სახელი",
+  "Username / optional": "მომხმარებლის სახელი / არასავალდებულო",
+  "Username already taken": "მომხმარებლის ეს სახელი დაკავებულია",
+  "Username may only contain letters, numbers, underscores, and hyphens": "დასაშვებია მხოლოდ ლათინური ასოები, ციფრები, ქვედა ტირეები და დეფისები",
+  "Username must be between 3 and 30 characters": "მომხმარებლის სახელი 3-დან 30-მდე სიმბოლოს უნდა შეიცავდეს",
+  "Username needs 3–30 letters, numbers, underscores or hyphens.": "მომხმარებლის სახელი: 3–30 ლათინური ასო, ციფრი, ქვედა ტირე ან დეფისი.",
+  "Username not set": "მომხმარებლის სახელი არ არის მითითებული",
+  Venue: "ადგილი",
+  "Venue must contain between 1 and 150 characters.": "ადგილის სახელი 1-დან 150-მდე სიმბოლოს უნდა შეიცავდეს.",
+  Voided: "გაუქმებული",
+  Waiting: "მოლოდინში",
+  "Waiting for the tournament draw.": "ტურნირის წილისყრის მოლოდინში.",
+  "Waiting queue / next to play": "რიგი / ვინ თამაშობს შემდეგ",
+  "We couldn't load the club members. Try connecting again.": "კლუბის წევრები ვერ ჩაიტვირთა. სცადეთ ხელახლა დაკავშირება.",
+  "We couldn't load the tournament board.": "ტურნირების დაფა ვერ ჩაიტვირთა.",
+  "We couldn't load the tournament state.": "ტურნირის მდგომარეობა ვერ ჩაიტვირთა.",
+  "We couldn't load the tournaments. Try connecting again.": "ტურნირები ვერ ჩაიტვირთა. სცადეთ ხელახლა დაკავშირება.",
+  "We couldn't load this tournament's players.": "ამ ტურნირის მოთამაშეები ვერ ჩაიტვირთა.",
+  Winner: "გამარჯვებული",
+  "Winner advances": "გამარჯვებული შემდეგ ეტაპზე გადის",
+  "Winners advance and the table is freed automatically. Changing a winner after downstream games requires a confirmed reset.": "გამარჯვებულები შემდეგ ეტაპზე გადიან და მაგიდა ავტომატურად თავისუფლდება. შემდგომი მატჩების შემდეგ გამარჯვებულის შეცვლას დადასტურებული განულება სჭირდება.",
+  "Winners bracket": "გამარჯვებულთა ბადე",
+  "Withdraw {name}": "ტურნირიდან მოხსნა: {name}",
+  "Wrong side of the table.": "მაგიდის არასწორ მხარეს ხარ.",
+  YOUR: "შენი",
+  You: "თქვენ",
+  "You can't revoke your own admin role.": "საკუთარი ადმინისტრატორის როლს ვერ გააუქმებთ.",
+  "You do not have permission to view this page. Ask an administrator if you believe this is a mistake.": "ამ გვერდზე წვდომა არ გაქვთ. თუ ეს შეცდომაა, მიმართეთ ადმინისტრატორს.",
+  "Your Member ID": "თქვენი წევრის ID",
+  "Your account is still connecting.": "ანგარიში ჯერ უკავშირდება სერვერს.",
+  "Your club identity": "თქვენი კლუბის პროფილი",
+  "Your details are unavailable. Try again before editing.": "მონაცემები მიუწვდომელია. რედაქტირებამდე სცადეთ ხელახლა ჩატვირთვა.",
+  "Your member ID / Principal ID": "თქვენი წევრის ID / Principal ID",
+  "Zoom bracket in": "ბადის გადიდება",
+  "Zoom bracket out": "ბადის შემცირება",
+  "a pending winners-bracket slot": "გამარჯვებულთა ბადის მომლოდინე პოზიციაზე",
+  "accounts /": "ანგარიში /",
+  "accounts match": "ანგარიში მოიძებნა",
+  admin: "ადმინი",
+  admins: "ადმინი",
+  advanced: "შემდეგ ეტაპზეა",
+  available: "თავისუფალია",
+  bye: "თამაშის გარეშე",
+  cancelled: "გაუქმებულია",
+  champion: "ჩემპიონი",
+  "clears its score, winner and table assignment. Earlier registration details remain unchanged.": "ანულებს ანგარიშს, გამარჯვებულსა და მაგიდის დანიშვნას. რეგისტრაციის საწყისი მონაცემები უცვლელია.",
+  completed: "დასრულებულია",
+  eliminated: "გამოთიშულია",
+  "expected players": "მოსალოდნელი მოთამაშე",
+  "expected players / registration stays open": "მოსალოდნელი მოთამაშე / რეგისტრაცია ღიაა",
+  finished: "დასრულებულია",
+  for: "ტურნირისთვის",
+  in: "პოზიციაზე",
+  live: "მიმდინარეობს",
+  loss: "წაგება",
+  losses: "წაგება",
+  of: "სულ",
+  "one loss eliminates a player.": "მოთამაშე ერთი წაგების შემდეგ ითიშება.",
+  "opening slots": "საწყისი პოზიცია",
+  pending: "მოლოდინში",
+  people: "წევრი",
+  person: "წევრი",
+  "physical table": "მაგიდა",
+  "physical tables": "მაგიდა",
+  players: "მოთამაშე",
+  "players /": "მოთამაშე /",
+  "players leave after their second loss.": "მოთამაშეები მეორე წაგების შემდეგ ითიშებიან.",
+  "players · Original registration numbers and times stay fixed.": "მოთამაშე · რეგისტრაციის ნომრები და დრო უცვლელია.",
+  playing: "თამაშობს",
+  ready: "მზადაა",
+  removed: "წაშლილია",
+  table: "მაგიდა",
+  tables: "მაგიდა",
+  "their current unplayed bracket round": "მიმდინარე უთამაშებელ რაუნდში",
+  "to table": "მაგიდაზე",
+  unavailable: "მიუწვდომელია",
+  upcoming: "მომავალი",
+  void: "გაუქმებულია",
+  vs: "წინააღმდეგ",
+  waiting: "მოლოდინში",
+  "wins.": "იმარჯვებს.",
+  "your-handle": "თქვენი-მეტსახელი",
+  "{name} is no longer an admin.": "{name} აღარ არის ადმინისტრატორი.",
+  "{name} is now an admin.": "{name} ახლა ადმინისტრატორია.",
+  "{name}'s member details are saved.": "წევრის მონაცემები შენახულია: {name}.",
+  "{title} is saved. See you at the table.": "{title} შენახულია. მაგიდასთან შევხვდებით.",
+  "{v1} / R{v2}": "{v1} / R{v2}",
+  "{v1} and the original registration time remain unchanged. Skill changes apply to future matchmaking.": "{v1} და რეგისტრაციის დრო უცვლელია. დონის ცვლილება მომავალი მატჩების შერჩევაზე ვრცელდება.",
+  "{v1} avatar": "ავატარი: {v1}",
+  "{v1} club members": "კლუბის წევრები: {v1}",
+  "{v1} upcoming / {v2} live": "{v1} მომავალი / {v2} მიმდინარე",
+  "· Registration order belongs to this tournament.": "· რეგისტრაციის რიგი ამ ტურნირს ეკუთვნის."
+};
+const ru = {
+  "Clear search": "Очистить поиск",
+  "Match started at table {table}": "Матч начат за столом {table}",
+  "Bracket generated": "Сетка создана",
+  "{count} waiting": "В очереди: {count}",
+  "{matched} of {total} accounts match": "Найдено: {matched} из {total}",
+  "Original registration numbers and times stay fixed.": "Номера и время регистрации остаются неизменными.",
+  "registration stays open": "регистрация остаётся открытой",
+  ". The registration remains": ". Регистрационный номер остаётся",
+  "/ Full bracket": "/ Полная сетка",
+  "/ IN THE CLUB": "/ В КЛУБЕ",
+  "/ L": "/ L",
+  "/ Live floor": "/ Текущие игры",
+  "/ Tbilisi": "/ Тбилиси",
+  "3–30 letters, numbers, underscores or hyphens. Saved in lowercase.": "3–30 латинских букв, цифр, знаков подчёркивания или дефисов. Сохраняется в нижнем регистре.",
+  "404 / OUT OF BOUNDS": "404 / ЗА ПРЕДЕЛАМИ СТОЛА",
+  "A few words about this member.": "Несколько слов об участнике.",
+  "A knockout match needs a winner. Scores cannot be tied.": "В матче на выбывание должен быть победитель. Ничья невозможна.",
+  "A match cannot finish with a tied score": "Матч не может закончиться ничьей",
+  "A name for the club. A handle for the crew. Both are optional.": "Имя для клуба. Ник для своих. Оба поля необязательны.",
+  "A new permanent registration number and timestamp are saved automatically. The player joins after earlier registrations.": "Постоянный номер и время регистрации сохраняются автоматически. Игрок встаёт в очередь после зарегистрированных ранее.",
+  "A player cannot occupy both sides of a match": "Игрок не может занять обе стороны матча",
+  "A player is already playing another match": "Игрок уже играет другой матч",
+  "ACCOUNTS.": "АККАУНТЫ.",
+  "AFTER DARK.": "ПОСЛЕ ЗАКАТА.",
+  "Account details": "Данные аккаунта",
+  Accounts: "Аккаунты",
+  "Accounts appear automatically after signing in to ChillPong.": "Аккаунты появляются автоматически после входа в ChillPong.",
+  "Add player": "Добавить игрока",
+  "Add players and generate the bracket to decide the first games.": "Добавьте игроков и создайте сетку для первых матчей.",
+  "Add the first members and build the ChillPong community.": "Добавьте первых участников в сообщество ChillPong.",
+  "Add to the lineup.": "ВСТУПИТЬ В ИГРУ.",
+  "Add to waiting queue": "Добавить в очередь",
+  "Add user": "Добавить пользователя",
+  Admin: "Админ",
+  "Admin access": "Доступ администраторов",
+  "Admin access and a selected tournament are required.": "Нужны права администратора и выбранный турнир.",
+  "Admin access is required.": "Нужны права администратора.",
+  "Admin account": "Аккаунт администратора",
+  Admins: "Администраторы",
+  "Admins only": "Только для администраторов",
+  Advanced: "Продвинутый",
+  "After that": "После этого",
+  "All rounds": "Все раунды",
+  "All signed-in accounts and their member IDs. Assign or revoke admin access here.": "Все авторизованные аккаунты и их ID участника. Здесь можно выдать или отозвать доступ администратора.",
+  "All skill levels": "Все уровни",
+  "All start times are local to Tbilisi / UTC +04:00": "Время начала указано по Тбилиси / UTC +04:00",
+  "All statuses": "Все статусы",
+  "All tables": "Все столы",
+  "All tournaments": "Все турниры",
+  "All users": "Все пользователи",
+  "Also reset completed downstream results": "Также сбросить результаты последующих матчей",
+  "An empty slot admits them directly. An occupied eligible slot creates a qualifier against its current player or incoming winner, keeping both players in the tournament. Opening qualifiers are round zero.": "Пустое место принимает игрока напрямую. Занятое допустимое место создаёт отборочный матч с текущим игроком или ожидаемым победителем. Оба остаются в турнире. Начальный отбор — нулевой раунд.",
+  "An occupied pending slot swaps both incoming bracket positions; an empty slot moves this player. Completed results and original registration details remain unchanged.": "Занятое место в ожидающем матче меняет игроков местами; пустое — переносит игрока. Завершённые результаты и данные регистрации сохраняются.",
+  "An open table. An open lineup.": "Стол свободен. Состав открыт.",
+  "Anonymous principals cannot be users": "Анонимный principal не может быть пользователем",
+  "Ask the member to sign in and copy their Member ID from the account menu.": "Попросите участника войти и скопировать свой ID из меню аккаунта.",
+  "Assign BYE": "Назначить проход без игры",
+  "Assign BYE to slot": "Назначить проход без игры на место",
+  "Assign admin": "Назначить админом",
+  "Assign admin to {id}": "Назначить администратором {id}",
+  "Assign manual bye": "Назначить проход без игры вручную",
+  "Assign next match": "Назначить следующий матч",
+  "Assign table": "Назначить стол",
+  "At least 2 active players are required": "Нужно минимум 2 активных игрока",
+  "At most 4096 active players are supported": "Поддерживается не более 4096 активных игроков",
+  "Authenticated accounts and their admin access.": "Авторизованные аккаунты и доступ администратора.",
+  "Auto-save on": "Автосохранение включено",
+  "Automatic advance": "Автоматический проход",
+  "Awaiting player": "Ожидаем игрока",
+  BYE: "БЕЗ ИГРЫ",
+  "BYE / empty slot": "Без игры / пустое место",
+  "BYEs /": "Проходов без игры /",
+  "Back to tournaments": "Назад к турнирам",
+  "Backend is not ready": "Сервер ещё подключается",
+  "Bad backhands.": "Плохие бэкхенды.",
+  "Bar name / address": "Название бара / адрес",
+  Beginner: "Новичок",
+  "Bio / optional": "О себе / необязательно",
+  "Bio must be at most 500 characters": "Описание должно быть не длиннее 500 символов",
+  "Bracket dependency": "Ожидает предыдущий матч",
+  "Bracket format cannot change after a match has started": "Формат сетки нельзя менять после начала матча",
+  "Bracket pairing invariant failed": "Не удалось составить пары в сетке",
+  "Bracket zoom": "Масштаб сетки",
+  "Built with caffeine.ai ↗": "Создано с caffeine.ai ↗",
+  "CHILLPONG /": "CHILLPONG /",
+  "CHILLPONG / ADMIN ACCOUNTS": "CHILLPONG / АККАУНТЫ",
+  "CHILLPONG / CONTROL ROOM": "CHILLPONG / ПУЛЬТ УПРАВЛЕНИЯ",
+  "CHILLPONG / MEMBER FILE": "CHILLPONG / КАРТОЧКА УЧАСТНИКА",
+  "CHILLPONG / SET THE NIGHT": "CHILLPONG / СОЗДАЙ ЭТУ НОЧЬ",
+  "CHILLPONG / TBILISI UNDERGROUND": "CHILLPONG / ТБИЛИСИ АНДЕРГРАУНД",
+  "CHILLPONG / THE LINEUP": "CHILLPONG / СОСТАВ",
+  "CHILLPONG / TOURNAMENT": "CHILLPONG / ТУРНИР",
+  CLUB: "КЛУБНЫЕ",
+  "CP /": "CP /",
+  Cancel: "Отмена",
+  "Cannot revoke the owner's admin role": "Нельзя отозвать права администратора у владельца",
+  Champion: "Чемпион",
+  Championship: "Чемпионский матч",
+  "Change language": "Изменить язык",
+  "Change matchup": "Изменить пару",
+  "Checking permissions": "Проверяем права",
+  "ChillPong / Tbilisi": "ChillPong / Тбилиси",
+  "ChillPong hedgehog and paddle logo": "Логотип ChillPong с ежом и ракеткой",
+  "ChillPong home": "Главная ChillPong",
+  "Choose a tournament first.": "Сначала выберите турнир.",
+  "Choose a valid start date and time in Tbilisi.": "Выберите корректные дату и время начала по Тбилиси.",
+  "Choose match": "Выберите матч",
+  "Choose the format and 1–20 physical tables before the first match starts. Player registrations survive changes to the unplayed draw.": "Выберите формат и от 1 до 20 столов до начала первого матча. Изменения несыгранной сетки сохраняют регистрации игроков.",
+  Close: "Закрыть",
+  "Close member editor": "Закрыть редактор участника",
+  "Close sidebar": "Закрыть меню",
+  "Close tournament controls": "Закрыть управление турниром",
+  "Close tournament details": "Закрыть информацию о турнире",
+  "Close tournament editor": "Закрыть редактор турнира",
+  "Club member": "Участник клуба",
+  "Club members will appear here once the crew is added.": "Участники появятся здесь после добавления в клуб.",
+  "Complete tournament bracket": "Полная сетка турнира",
+  Completed: "Завершён",
+  "Completed results remain in history. Pending dependencies are updated where safe; active downstream matches can block removal.": "Завершённые результаты сохраняются в истории. Связанные ожидающие матчи обновляются, если это безопасно; активные последующие матчи могут блокировать удаление.",
+  "Configure between 1 and 20 tables": "Укажите от 1 до 20 столов",
+  "Configure tournament": "Настроить турнир",
+  "Confirm cascade to reset completed dependent matches": "Подтвердите сброс завершённых связанных матчей",
+  "Confirm removal because this player is assigned to the bracket": "Подтвердите удаление: игрок уже включён в сетку",
+  "Confirm reset": "Подтвердить сброс",
+  "Confirm undo": "Подтвердить отмену",
+  Connecting: "Подключение",
+  "Connecting…": "Подключение…",
+  "Copy member ID": "Скопировать ID участника",
+  "Copy member ID {v1}": "Скопировать ID участника {v1}",
+  "Correct the result": "Исправить результат",
+  "Couldn't copy the member ID. You can select and copy it below.": "Не удалось скопировать ID. Выделите и скопируйте его ниже.",
+  "Couldn't load accounts": "Не удалось загрузить аккаунты",
+  "Couldn't load your profile": "Не удалось загрузить профиль",
+  "Couldn't save this change. Try again.": "Не удалось сохранить изменение. Попробуйте ещё раз.",
+  "Couldn't save this member. Try again.": "Не удалось сохранить участника. Попробуйте ещё раз.",
+  "Couldn't save this tournament. Try again.": "Не удалось сохранить турнир. Попробуйте ещё раз.",
+  "Couldn't save your profile. Try again.": "Не удалось сохранить профиль. Попробуйте ещё раз.",
+  "Couldn't update that role. Please try again.": "Не удалось изменить роль. Попробуйте ещё раз.",
+  "Create tournament": "Создать турнир",
+  "Current round": "Текущий раунд",
+  "Date / time": "Дата / время",
+  "Destination match": "Матч назначения",
+  "Destination slot": "Место назначения",
+  Details: "Подробнее",
+  "Directory unavailable.": "Список недоступен.",
+  "Display name": "Имя",
+  "Display name must be at most 80 characters": "Имя должно быть не длиннее 80 символов",
+  "Display name must contain at most 80 characters.": "Имя должно быть не длиннее 80 символов.",
+  "Double elimination": "До двух поражений",
+  Doubles: "Парная игра",
+  "Doubles / teams of two": "Парная игра / команды по двое",
+  "Draw ready": "Сетка готова",
+  Edit: "Изменить",
+  "Edit member.": "Изменить участника.",
+  "Edit player.": "Изменить игрока.",
+  "Edit profiles": "Изменить профили",
+  "Edit tournament": "Изменить турнир",
+  "Edit tournament.": "Изменить турнир.",
+  "Edit {name}": "Изменить: {name}",
+  "Edit {v1}": "Изменить: {v1}",
+  Eliminated: "Выбыл",
+  "Elimination format": "Формат выбывания",
+  "Enter a non-negative whole-number score for both players.": "Введите целый неотрицательный счёт для обоих игроков.",
+  "Enter a valid Internet Identity principal for this member.": "Введите корректный principal Internet Identity участника.",
+  "Everyone is playing, advanced or finished.": "Все уже играют, прошли дальше или закончили.",
+  "Expected players": "Ожидаемые игроки",
+  "Expected players must be a whole number of at least 2.": "Число ожидаемых игроков должно быть целым и не меньше 2.",
+  "Expected players must be at least 2": "Нужно минимум 2 ожидаемых игрока",
+  Expert: "Эксперт",
+  "Explore tournaments": "Смотреть турниры",
+  Extended: "Расширенный",
+  "Extended view": "Расширенный вид",
+  "FIND A TOURNAMENT": "НАЙТИ ТУРНИР",
+  "FIND YOUR PEOPLE": "НАЙТИ СВОИХ",
+  "Filter members": "Фильтр участников",
+  "Filter tournaments": "Фильтр турниров",
+  Final: "Итог",
+  "Finalist positions stay fixed because they determine whether a double elimination reset final is required.": "Позиции финалистов фиксированы: от них зависит, потребуется ли повторный финал в формате до двух поражений.",
+  "Find your next opponent. Follow the lineup by skill, status, table and round.": "Найдите следующего соперника. Следите за участниками по уровню, статусу, столу и раунду.",
+  "Find your next tournament and meet us at the table.": "Найдите свой следующий турнир. Встретимся за столом.",
+  "First participant is missing": "Первый участник отсутствует",
+  "Fit bracket": "Показать всю сетку",
+  Following: "За ним",
+  "GAME ON.": "ИГРА НАЧИНАЕТСЯ.",
+  "Game mode": "Режим игры",
+  "Generate bracket": "Создать сетку",
+  "Generate the draw.": "Создать сетку.",
+  "Give the night a name": "Дайте этой ночи имя",
+  "Good people.": "Хорошие люди.",
+  "Grand final": "Гранд-финал",
+  "If later rounds depend on this result, a plain reset is rejected until downstream results are explicitly included.": "Если следующие раунды зависят от результата, сброс возможен только с явным включением последующих результатов.",
+  "Include removed players": "Показать удалённых",
+  Intermediate: "Средний",
+  Joined: "В клубе с",
+  "Keep the ball moving.": "Не останавливай мяч.",
+  "Keep the bio to 500 characters or fewer.": "Описание должно быть не длиннее 500 символов.",
+  "Keep the description to 2,000 characters or fewer.": "Описание должно быть не длиннее 2000 символов.",
+  "Keep this handle, or choose a new one.": "Оставьте этот ник или выберите новый.",
+  "Keep this username, choose another one, or leave it blank.": "Оставьте этот ник, выберите другой или оставьте поле пустым.",
+  "Keep your name to 80 characters or fewer.": "Имя должно быть не длиннее 80 символов.",
+  Language: "Язык",
+  "Leave blank if you prefer. Up to 80 characters.": "Можно оставить пустым. До 80 символов.",
+  Live: "Идёт сейчас",
+  "Live now": "Идёт сейчас",
+  "Live tournament / public view": "Турнир вживую / для всех",
+  Loading: "Загрузка",
+  "Loading players…": "Загружаем игроков…",
+  "Loading the member directory.": "Загружаем список участников.",
+  "Loading the selected lineup…": "Загружаем выбранный состав…",
+  "Loading the tournament board.": "Загружаем список турниров.",
+  "Loading the tournament floor and bracket.": "Загружаем игры и сетку турнира.",
+  "Loading tournaments": "Загружаем турниры",
+  "Loading users": "Загружаем пользователей",
+  "Loading your profile": "Загружаем профиль",
+  Loser: "Проигравший",
+  "Loser drops": "Проигравший переходит ниже",
+  "Losers bracket": "Сетка проигравших",
+  "Lower Intermediate": "Ниже среднего",
+  "MATCH FILE": "КАРТОЧКА МАТЧА",
+  "Manage member identities and account details. Tournament entrants are listed on the Players page.": "Управляйте аккаунтами и данными участников. Участники турниров находятся на странице «Игроки».",
+  "Manual override": "Ручное изменение",
+  "Manual override / players & byes": "Ручные изменения / игроки и проходы без игры",
+  "Manual override. The backend rejects changes that would overwrite a played match or an active downstream match.": "Ручное изменение. Система отклонит изменения, затрагивающие сыгранный матч или активный последующий матч.",
+  "Manual placement requires a winners-bracket match": "Ручное размещение требует матч в сетке победителей",
+  "Manual placement requires an opening winners-bracket slot": "Для ручного размещения нужно стартовое место в сетке победителей",
+  "Match / table / seed": "Матч / стол / посев",
+  "Match not found": "Матч не найден",
+  "Match participant missing": "Участник матча отсутствует",
+  "Match {match}": "Матч {match}",
+  Member: "Участник",
+  "Member ID / Principal ID": "ID участника / Principal ID",
+  "Member ID copied.": "ID участника скопирован.",
+  "Member principal": "Principal участника",
+  "More details will be announced by the crew.": "Организаторы сообщат подробности позже.",
+  "Most recent action": "Последнее действие",
+  Move: "Переместить",
+  "Move / place player.": "Переместить / разместить игрока.",
+  "Move player manually": "Переместить игрока вручную",
+  "Move player to front of queue": "Переместить игрока в начало очереди",
+  "Move players within their current bracket and round": "Перемещайте игроков только внутри текущей сетки и раунда",
+  "My profile": "Мой профиль",
+  "NAME / REGISTRATION NUMBER": "ИМЯ / НОМЕР РЕГИСТРАЦИИ",
+  "Name / A–Z": "Имя / А–Я",
+  "Name / optional": "Имя / необязательно",
+  "Name at the table": "Имя за столом",
+  "Name on the table": "Имя за столом",
+  "New tournament": "Новый турнир",
+  "New tournament.": "Новый турнир.",
+  "New tournaments will land here. Check back for the next night at the table.": "Здесь появятся новые турниры. Заходите, чтобы узнать о следующей ночи за столом.",
+  Next: "Следующий",
+  "Next matches": "Следующие матчи",
+  "No bracket yet.": "Сетки пока нет.",
+  "No current round": "Без текущего раунда",
+  "No decided matches waiting.": "Готовых матчей пока нет.",
+  "No games in this corner.": "Здесь пока нет игр.",
+  "No matches.": "Никого не нашли.",
+  "No matching member ID": "ID участника не найден",
+  "No matching players.": "Игроки не найдены.",
+  "No safe opening slots": "Нет доступных стартовых мест",
+  "No signed-in accounts yet": "Авторизованных аккаунтов пока нет",
+  "No table assigned": "Стол не назначен",
+  "No table is available": "Нет свободных столов",
+  "Number of tables": "Количество столов",
+  "ORGANIZER DESK": "СТОЛ ОРГАНИЗАТОРА",
+  "On deck": "На очереди",
+  "On the floor": "За столами",
+  "Only a ready match can start": "Начать можно только готовый матч",
+  "Only a ready or playing match can be assigned a table": "Стол можно назначить только готовому или текущему матчу",
+  "Only a ready, playing, or completed match accepts a score": "Счёт можно указать только для готового, текущего или завершённого матча",
+  "Only admins can manage account access": "Доступом управляют только администраторы",
+  "Only if the unbeaten finalist loses": "Только если непобеждённый финалист проиграет",
+  "Only pending matches can be prioritized": "Приоритет можно задать только ожидающим матчам",
+  "Open room": "Открыть зал",
+  "Open sidebar": "Открыть меню",
+  "Open tournament room": "Открыть зал турнира",
+  "Open tournament room for {v1}": "Открыть зал турнира {v1}",
+  "Opening slots can be replaced. Later ready matches can swap opponents within the same bracket and round. Registration numbers never change.": "Стартовые места можно менять. В последующих готовых матчах можно менять соперников внутри одной сетки и раунда. Номера регистрации не меняются.",
+  "Optional. If provided, use 3–30 letters, numbers, underscores or hyphens. Saved in lowercase.": "Необязательно. Используйте 3–30 латинских букв, цифр, знаков подчёркивания или дефисов. Сохраняется в нижнем регистре.",
+  "Organizer controls": "Управление",
+  "Organizer desk": "Панель организатора",
+  "Original registration numbers stay fixed between rounds. Manual priority is shown in the organizer history.": "Номера регистрации не меняются между раундами. Ручной приоритет отмечается в истории организатора.",
+  "Other match": "Другой матч",
+  "Other match slot": "Место в другом матче",
+  "PLAYERS.": "ИГРОКИ.",
+  "PROFILE.": "ПРОФИЛЬ.",
+  "Paddles up. Phones down.": "Ракетки вверх. Телефоны вниз.",
+  "Past games": "Прошедшие игры",
+  "Paste a principal ID or part of it": "Введите principal ID или его часть",
+  Place: "Разместить",
+  "Place player": "Разместить игрока",
+  "Place player manually": "Разместить игрока вручную",
+  "Planning estimate. Registration stays open.": "Ориентир для планирования. Регистрация остаётся открытой.",
+  Player: "Игрок",
+  "Player A": "Игрок A",
+  "Player A slot": "Место игрока A",
+  "Player B": "Игрок B",
+  "Player B slot": "Место игрока B",
+  "Player already occupies another bracket slot": "Игрок уже занимает другое место в сетке",
+  "Player already occupies that slot": "Игрок уже занимает это место",
+  "Player changes saved to the tournament.": "Изменения игроков сохранены в турнире.",
+  "Player has no pending bracket slot to move": "У игрока нет ожидающего места для перемещения",
+  "Player is already in the bracket; use Move player": "Игрок уже в сетке. Используйте «Переместить игрока»",
+  "Player is already removed": "Игрок уже удалён",
+  "Player missing": "Игрок отсутствует",
+  "Player name": "Имя игрока",
+  "Player name must be between 1 and 80 characters": "Имя игрока должно содержать от 1 до 80 символов",
+  "Player not found": "Игрок не найден",
+  "Player registration counters continue forward so registration numbers remain permanent. Restored results, assignments and queue positions are saved automatically.": "Счётчик регистрации продолжает расти, поэтому номера остаются постоянными. Восстановленные результаты, назначения и места в очереди сохраняются автоматически.",
+  Players: "Игроки",
+  "Players added here receive permanent registration numbers and join the queue.": "Добавленные игроки получают постоянные номера регистрации и встают в очередь.",
+  "Players appear here when they register for a tournament.": "Игроки появляются здесь после регистрации на турнир.",
+  "Players unavailable.": "Игроки недоступны.",
+  Playing: "Играет",
+  Primary: "Основное меню",
+  "Prioritize match": "Повысить приоритет матча",
+  "Prioritize {v1} in queue": "Повысить приоритет {v1} в очереди",
+  Profile: "Профиль",
+  "Profile saved.": "Профиль сохранён.",
+  Qualifiers: "Отборочные",
+  "Qualifiers / round 0": "Отборочные / раунд 0",
+  Ready: "Готов",
+  "Ready for the next rally.": "Готов к следующему розыгрышу.",
+  "Recent organizer actions": "Последние действия организатора",
+  "Record match result": "Записать результат матча",
+  "Refresh accounts": "Обновить аккаунты",
+  "Refresh tournaments": "Обновить турниры",
+  "Reg / time": "Рег / время",
+  "Regenerate bracket": "Пересоздать сетку",
+  "Register & place manually": "Зарегистрировать и разместить",
+  "Register {name}": "Зарегистрировать: {name}",
+  Registered: "Зарегистрирован",
+  "Registration open": "Регистрация открыта",
+  "Registration order": "Порядок регистрации",
+  "Release occupied tables before reducing the table count": "Освободите занятые столы перед уменьшением их количества",
+  "Remove player": "Удалить игрока",
+  "Remove player?": "Удалить игрока?",
+  "Remove {v1}": "Удалить: {v1}",
+  Removed: "Удалён",
+  "Removed players cannot be placed": "Удалённых игроков нельзя разместить",
+  "Reset a playing match before releasing its table": "Сбросьте текущий матч перед освобождением стола",
+  "Reset bracket zoom": "Сбросить масштаб сетки",
+  "Reset completed or playing dependent matches before changing the bracket": "Сбросьте завершённые или текущие связанные матчи перед изменением сетки",
+  "Reset dependent matches before changing the winner": "Сбросьте связанные матчи перед сменой победителя",
+  "Reset filters": "Сбросить фильтры",
+  "Reset filters & sort": "Сбросить фильтры и сортировку",
+  "Reset final": "Повторный финал",
+  "Reset match / undo result": "Сбросить матч / отменить результат",
+  "Reset match and advancement": "Сбросить матч и продвижение",
+  "Reset playing dependent matches first": "Сначала сбросьте текущие связанные матчи",
+  "Reset this result?": "Сбросить результат?",
+  Resetting: "Сброс",
+  "Restore the tournament state immediately before the most recent organizer action.": "Восстановить состояние турнира перед последним действием организатора.",
+  "Results and assignments are managed by the tournament organizer.": "Результатами и назначениями управляет организатор турнира.",
+  "Revoke admin": "Снять права админа",
+  "Revoke admin from {id}": "Отозвать права администратора у {id}",
+  "Round {round}": "Раунд {round}",
+  "Rules, arrival instructions, entry details. Everything the players need.": "Правила, как добраться, условия участия. Всё, что нужно игрокам.",
+  "Save changes": "Сохранить изменения",
+  "Save player": "Сохранить игрока",
+  "Save profile": "Сохранить профиль",
+  "Save result": "Сохранить результат",
+  "Save setup": "Сохранить настройки",
+  "Save the result": "Сохранить результат",
+  "Saved to the tournament. The floor, draw and queue are up to date.": "Сохранено в турнире. Столы, сетка и очередь обновлены.",
+  "Saving…": "Сохраняем…",
+  "Score A": "Счёт A",
+  "Score B": "Счёт B",
+  "Scores must be at most 999": "Счёт не может превышать 999",
+  "Scroll to pan / select any match": "Прокрутка для перемещения / выберите любой матч",
+  "Scrollable bracket graph": "Прокручиваемая сетка турнира",
+  "Search by member ID": "Поиск по ID участника",
+  "Search tournament players": "Поиск игроков турнира",
+  "Search tournaments": "Поиск турниров",
+  "Search users": "Поиск пользователей",
+  "Second loss = elimination": "Второе поражение = выбывание",
+  "Second participant is missing": "Второй участник отсутствует",
+  Seed: "Посев",
+  "Select a member to edit.": "Выберите участника для изменения.",
+  "Select a tournament to edit.": "Выберите турнир для изменения.",
+  "Select the Member ID above to copy it.": "Выделите ID участника выше, чтобы скопировать.",
+  "Select two different slots": "Выберите два разных места",
+  "Serve. Rally. Repeat.": "Подача. Розыгрыш. Повтор.",
+  "Set custom matchup": "Задать пару вручную",
+  "Set the venue, pick a date and put the first tournament on the board.": "Выберите бар, дату и добавьте первый турнир.",
+  "Share this ID with an admin to join the lineup.": "Отправьте этот ID администратору, чтобы попасть в состав.",
+  "Sidebar visibility": "Видимость меню",
+  "Sign in": "Войти",
+  "Sign out": "Выйти",
+  "Signed-in member": "Авторизованный участник",
+  "Signing in": "Вход",
+  "Single elimination": "До одного поражения",
+  Singles: "Одиночная игра",
+  "Singles / one vs. one": "Одиночная игра / один на один",
+  Skill: "Уровень",
+  "Skill compatibility → registration order → bracket availability": "Близкий уровень → порядок регистрации → готовность сетки",
+  "Skill level": "Уровень игры",
+  "Skill level / L1–L5": "Уровень игры / L1–L5",
+  "Skill level must be between 1 and 5": "Уровень игры должен быть от 1 до 5",
+  "Something went wrong": "Что-то пошло не так",
+  "Something went wrong while fetching authenticated accounts.": "Ошибка при загрузке авторизованных аккаунтов.",
+  "Something went wrong. Please try again.": "Что-то пошло не так. Попробуйте ещё раз.",
+  "Sort by": "Сортировка",
+  Standard: "Стандартный",
+  "Standard view": "Стандартный вид",
+  "Start match": "Начать матч",
+  "Start time / Tbilisi (UTC+04)": "Начало / Тбилиси (UTC+04)",
+  Status: "Статус",
+  "Status /": "Статус /",
+  "Status / live first": "Статус / текущие первыми",
+  "Status / losses": "Статус / поражения",
+  "Swap bracket players": "Поменять игроков в сетке",
+  "Swap opening slots or ready matches in the same bracket round": "Меняйте стартовые места или готовые матчи одного раунда сетки",
+  "Swap players": "Поменять игроков",
+  "Swap players between ready matches": "Поменять игроков между готовыми матчами",
+  "TBILISI / AFTER HOURS": "ТБИЛИСИ / ПОСЛЕ ПОЛУНОЧИ",
+  "TBILISI, GE": "ТБИЛИСИ, GE",
+  THE: "НАШИ",
+  "THE CLUB / INDEX": "КЛУБ / МЕНЮ",
+  "THE FINAL POINT / TOURNAMENT CHAMPION": "ПОСЛЕДНЕЕ ОЧКО / ЧЕМПИОН ТУРНИРА",
+  "THE LINEUP / PERMANENT REGISTRATION": "СОСТАВ / ПОСТОЯННАЯ РЕГИСТРАЦИЯ",
+  "THE TABLE IS THE DANCE FLOOR.": "ЭТОТ СТОЛ — ТАНЦПОЛ.",
+  Table: "Стол",
+  "Table is already occupied": "Стол уже занят",
+  "Table is clear.": "Стол свободен.",
+  "Table must be between 1 and the configured table count": "Номер стола должен быть в пределах настроенного количества",
+  "Table setup": "Настройка столов",
+  "Table {v1}": "Стол {v1}",
+  Tbilisi: "Тбилиси",
+  "Tbilisi / After hours": "Тбилиси / После полуночи",
+  "The board is offline.": "Доска турниров недоступна.",
+  "The club directory is still connecting.": "Список клуба ещё подключается.",
+  "The complete results are in the full bracket.": "Все результаты доступны в полной сетке.",
+  "The details / optional": "Подробности / необязательно",
+  "The draw pairs compatible skill levels first, then uses permanent registration order to settle equal choices. Winners advance automatically;": "Сетка сначала подбирает пары по близкому уровню, затем по порядку регистрации. Победители проходят автоматически;",
+  "The elimination format is locked after the first match begins. You can still adjust the table count; occupied tables cannot be removed.": "Формат фиксируется после начала первого матча. Количество столов можно менять; занятые столы нельзя убрать.",
+  "The full tournament tree appears when the organizer generates the bracket.": "Полная сетка появится после её создания организатором.",
+  "The lineup is offline.": "Состав недоступен.",
+  "The lineup is open. Players join the queue when registered.": "Состав открыт. Игроки встают в очередь после регистрации.",
+  "The lineup starts here.": "Состав начинается здесь.",
+  "The lineup starts with a tournament.": "Состав начинается с турнира.",
+  "The match desk is offline.": "Управление матчами недоступно.",
+  "The next night is loading.": "Готовим следующую ночь.",
+  "The night / organizer notes": "О вечере / заметки организатора",
+  "The night has a winner.": "У этой ночи есть победитель.",
+  "The player leaves the waiting queue and unplayed bracket slots.": "Игрок покидает очередь и несыгранные места сетки.",
+  "The tournament board": "Доска турниров",
+  "The tournament board is still connecting.": "Доска турниров ещё подключается.",
+  "The tournament is still connecting.": "Турнир ещё подключается.",
+  "Their permanent registration number is retained and will not be reused.": "Постоянный номер регистрации сохраняется и не будет использован повторно.",
+  Then: "Затем",
+  "There is no action to undo": "Нет действия для отмены",
+  "This action couldn't be saved. Try again.": "Не удалось сохранить действие. Попробуйте ещё раз.",
+  "This can erase scores in later rounds. Active downstream matches must be resolved first; the backend prevents resetting across a playing match.": "Это может удалить счёт в последующих раундах. Сначала завершите активные связанные матчи: система не позволит сбросить текущую игру.",
+  "This identity stays attached to the member.": "Эта идентичность остаётся привязанной к участнику.",
+  "This match slot": "Место в этом матче",
+  "This member": "Этот участник",
+  "This player is currently playing. Their opponent may advance by forfeit when they are removed.": "Игрок сейчас играет. При удалении его соперник может пройти дальше автоматически.",
+  "This regenerates the unplayed bracket and replaces manual opening assignments. Registered players stay intact.": "Это пересоздаст несыгранную сетку и заменит ручные стартовые назначения. Регистрации игроков сохранятся.",
+  "This tournament is no longer available.": "Этот турнир больше недоступен.",
+  Tournament: "Турнир",
+  "Tournament board": "Доска турниров",
+  "Tournament controls": "Управление турниром",
+  "Tournament description must be at most 2000 characters": "Описание турнира должно быть не длиннее 2000 символов",
+  "Tournament not found": "Турнир не найден",
+  "Tournament not found.": "Турнир не найден.",
+  "Tournament room": "Зал турнира",
+  "Tournament start time must be a positive timestamp": "Укажите корректное время начала турнира",
+  "Tournament title": "Название турнира",
+  "Tournament title must be between 1 and 100 characters": "Название турнира должно содержать от 1 до 100 символов",
+  "Tournament title must contain between 1 and 100 characters.": "Название турнира должно содержать от 1 до 100 символов.",
+  "Tournament venue must be between 1 and 150 characters": "Место проведения должно содержать от 1 до 150 символов",
+  Tournaments: "Турниры",
+  "Try a different filter or search to find your tournament.": "Попробуйте другой фильтр или поиск, чтобы найти турнир.",
+  "Try a different principal ID or clear the search.": "Попробуйте другой principal ID или очистите поиск.",
+  "Try again": "Повторить",
+  "Try another name or adjust the skill, status, table or round filters.": "Попробуйте другое имя или измените фильтры уровня, статуса, стола или раунда.",
+  "Try another name or switch the member filter.": "Попробуйте другое имя или фильтр участников.",
+  "UNDERGROUND PING-PONG CLUB": "АНДЕРГРАУНД ПИНГ-ПОНГ КЛУБ",
+  Unassigned: "Не назначен",
+  "Unauthorized: Only admins can perform this action": "Это действие доступно только администраторам",
+  "Unauthorized: Only users can perform this action": "Это действие доступно только авторизованным пользователям",
+  "Unauthorized: Sign in to edit your profile": "Войдите, чтобы изменить профиль",
+  "Underground ping-pong. Tbilisi nights.": "Андеграунд пинг-понг. Ночи Тбилиси.",
+  "Undo last action": "Отменить последнее действие",
+  "Undo last action?": "Отменить последнее действие?",
+  "Undo must be handled before reducing a command": "Не удалось отменить действие",
+  Upcoming: "Скоро",
+  "Upcoming pairings appear as their bracket dependencies finish.": "Следующие пары появятся после завершения предыдущих матчей.",
+  "Use the member's signed-in principal, not an anonymous identity.": "Используйте principal авторизованного участника, а не анонимную идентичность.",
+  "Use the principal shown to this member after signing in.": "Используйте principal, показанный участнику после входа.",
+  "User already exists": "Пользователь уже существует",
+  "User not found": "Пользователь не найден",
+  Username: "Никнейм",
+  "Username / optional": "Никнейм / необязательно",
+  "Username already taken": "Этот никнейм уже занят",
+  "Username may only contain letters, numbers, underscores, and hyphens": "В никнейме допустимы только латинские буквы, цифры, подчёркивания и дефисы",
+  "Username must be between 3 and 30 characters": "Никнейм должен содержать от 3 до 30 символов",
+  "Username needs 3–30 letters, numbers, underscores or hyphens.": "Никнейм: 3–30 латинских букв, цифр, знаков подчёркивания или дефисов.",
+  "Username not set": "Никнейм не указан",
+  Venue: "Место",
+  "Venue must contain between 1 and 150 characters.": "Место проведения должно содержать от 1 до 150 символов.",
+  Voided: "Аннулирован",
+  Waiting: "Ожидает",
+  "Waiting for the tournament draw.": "Ожидаем жеребьёвку турнира.",
+  "Waiting queue / next to play": "Очередь / кто играет дальше",
+  "We couldn't load the club members. Try connecting again.": "Не удалось загрузить участников клуба. Подключитесь ещё раз.",
+  "We couldn't load the tournament board.": "Не удалось загрузить доску турниров.",
+  "We couldn't load the tournament state.": "Не удалось загрузить состояние турнира.",
+  "We couldn't load the tournaments. Try connecting again.": "Не удалось загрузить турниры. Подключитесь ещё раз.",
+  "We couldn't load this tournament's players.": "Не удалось загрузить игроков этого турнира.",
+  Winner: "Победитель",
+  "Winner advances": "Победитель проходит дальше",
+  "Winners advance and the table is freed automatically. Changing a winner after downstream games requires a confirmed reset.": "Победители проходят дальше, стол освобождается автоматически. Смена победителя после следующих матчей требует подтверждённого сброса.",
+  "Winners bracket": "Сетка победителей",
+  "Withdraw {name}": "Снять с турнира: {name}",
+  "Wrong side of the table.": "Не та сторона стола.",
+  YOUR: "ВАШ",
+  You: "Вы",
+  "You can't revoke your own admin role.": "Нельзя отозвать свои права администратора.",
+  "You do not have permission to view this page. Ask an administrator if you believe this is a mistake.": "У вас нет доступа к этой странице. Если это ошибка, обратитесь к администратору.",
+  "Your Member ID": "Ваш ID участника",
+  "Your account is still connecting.": "Аккаунт ещё подключается.",
+  "Your club identity": "Ваш профиль в клубе",
+  "Your details are unavailable. Try again before editing.": "Данные недоступны. Попробуйте загрузить их перед редактированием.",
+  "Your member ID / Principal ID": "Ваш ID участника / Principal ID",
+  "Zoom bracket in": "Увеличить сетку",
+  "Zoom bracket out": "Уменьшить сетку",
+  "a pending winners-bracket slot": "ожидающее место в сетке победителей",
+  "accounts /": "аккаунтов /",
+  "accounts match": "аккаунтов найдено",
+  admin: "админ",
+  admins: "админов",
+  advanced: "прошёл дальше",
+  available: "свободен",
+  bye: "без игры",
+  cancelled: "отменён",
+  champion: "чемпион",
+  "clears its score, winner and table assignment. Earlier registration details remain unchanged.": "очищает счёт, победителя и назначенный стол. Исходные данные регистрации сохраняются.",
+  completed: "завершён",
+  eliminated: "выбыл",
+  "expected players": "ожидаемых игроков",
+  "expected players / registration stays open": "ожидаемых игроков / регистрация открыта",
+  finished: "завершён",
+  for: "для",
+  in: "в",
+  live: "идёт сейчас",
+  loss: "поражение",
+  losses: "поражений",
+  of: "из",
+  "one loss eliminates a player.": "игрок выбывает после первого поражения.",
+  "opening slots": "стартовых мест",
+  pending: "ожидает",
+  people: "участников",
+  person: "участник",
+  "physical table": "стол",
+  "physical tables": "столов",
+  players: "игроков",
+  "players /": "игроков /",
+  "players leave after their second loss.": "игроки выбывают после второго поражения.",
+  "players · Original registration numbers and times stay fixed.": "игроков · Номера и время регистрации остаются неизменными.",
+  playing: "играет",
+  ready: "готов",
+  removed: "удалён",
+  table: "стол",
+  tables: "столов",
+  "their current unplayed bracket round": "его текущий несыгранный раунд",
+  "to table": "на стол",
+  unavailable: "недоступен",
+  upcoming: "скоро",
+  void: "аннулирован",
+  vs: "против",
+  waiting: "ожидает",
+  "wins.": "побеждает.",
+  "your-handle": "ваш-ник",
+  "{name} is no longer an admin.": "{name} больше не администратор.",
+  "{name} is now an admin.": "{name} теперь администратор.",
+  "{name}'s member details are saved.": "Данные участника {name} сохранены.",
+  "{title} is saved. See you at the table.": "{title} сохранён. Встретимся за столом.",
+  "{v1} / R{v2}": "{v1} / R{v2}",
+  "{v1} and the original registration time remain unchanged. Skill changes apply to future matchmaking.": "{v1} и время регистрации не меняются. Изменения уровня учитываются в будущих матчах.",
+  "{v1} avatar": "Аватар: {v1}",
+  "{v1} club members": "Участников клуба: {v1}",
+  "{v1} upcoming / {v2} live": "{v1} скоро / {v2} сейчас",
+  "· Registration order belongs to this tournament.": "· Порядок регистрации относится к этому турниру."
+};
+const LANGUAGE_STORAGE_KEY = "chillpong.language";
+const LANGUAGES = [
+  { code: "en", name: "English" },
+  { code: "ru", name: "Русский" },
+  { code: "ka", name: "ქართული" }
+];
+const locales = {
+  en: "en-GB",
+  ru: "ru-RU",
+  ka: "ka-GE"
+};
+const catalogs = { en: {}, ru, ka };
+const listeners = /* @__PURE__ */ new Set();
+function isLanguage(value) {
+  return value === "en" || value === "ru" || value === "ka";
+}
+function readLanguage() {
+  try {
+    const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    return isLanguage(saved) ? saved : "en";
+  } catch {
+    return "en";
+  }
+}
+let language = readLanguage();
+function getLanguage() {
+  return language;
+}
+function getLocale() {
+  return locales[language];
+}
+function applyLanguage(next) {
+  language = next;
+  if (typeof document !== "undefined") document.documentElement.lang = next;
+  for (const listener of listeners) listener();
+}
+function setLanguage(next) {
+  if (!isLanguage(next)) return;
+  try {
+    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, next);
+  } catch {
+  }
+  applyLanguage(next);
+}
+if (typeof window !== "undefined") {
+  document.documentElement.lang = language;
+  window.addEventListener("storage", (event) => {
+    if (event.key === LANGUAGE_STORAGE_KEY)
+      applyLanguage(isLanguage(event.newValue) ? event.newValue : "en");
+  });
+}
+function translate(input, params = {}, selected = language) {
+  if (input === null || input === void 0) return "";
+  const message = typeof input === "string" ? input : input.message;
+  const values = typeof input === "string" ? params : input.params;
+  const translated = catalogs[selected][message] ?? message;
+  return translated.replace(
+    /\{(\w+)\}/g,
+    (placeholder, key) => values[key] === void 0 ? placeholder : String(values[key])
+  );
+}
+function translateError(message) {
+  const key = Object.hasOwn(ru, message) ? message : errorMessages.find((candidate) => message.includes(candidate));
+  return key ? translate(key) : language === "en" ? message : translate("Something went wrong. Please try again.");
+}
+function translateHistory(caption) {
+  const table = /^Match started at table (\d+)$/.exec(caption);
+  if (table)
+    return translate("Match started at table {table}", { table: table[1] });
+  const match = /^(Register|Edit|Withdraw) (.+)$/s.exec(caption);
+  return match ? translate(`${match[1]} {name}`, { name: match[2] }) : translate(caption);
+}
+function subscribe$1(listener) {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+function useI18n() {
+  const selected = reactExports.useSyncExternalStore(
+    subscribe$1,
+    getLanguage,
+    () => "en"
+  );
+  const t = reactExports.useCallback(
+    (message, params) => translate(message, params, selected),
+    [selected]
+  );
+  return {
+    language: selected,
+    locale: locales[selected],
+    t,
+    setLanguage
+  };
+}
 const _ImmutableObjectStorageCreateCertificateResult = Record({
   "method": Text,
   "blob_hash": Text
@@ -35023,11 +36354,22 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$E = [
+const __iconNode$F = [
   ["path", { d: "M12 5v14", key: "s699le" }],
   ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$E);
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$F);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$E = [
+  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+];
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$E);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35035,10 +36377,10 @@ const ArrowDown = createLucideIcon("arrow-down", __iconNode$E);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$D = [
-  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
-  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$D);
+const ArrowRight = createLucideIcon("arrow-right", __iconNode$D);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35046,10 +36388,10 @@ const ArrowLeft = createLucideIcon("arrow-left", __iconNode$D);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$C = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+  ["path", { d: "M7 7h10v10", key: "1tivn9" }],
+  ["path", { d: "M7 17 17 7", key: "1vkiza" }]
 ];
-const ArrowRight = createLucideIcon("arrow-right", __iconNode$C);
+const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$C);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35057,10 +36399,10 @@ const ArrowRight = createLucideIcon("arrow-right", __iconNode$C);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$B = [
-  ["path", { d: "M7 7h10v10", key: "1tivn9" }],
-  ["path", { d: "M7 17 17 7", key: "1vkiza" }]
+  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
+  ["path", { d: "M12 19V5", key: "x0mq9r" }]
 ];
-const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$B);
+const ArrowUp = createLucideIcon("arrow-up", __iconNode$B);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35068,17 +36410,6 @@ const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$B);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$A = [
-  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
-  ["path", { d: "M12 19V5", key: "x0mq9r" }]
-];
-const ArrowUp = createLucideIcon("arrow-up", __iconNode$A);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$z = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -35090,23 +36421,35 @@ const __iconNode$z = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M16 18h.01", key: "kzsmim" }]
 ];
-const CalendarDays = createLucideIcon("calendar-days", __iconNode$z);
+const CalendarDays = createLucideIcon("calendar-days", __iconNode$A);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$y = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$y);
+const __iconNode$z = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$z);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$x = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$x);
+const __iconNode$y = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$y);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$x = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
+  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+];
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$x);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35115,10 +36458,9 @@ const ChevronDown = createLucideIcon("chevron-down", __iconNode$x);
  */
 const __iconNode$w = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
-  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$w);
+const CircleCheck = createLucideIcon("circle-check", __iconNode$w);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35127,9 +36469,9 @@ const CircleAlert = createLucideIcon("circle-alert", __iconNode$w);
  */
 const __iconNode$v = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+  ["polyline", { points: "12 6 12 12 16.5 12", key: "1aq6pp" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$v);
+const Clock3 = createLucideIcon("clock-3", __iconNode$v);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35137,10 +36479,10 @@ const CircleCheck = createLucideIcon("circle-check", __iconNode$v);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$u = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16.5 12", key: "1aq6pp" }]
+  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
+  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
 ];
-const Clock3 = createLucideIcon("clock-3", __iconNode$u);
+const Copy = createLucideIcon("copy", __iconNode$u);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35148,10 +36490,18 @@ const Clock3 = createLucideIcon("clock-3", __iconNode$u);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$t = [
-  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
-  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
+  ["path", { d: "M21.54 15H17a2 2 0 0 0-2 2v4.54", key: "1djwo0" }],
+  [
+    "path",
+    {
+      d: "M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17",
+      key: "1tzkfa"
+    }
+  ],
+  ["path", { d: "M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05", key: "14pb5j" }],
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
 ];
-const Copy = createLucideIcon("copy", __iconNode$t);
+const Earth = createLucideIcon("earth", __iconNode$t);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35547,6 +36897,7 @@ const __iconNode = [
 ];
 const X = createLucideIcon("x", __iconNode);
 function RequireAuth({ children }) {
+  const { t } = useI18n();
   const { isAuthenticated, isInitializing, login } = useAuth();
   reactExports.useEffect(() => {
     if (!isInitializing && !isAuthenticated) {
@@ -35567,7 +36918,7 @@ function RequireAuth({ children }) {
               "aria-hidden": "true"
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Loading" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Loading") })
         ]
       }
     );
@@ -35586,7 +36937,7 @@ function RequireAuth({ children }) {
               "aria-hidden": "true"
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Signing in" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Signing in") })
         ]
       }
     );
@@ -35594,6 +36945,7 @@ function RequireAuth({ children }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children });
 }
 function RequireAdmin({ children }) {
+  const { t } = useI18n();
   const { isAuthenticated, isInitializing, isAdmin, roleLoading, login } = useAuth();
   reactExports.useEffect(() => {
     if (!isInitializing && !isAuthenticated) {
@@ -35614,7 +36966,7 @@ function RequireAdmin({ children }) {
               "aria-hidden": "true"
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Checking permissions" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Checking permissions") })
         ]
       }
     );
@@ -35633,7 +36985,7 @@ function RequireAdmin({ children }) {
               "aria-hidden": "true"
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Signing in" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Signing in") })
         ]
       }
     );
@@ -35646,8 +36998,10 @@ function RequireAdmin({ children }) {
         className: "flex min-h-[50vh] flex-col items-center justify-center gap-3 px-6 text-center",
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldAlert, { className: "size-8 text-error", "aria-hidden": "true" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-xl font-semibold", children: "Admins only" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-sm text-sm text-base-content/60", children: "You do not have permission to view this page. Ask an administrator if you believe this is a mistake." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-xl font-semibold", children: t("Admins only") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-sm text-sm text-base-content/60", children: t(
+            "You do not have permission to view this page. Ask an administrator if you believe this is a mistake."
+          ) })
         ]
       }
     );
@@ -36083,7 +37437,7 @@ const getDefaultConfig = () => {
   const sepia = fromTheme("sepia");
   const skew = fromTheme("skew");
   const space = fromTheme("space");
-  const translate = fromTheme("translate");
+  const translate2 = fromTheme("translate");
   const getOverscroll = () => ["auto", "contain", "none"];
   const getOverflow = () => ["auto", "hidden", "clip", "visible", "scroll"];
   const getSpacingWithAutoAndArbitrary = () => ["auto", isArbitraryValue, spacing];
@@ -37762,14 +39116,14 @@ const getDefaultConfig = () => {
        * @see https://tailwindcss.com/docs/translate
        */
       "translate-x": [{
-        "translate-x": [translate]
+        "translate-x": [translate2]
       }],
       /**
        * Translate Y
        * @see https://tailwindcss.com/docs/translate
        */
       "translate-y": [{
-        "translate-y": [translate]
+        "translate-y": [translate2]
       }],
       /**
        * Skew X
@@ -43385,8 +44739,102 @@ function useLocation(opts) {
     select: (state) => state.location
   });
 }
+function LanguageSwitcher() {
+  const { language: language2, setLanguage: setLanguage2, t } = useI18n();
+  const [open, setOpen] = reactExports.useState(false);
+  const root2 = reactExports.useRef(null);
+  const trigger = reactExports.useRef(null);
+  reactExports.useEffect(() => {
+    if (!open) return;
+    function close(event) {
+      var _a2;
+      if (!((_a2 = root2.current) == null ? void 0 : _a2.contains(event.target))) setOpen(false);
+    }
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, [open]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      ref: root2,
+      className: "relative shrink-0",
+      onKeyDown: (event) => {
+        var _a2;
+        if (event.key === "Escape") {
+          setOpen(false);
+          (_a2 = trigger.current) == null ? void 0 : _a2.focus();
+        }
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "tooltip tooltip-bottom", "data-tip": t("Language"), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            ref: trigger,
+            type: "button",
+            "data-ocid": "header.language_button",
+            className: "btn btn-ghost btn-sm gap-2 px-2",
+            "aria-label": t("Change language"),
+            "aria-expanded": open,
+            "aria-controls": "language-options",
+            onClick: () => setOpen((value) => !value),
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Earth, { className: "size-4", "aria-hidden": "true" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-[10px]", children: language2 === "ka" ? "GEO" : language2.toUpperCase() })
+            ]
+          }
+        ) }),
+        open ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "fieldset",
+          {
+            id: "language-options",
+            className: "absolute left-0 top-full z-50 mt-3 w-48 border border-base-300 border-t-primary bg-base-200 p-2 shadow-xl",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("legend", { className: "sr-only", children: t("Language") }),
+              LANGUAGES.map((option) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "label",
+                {
+                  className: "flex cursor-pointer items-center justify-between gap-3 px-3 py-3 text-sm hover:bg-base-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-primary",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { lang: option.code, children: option.name }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "input",
+                      {
+                        className: "sr-only",
+                        type: "radio",
+                        name: "language",
+                        value: option.code,
+                        "aria-label": option.name,
+                        checked: language2 === option.code,
+                        onClick: () => {
+                          var _a2;
+                          if (language2 === option.code) {
+                            setOpen(false);
+                            (_a2 = trigger.current) == null ? void 0 : _a2.focus();
+                          }
+                        },
+                        onChange: () => {
+                          var _a2;
+                          setLanguage2(option.code);
+                          setOpen(false);
+                          (_a2 = trigger.current) == null ? void 0 : _a2.focus();
+                        }
+                      }
+                    ),
+                    language2 === option.code ? /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-4 text-primary", "aria-hidden": "true" }) : null
+                  ]
+                },
+                option.code
+              ))
+            ]
+          }
+        ) : null
+      ]
+    }
+  );
+}
 function Header({ onOpenSidebar }) {
   var _a2;
+  const { t } = useI18n();
   const { pathname } = useLocation();
   const {
     isAuthenticated,
@@ -43421,7 +44869,7 @@ function Header({ onOpenSidebar }) {
               type: "button",
               className: "btn btn-ghost btn-square lg:hidden",
               onClick: onOpenSidebar,
-              "aria-label": "Open sidebar",
+              "aria-label": t("Open sidebar"),
               "data-ocid": "layout.sidebar_toggle",
               children: /* @__PURE__ */ jsxRuntimeExports.jsx(Menu, { className: "size-5" })
             }
@@ -43430,7 +44878,7 @@ function Header({ onOpenSidebar }) {
             Link,
             {
               to: "/tournaments",
-              "aria-label": "ChillPong home",
+              "aria-label": t("ChillPong home"),
               className: "shrink-0",
               children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "img",
@@ -43444,39 +44892,40 @@ function Header({ onOpenSidebar }) {
               )
             }
           ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(LanguageSwitcher, {}),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "hidden items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em] sm:flex", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base-content/40", children: "CHILL PONG" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base-content/25", children: "/" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: title })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t(title) })
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex shrink-0 items-center gap-4", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "hidden items-center gap-2 font-mono text-[10px] tracking-[0.14em] text-base-content/50 xl:flex", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "size-1.5 bg-secondary" }),
-            "TBILISI / AFTER HOURS"
+            t("TBILISI / AFTER HOURS")
           ] }),
           isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsxs("details", { className: "dropdown dropdown-end border-l border-base-300 pl-3", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "summary",
               {
                 "data-ocid": "layout.user_identity",
-                "aria-label": "Account details",
+                "aria-label": t("Account details"),
                 className: "btn btn-ghost flex items-center gap-2.5 px-1 normal-case",
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     Avatar,
                     {
                       src: (_a2 = profile == null ? void 0 : profile.avatar) == null ? void 0 : _a2.getDirectURL(),
-                      name: (profile == null ? void 0 : profile.displayName) || (profile == null ? void 0 : profile.username) || "Member",
+                      name: (profile == null ? void 0 : profile.displayName) || (profile == null ? void 0 : profile.username) || t("Member"),
                       size: "sm"
                     }
                   ),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden max-w-36 truncate text-sm sm:block", children: (profile == null ? void 0 : profile.displayName) || (profile == null ? void 0 : profile.username) || "Club member" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden max-w-36 truncate text-sm sm:block", children: (profile == null ? void 0 : profile.displayName) || (profile == null ? void 0 : profile.username) || t("Club member") }),
                   isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(
                     ShieldCheck,
                     {
                       className: "size-4 text-primary",
-                      "aria-label": "Admin account"
+                      "aria-label": t("Admin account")
                     }
                   ) : null
                 ]
@@ -43494,11 +44943,11 @@ function Header({ onOpenSidebar }) {
                   },
                   children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(UserRound, { className: "size-4", "aria-hidden": "true" }),
-                    "My profile"
+                    t("My profile")
                   ]
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mb-3 text-base-content/60", children: "Your Member ID" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mb-3 text-base-content/60", children: t("Your Member ID") }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "block select-all break-all font-mono text-xs leading-relaxed", children: principal }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs(
                 "button",
@@ -43509,17 +44958,17 @@ function Header({ onOpenSidebar }) {
                   disabled: !principal,
                   children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { className: "size-3.5" }),
-                    "Copy member ID"
+                    t("Copy member ID")
                   ]
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-xs text-base-content/60", children: "Share this ID with an admin to join the lineup." }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-xs text-base-content/60", children: t("Share this ID with an admin to join the lineup.") }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "output",
                 {
                   className: "mt-2 block text-xs text-primary",
                   "aria-live": "polite",
-                  children: copyNotice
+                  children: t(copyNotice)
                 }
               )
             ] })
@@ -43533,7 +44982,7 @@ function Header({ onOpenSidebar }) {
               "data-ocid": "sign_in_button",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "size-4" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Sign in" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t("Sign in") }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "hidden size-3.5 sm:block" })
               ]
             }
@@ -43544,6 +44993,7 @@ function Header({ onOpenSidebar }) {
   );
 }
 function Sidebar({ onNavigate }) {
+  const { t } = useI18n();
   const { pathname } = useLocation();
   const {
     isAdmin,
@@ -43556,7 +45006,8 @@ function Sidebar({ onNavigate }) {
   const items = [
     { label: "Players", to: "/players", icon: Users, number: "01" },
     { label: "Tournaments", to: "/tournaments", icon: Trophy, number: "02" },
-    ...isAdmin ? [{ label: "Admin", to: "/admin", icon: ShieldCheck, number: "03" }] : []
+    ...isAuthenticated ? [{ label: "Profile", to: "/profile", icon: UserRound, number: "03" }] : [],
+    ...isAdmin ? [{ label: "Admin", to: "/admin", icon: ShieldCheck, number: "04" }] : []
   ];
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "aside",
@@ -43570,14 +45021,14 @@ function Sidebar({ onNavigate }) {
             {
               to: "/tournaments",
               onClick: onNavigate,
-              "aria-label": "ChillPong home",
+              "aria-label": t("ChillPong home"),
               className: "block",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "img",
                   {
                     src: "/logo.jpg",
-                    alt: "ChillPong hedgehog and paddle logo",
+                    alt: t("ChillPong hedgehog and paddle logo"),
                     width: 64,
                     height: 64,
                     className: "size-16 rounded-full object-cover"
@@ -43588,7 +45039,7 @@ function Sidebar({ onNavigate }) {
                   /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "PONG." })
                 ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-3 block font-mono text-[9px] tracking-[0.18em] text-base-content/50", children: "UNDERGROUND PING-PONG CLUB" })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-3 block font-mono text-[9px] tracking-[0.18em] text-base-content/50", children: t("UNDERGROUND PING-PONG CLUB") })
               ]
             }
           ),
@@ -43598,14 +45049,14 @@ function Sidebar({ onNavigate }) {
               type: "button",
               className: "btn btn-ghost btn-square btn-sm lg:hidden",
               onClick: onNavigate,
-              "aria-label": "Close sidebar",
+              "aria-label": t("Close sidebar"),
               "data-ocid": "layout.sidebar_close",
               children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "size-4" })
             }
           )
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("nav", { className: "flex-1 px-4", "aria-label": "Primary", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mb-3 px-3", children: "THE CLUB / INDEX" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("nav", { className: "flex-1 px-4", "aria-label": t("Primary"), children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mb-3 px-3", children: t("THE CLUB / INDEX") }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "space-y-2", children: items.map(({ label, to, icon: Icon2, number }) => {
             const active = pathname === to || pathname.startsWith(`${to}/`);
             return /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -43621,7 +45072,7 @@ function Sidebar({ onNavigate }) {
                 ),
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(Icon2, { className: "size-[18px]", "aria-hidden": "true" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex-1 font-display text-sm font-semibold", children: label }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex-1 font-display text-sm font-semibold", children: t(label) }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-[10px] opacity-50", children: number })
                 ]
               }
@@ -43630,13 +45081,13 @@ function Sidebar({ onNavigate }) {
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-6 mb-6 border-t border-base-300 pt-5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-6 flex items-center justify-between font-mono text-[10px] tracking-widest text-base-content/50", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "TBILISI, GE" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t("TBILISI, GE") }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "size-4 text-secondary", "aria-hidden": "true" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mb-6 font-display text-lg font-semibold uppercase leading-tight", children: [
-            "Good people.",
+            t("Good people."),
             /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-            "Bad backhands."
+            t("Bad backhands.")
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
@@ -43652,17 +45103,18 @@ function Sidebar({ onNavigate }) {
               "data-ocid": isAuthenticated ? "layout.sidebar_logout" : "layout.sidebar_login",
               children: [
                 isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(LogOut, { className: "size-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "size-4" }),
-                isAuthenticated ? "Sign out" : "Sign in"
+                isAuthenticated ? t("Sign out") : t("Sign in")
               ]
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-center font-mono text-[9px] uppercase tracking-widest text-base-content/35", children: "Keep the ball moving." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-center font-mono text-[9px] uppercase tracking-widest text-base-content/35", children: t("Keep the ball moving.") })
         ] })
       ]
     }
   );
 }
 function MainLayout() {
+  const { t } = useI18n();
   const [drawerOpen, setDrawerOpen] = reactExports.useState(false);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "drawer min-h-svh overflow-x-clip lg:drawer-open", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -43673,7 +45125,7 @@ function MainLayout() {
         className: "drawer-toggle",
         checked: drawerOpen,
         onChange: (event) => setDrawerOpen(event.target.checked),
-        "aria-label": "Sidebar visibility"
+        "aria-label": t("Sidebar visibility")
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "drawer-content flex min-w-0 flex-col", children: [
@@ -43683,9 +45135,10 @@ function MainLayout() {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
           "© ",
           (/* @__PURE__ */ new Date()).getFullYear(),
-          " ChillPong / Tbilisi"
+          " ",
+          t("ChillPong / Tbilisi")
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Serve. Rally. Repeat." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t("Serve. Rally. Repeat.") }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "a",
           {
@@ -43693,7 +45146,7 @@ function MainLayout() {
             target: "_blank",
             rel: "noopener noreferrer",
             className: "hover:text-primary",
-            children: "Built with caffeine.ai ↗"
+            children: t("Built with caffeine.ai ↗")
           }
         )
       ] })
@@ -43703,7 +45156,7 @@ function MainLayout() {
         "button",
         {
           type: "button",
-          "aria-label": "Close sidebar",
+          "aria-label": t("Close sidebar"),
           className: "drawer-overlay lg:hidden",
           onClick: () => setDrawerOpen(false)
         }
@@ -43736,6 +45189,7 @@ const Button = reactExports.forwardRef(
     type = "button",
     ...props
   }, ref) => {
+    const { t } = useI18n();
     return /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "button",
       {
@@ -43755,7 +45209,7 @@ const Button = reactExports.forwardRef(
         children: [
           loading ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "size-4 animate-spin", "aria-hidden": "true" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Loading" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Loading") })
           ] }) : null,
           children
         ]
@@ -43796,6 +45250,7 @@ function ErrorState({
   action,
   className
 }) {
+  const { t } = useI18n();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
     {
@@ -43807,7 +45262,7 @@ function ErrorState({
       ),
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex size-14 items-center justify-center rounded-full bg-error/10 text-error", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { className: "size-7", "aria-hidden": "true" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-lg font-semibold text-base-content", children: title }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-lg font-semibold text-base-content", children: t(title) }),
         message ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-sm text-sm text-base-content/60", children: message }) : null,
         action ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-2", children: action }) : onRetry ? /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
@@ -43816,7 +45271,7 @@ function ErrorState({
             "data-ocid": "retry_button",
             className: "btn btn-primary btn-sm mt-2",
             onClick: onRetry,
-            children: retryLabel
+            children: t(retryLabel)
           }
         ) : null
       ]
@@ -43879,6 +45334,52 @@ function Skeleton({
     }
   );
 }
+const nouns = {
+  player: ["player", "players", "игрок", "игрока", "игроков", "მოთამაშე"],
+  table: ["table", "tables", "стол", "стола", "столов", "მაგიდა"],
+  physicalTable: [
+    "physical table",
+    "physical tables",
+    "стол",
+    "стола",
+    "столов",
+    "მაგიდა"
+  ],
+  admin: ["admin", "admins", "админ", "админа", "админов", "ადმინი"],
+  account: [
+    "account",
+    "accounts",
+    "аккаунт",
+    "аккаунта",
+    "аккаунтов",
+    "ანგარიში"
+  ],
+  loss: ["loss", "losses", "поражение", "поражения", "поражений", "წაგება"],
+  person: ["person", "people", "участник", "участника", "участников", "წევრი"],
+  slot: [
+    "opening slot",
+    "opening slots",
+    "стартовое место",
+    "стартовых места",
+    "стартовых мест",
+    "საწყისი პოზიცია"
+  ],
+  expectedPlayer: [
+    "expected player",
+    "expected players",
+    "ожидаемый игрок",
+    "ожидаемых игрока",
+    "ожидаемых игроков",
+    "მოსალოდნელი მოთამაშე"
+  ]
+};
+function countLabel(count, noun) {
+  const language2 = getLanguage();
+  const forms = nouns[noun];
+  const rule = new Intl.PluralRules(language2).select(Number(count));
+  const word = language2 === "ka" ? forms[5] : language2 === "ru" ? forms[rule === "one" ? 2 : rule === "few" ? 3 : 4] : forms[rule === "one" ? 0 : 1];
+  return `${count} ${word}`;
+}
 const USERS_QUERY_KEY$1 = ["adminUsers"];
 function isAdminRole(role) {
   return role === Role.admin;
@@ -43903,6 +45404,7 @@ function AdminSkeleton() {
   );
 }
 function AdminPage() {
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { principal, isAdmin } = useAuth();
   const queryClient2 = useQueryClient();
@@ -43930,9 +45432,10 @@ function AdminPage() {
       return grant ? actor.grantAdminRole(id) : actor.revokeAdminRole(id);
     },
     onSuccess: (updated, variables) => {
-      setNotice(
-        variables.grant ? `${updated.displayName || updated.id.toString()} is now an admin.` : `${updated.displayName || updated.id.toString()} is no longer an admin.`
-      );
+      setNotice({
+        message: variables.grant ? "{name} is now an admin." : "{name} is no longer an admin.",
+        params: { name: updated.displayName || updated.id.toString() }
+      });
       void queryClient2.invalidateQueries({ queryKey: USERS_QUERY_KEY$1 });
       void queryClient2.invalidateQueries({ queryKey: ["users"] });
       void queryClient2.invalidateQueries({ queryKey: ["myRole"] });
@@ -43970,8 +45473,8 @@ function AdminPage() {
   if (usersQuery.isLoading || isFetching && !usersQuery.data) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "data-ocid": "admin_page", className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto w-full max-w-5xl space-y-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "space-y-1", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-4xl font-bold uppercase tracking-tight text-foreground", children: "Admin access" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Authenticated accounts and their admin access." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-4xl font-bold uppercase tracking-tight text-foreground", children: t("Admin access") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: t("Authenticated accounts and their admin access.") })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(AdminSkeleton, {})
     ] }) });
@@ -43980,8 +45483,10 @@ function AdminPage() {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "data-ocid": "admin_page", className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mx-auto w-full max-w-5xl", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       ErrorState,
       {
-        title: "Couldn't load accounts",
-        message: "Something went wrong while fetching authenticated accounts.",
+        title: t("Couldn't load accounts"),
+        message: t(
+          "Something went wrong while fetching authenticated accounts."
+        ),
         onRetry: () => void usersQuery.refetch()
       }
     ) }) });
@@ -43989,12 +45494,14 @@ function AdminPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "data-ocid": "admin_page", className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto w-full max-w-5xl space-y-6", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "flex flex-wrap items-end justify-between gap-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: "CHILLPONG / CONTROL ROOM" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-4xl font-bold uppercase tracking-tight text-foreground", children: "Admin access" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "All signed-in accounts and their member IDs. Assign or revoke admin access here." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: t("CHILLPONG / CONTROL ROOM") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-4xl font-bold uppercase tracking-tight text-foreground", children: t("Admin access") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: t(
+          "All signed-in accounts and their member IDs. Assign or revoke admin access here."
+        ) })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/admin/accounts", className: "btn btn-outline btn-sm", children: "Edit profiles" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/admin/accounts", className: "btn btn-outline btn-sm", children: t("Edit profiles") }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           Button,
           {
@@ -44004,7 +45511,7 @@ function AdminPage() {
             onClick: () => void usersQuery.refetch(),
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "size-4", "aria-hidden": "true" }),
-              "Refresh accounts"
+              t("Refresh accounts")
             ]
           }
         ),
@@ -44015,11 +45522,10 @@ function AdminPage() {
             className: "inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-sm text-muted-foreground",
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "size-4", "aria-hidden": "true" }),
-              users.length,
-              " accounts / ",
-              adminCount,
+              countLabel(users.length, "account"),
+              " /",
               " ",
-              adminCount === 1 ? "admin" : "admins"
+              countLabel(adminCount, "admin")
             ]
           }
         )
@@ -44030,20 +45536,18 @@ function AdminPage() {
         Input,
         {
           type: "search",
-          label: "Search by member ID",
-          placeholder: "Paste a principal ID or part of it",
+          label: t("Search by member ID"),
+          placeholder: t("Paste a principal ID or part of it"),
           className: "font-mono text-sm",
           value: search,
           onChange: (event) => setSearch(event.target.value),
           rightElement: /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "size-4", "aria-hidden": "true" })
         }
       ),
-      searchTerm ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", "aria-live": "polite", children: [
-        visibleUsers.length,
-        " of ",
-        users.length,
-        " accounts match"
-      ] }) : null
+      searchTerm ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", "aria-live": "polite", children: t("{matched} of {total} accounts match", {
+        matched: visibleUsers.length,
+        total: users.length
+      }) }) : null
     ] }),
     notice ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "output",
@@ -44058,7 +45562,7 @@ function AdminPage() {
               "aria-hidden": "true"
             }
           ),
-          notice
+          t(notice)
         ]
       }
     ) : null,
@@ -44076,7 +45580,7 @@ function AdminPage() {
               "aria-hidden": "true"
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: copyError || (roleMutation.error instanceof Error ? roleMutation.error.message : "Couldn't update that role. Please try again.") })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t(copyError) || (roleMutation.error instanceof Error ? translateError(roleMutation.error.message) : t("Couldn't update that role. Please try again.")) })
         ]
       }
     ) : null,
@@ -44084,16 +45588,18 @@ function AdminPage() {
       EmptyState,
       {
         icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-7", "aria-hidden": "true" }),
-        title: "No signed-in accounts yet",
-        description: "Accounts appear automatically after signing in to ChillPong."
+        title: t("No signed-in accounts yet"),
+        description: t(
+          "Accounts appear automatically after signing in to ChillPong."
+        )
       }
     ) : visibleUsers.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       EmptyState,
       {
         icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "size-7", "aria-hidden": "true" }),
-        title: "No matching member ID",
-        description: "Try a different principal ID or clear the search.",
-        action: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", onClick: () => setSearch(""), children: "Clear search" })
+        title: t("No matching member ID"),
+        description: t("Try a different principal ID or clear the search."),
+        action: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", onClick: () => setSearch(""), children: t("Clear search") })
       }
     ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
       "ul",
@@ -44113,19 +45619,21 @@ function AdminPage() {
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   Avatar,
                   {
-                    name: user.displayName || user.username || "Member",
+                    name: (user.displayName === "Signed-in member" && !user.username ? t("Signed-in member") : user.displayName) || user.username || t("Member"),
                     size: "md",
-                    alt: `${user.displayName || user.username || "Member"} avatar`
+                    alt: t("{v1} avatar", {
+                      v1: (user.displayName === "Signed-in member" && !user.username ? t("Signed-in member") : user.displayName) || user.username || t("Member")
+                    })
                   }
                 ),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 space-y-2", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "flex items-center gap-2 truncate font-medium text-foreground", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: user.displayName || user.username || "Signed-in member" }),
-                    isSelf ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "shrink-0 rounded-none bg-base-300 px-2 py-0.5 text-xs text-muted-foreground", children: "You" }) : null
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: (user.displayName === "Signed-in member" && !user.username ? t("Signed-in member") : user.displayName) || user.username || t("Signed-in member") }),
+                    isSelf ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "shrink-0 rounded-none bg-base-300 px-2 py-0.5 text-xs text-muted-foreground", children: t("You") }) : null
                   ] }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "truncate text-sm text-muted-foreground", children: user.username ? `@${user.username}` : "Username not set" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "truncate text-sm text-muted-foreground", children: user.username ? `@${user.username}` : t("Username not set") }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: "Member ID / Principal ID" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: t("Member ID / Principal ID") }),
                     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-2", children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "min-w-0 break-all font-mono text-xs leading-6 text-foreground select-all", children: user.id.toString() }),
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -44134,7 +45642,9 @@ function AdminPage() {
                           variant: "ghost",
                           size: "icon",
                           className: "btn-xs shrink-0",
-                          "aria-label": `Copy member ID ${user.id.toString()}`,
+                          "aria-label": t("Copy member ID {v1}", {
+                            v1: user.id.toString()
+                          }),
                           onClick: () => void copyPrincipal(user.id.toString()),
                           children: copiedId === user.id.toString() ? /* @__PURE__ */ jsxRuntimeExports.jsx(
                             Check,
@@ -44156,7 +45666,7 @@ function AdminPage() {
                       className: admin ? "inline-flex items-center gap-1.5 rounded-none border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary" : "inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-xs font-medium text-muted-foreground",
                       children: [
                         admin ? /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "size-3.5", "aria-hidden": "true" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldMinus, { className: "size-3.5", "aria-hidden": "true" }),
-                        admin ? "Admin" : "Member"
+                        admin ? t("Admin") : t("Member")
                       ]
                     }
                   ),
@@ -44168,15 +45678,18 @@ function AdminPage() {
                       "data-ocid": `admin_user.toggle_button.${index2 + 1}`,
                       loading: isPending,
                       disabled: roleMutation.isPending || isSelf && admin,
-                      "aria-label": `${admin ? "Revoke admin from" : "Assign admin to"} ${user.id.toString()}`,
-                      title: isSelf && admin ? "You can't revoke your own admin role." : void 0,
+                      "aria-label": t(
+                        admin ? "Revoke admin from {id}" : "Assign admin to {id}",
+                        { id: user.id.toString() }
+                      ),
+                      title: isSelf && admin ? t("You can't revoke your own admin role.") : void 0,
                       onClick: () => handleToggle(user),
                       children: admin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldMinus, { className: "size-4", "aria-hidden": "true" }),
-                        "Revoke admin"
+                        t("Revoke admin")
                       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldPlus, { className: "size-4", "aria-hidden": "true" }),
-                        "Assign admin"
+                        t("Assign admin")
                       ] })
                     }
                   )
@@ -44249,19 +45762,22 @@ function playerMovement(view, player) {
   };
 }
 function sourceLabel(source, matches) {
-  if (source.kind === "bye") return "BYE";
-  if (source.kind === "empty") return "Awaiting player";
-  if (source.kind === "player") return "Awaiting player";
+  if (source.kind === "bye") return translate("BYE");
+  if (source.kind === "empty") return translate("Awaiting player");
+  if (source.kind === "player") return translate("Awaiting player");
   const match = matches.find((item) => item.id === source.id);
-  return `${source.kind === "winner" ? "Winner" : "Loser"} / ${match ? matchLabel(match) : `M${source.id}`}`;
+  return `${translate(source.kind === "winner" ? "Winner" : "Loser")} / ${match ? matchLabel(match) : `M${source.id}`}`;
 }
 function tbilisiTime(timestamp) {
-  return new Date(Number(timestamp / 1000000n)).toLocaleTimeString("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "Asia/Tbilisi",
-    hourCycle: "h23"
-  });
+  return new Date(Number(timestamp / 1000000n)).toLocaleTimeString(
+    getLocale(),
+    {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Tbilisi",
+      hourCycle: "h23"
+    }
+  );
 }
 function PlayerForm({
   view,
@@ -44269,6 +45785,7 @@ function PlayerForm({
   pending,
   onAction
 }) {
+  const { t } = useI18n();
   const [name, setName] = reactExports.useState((player == null ? void 0 : player.name) ?? "");
   const [skill, setSkill] = reactExports.useState((player == null ? void 0 : player.skill) ?? 1);
   const valid = name.trim().length > 0 && name.trim().length <= 80;
@@ -44289,7 +45806,7 @@ function PlayerForm({
       },
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Player name" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Player name") }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "input",
             {
@@ -44300,12 +45817,12 @@ function PlayerForm({
               value: name,
               disabled: pending,
               onChange: (event) => setName(event.target.value),
-              placeholder: "Name on the table"
+              placeholder: t("Name on the table")
             }
           )
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Skill level" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Skill level") }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "select",
             {
@@ -44318,12 +45835,17 @@ function PlayerForm({
                 "L",
                 index2 + 1,
                 " — ",
-                level
+                t(level)
               ] }, level))
             }
           )
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: player ? `${registrationLabel(player.registrationNumber)} and the original registration time remain unchanged. Skill changes apply to future matchmaking.` : "A new permanent registration number and timestamp are saved automatically. The player joins after earlier registrations." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: player ? t(
+          "{v1} and the original registration time remain unchanged. Skill changes apply to future matchmaking.",
+          { v1: registrationLabel(player.registrationNumber) }
+        ) : t(
+          "A new permanent registration number and timestamp are saved automatically. The player joins after earlier registrations."
+        ) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap justify-end gap-3 border-t border-base-300 pt-5", children: [
           !player && view.generated ? /* @__PURE__ */ jsxRuntimeExports.jsx(
             Button,
@@ -44331,7 +45853,7 @@ function PlayerForm({
               variant: "outline",
               disabled: !valid || pending,
               onClick: () => save(true),
-              children: "Register & place manually"
+              children: t("Register & place manually")
             }
           ) : null,
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -44341,7 +45863,7 @@ function PlayerForm({
               "data-ocid": "tournament.save_player_button",
               loading: pending,
               disabled: !valid,
-              children: player ? "Save player" : "Add to waiting queue"
+              children: player ? t("Save player") : t("Add to waiting queue")
             }
           )
         ] })
@@ -44356,6 +45878,7 @@ function MovePlayerForm({
   onAction
 }) {
   var _a2;
+  const { t } = useI18n();
   const { entrant, targets: options } = playerMovement(view, player);
   const [target, setTarget] = reactExports.useState(((_a2 = options[0]) == null ? void 0 : _a2.id.toString()) ?? "");
   const [slot, setSlot] = reactExports.useState("a");
@@ -44376,24 +45899,30 @@ function MovePlayerForm({
       },
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/60", children: [
-          "Place ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-base-content", children: player.name }),
-          " in",
+          t("Place"),
           " ",
-          entrant ? "a pending winners-bracket slot" : "their current unplayed bracket round",
-          ". The registration remains",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-base-content", children: player.name }),
+          " ",
+          t("in"),
+          " ",
+          entrant ? t("a pending winners-bracket slot") : t("their current unplayed bracket round"),
+          t(". The registration remains"),
           " ",
           registrationLabel(player.registrationNumber),
           ".",
           " ",
-          entrant ? "An empty slot admits them directly. An occupied eligible slot creates a qualifier against its current player or incoming winner, keeping both players in the tournament. Opening qualifiers are round zero." : "An occupied pending slot swaps both incoming bracket positions; an empty slot moves this player. Completed results and original registration details remain unchanged."
+          entrant ? t(
+            "An empty slot admits them directly. An occupied eligible slot creates a qualifier against its current player or incoming winner, keeping both players in the tournament. Opening qualifiers are round zero."
+          ) : t(
+            "An occupied pending slot swaps both incoming bracket positions; an empty slot moves this player. Completed results and original registration details remain unchanged."
+          )
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Destination match" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Destination match") }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "select",
             {
-              "aria-label": "Destination match",
+              "aria-label": t("Destination match"),
               className: "select w-full rounded-none",
               value: target,
               disabled: pending,
@@ -44406,16 +45935,16 @@ function MovePlayerForm({
                   " ",
                   ((_a3 = playerById(view.players, match.playerAId)) == null ? void 0 : _a3.name) ?? sourceLabel(match.sourceA, view.matches),
                   " ",
-                  "vs",
+                  t("vs"),
                   " ",
                   ((_b2 = playerById(view.players, match.playerBId)) == null ? void 0 : _b2.name) ?? sourceLabel(match.sourceB, view.matches)
                 ] }, match.id.toString());
-              }) : /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: "No safe opening slots" })
+              }) : /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("No safe opening slots") })
             }
           )
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Destination slot" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Destination slot") }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "select",
             {
@@ -44424,14 +45953,16 @@ function MovePlayerForm({
               disabled: pending,
               onChange: (event) => setSlot(event.target.value),
               children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: "Player A" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: "Player B" })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: t("Player A") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: t("Player B") })
               ]
             }
           )
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-secondary/80", children: "Manual override. The backend rejects changes that would overwrite a played match or an active downstream match." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-end border-t border-base-300 pt-5", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "submit", loading: pending, disabled: !validTarget, children: "Place player" }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-secondary/80", children: t(
+          "Manual override. The backend rejects changes that would overwrite a played match or an active downstream match."
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-end border-t border-base-300 pt-5", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "submit", loading: pending, disabled: !validTarget, children: t("Place player") }) })
       ]
     }
   );
@@ -44445,6 +45976,7 @@ function MatchEditor({
   onOpen
 }) {
   var _a2, _b2, _c2, _d2, _e2;
+  const { t } = useI18n();
   const [scoreA, setScoreA] = reactExports.useState(((_a2 = match.scoreA) == null ? void 0 : _a2.toString()) ?? "");
   const [scoreB, setScoreB] = reactExports.useState(((_b2 = match.scoreB) == null ? void 0 : _b2.toString()) ?? "");
   const [table, setTable] = reactExports.useState(((_c2 = match.table) == null ? void 0 : _c2.toString()) ?? "");
@@ -44511,7 +46043,7 @@ function MatchEditor({
                 "L",
                 player.skill,
                 " / ",
-                SKILL_LEVELS[player.skill - 1],
+                t(SKILL_LEVELS[player.skill - 1]),
                 " /",
                 " ",
                 registrationLabel(player.registrationNumber)
@@ -44525,39 +46057,42 @@ function MatchEditor({
     }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-5 font-mono text-[10px] uppercase tracking-wider text-base-content/45", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-        "Status / ",
-        match.status
+        t("Status /"),
+        " ",
+        t(match.status)
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: match.table ? `Table ${match.table}` : "No table assigned" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: match.table ? t("Table {v1}", { v1: match.table }) : t("No table assigned") }),
       match.manualOverride || match.prioritized ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1 text-secondary", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
-        " Manual override"
+        " ",
+        t("Manual override")
       ] }) : null
     ] }),
     isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-3 sm:grid-cols-[1fr_auto_auto]", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Assign table" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Assign table") }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "select",
             {
-              "aria-label": "Assign table",
+              "aria-label": t("Assign table"),
               className: "select w-full rounded-none",
               value: table,
               disabled: pending || match.status === "completed" || match.status === "bye" || match.status === "void",
               onChange: (event) => setTable(event.target.value),
               children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: "Unassigned" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("Unassigned") }),
                 view.tables.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "option",
                   {
                     value: item.number,
                     disabled: item.matchId !== void 0 && item.matchId !== match.id && (item.status === "playing" || item.status === "waiting"),
                     children: [
-                      "Table ",
+                      t("Table"),
+                      " ",
                       item.number,
                       " / ",
-                      item.status
+                      t(item.status)
                     ]
                   },
                   item.number
@@ -44580,7 +46115,7 @@ function MatchEditor({
               },
               { close: false }
             ),
-            children: "Assign table"
+            children: t("Assign table")
           }
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -44592,7 +46127,7 @@ function MatchEditor({
               { kind: "startMatch", matchId: match.id },
               { close: false }
             ),
-            children: "Start match"
+            children: t("Start match")
           }
         )
       ] }),
@@ -44625,10 +46160,10 @@ function MatchEditor({
             });
           },
           children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-primary", children: match.status === "completed" ? "Correct the result" : "Save the result" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-primary", children: match.status === "completed" ? t("Correct the result") : t("Save the result") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Score A" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Score A") }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "input",
                   {
@@ -44644,7 +46179,7 @@ function MatchEditor({
                 )
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Score B" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Score B") }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "input",
                   {
@@ -44660,15 +46195,17 @@ function MatchEditor({
                 )
               ] })
             ] }),
-            validation ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { role: "alert", className: "text-xs text-error", children: validation }) : null,
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: "Winners advance and the table is freed automatically. Changing a winner after downstream games requires a confirmed reset." }),
+            validation ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { role: "alert", className: "text-xs text-error", children: t(validation) }) : null,
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
+              "Winners advance and the table is freed automatically. Changing a winner after downstream games requires a confirmed reset."
+            ) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               Button,
               {
                 type: "submit",
                 "data-ocid": "tournament.save_result_button",
                 loading: pending,
-                children: "Save result"
+                children: t("Save result")
               }
             )
           ]
@@ -44685,7 +46222,7 @@ function MatchEditor({
               { kind: "prioritizeMatch", matchId: match.id },
               { close: false }
             ),
-            children: "Prioritize match"
+            children: t("Prioritize match")
           }
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -44695,14 +46232,16 @@ function MatchEditor({
             size: "sm",
             disabled: pending || match.status !== "completed" && match.status !== "playing" && match.status !== "bye",
             onClick: () => onOpen({ kind: "reset", matchId: match.id }),
-            children: "Reset match / undo result"
+            children: t("Reset match / undo result")
           }
         )
       ] }),
       canSwapBracket ? /* @__PURE__ */ jsxRuntimeExports.jsxs("details", { className: "border-t border-base-300 pt-5", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("summary", { className: "technical-label cursor-pointer text-secondary", children: "Manual override / players & byes" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("summary", { className: "technical-label cursor-pointer text-secondary", children: t("Manual override / players & byes") }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-5 space-y-5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: "Opening slots can be replaced. Later ready matches can swap opponents within the same bracket and round. Registration numbers never change." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
+            "Opening slots can be replaced. Later ready matches can swap opponents within the same bracket and round. Registration numbers never change."
+          ) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-3 sm:grid-cols-2", children: [
             {
               label: "Player A slot",
@@ -44715,7 +46254,7 @@ function MatchEditor({
               setter: setPlayerB
             }
           ].map((side) => /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: side.label }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t(side.label) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "select",
               {
@@ -44724,7 +46263,7 @@ function MatchEditor({
                 disabled: pending || !editableOpening,
                 onChange: (event) => side.setter(event.target.value),
                 children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: "BYE / empty slot" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("BYE / empty slot") }),
                   activePlayers.map((player) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
                     "option",
                     {
@@ -44733,7 +46272,8 @@ function MatchEditor({
                         registrationLabel(player.registrationNumber),
                         " ",
                         player.name,
-                        " / L",
+                        " ",
+                        t("/ L"),
                         player.skill
                       ]
                     },
@@ -44758,12 +46298,12 @@ function MatchEditor({
                 },
                 { close: false }
               ),
-              children: "Change matchup"
+              children: t("Change matchup")
             }
           ),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-3 sm:grid-cols-[1fr_auto]", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Assign BYE to slot" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Assign BYE to slot") }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs(
                 "select",
                 {
@@ -44772,8 +46312,8 @@ function MatchEditor({
                   disabled: pending || !editableOpening,
                   onChange: (event) => setByeSlot(event.target.value),
                   children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: "Player A" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: "Player B" })
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: t("Player A") }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: t("Player B") })
                   ]
                 }
               )
@@ -44789,15 +46329,15 @@ function MatchEditor({
                   { kind: "assignBye", matchId: match.id, slot: byeSlot },
                   { close: false }
                 ),
-                children: "Assign BYE"
+                children: t("Assign BYE")
               }
             )
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 border-t border-base-300 pt-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[10px]", children: "Swap players between ready matches" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[10px]", children: t("Swap players between ready matches") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-3 sm:grid-cols-3", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: "This match slot" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: t("This match slot") }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "select",
                   {
@@ -44806,14 +46346,14 @@ function MatchEditor({
                     disabled: pending,
                     onChange: (event) => setFirstSlot(event.target.value),
                     children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: "Player A" }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: "Player B" })
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: t("Player A") }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: t("Player B") })
                     ]
                   }
                 )
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: "Other match" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: t("Other match") }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "select",
                   {
@@ -44822,7 +46362,7 @@ function MatchEditor({
                     disabled: pending,
                     onChange: (event) => setOtherMatch(event.target.value),
                     children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: "Choose match" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("Choose match") }),
                       swapMatches.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
                         "option",
                         {
@@ -44836,7 +46376,7 @@ function MatchEditor({
                 )
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: "Other match slot" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: t("Other match slot") }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "select",
                   {
@@ -44845,8 +46385,8 @@ function MatchEditor({
                     disabled: pending,
                     onChange: (event) => setOtherSlot(event.target.value),
                     children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: "Player A" }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: "Player B" })
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: t("Player A") }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: t("Player B") })
                     ]
                   }
                 )
@@ -44868,13 +46408,17 @@ function MatchEditor({
                   },
                   { close: false }
                 ),
-                children: "Swap players"
+                children: t("Swap players")
               }
             )
           ] })
         ] })
-      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border-t border-base-300 pt-4 text-xs leading-relaxed text-base-content/45", children: "Finalist positions stay fixed because they determine whether a double elimination reset final is required." })
-    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-base-content/45", children: "Results and assignments are managed by the tournament organizer." })
+      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border-t border-base-300 pt-4 text-xs leading-relaxed text-base-content/45", children: t(
+        "Finalist positions stay fixed because they determine whether a double elimination reset final is required."
+      ) })
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-base-content/45", children: t(
+      "Results and assignments are managed by the tournament organizer."
+    ) })
   ] });
 }
 function ResetForm({
@@ -44882,14 +46426,17 @@ function ResetForm({
   pending,
   onAction
 }) {
+  const { t } = useI18n();
   const [cascade, setCascade] = reactExports.useState(false);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/65", children: [
-      "Resetting",
+      t("Resetting"),
       " ",
       /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-base-content", children: matchLabel(match) }),
       " ",
-      "clears its score, winner and table assignment. Earlier registration details remain unchanged."
+      t(
+        "clears its score, winner and table assignment. Earlier registration details remain unchanged."
+      )
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "flex items-start gap-3 border border-secondary/30 p-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -44903,11 +46450,15 @@ function ResetForm({
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-sm font-semibold", children: "Also reset completed downstream results" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-1 block text-xs leading-relaxed text-base-content/45", children: "This can erase scores in later rounds. Active downstream matches must be resolved first; the backend prevents resetting across a playing match." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-sm font-semibold", children: t("Also reset completed downstream results") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-1 block text-xs leading-relaxed text-base-content/45", children: t(
+          "This can erase scores in later rounds. Active downstream matches must be resolved first; the backend prevents resetting across a playing match."
+        ) })
       ] })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-secondary/80", children: "If later rounds depend on this result, a plain reset is rejected until downstream results are explicitly included." }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-secondary/80", children: t(
+      "If later rounds depend on this result, a plain reset is rejected until downstream results are explicitly included."
+    ) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       Button,
       {
@@ -44915,7 +46466,7 @@ function ResetForm({
         "data-ocid": "tournament.confirm_reset_button",
         loading: pending,
         onClick: () => onAction({ kind: "resetMatch", matchId: match.id, cascade }),
-        children: "Confirm reset"
+        children: t("Confirm reset")
       }
     )
   ] });
@@ -44931,6 +46482,7 @@ function OrganizerDialogs({
   onAction
 }) {
   var _a2;
+  const { t } = useI18n();
   const ref = reactExports.useRef(null);
   const allowed = !!modal && (isAdmin || modal.kind === "match");
   reactExports.useEffect(() => {
@@ -44952,7 +46504,9 @@ function OrganizerDialogs({
     (player) => player.status !== "removed"
   ).length;
   const bracketSize = 2 ** Math.ceil(Math.log2(Math.max(2, playerCount)));
-  const title = !modal ? "Tournament controls" : modal.kind === "player" ? modal.player ? "Edit player." : "Add to the lineup." : modal.kind === "remove" ? "Remove player?" : modal.kind === "move" ? "Move / place player." : modal.kind === "generate" ? "Generate the draw." : modal.kind === "undo" ? "Undo last action?" : modal.kind === "reset" ? "Reset this result?" : `Match ${match ? matchLabel(match) : "unavailable"}`;
+  const title = !modal ? "Tournament controls" : modal.kind === "player" ? modal.player ? "Edit player." : "Add to the lineup." : modal.kind === "remove" ? "Remove player?" : modal.kind === "move" ? "Move / place player." : modal.kind === "generate" ? "Generate the draw." : modal.kind === "undo" ? "Undo last action?" : modal.kind === "reset" ? "Reset this result?" : t("Match {match}", {
+    match: match ? matchLabel(match) : t("unavailable")
+  });
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "dialog",
     {
@@ -44977,16 +46531,16 @@ function OrganizerDialogs({
         /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-7 flex items-start justify-between gap-4", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "section-kicker mb-2", children: [
-              "CHILLPONG /",
+              t("CHILLPONG /"),
               " ",
-              modal.kind === "match" ? "MATCH FILE" : "ORGANIZER DESK"
+              modal.kind === "match" ? t("MATCH FILE") : t("ORGANIZER DESK")
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "h2",
               {
                 id: "organizer-dialog-title",
                 className: "font-display text-3xl font-bold uppercase tracking-tight",
-                children: title
+                children: t(title)
               }
             )
           ] }),
@@ -44994,7 +46548,7 @@ function OrganizerDialogs({
             "button",
             {
               type: "button",
-              "aria-label": "Close tournament controls",
+              "aria-label": t("Close tournament controls"),
               className: "btn btn-ghost btn-square btn-sm",
               disabled: pending,
               onClick: onClose,
@@ -45058,11 +46612,19 @@ function OrganizerDialogs({
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/65", children: [
-              modal.player.status === "playing" ? "This player is currently playing. Their opponent may advance by forfeit when they are removed. " : "The player leaves the waiting queue and unplayed bracket slots. ",
-              "Completed results remain in history. Pending dependencies are updated where safe; active downstream matches can block removal."
+              modal.player.status === "playing" ? t(
+                "This player is currently playing. Their opponent may advance by forfeit when they are removed."
+              ) : t(
+                "The player leaves the waiting queue and unplayed bracket slots."
+              ),
+              t(
+                "Completed results remain in history. Pending dependencies are updated where safe; active downstream matches can block removal."
+              )
             ] })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-base-content/45", children: "Their permanent registration number is retained and will not be reused." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-base-content/45", children: t(
+            "Their permanent registration number is retained and will not be reused."
+          ) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             Button,
             {
@@ -45070,29 +46632,34 @@ function OrganizerDialogs({
               "data-ocid": "tournament.confirm_remove_button",
               loading: pending,
               onClick: () => onAction({ kind: "removePlayer", playerId: modal.player.id }),
-              children: "Remove player"
+              children: t("Remove player")
             }
           )
         ] }) : null,
         modal.kind === "generate" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-display text-2xl font-bold", children: [
-            playerCount,
-            " players / ",
-            bracketSize,
-            " opening slots"
+            countLabel(playerCount, "player"),
+            " /",
+            " ",
+            countLabel(bracketSize, "slot")
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-xs text-primary", children: [
             bracketSize - playerCount,
-            " BYEs /",
             " ",
-            view.elimination === "double" ? "Double elimination" : "Single elimination"
+            t("BYEs /"),
+            " ",
+            view.elimination === "double" ? t("Double elimination") : t("Single elimination")
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/60", children: [
-            "The draw pairs compatible skill levels first, then uses permanent registration order to settle equal choices. Winners advance automatically;",
+            t(
+              "The draw pairs compatible skill levels first, then uses permanent registration order to settle equal choices. Winners advance automatically;"
+            ),
             " ",
-            view.elimination === "double" ? "players leave after their second loss." : "one loss eliminates a player."
+            view.elimination === "double" ? t("players leave after their second loss.") : t("one loss eliminates a player.")
           ] }),
-          view.generated ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border border-secondary/30 p-3 text-xs text-secondary/90", children: "This regenerates the unplayed bracket and replaces manual opening assignments. Registered players stay intact." }) : null,
+          view.generated ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border border-secondary/30 p-3 text-xs text-secondary/90", children: t(
+            "This regenerates the unplayed bracket and replaces manual opening assignments. Registered players stay intact."
+          ) }) : null,
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             Button,
             {
@@ -45100,14 +46667,18 @@ function OrganizerDialogs({
               loading: pending,
               disabled: playerCount < 2 || !view.canChangeFormat,
               onClick: () => onAction({ kind: "generateBracket" }),
-              children: "Generate bracket"
+              children: t("Generate bracket")
             }
           )
         ] }) : null,
         modal.kind === "undo" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-base-content/60", children: "Restore the tournament state immediately before the most recent organizer action." }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border border-base-300 p-4 font-mono text-xs", children: (lastAction == null ? void 0 : lastAction.label) ?? "Most recent action" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: "Player registration counters continue forward so registration numbers remain permanent. Restored results, assignments and queue positions are saved automatically." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-base-content/60", children: t(
+            "Restore the tournament state immediately before the most recent organizer action."
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border border-base-300 p-4 font-mono text-xs", children: lastAction ? translateHistory(lastAction.label) : t("Most recent action") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
+            "Player registration counters continue forward so registration numbers remain permanent. Restored results, assignments and queue positions are saved automatically."
+          ) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             Button,
             {
@@ -45115,7 +46686,7 @@ function OrganizerDialogs({
               loading: pending,
               disabled: !view.canUndo,
               onClick: () => onAction({ kind: "undo" }),
-              children: "Confirm undo"
+              children: t("Confirm undo")
             }
           )
         ] }) : null,
@@ -45125,10 +46696,10 @@ function OrganizerDialogs({
             "data-ocid": "tournament.action_error",
             role: "alert",
             className: "mt-5 border border-error/35 px-4 py-3 text-sm text-error",
-            children: error
+            children: translateError(error)
           }
         ) : null,
-        /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "mt-6 flex justify-end border-t border-base-300 pt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", disabled: pending, onClick: onClose, children: modal.kind === "match" ? "Close" : "Cancel" }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "mt-6 flex justify-end border-t border-base-300 pt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", disabled: pending, onClick: onClose, children: modal.kind === "match" ? t("Close") : t("Cancel") }) })
       ] }) : null
     }
   );
@@ -45162,7 +46733,7 @@ function roundKey(match) {
   return `${match.bracket}:${match.round}`;
 }
 function roundLabel(match) {
-  return match.bracket === "grandFinal" || match.bracket === "resetFinal" ? BRACKET_LABELS[match.bracket] : `${BRACKET_LABELS[match.bracket]} / ${match.round === 0 ? "Qualifiers" : `Round ${match.round}`}`;
+  return match.bracket === "grandFinal" || match.bracket === "resetFinal" ? translate(BRACKET_LABELS[match.bracket]) : `${translate(BRACKET_LABELS[match.bracket])} / ${match.round === 0 ? translate("Qualifiers") : translate("Round {round}", { round: match.round })}`;
 }
 function registrationOrder(a2, b2) {
   if (a2.registrationNumber !== b2.registrationNumber)
@@ -45178,7 +46749,7 @@ function selectPlayers(view, filters) {
     const table = match == null ? void 0 : match.table;
     return (filters.showRemoved || player.status !== "removed") && (!search || `${player.name} #${player.registrationNumber.toString().padStart(3, "0")}`.toLocaleLowerCase().includes(search)) && (filters.skill === "all" || player.skill === Number(filters.skill)) && (filters.status === "all" || player.status === filters.status) && (filters.table === "all" || (filters.table === "none" ? table === void 0 : table === Number(filters.table))) && (filters.round === "all" || (filters.round === "none" ? !match : !!match && roundKey(match) === filters.round));
   }).sort((a2, b2) => {
-    const difference = filters.sort === "name" ? a2.name.localeCompare(b2.name, void 0, {
+    const difference = filters.sort === "name" ? a2.name.localeCompare(b2.name, getLocale(), {
       sensitivity: "base",
       numeric: true
     }) : filters.sort === "skill" ? a2.skill - b2.skill : filters.sort === "status" ? PLAYER_STATUSES.indexOf(a2.status) - PLAYER_STATUSES.indexOf(b2.status) : 0;
@@ -45196,6 +46767,7 @@ function PlayersPanel({
   onMove,
   standalone = false
 }) {
+  const { t } = useI18n();
   const [filters, setFilters] = reactExports.useState(DEFAULT_PLAYER_FILTERS);
   const players = selectPlayers(view, filters);
   const rounds = [
@@ -45210,14 +46782,14 @@ function PlayersPanel({
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex flex-wrap items-center justify-between gap-4", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: standalone ? "sr-only" : "section-kicker mb-2", children: "THE LINEUP / PERMANENT REGISTRATION" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: standalone ? "sr-only" : "section-kicker mb-2", children: t("THE LINEUP / PERMANENT REGISTRATION") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "h2",
               {
                 id: "players-title",
                 className: standalone ? "technical-label text-base-content/60" : "font-display text-2xl font-bold uppercase",
                 children: [
-                  "Players",
+                  t("Players"),
                   " ",
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono text-sm font-normal text-base-content/30", children: [
                     "/",
@@ -45229,7 +46801,8 @@ function PlayersPanel({
           ] }),
           isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { "data-ocid": "tournament.add_player_button", onClick: onAdd, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-4", "aria-hidden": "true" }),
-            " Add player"
+            " ",
+            t("Add player")
           ] }) : null
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-5 flex flex-wrap items-center justify-between gap-4", children: [
@@ -45239,8 +46812,8 @@ function PlayersPanel({
               "input",
               {
                 type: "search",
-                "aria-label": "Search tournament players",
-                placeholder: "NAME / REGISTRATION NUMBER",
+                "aria-label": t("Search tournament players"),
+                placeholder: t("NAME / REGISTRATION NUMBER"),
                 className: "min-w-0 flex-1 bg-transparent py-3 font-mono text-xs outline-none placeholder:text-base-content/35",
                 value: filters.search,
                 onChange: (event) => setFilters((previous) => ({
@@ -45265,12 +46838,12 @@ function PlayersPanel({
               }
             ),
             " ",
-            "Include removed players"
+            t("Include removed players")
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: "Skill level" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: t("Skill level") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "select",
               {
@@ -45281,19 +46854,19 @@ function PlayersPanel({
                   skill: event.target.value
                 })),
                 children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: "All skill levels" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: t("All skill levels") }),
                   SKILL_LEVELS.map((level, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: index2 + 1, children: [
                     "L",
                     index2 + 1,
                     " / ",
-                    level
+                    t(level)
                   ] }, level))
                 ]
               }
             )
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: "Status" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: t("Status") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "select",
               {
@@ -45305,14 +46878,17 @@ function PlayersPanel({
                   showRemoved: event.target.value === "removed" || previous.showRemoved
                 })),
                 children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: "All statuses" }),
-                  PLAYER_STATUSES.map((status) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: status, children: status.charAt(0).toUpperCase() + status.slice(1) }, status))
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: t("All statuses") }),
+                  PLAYER_STATUSES.map((status) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: status, children: t(status).replace(
+                    /^./,
+                    (character) => character.toUpperCase()
+                  ) }, status))
                 ]
               }
             )
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: "Table" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: t("Table") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "select",
               {
@@ -45323,10 +46899,11 @@ function PlayersPanel({
                   table: event.target.value
                 })),
                 children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: "All tables" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "none", children: "No table assigned" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: t("All tables") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "none", children: t("No table assigned") }),
                   view.tables.map((table) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: table.number, children: [
-                    "Table ",
+                    t("Table"),
+                    " ",
                     table.number
                   ] }, table.number))
                 ]
@@ -45334,7 +46911,7 @@ function PlayersPanel({
             )
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: "Current round" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: t("Current round") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "select",
               {
@@ -45345,15 +46922,15 @@ function PlayersPanel({
                   round: event.target.value
                 })),
                 children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: "All rounds" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "none", children: "No current round" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: t("All rounds") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "none", children: t("No current round") }),
                   rounds.map((match) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: roundKey(match), children: roundLabel(match) }, roundKey(match)))
                 ]
               }
             )
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "col-span-2 sm:col-span-1", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-primary", children: "Sort by" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-primary", children: t("Sort by") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "select",
               {
@@ -45364,10 +46941,10 @@ function PlayersPanel({
                   sort: event.target.value
                 })),
                 children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "registration", children: "Registration order" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "name", children: "Name / A–Z" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "skill", children: "Skill level / L1–L5" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "status", children: "Status / live first" })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "registration", children: t("Registration order") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "name", children: t("Name / A–Z") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "skill", children: t("Skill level / L1–L5") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "status", children: t("Status / live first") })
                 ]
               }
             )
@@ -45383,11 +46960,14 @@ function PlayersPanel({
                 players.length,
                 " /",
                 " ",
-                view.players.filter(
-                  (player) => filters.showRemoved || player.status !== "removed"
-                ).length,
-                " ",
-                "players · Original registration numbers and times stay fixed."
+                countLabel(
+                  view.players.filter(
+                    (player) => filters.showRemoved || player.status !== "removed"
+                  ).length,
+                  "player"
+                ),
+                " · ",
+                t("Original registration numbers and times stay fixed.")
               ]
             }
           ),
@@ -45397,7 +46977,7 @@ function PlayersPanel({
               type: "button",
               className: "btn btn-ghost btn-xs",
               onClick: () => setFilters(DEFAULT_PLAYER_FILTERS),
-              children: "Reset filters & sort"
+              children: t("Reset filters & sort")
             }
           ) : null
         ] }),
@@ -45413,7 +46993,7 @@ function PlayersPanel({
                   {
                     scope: "col",
                     className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
-                    children: "Reg / time"
+                    children: t("Reg / time")
                   }
                 ),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -45421,7 +47001,7 @@ function PlayersPanel({
                   {
                     scope: "col",
                     className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
-                    children: "Player"
+                    children: t("Player")
                   }
                 ),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -45429,7 +47009,7 @@ function PlayersPanel({
                   {
                     scope: "col",
                     className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
-                    children: "Skill"
+                    children: t("Skill")
                   }
                 ),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -45437,7 +47017,7 @@ function PlayersPanel({
                   {
                     scope: "col",
                     className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
-                    children: "Status / losses"
+                    children: t("Status / losses")
                   }
                 ),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -45445,7 +47025,7 @@ function PlayersPanel({
                   {
                     scope: "col",
                     className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
-                    children: "Match / table / seed"
+                    children: t("Match / table / seed")
                   }
                 ),
                 isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -45453,7 +47033,7 @@ function PlayersPanel({
                   {
                     scope: "col",
                     className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
-                    children: "Organizer controls"
+                    children: t("Organizer controls")
                   }
                 ) : null
               ] }) }),
@@ -45482,21 +47062,17 @@ function PlayersPanel({
                           "L",
                           player.skill
                         ] }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-[10px] text-base-content/40", children: SKILL_LEVELS[player.skill - 1] })
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-[10px] text-base-content/40", children: t(SKILL_LEVELS[player.skill - 1]) })
                       ] }),
                       /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-3 py-4", children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsx(
                           "p",
                           {
                             className: `technical-label text-[9px] ${player.status === "champion" ? "text-primary" : player.status === "playing" ? "text-secondary" : "text-base-content/60"}`,
-                            children: player.status
+                            children: t(player.status)
                           }
                         ),
-                        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1 font-mono text-[10px] text-base-content/35", children: [
-                          player.losses,
-                          " ",
-                          player.losses === 1 ? "loss" : "losses"
-                        ] })
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 font-mono text-[10px] text-base-content/35", children: countLabel(player.losses, "loss") })
                       ] }),
                       /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-3 py-4 font-mono text-[10px] text-base-content/45", children: [
                         match ? matchLabel(match) : "—",
@@ -45504,7 +47080,8 @@ function PlayersPanel({
                         " ",
                         (match == null ? void 0 : match.table) ? `T${match.table}` : "—",
                         player.seed !== void 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1", children: [
-                          "Seed ",
+                          t("Seed"),
+                          " ",
                           player.seed.toString()
                         ] }) : null
                       ] }),
@@ -45514,7 +47091,7 @@ function PlayersPanel({
                           {
                             type: "button",
                             className: "btn btn-ghost btn-square btn-xs",
-                            "aria-label": `Edit ${player.name}`,
+                            "aria-label": t("Edit {v1}", { v1: player.name }),
                             disabled: pending || player.status === "removed",
                             onClick: () => onEdit(player),
                             children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "size-3.5", "aria-hidden": "true" })
@@ -45525,7 +47102,9 @@ function PlayersPanel({
                           {
                             type: "button",
                             className: "btn btn-ghost btn-square btn-xs",
-                            "aria-label": `Prioritize ${player.name} in queue`,
+                            "aria-label": t("Prioritize {v1} in queue", {
+                              v1: player.name
+                            }),
                             disabled: pending || !canPrioritize,
                             onClick: () => onPrioritize(player),
                             children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUp, { className: "size-3.5", "aria-hidden": "true" })
@@ -45539,7 +47118,7 @@ function PlayersPanel({
                             disabled: pending || !view.generated || !playerMovement(view, player).targets.length,
                             onClick: () => onMove(player),
                             children: [
-                              "Move",
+                              t("Move"),
                               /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
                                 " ",
                                 player.name
@@ -45552,7 +47131,7 @@ function PlayersPanel({
                           {
                             type: "button",
                             className: "btn btn-ghost btn-square btn-xs text-secondary",
-                            "aria-label": `Remove ${player.name}`,
+                            "aria-label": t("Remove {v1}", { v1: player.name }),
                             disabled: pending || player.status === "removed",
                             onClick: () => onRemove(player),
                             children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "size-3.5", "aria-hidden": "true" })
@@ -45567,8 +47146,12 @@ function PlayersPanel({
             ]
           }
         ) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border border-dashed border-base-300 px-6 py-10 text-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-lg font-bold uppercase", children: view.players.length ? "No matching players." : "An open table. An open lineup." }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-base-content/45", children: view.players.length ? "Try another name or adjust the skill, status, table or round filters." : "Players added here receive permanent registration numbers and join the queue." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-lg font-bold uppercase", children: view.players.length ? t("No matching players.") : t("An open table. An open lineup.") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-base-content/45", children: view.players.length ? t(
+            "Try another name or adjust the skill, status, table or round filters."
+          ) : t(
+            "Players added here receive permanent registration numbers and join the queue."
+          ) })
         ] })
       ]
     }
@@ -45786,6 +47369,7 @@ class TournamentService {
 const tournamentService = new TournamentService();
 function PlayersPage() {
   var _a2;
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient2 = useQueryClient();
@@ -45880,14 +47464,17 @@ function PlayersPage() {
   const error = mutation.isError ? mutation.error instanceof Error ? mutation.error.message : "Couldn't save this change. Try again." : null;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "players_page", className: "club-page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-8", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: "CHILLPONG / THE LINEUP" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: t("CHILLPONG / THE LINEUP") }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "page-title", children: [
-        "THE ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "PLAYERS." })
+        t("THE"),
+        " ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: t("PLAYERS.") })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-5 max-w-xl text-sm leading-relaxed text-base-content/60", children: "Find your next opponent. Follow the lineup by skill, status, table and round." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-5 max-w-xl text-sm leading-relaxed text-base-content/60", children: t(
+        "Find your next opponent. Follow the lineup by skill, status, table and round."
+      ) })
     ] }),
-    loading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-state", "aria-busy": "true", "aria-live": "polite", children: "Loading players…" }) : tournamentsQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", role: "alert", children: [
+    loading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-state", "aria-busy": "true", "aria-live": "polite", children: t("Loading players…") }) : tournamentsQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", role: "alert", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         TriangleAlert,
         {
@@ -45895,25 +47482,25 @@ function PlayersPage() {
           "aria-hidden": "true"
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: "The lineup is offline." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: "We couldn't load the tournament board." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: t("The lineup is offline.") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t("We couldn't load the tournament board.") }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
           className: "mt-6",
           onClick: () => void tournamentsQuery.refetch(),
-          children: "Try again"
+          children: t("Try again")
         }
       )
     ] }) : !tournaments.length ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "mb-4 size-8 text-primary", "aria-hidden": "true" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: "The lineup starts with a tournament." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: "Players appear here when they register for a tournament." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/tournaments", className: "btn btn-outline mt-6", children: "Tournament board" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: t("The lineup starts with a tournament.") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t("Players appear here when they register for a tournament.") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/tournaments", className: "btn btn-outline mt-6", children: t("Tournament board") })
     ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-end justify-between gap-4 border-y border-base-300 py-5", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "w-full sm:max-w-xs", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: "Tournament" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: t("Tournament") }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "select",
             {
@@ -45929,7 +47516,7 @@ function PlayersPage() {
               children: tournaments.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: item.id.toString(), children: [
                 item.title,
                 " / ",
-                item.status
+                t(item.status)
               ] }, item.id.toString()))
             }
           )
@@ -45940,7 +47527,7 @@ function PlayersPage() {
             href: `/tournaments/${tournament.id}`,
             className: "btn btn-outline btn-sm",
             children: [
-              "Open tournament room",
+              t("Open tournament room"),
               " ",
               /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "size-3.5", "aria-hidden": "true" })
             ]
@@ -45949,11 +47536,12 @@ function PlayersPage() {
       ] }),
       tournament ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-4 text-xs text-base-content/45", children: [
         tournament.venue,
-        " · Registration order belongs to this tournament."
+        " ",
+        t("· Registration order belongs to this tournament.")
       ] }) : null,
       notice ? /* @__PURE__ */ jsxRuntimeExports.jsxs("output", { className: "mt-6 flex items-center gap-2 border border-primary/25 bg-primary/5 px-4 py-3 text-sm", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-4 text-primary", "aria-hidden": "true" }),
-        notice
+        t(notice)
       ] }) : null,
       stateQuery.isLoading || !tournament ? /* @__PURE__ */ jsxRuntimeExports.jsx(
         "div",
@@ -45961,11 +47549,11 @@ function PlayersPage() {
           className: "club-state mt-8",
           "aria-busy": "true",
           "aria-live": "polite",
-          children: "Loading the selected lineup…"
+          children: t("Loading the selected lineup…")
         }
       ) : stateQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state mt-8", role: "alert", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: "Players unavailable." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: "We couldn't load this tournament's players." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: t("Players unavailable.") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t("We couldn't load this tournament's players.") }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           Button,
           {
@@ -45973,18 +47561,18 @@ function PlayersPage() {
             onClick: () => void stateQuery.refetch(),
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "size-4", "aria-hidden": "true" }),
-              "Try again"
+              t("Try again")
             ]
           }
         )
       ] }) : !view ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state mt-8", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "This tournament is no longer available." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t("This tournament is no longer available.") }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           Button,
           {
             className: "mt-4",
             onClick: () => void tournamentsQuery.refetch(),
-            children: "Refresh tournaments"
+            children: t("Refresh tournaments")
           }
         )
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
@@ -46024,7 +47612,7 @@ function PlayersPage() {
         {
           role: "alert",
           className: "mt-5 border border-error/40 p-4 text-sm text-error",
-          children: error
+          children: translateError(error)
         }
       ) : null
     ] })
@@ -46035,6 +47623,7 @@ function ProfileEditor({
   principal,
   profile
 }) {
+  const { t } = useI18n();
   const queryClient2 = useQueryClient();
   const [name, setName] = reactExports.useState((profile == null ? void 0 : profile.displayName) ?? "");
   const [username, setUsername] = reactExports.useState((profile == null ? void 0 : profile.username) ?? "");
@@ -46080,18 +47669,18 @@ function ProfileEditor({
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 border-b border-base-300 pb-5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(UserRound, { className: "size-5 text-primary", "aria-hidden": "true" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-xl font-semibold uppercase", children: "Your club identity" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-xl font-semibold uppercase", children: t("Your club identity") })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           Input,
           {
-            label: "Name / optional",
+            label: t("Name / optional"),
             autoComplete: "name",
             maxLength: 80,
-            placeholder: "Name at the table",
+            placeholder: t("Name at the table"),
             value: name,
             disabled: saveMutation.isPending,
-            hint: "Leave blank if you prefer. Up to 80 characters.",
+            hint: t("Leave blank if you prefer. Up to 80 characters."),
             onChange: (event) => {
               setName(event.target.value);
               setFormError(null);
@@ -46102,16 +47691,18 @@ function ProfileEditor({
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           Input,
           {
-            label: "Username / optional",
+            label: t("Username / optional"),
             autoComplete: "username",
             autoCapitalize: "none",
             spellCheck: false,
             className: "font-mono",
             maxLength: keepsExistingUsername ? void 0 : 30,
-            placeholder: "your-handle",
+            placeholder: t("your-handle"),
             value: username,
             disabled: saveMutation.isPending,
-            hint: keepsExistingUsername && username ? "Keep this username, choose another one, or leave it blank." : "Optional. If provided, use 3–30 letters, numbers, underscores or hyphens. Saved in lowercase.",
+            hint: keepsExistingUsername && username ? t("Keep this username, choose another one, or leave it blank.") : t(
+              "Optional. If provided, use 3–30 letters, numbers, underscores or hyphens. Saved in lowercase."
+            ),
             onChange: (event) => {
               setUsername(event.target.value);
               setFormError(null);
@@ -46124,7 +47715,7 @@ function ProfileEditor({
           {
             role: "alert",
             className: "border border-error/40 p-4 text-sm text-error",
-            children: formError || (saveMutation.error instanceof Error ? saveMutation.error.message : "Couldn't save your profile. Try again.")
+            children: t(formError) || (saveMutation.error instanceof Error ? translateError(saveMutation.error.message) : t("Couldn't save your profile. Try again."))
           }
         ) : null,
         saveMutation.isSuccess ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -46134,19 +47725,20 @@ function ProfileEditor({
             "aria-live": "polite",
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "size-4", "aria-hidden": "true" }),
-              "Profile saved."
+              t("Profile saved.")
             ]
           }
         ) : null,
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-end border-t border-base-300 pt-5", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { type: "submit", loading: saveMutation.isPending, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Save, { className: "size-4", "aria-hidden": "true" }),
-          "Save profile"
+          t("Save profile")
         ] }) })
       ]
     }
   );
 }
 function ProfilePage() {
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { principal, isAuthenticated } = useAuth();
   const profileQuery = useQuery({
@@ -46160,27 +47752,32 @@ function ProfilePage() {
   if (!isAuthenticated || !principal) return null;
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "data-ocid": "profile_page", className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto max-w-2xl space-y-8", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: "CHILLPONG / MEMBER FILE" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: t("CHILLPONG / MEMBER FILE") }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "page-title", children: [
-        "YOUR ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "PROFILE." })
+        t("YOUR"),
+        " ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: t("PROFILE.") })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 text-sm leading-relaxed text-muted-foreground", children: "A name for the club. A handle for the crew. Both are optional." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 text-sm leading-relaxed text-muted-foreground", children: t(
+        "A name for the club. A handle for the crew. Both are optional."
+      ) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2 border-l-2 border-primary pl-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label", children: "Your member ID / Principal ID" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label", children: t("Your member ID / Principal ID") }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "block select-all break-all font-mono text-xs leading-relaxed", children: principal })
     ] }),
     profileQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       ErrorState,
       {
-        title: "Couldn't load your profile",
-        message: "Your details are unavailable. Try again before editing.",
+        title: t("Couldn't load your profile"),
+        message: t(
+          "Your details are unavailable. Try again before editing."
+        ),
         onRetry: () => void profileQuery.refetch()
       }
     ) : profileQuery.isPending || isFetching || !actor ? /* @__PURE__ */ jsxRuntimeExports.jsxs("output", { className: "flex items-center justify-center gap-3 border border-base-300 p-12 text-sm text-muted-foreground", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "size-5 animate-spin", "aria-hidden": "true" }),
-      "Loading your profile"
+      t("Loading your profile")
     ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
       ProfileEditor,
       {
@@ -46199,6 +47796,7 @@ function MatchCard({
   onSelect,
   compact = false
 }) {
+  const { t } = useI18n();
   const sides = [
     {
       id: match.playerAId,
@@ -46223,10 +47821,13 @@ function MatchCard({
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-3 flex items-center justify-between gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-2 text-[9px] text-base-content/45", children: [
-            compact ? matchLabel(match) : `${BRACKET_LABELS[match.bracket]} / R${match.round}`,
-            compact && (match.manualOverride || match.prioritized) ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { title: "Manual override", className: "text-secondary", children: [
+            compact ? matchLabel(match) : t("{v1} / R{v2}", {
+              v1: t(BRACKET_LABELS[match.bracket]),
+              v2: match.round
+            }),
+            compact && (match.manualOverride || match.prioritized) ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { title: t("Manual override"), className: "text-secondary", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Manual override" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Manual override") })
             ] }) : null
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -46239,8 +47840,8 @@ function MatchCard({
                 match.table,
                 " /",
                 " ",
-                match.status
-              ] }) : match.status === "completed" ? "Final" : match.status === "bye" ? "BYE" : match.status === "void" ? "Voided" : match.status === "ready" ? "Ready" : "Waiting"
+                t(match.status)
+              ] }) : match.status === "completed" ? t("Final") : match.status === "bye" ? t("BYE") : match.status === "void" ? t("Voided") : match.status === "ready" ? t("Ready") : t("Waiting")
             }
           )
         ] }),
@@ -46266,7 +47867,7 @@ function MatchCard({
                     " /",
                     " ",
                     registrationLabel(player.registrationNumber)
-                  ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-0.5 font-mono text-[9px] text-base-content/25", children: side.source.kind === "bye" ? "Automatic advance" : "Bracket dependency" })
+                  ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-0.5 font-mono text-[9px] text-base-content/25", children: side.source.kind === "bye" ? t("Automatic advance") : t("Bracket dependency") })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "span",
@@ -46284,11 +47885,12 @@ function MatchCard({
           /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label text-[9px] text-base-content/40", children: [
             matchLabel(match),
             " / ",
-            match.status
+            t(match.status)
           ] }),
           match.manualOverride || match.prioritized ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-1 text-[8px] text-secondary", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
-            " Manual override"
+            " ",
+            t("Manual override")
           ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
             ArrowUpRight,
             {
@@ -46311,6 +47913,7 @@ function BracketGraph({
   players,
   onSelect
 }) {
+  const { t } = useI18n();
   const [zoom, setZoom] = reactExports.useState(1);
   const viewportRef = reactExports.useRef(null);
   const layout = reactExports.useMemo(() => {
@@ -46364,7 +47967,7 @@ function BracketGraph({
           return {
             index: column,
             caption: groupRounds.map(
-              (round) => round === 0 ? "Qualifiers / round 0" : `Round ${round}`
+              (round) => round === 0 ? t("Qualifiers / round 0") : t("Round {round}", { round })
             ).join(" + ")
           };
         })
@@ -46388,17 +47991,19 @@ function BracketGraph({
       width: 56 + columns * COLUMN_WIDTH - (COLUMN_WIDTH - CARD_WIDTH),
       height: top
     };
-  }, [matches]);
+  }, [matches, t]);
   const byId = new Map(
     layout.nodes.map((node) => [node.match.id.toString(), node])
   );
   if (!matches.length) {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-2xl font-bold uppercase", children: "No bracket yet." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: "The full tournament tree appears when the organizer generates the bracket." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-2xl font-bold uppercase", children: t("No bracket yet.") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t(
+        "The full tournament tree appears when the organizer generates the bracket."
+      ) })
     ] });
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-label": "Complete tournament bracket", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-label": t("Complete tournament bracket"), children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex flex-wrap items-center justify-between gap-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-wider text-base-content/45", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
@@ -46410,7 +48015,7 @@ function BracketGraph({
             }
           ),
           " ",
-          "Winner advances"
+          t("Winner advances")
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -46421,9 +48026,9 @@ function BracketGraph({
             }
           ),
           " ",
-          "Loser drops"
+          t("Loser drops")
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Scroll to pan / select any match" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t("Scroll to pan / select any match") })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 border border-base-300 p-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -46431,7 +48036,7 @@ function BracketGraph({
           {
             type: "button",
             className: "btn btn-ghost btn-square btn-xs",
-            "aria-label": "Zoom bracket out",
+            "aria-label": t("Zoom bracket out"),
             disabled: zoom <= 0.1,
             onClick: () => setZoom(
               (value) => Math.max(0.1, Math.round((value - 0.1) * 10) / 10)
@@ -46443,7 +48048,7 @@ function BracketGraph({
           "output",
           {
             className: "w-10 text-center font-mono text-[10px]",
-            "aria-label": "Bracket zoom",
+            "aria-label": t("Bracket zoom"),
             children: [
               Math.round(zoom * 100),
               "%"
@@ -46455,7 +48060,7 @@ function BracketGraph({
           {
             type: "button",
             className: "btn btn-ghost btn-square btn-xs",
-            "aria-label": "Zoom bracket in",
+            "aria-label": t("Zoom bracket in"),
             disabled: zoom >= 1.6,
             onClick: () => setZoom(
               (value) => Math.min(1.6, Math.round((value + 0.1) * 10) / 10)
@@ -46485,7 +48090,8 @@ function BracketGraph({
             },
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Maximize2, { className: "size-3.5", "aria-hidden": "true" }),
-              " Fit bracket"
+              " ",
+              t("Fit bracket")
             ]
           }
         ),
@@ -46494,7 +48100,7 @@ function BracketGraph({
           {
             type: "button",
             className: "btn btn-ghost btn-square btn-xs",
-            "aria-label": "Reset bracket zoom",
+            "aria-label": t("Reset bracket zoom"),
             onClick: () => setZoom(1),
             children: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { className: "size-3.5", "aria-hidden": "true" })
           }
@@ -46507,7 +48113,7 @@ function BracketGraph({
         ref: viewportRef,
         "data-ocid": "tournament.bracket",
         className: "bracket-viewport max-h-[75vh] overflow-auto border border-base-300 bg-base-100",
-        "aria-label": "Scrollable bracket graph",
+        "aria-label": t("Scrollable bracket graph"),
         children: /* @__PURE__ */ jsxRuntimeExports.jsx(
           "div",
           {
@@ -46567,8 +48173,8 @@ function BracketGraph({
                         className: "absolute left-7 font-display text-lg font-bold uppercase tracking-tight",
                         style: { top: heading.top },
                         children: [
-                          BRACKET_LABELS[heading.lane],
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-3 font-mono text-[10px] font-normal text-base-content/30", children: heading.lane === "resetFinal" ? "Only if the unbeaten finalist loses" : heading.lane === "losers" ? "Second loss = elimination" : "" })
+                          t(BRACKET_LABELS[heading.lane]),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-3 font-mono text-[10px] font-normal text-base-content/30", children: heading.lane === "resetFinal" ? t("Only if the unbeaten finalist loses") : heading.lane === "losers" ? t("Second loss = elimination") : "" })
                         ]
                       }
                     ),
@@ -46580,7 +48186,7 @@ function BracketGraph({
                           left: 28 + column.index * COLUMN_WIDTH,
                           top: heading.top + 39
                         },
-                        children: heading.lane === "grandFinal" || heading.lane === "resetFinal" ? "Championship" : column.caption
+                        children: heading.lane === "grandFinal" || heading.lane === "resetFinal" ? t("Championship") : t(column.caption)
                       },
                       column.index
                     ))
@@ -46624,6 +48230,7 @@ function StandardView({
   onSelect,
   onAssign
 }) {
+  const { t } = useI18n();
   const next = view.nextMatches.map((id) => view.matches.find((match) => match.id === id)).filter((match) => !!match).slice(0, 5);
   const queue = view.waitingQueue.map((id) => playerById(view.players, id)).filter((player) => player !== void 0);
   const nextUnassigned = next.find((match) => match.table === void 0);
@@ -46635,14 +48242,10 @@ function StandardView({
           {
             id: "floor-title",
             className: "font-display text-xl font-bold uppercase",
-            children: "On the floor"
+            children: t("On the floor")
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label text-[10px] text-base-content/40", children: [
-          view.tableCount,
-          " ",
-          view.tableCount === 1 ? "physical table" : "physical tables"
-        ] })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[10px] text-base-content/40", children: countLabel(view.tableCount, "physicalTable") })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "div",
@@ -46669,14 +48272,15 @@ function StandardView({
                         }
                       ),
                       " ",
-                      "Table ",
+                      t("Table"),
+                      " ",
                       table.number
                     ] }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
                       "span",
                       {
                         className: `technical-label text-[9px] ${table.status === "playing" ? "text-secondary" : "text-base-content/40"}`,
-                        children: table.status
+                        children: t(table.status)
                       }
                     )
                   ] }),
@@ -46696,8 +48300,8 @@ function StandardView({
                         "aria-hidden": "true"
                       }
                     ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-lg font-bold uppercase", children: "Table is clear." }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-xs text-base-content/40", children: view.generated ? "Ready for the next rally." : "Waiting for the tournament draw." })
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-lg font-bold uppercase", children: t("Table is clear.") }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-xs text-base-content/40", children: view.generated ? t("Ready for the next rally.") : t("Waiting for the tournament draw.") })
                   ] }),
                   isAdmin && available && nextUnassigned ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
                     Button,
@@ -46708,11 +48312,13 @@ function StandardView({
                       loading: pending,
                       onClick: () => onAssign(nextUnassigned.id, table.number),
                       children: [
-                        "Assign next match",
+                        t("Assign next match"),
                         " ",
                         /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { className: "size-3.5", "aria-hidden": "true" }),
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
-                          " to table ",
+                          " ",
+                          t("to table"),
+                          " ",
                           table.number
                         ] })
                       ]
@@ -46733,10 +48339,12 @@ function StandardView({
           {
             id: "next-title",
             className: "font-display text-xl font-bold uppercase",
-            children: "Next matches"
+            children: t("Next matches")
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[9px] text-base-content/40", children: "Skill compatibility → registration order → bracket availability" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[9px] text-base-content/40", children: t(
+          "Skill compatibility → registration order → bracket availability"
+        ) })
       ] }),
       next.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(
         "div",
@@ -46748,7 +48356,9 @@ function StandardView({
               "p",
               {
                 className: `technical-label mb-2 text-[10px] ${index2 === 0 ? "text-primary" : "text-base-content/40"}`,
-                children: ["Next", "Following", "Then", "After that", "On deck"][index2]
+                children: t(
+                  ["Next", "Following", "Then", "After that", "On deck"][index2]
+                )
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -46771,8 +48381,12 @@ function StandardView({
           }
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display font-bold uppercase", children: view.complete ? "The night has a winner." : "No decided matches waiting." }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-sm text-base-content/45", children: view.complete ? "The complete results are in the full bracket." : view.generated ? "Upcoming pairings appear as their bracket dependencies finish." : "Add players and generate the bracket to decide the first games." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display font-bold uppercase", children: view.complete ? t("The night has a winner.") : t("No decided matches waiting.") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-sm text-base-content/45", children: view.complete ? t("The complete results are in the full bracket.") : view.generated ? t(
+            "Upcoming pairings appear as their bracket dependencies finish."
+          ) : t(
+            "Add players and generate the bracket to decide the first games."
+          ) })
         ] })
       ] })
     ] }),
@@ -46783,15 +48397,14 @@ function StandardView({
           {
             id: "queue-title",
             className: "font-display text-xl font-bold uppercase",
-            children: "Waiting queue / next to play"
+            children: t("Waiting queue / next to play")
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label text-[10px] text-base-content/40", children: [
-          queue.length,
-          " waiting"
-        ] })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[10px] text-base-content/40", children: t("{count} waiting", { count: queue.length }) })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-4 text-xs leading-relaxed text-base-content/45", children: "Original registration numbers stay fixed between rounds. Manual priority is shown in the organizer history." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-4 text-xs leading-relaxed text-base-content/45", children: t(
+        "Original registration numbers stay fixed between rounds. Manual priority is shown in the organizer history."
+      ) }),
       queue.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(
         "ol",
         {
@@ -46810,10 +48423,11 @@ function StandardView({
                   player.skill
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono text-[10px] text-base-content/40", children: [
-                  "Registered ",
+                  t("Registered"),
+                  " ",
                   tbilisiTime(player.registeredAt)
                 ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/35", children: player.status })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/35", children: t(player.status) })
               ]
             },
             player.id.toString()
@@ -46821,10 +48435,57 @@ function StandardView({
         }
       ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 border border-dashed border-base-300 p-6 text-sm text-base-content/45", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-5", "aria-hidden": "true" }),
-        view.players.length ? "Everyone is playing, advanced or finished." : "The lineup is open. Players join the queue when registered."
+        view.players.length ? t("Everyone is playing, advanced or finished.") : t(
+          "The lineup is open. Players join the queue when registered."
+        )
       ] })
     ] })
   ] });
+}
+const months = [
+  ["იან.", "იანვარი"],
+  ["თებ.", "თებერვალი"],
+  ["მარ.", "მარტი"],
+  ["აპრ.", "აპრილი"],
+  ["მაი.", "მაისი"],
+  ["ივნ.", "ივნისი"],
+  ["ივლ.", "ივლისი"],
+  ["აგვ.", "აგვისტო"],
+  ["სექ.", "სექტემბერი"],
+  ["ოქტ.", "ოქტომბერი"],
+  ["ნოე.", "ნოემბერი"],
+  ["დეკ.", "დეკემბერი"]
+];
+const weekdays = {
+  Monday: ["ორშ.", "ორშაბათი"],
+  Tuesday: ["სამ.", "სამშაბათი"],
+  Wednesday: ["ოთხ.", "ოთხშაბათი"],
+  Thursday: ["ხუთ.", "ხუთშაბათი"],
+  Friday: ["პარ.", "პარასკევი"],
+  Saturday: ["შაბ.", "შაბათი"],
+  Sunday: ["კვი.", "კვირა"]
+};
+function formatClubDate(date, options) {
+  const settings = { ...options, timeZone: options.timeZone ?? "Asia/Tbilisi" };
+  if (getLanguage() !== "ka")
+    return new Intl.DateTimeFormat(getLocale(), settings).format(date);
+  const month = Number(
+    new Intl.DateTimeFormat("en-GB", {
+      month: "numeric",
+      timeZone: settings.timeZone
+    }).format(date)
+  ) - 1;
+  const weekday = new Intl.DateTimeFormat("en-GB", {
+    weekday: "long",
+    timeZone: settings.timeZone
+  }).format(date);
+  return new Intl.DateTimeFormat("en-GB", settings).formatToParts(date).map((part) => {
+    if (part.type === "month" && options.month !== "numeric" && options.month !== "2-digit")
+      return months[month][options.month === "short" ? 0 : 1];
+    if (part.type === "weekday")
+      return weekdays[weekday][options.weekday === "short" ? 0 : 1];
+    return part.value;
+  }).join("");
 }
 function OrganizerSetup({
   view,
@@ -46832,6 +48493,7 @@ function OrganizerSetup({
   onAction,
   onOpen
 }) {
+  const { t } = useI18n();
   const [elimination, setElimination] = reactExports.useState(view.elimination);
   const [tables, setTables] = reactExports.useState(view.tableCount.toString());
   const [setupOpen, setSetupOpen] = reactExports.useState(view.canChangeFormat);
@@ -46856,7 +48518,8 @@ function OrganizerSetup({
         /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "flex flex-wrap items-center justify-between gap-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "technical-label flex items-center gap-2 text-primary", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3.5", "aria-hidden": "true" }),
-            " Organizer desk"
+            " ",
+            t("Organizer desk")
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-1", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -46864,7 +48527,7 @@ function OrganizerSetup({
               {
                 "aria-live": "polite",
                 className: "mr-3 font-mono text-[9px] uppercase tracking-wider text-base-content/35",
-                children: pending ? "Saving…" : "Auto-save on"
+                children: pending ? t("Saving…") : t("Auto-save on")
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -46876,7 +48539,7 @@ function OrganizerSetup({
                 "aria-controls": "tournament-setup-fields",
                 onClick: () => setSetupOpen((open) => !open),
                 children: [
-                  "Table setup",
+                  t("Table setup"),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     ChevronDown,
                     {
@@ -46897,7 +48560,8 @@ function OrganizerSetup({
                 onClick: () => onOpen({ kind: "undo" }),
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(Undo2, { className: "size-3.5", "aria-hidden": "true" }),
-                  " Undo last action"
+                  " ",
+                  t("Undo last action")
                 ]
               }
             )
@@ -46919,7 +48583,7 @@ function OrganizerSetup({
               },
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "min-w-48 flex-1", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Elimination format" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Elimination format") }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs(
                     "select",
                     {
@@ -46929,14 +48593,14 @@ function OrganizerSetup({
                       disabled: pending || !view.canChangeFormat,
                       onChange: (event) => setElimination(event.target.value),
                       children: [
-                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "single", children: "Single elimination" }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "double", children: "Double elimination" })
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "single", children: t("Single elimination") }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "double", children: t("Double elimination") })
                       ]
                     }
                   )
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "w-36", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: "Number of tables" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Number of tables") }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "input",
                     {
@@ -46953,7 +48617,7 @@ function OrganizerSetup({
                     }
                   )
                 ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "submit", variant: "outline", disabled: pending || !valid, children: "Save setup" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "submit", variant: "outline", disabled: pending || !valid, children: t("Save setup") }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   Button,
                   {
@@ -46962,14 +48626,18 @@ function OrganizerSetup({
                     onClick: () => onOpen({ kind: "generate" }),
                     children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(GitBranch, { className: "size-4", "aria-hidden": "true" }),
-                      view.generated ? "Regenerate bracket" : "Generate bracket"
+                      view.generated ? t("Regenerate bracket") : t("Generate bracket")
                     ]
                   }
                 )
               ]
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 text-xs leading-relaxed text-base-content/40", children: view.canChangeFormat ? "Choose the format and 1–20 physical tables before the first match starts. Player registrations survive changes to the unplayed draw." : "The elimination format is locked after the first match begins. You can still adjust the table count; occupied tables cannot be removed." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 text-xs leading-relaxed text-base-content/40", children: view.canChangeFormat ? t(
+            "Choose the format and 1–20 physical tables before the first match starts. Player registrations survive changes to the unplayed draw."
+          ) : t(
+            "The elimination format is locked after the first match begins. You can still adjust the table count; occupied tables cannot be removed."
+          ) })
         ] })
       ]
     }
@@ -46978,6 +48646,7 @@ function OrganizerSetup({
 function TournamentDetailPage({
   tournamentId
 }) {
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient2 = useQueryClient();
@@ -47058,7 +48727,7 @@ function TournamentDetailPage({
             },
             item
           )) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Loading the tournament floor and bracket." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Loading the tournament floor and bracket.") })
         ]
       }
     );
@@ -47077,19 +48746,20 @@ function TournamentDetailPage({
               "aria-hidden": "true"
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: "The match desk is offline." }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: "We couldn't load the tournament state." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: t("The match desk is offline.") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t("We couldn't load the tournament state.") }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { className: "mt-6", onClick: () => void stateQuery.refetch(), children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "size-4", "aria-hidden": "true" }),
-            " Try again"
+            " ",
+            t("Try again")
           ] })
         ]
       }
     ) });
   if (!view)
     return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: "Tournament not found." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/tournaments", className: "btn btn-outline mt-6", children: "Back to tournaments" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: t("Tournament not found.") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/tournaments", className: "btn btn-outline mt-6", children: t("Back to tournaments") })
     ] }) });
   const champion = playerById(view.players, view.championId);
   const activePlayers = view.players.filter(
@@ -47107,7 +48777,8 @@ function TournamentDetailPage({
         className: "technical-label mb-8 inline-flex items-center gap-2 text-base-content/45 hover:text-primary",
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "size-3.5", "aria-hidden": "true" }),
-          " Tournament board"
+          " ",
+          t("Tournament board")
         ]
       }
     ),
@@ -47121,7 +48792,7 @@ function TournamentDetailPage({
           "span",
           {
             className: `technical-label border px-2 py-1 text-[9px] ${view.complete ? "border-primary/40 text-primary" : !view.canChangeFormat ? "border-secondary/40 text-secondary" : "border-base-300 text-base-content/45"}`,
-            children: view.complete ? "Completed" : !view.canChangeFormat ? "Live" : view.generated ? "Draw ready" : "Registration open"
+            children: view.complete ? t("Completed") : !view.canChangeFormat ? t("Live") : view.generated ? t("Draw ready") : t("Registration open")
           }
         )
       ] }),
@@ -47132,36 +48803,34 @@ function TournamentDetailPage({
           view.tournament.venue
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-          new Date(
-            Number(view.tournament.startsAt / 1000000n)
-          ).toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-            timeZone: "Asia/Tbilisi"
-          }),
+          formatClubDate(
+            new Date(Number(view.tournament.startsAt / 1000000n)),
+            {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              timeZone: "Asia/Tbilisi"
+            }
+          ),
           " ",
           "/ ",
           tbilisiTime(view.tournament.startsAt),
-          " Tbilisi"
+          " ",
+          t("Tbilisi")
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(GitBranch, { className: "size-3.5", "aria-hidden": "true" }),
-          view.elimination === "double" ? "Double elimination" : "Single elimination"
+          view.elimination === "double" ? t("Double elimination") : t("Single elimination")
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-          activePlayers.length,
-          " players"
-        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: countLabel(activePlayers.length, "player") }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Table2, { className: "size-3.5", "aria-hidden": "true" }),
-          view.tableCount,
-          " ",
-          view.tableCount === 1 ? "table" : "tables"
+          countLabel(view.tableCount, "table")
         ] }),
         overrides ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1.5 text-secondary", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
-          " Manual override"
+          " ",
+          t("Manual override")
         ] }) : null
       ] })
     ] }),
@@ -47174,10 +48843,11 @@ function TournamentDetailPage({
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mb-2 text-primary", children: "THE FINAL POINT / TOURNAMENT CHAMPION" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mb-2 text-primary", children: t("THE FINAL POINT / TOURNAMENT CHAMPION") }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "font-display text-3xl font-bold uppercase", children: [
           champion.name,
-          " wins."
+          " ",
+          t("wins.")
         ] })
       ] })
     ] }) : null,
@@ -47197,7 +48867,7 @@ function TournamentDetailPage({
         className: "mb-6 flex items-center gap-2 border border-primary/25 bg-primary/5 px-4 py-3 text-sm",
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-4 shrink-0 text-primary", "aria-hidden": "true" }),
-          notice
+          t(notice)
         ]
       }
     ) : null,
@@ -47206,7 +48876,7 @@ function TournamentDetailPage({
       {
         role: "alert",
         className: "mb-6 border border-error/35 px-4 py-3 text-sm text-error",
-        children: actionError
+        children: translateError(actionError)
       }
     ) : null,
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-8 flex flex-wrap items-center justify-between gap-4 border-y border-base-300 py-4", children: [
@@ -47216,14 +48886,14 @@ function TournamentDetailPage({
           {
             type: "button",
             "data-ocid": "tournament.standard_tab",
-            "aria-label": "Standard view",
+            "aria-label": t("Standard view"),
             "aria-pressed": display === "standard",
             className: `club-filter ${display === "standard" ? "is-active" : ""}`,
             onClick: () => setDisplay("standard"),
             children: [
-              "Standard",
+              t("Standard"),
               " ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 hidden font-normal opacity-50 sm:inline", children: "/ Live floor" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 hidden font-normal opacity-50 sm:inline", children: t("/ Live floor") })
             ]
           }
         ),
@@ -47232,14 +48902,14 @@ function TournamentDetailPage({
           {
             type: "button",
             "data-ocid": "tournament.extended_tab",
-            "aria-label": "Extended view",
+            "aria-label": t("Extended view"),
             "aria-pressed": display === "extended",
             className: `club-filter ${display === "extended" ? "is-active" : ""}`,
             onClick: () => setDisplay("extended"),
             children: [
-              "Extended",
+              t("Extended"),
               " ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 hidden font-normal opacity-50 sm:inline", children: "/ Full bracket" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 hidden font-normal opacity-50 sm:inline", children: t("/ Full bracket") })
             ]
           }
         )
@@ -47252,10 +48922,11 @@ function TournamentDetailPage({
           onClick: () => openModal({ kind: "player" }),
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-3.5", "aria-hidden": "true" }),
-            " Add player"
+            " ",
+            t("Add player")
           ]
         }
-      ) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/35", children: "Live tournament / public view" })
+      ) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/35", children: t("Live tournament / public view") })
     ] }),
     display === "standard" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       StandardView,
@@ -47288,18 +48959,18 @@ function TournamentDetailPage({
       }
     ),
     view.tournament.description ? /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mt-8 border-t border-base-300 pt-6", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "technical-label mb-3 text-base-content/45", children: "The night / organizer notes" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "technical-label mb-3 text-base-content/45", children: t("The night / organizer notes") }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-3xl whitespace-pre-wrap break-words text-sm leading-relaxed text-base-content/60", children: view.tournament.description })
     ] }) : null,
     isAdmin && recentActions.length ? /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mt-8 border-t border-base-300 pt-6", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "technical-label mb-4 text-base-content/45", children: "Recent organizer actions" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "technical-label mb-4 text-base-content/45", children: t("Recent organizer actions") }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("ol", { className: "space-y-3", children: recentActions.map((action) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "li",
         {
           className: "flex gap-4 font-mono text-[10px] text-base-content/45",
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base-content/25", children: tbilisiTime(action.createdAt) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: action.label })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: translateHistory(action.label) })
           ]
         },
         action.id.toString()
@@ -47329,13 +49000,13 @@ function eventDate(timestamp) {
   return new Date(Number(timestamp / 1000000n));
 }
 function datePart(timestamp, options) {
-  return eventDate(timestamp).toLocaleDateString("en-GB", {
+  return formatClubDate(eventDate(timestamp), {
     ...options,
     timeZone: TBILISI_TIME_ZONE
   });
 }
 function eventTime(timestamp) {
-  return eventDate(timestamp).toLocaleTimeString("en-GB", {
+  return eventDate(timestamp).toLocaleTimeString(getLocale(), {
     hour: "2-digit",
     minute: "2-digit",
     hourCycle: "h23",
@@ -47359,6 +49030,7 @@ function toVenueDateTime(timestamp) {
   return `${part("year")}-${part("month")}-${part("day")}T${part("hour")}:${part("minute")}`;
 }
 function CourtGraphic() {
+  const { t } = useI18n();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
     {
@@ -47449,7 +49121,7 @@ function CourtGraphic() {
                   fontFamily: "monospace",
                   fontSize: "9",
                   letterSpacing: "3",
-                  children: "THE TABLE IS THE DANCE FLOOR."
+                  children: t("THE TABLE IS THE DANCE FLOOR.")
                 }
               ),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -47468,24 +49140,26 @@ function CourtGraphic() {
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute right-3 top-5 border border-primary px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-primary rotate-[-5deg]", children: "Tbilisi / After hours" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute right-3 top-5 border border-primary px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-primary rotate-[-5deg]", children: t("Tbilisi / After hours") })
       ]
     }
   );
 }
 function TournamentBadge({ status }) {
+  const { t } = useI18n();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "span",
     {
       className: `tournament-status tournament-status-${status} technical-label inline-flex items-center gap-2 border px-2.5 py-1 text-[10px] ${status === TournamentStatus.live ? "border-secondary/50 text-secondary" : status === TournamentStatus.upcoming ? "border-primary/35 text-primary" : "border-base-300 text-base-content/40"}`,
       children: [
         status === TournamentStatus.live ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "size-1.5 bg-secondary", "aria-hidden": "true" }) : null,
-        status === TournamentStatus.completed ? "Completed" : status === TournamentStatus.live ? "Live now" : "Upcoming"
+        status === TournamentStatus.completed ? t("Completed") : status === TournamentStatus.live ? t("Live now") : t("Upcoming")
       ]
     }
   );
 }
 function TournamentsPage() {
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient2 = useQueryClient();
@@ -47519,7 +49193,10 @@ function TournamentsPage() {
       return editor === "new" ? tournamentService.create(actor, input) : tournamentService.update(actor, editor.id, input);
     },
     onSuccess: (tournament) => {
-      setNotice(`${tournament.title} is saved. See you at the table.`);
+      setNotice({
+        message: "{title} is saved. See you at the table.",
+        params: { title: tournament.title }
+      });
       setEditor(null);
       void queryClient2.invalidateQueries({ queryKey: TOURNAMENTS_QUERY_KEY });
     }
@@ -47607,7 +49284,8 @@ function TournamentsPage() {
     const priority = { live: 0, upcoming: 1, completed: 2 };
     const byStatus = priority[a2.status] - priority[b2.status];
     if (byStatus) return byStatus;
-    if (a2.startsAt === b2.startsAt) return a2.title.localeCompare(b2.title);
+    if (a2.startsAt === b2.startsAt)
+      return a2.title.localeCompare(b2.title, getLocale());
     const byDate = a2.startsAt < b2.startsAt ? -1 : 1;
     return a2.status === TournamentStatus.completed ? -byDate : byDate;
   });
@@ -47621,16 +49299,16 @@ function TournamentsPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "tournaments_page", className: "club-page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "tournament-hero relative grid gap-4 border-b border-base-300 pb-9 lg:grid-cols-[1.2fr_1fr]", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-5", children: "CHILLPONG / TBILISI UNDERGROUND" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-5", children: t("CHILLPONG / TBILISI UNDERGROUND") }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "page-title", children: [
-          "AFTER DARK.",
+          t("AFTER DARK."),
           /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "GAME ON." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: t("GAME ON.") })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-6 max-w-md text-sm leading-relaxed text-base-content/60", children: [
-          "Underground ping-pong. Tbilisi nights.",
+          t("Underground ping-pong. Tbilisi nights."),
           /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-          "Find your next tournament and meet us at the table."
+          t("Find your next tournament and meet us at the table.")
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-8 flex flex-wrap items-center gap-5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -47639,14 +49317,14 @@ function TournamentsPage() {
               href: "#tournament-board",
               className: "technical-label inline-flex items-center gap-3 text-base-content hover:text-primary",
               children: [
-                "Explore tournaments",
+                t("Explore tournaments"),
                 " ",
                 /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowDown, { className: "size-4", "aria-hidden": "true" })
               ]
             }
           ),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-5 border-l border-base-300", "aria-hidden": "true" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-base-content/40", children: "Paddles up. Phones down." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-base-content/40", children: t("Paddles up. Phones down.") })
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(CourtGraphic, {})
@@ -47665,10 +49343,13 @@ function TournamentsPage() {
                 {
                   id: "tournament-board-title",
                   className: "font-display text-2xl font-bold uppercase tracking-tight",
-                  children: "The tournament board"
+                  children: t("The tournament board")
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-base-content/40", children: loading ? "Connecting…" : `${upcomingCount} upcoming / ${liveCount} live` })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-base-content/40", children: loading ? t("Connecting…") : t("{v1} upcoming / {v2} live", {
+                v1: upcomingCount,
+                v2: liveCount
+              }) })
             ] }),
             isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
               Button,
@@ -47677,24 +49358,32 @@ function TournamentsPage() {
                 onClick: () => openEditor("new"),
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-4", "aria-hidden": "true" }),
-                  " New tournament"
+                  " ",
+                  t("New tournament")
                 ]
               }
             ) : null
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-toolbar mb-6 flex flex-wrap items-center justify-between gap-4 border-y border-base-300 py-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-1", "aria-label": "Filter tournaments", children: FILTERS.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "button",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
               {
-                type: "button",
-                "data-ocid": `tournaments.${item}_tab`,
-                "aria-pressed": filter === item,
-                className: `club-filter ${filter === item ? "is-active" : ""}`,
-                onClick: () => setFilter(item),
-                children: item === "all" ? "All tournaments" : item === "completed" ? "Past games" : item === "live" ? "Live now" : "Upcoming"
-              },
-              item
-            )) }),
+                className: "flex flex-wrap gap-1",
+                "aria-label": t("Filter tournaments"),
+                children: FILTERS.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    "data-ocid": `tournaments.${item}_tab`,
+                    "aria-pressed": filter === item,
+                    className: `club-filter ${filter === item ? "is-active" : ""}`,
+                    onClick: () => setFilter(item),
+                    children: item === "all" ? t("All tournaments") : item === "completed" ? t("Past games") : item === "live" ? t("Live now") : t("Upcoming")
+                  },
+                  item
+                ))
+              }
+            ),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "club-search flex w-full items-center gap-3 border border-base-300 px-3 sm:w-64", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 Search,
@@ -47708,8 +49397,8 @@ function TournamentsPage() {
                 {
                   type: "search",
                   "data-ocid": "tournaments.search_input",
-                  "aria-label": "Search tournaments",
-                  placeholder: "FIND A TOURNAMENT",
+                  "aria-label": t("Search tournaments"),
+                  placeholder: t("FIND A TOURNAMENT"),
                   value: search,
                   onChange: (event) => setSearch(event.target.value),
                   className: "min-w-0 flex-1 bg-transparent py-3 font-mono text-xs outline-none placeholder:text-base-content/40"
@@ -47724,7 +49413,7 @@ function TournamentsPage() {
               className: "mb-5 flex items-center gap-2 border border-primary/30 bg-primary/5 px-4 py-3 text-sm",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-4 text-primary", "aria-hidden": "true" }),
-                notice
+                t(notice)
               ]
             }
           ) : null,
@@ -47734,7 +49423,7 @@ function TournamentsPage() {
               "data-ocid": "tournaments.loading_state",
               "aria-live": "polite",
               "aria-busy": "true",
-              "aria-label": "Loading tournaments",
+              "aria-label": t("Loading tournaments"),
               className: "space-y-3",
               children: [
                 [1, 2, 3].map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -47751,7 +49440,7 @@ function TournamentsPage() {
                   },
                   item
                 )),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Loading the tournament board." })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Loading the tournament board.") })
               ]
             }
           ) : tournamentsQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -47768,23 +49457,27 @@ function TournamentsPage() {
                     "aria-hidden": "true"
                   }
                 ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-2xl font-bold uppercase", children: "The board is offline." }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-base-content/60", children: "We couldn't load the tournaments. Try connecting again." }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-2xl font-bold uppercase", children: t("The board is offline.") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-base-content/60", children: t("We couldn't load the tournaments. Try connecting again.") }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   Button,
                   {
                     variant: "outline",
                     className: "mt-6",
                     onClick: () => void tournamentsQuery.refetch(),
-                    children: "Try again"
+                    children: t("Try again")
                   }
                 )
               ]
             }
           ) : filteredTournaments.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "tournaments.empty_state", className: "club-state", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "mb-5 size-8 text-primary", "aria-hidden": "true" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-3xl font-bold uppercase", children: tournaments.length ? "No games in this corner." : "The next night is loading." }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-md text-sm leading-relaxed text-base-content/60", children: tournaments.length ? "Try a different filter or search to find your tournament." : isAdmin ? "Set the venue, pick a date and put the first tournament on the board." : "New tournaments will land here. Check back for the next night at the table." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-3xl font-bold uppercase", children: tournaments.length ? t("No games in this corner.") : t("The next night is loading.") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-md text-sm leading-relaxed text-base-content/60", children: tournaments.length ? t("Try a different filter or search to find your tournament.") : isAdmin ? t(
+              "Set the venue, pick a date and put the first tournament on the board."
+            ) : t(
+              "New tournaments will land here. Check back for the next night at the table."
+            ) }),
             tournaments.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(
               Button,
               {
@@ -47794,11 +49487,12 @@ function TournamentsPage() {
                   setSearch("");
                   setFilter("all");
                 },
-                children: "Reset filters"
+                children: t("Reset filters")
               }
             ) : isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { className: "mt-6", onClick: () => openEditor("new"), children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-4", "aria-hidden": "true" }),
-              " New tournament"
+              " ",
+              t("New tournament")
             ] }) : null
           ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
             "ul",
@@ -47822,7 +49516,8 @@ function TournamentsPage() {
                       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-3 flex flex-wrap items-center gap-3", children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsx(TournamentBadge, { status: tournament.status }),
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label text-[10px] text-base-content/35", children: [
-                          "CP / ",
+                          t("CP /"),
+                          " ",
                           tournament.id.toString().padStart(3, "0")
                         ] })
                       ] }),
@@ -47844,16 +49539,14 @@ function TournamentsPage() {
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1.5", children: [
                           /* @__PURE__ */ jsxRuntimeExports.jsx(Clock3, { className: "size-3.5", "aria-hidden": "true" }),
                           eventTime(tournament.startsAt),
-                          " Tbilisi"
+                          " ",
+                          t("Tbilisi")
                         ] })
                       ] })
                     ] }),
                     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "hidden space-y-2 lg:block", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[11px] text-base-content/65", children: tournament.format === TournamentFormat.doubles ? "Doubles" : "Singles" }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-[11px] text-base-content/40", children: [
-                        tournament.capacity.toString(),
-                        " expected players"
-                      ] })
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[11px] text-base-content/65", children: tournament.format === TournamentFormat.doubles ? t("Doubles") : t("Singles") }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-[11px] text-base-content/40", children: countLabel(tournament.capacity, "expectedPlayer") })
                     ] }),
                     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 sm:flex-col sm:items-end", children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -47861,9 +49554,11 @@ function TournamentsPage() {
                         {
                           href: `/tournaments/${tournament.id.toString()}`,
                           className: "btn btn-primary btn-sm",
-                          "aria-label": `Open tournament room for ${tournament.title}`,
+                          "aria-label": t("Open tournament room for {v1}", {
+                            v1: tournament.title
+                          }),
                           children: [
-                            "Open room",
+                            t("Open room"),
                             " ",
                             /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "size-4", "aria-hidden": "true" })
                           ]
@@ -47877,11 +49572,13 @@ function TournamentsPage() {
                           size: "sm",
                           onClick: () => setDetail(tournament),
                           children: [
-                            "Details",
+                            t("Details"),
                             " ",
                             /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "size-4", "aria-hidden": "true" }),
                             /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
-                              " for ",
+                              " ",
+                              t("for"),
+                              " ",
                               tournament.title
                             ] })
                           ]
@@ -47896,7 +49593,8 @@ function TournamentsPage() {
                           onClick: () => openEditor(tournament),
                           children: [
                             /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "size-3", "aria-hidden": "true" }),
-                            " Edit",
+                            " ",
+                            t("Edit"),
                             /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
                               " ",
                               tournament.title
@@ -47911,7 +49609,7 @@ function TournamentsPage() {
               ))
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mt-6 text-[10px] text-base-content/35", children: "All start times are local to Tbilisi / UTC +04:00" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mt-6 text-[10px] text-base-content/35", children: t("All start times are local to Tbilisi / UTC +04:00") })
         ]
       }
     ),
@@ -47939,7 +49637,8 @@ function TournamentsPage() {
           /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-7 flex items-start justify-between gap-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "section-kicker mb-3", children: [
-                "CHILLPONG / TOURNAMENT ",
+                t("CHILLPONG / TOURNAMENT"),
+                " ",
                 detail.id.toString().padStart(3, "0")
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(TournamentBadge, { status: detail.status })
@@ -47948,7 +49647,7 @@ function TournamentsPage() {
               "button",
               {
                 type: "button",
-                "aria-label": "Close tournament details",
+                "aria-label": t("Close tournament details"),
                 className: "btn btn-ghost btn-square btn-sm",
                 onClick: () => setDetail(null),
                 children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "size-5", "aria-hidden": "true" })
@@ -47967,7 +49666,8 @@ function TournamentsPage() {
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("dt", { className: "technical-label mb-2 flex items-center gap-2 text-base-content/45", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(CalendarDays, { className: "size-3.5", "aria-hidden": "true" }),
-                " Date / time"
+                " ",
+                t("Date / time")
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("dd", { className: "text-sm", children: [
                 datePart(detail.startsAt, {
@@ -47978,44 +49678,50 @@ function TournamentsPage() {
                 }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
                 eventTime(detail.startsAt),
-                " / Tbilisi"
+                " ",
+                t("/ Tbilisi")
               ] })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("dt", { className: "technical-label mb-2 flex items-center gap-2 text-base-content/45", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(MapPin, { className: "size-3.5", "aria-hidden": "true" }),
-                " Venue"
+                " ",
+                t("Venue")
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "break-words text-sm", children: detail.venue })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("dt", { className: "technical-label mb-2 flex items-center gap-2 text-base-content/45", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "size-3.5", "aria-hidden": "true" }),
-                " Game mode"
+                " ",
+                t("Game mode")
               ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "text-sm", children: detail.format === TournamentFormat.doubles ? "Doubles / teams of two" : "Singles / one vs. one" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "text-sm", children: detail.format === TournamentFormat.doubles ? t("Doubles / teams of two") : t("Singles / one vs. one") })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("dt", { className: "technical-label mb-2 flex items-center gap-2 text-base-content/45", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-3.5", "aria-hidden": "true" }),
-                " Expected players"
+                " ",
+                t("Expected players")
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("dd", { className: "text-sm", children: [
-                detail.capacity.toString(),
-                " expected players / registration stays open"
+                countLabel(detail.capacity, "expectedPlayer"),
+                " /",
+                " ",
+                t("registration stays open")
               ] })
             ] })
           ] }),
-          detail.description ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "whitespace-pre-wrap break-words text-sm leading-relaxed text-base-content/70", children: detail.description }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-base-content/45", children: "More details will be announced by the crew." }),
+          detail.description ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "whitespace-pre-wrap break-words text-sm leading-relaxed text-base-content/70", children: detail.description }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-base-content/45", children: t("More details will be announced by the crew.") }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "mt-8 flex flex-wrap justify-end gap-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", onClick: () => setDetail(null), children: "Close" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", onClick: () => setDetail(null), children: t("Close") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "a",
               {
                 href: `/tournaments/${detail.id.toString()}`,
                 className: "btn btn-primary",
                 children: [
-                  "Open tournament room",
+                  t("Open tournament room"),
                   " ",
                   /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "size-4", "aria-hidden": "true" })
                 ]
@@ -48023,7 +49729,8 @@ function TournamentsPage() {
             ),
             isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { variant: "outline", onClick: () => openEditor(detail), children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "size-4", "aria-hidden": "true" }),
-              " Edit tournament"
+              " ",
+              t("Edit tournament")
             ] }) : null
           ] })
         ] }) : null
@@ -48052,13 +49759,13 @@ function TournamentsPage() {
         children: editor && isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "modal-box max-w-2xl rounded-none border border-base-300 bg-base-200 p-6 sm:p-8", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-7 flex items-start justify-between gap-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-2", children: "CHILLPONG / SET THE NIGHT" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-2", children: t("CHILLPONG / SET THE NIGHT") }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "h2",
                 {
                   id: "tournament-editor-title",
                   className: "font-display text-3xl font-bold uppercase tracking-tight",
-                  children: editor === "new" ? "New tournament." : "Edit tournament."
+                  children: editor === "new" ? t("New tournament.") : t("Edit tournament.")
                 }
               )
             ] }),
@@ -48066,7 +49773,7 @@ function TournamentsPage() {
               "button",
               {
                 type: "button",
-                "aria-label": "Close tournament editor",
+                "aria-label": t("Close tournament editor"),
                 className: "btn btn-ghost btn-square btn-sm",
                 disabled: saveMutation.isPending,
                 onClick: closeEditor,
@@ -48084,7 +49791,7 @@ function TournamentsPage() {
               },
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Tournament title" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Tournament title") }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "input",
                     {
@@ -48094,12 +49801,12 @@ function TournamentsPage() {
                       maxLength: 100,
                       value: title,
                       onChange: (event) => setTitle(event.target.value),
-                      placeholder: "Give the night a name"
+                      placeholder: t("Give the night a name")
                     }
                   )
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Venue" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Venue") }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "input",
                     {
@@ -48109,13 +49816,13 @@ function TournamentsPage() {
                       maxLength: 150,
                       value: venue,
                       onChange: (event) => setVenue(event.target.value),
-                      placeholder: "Bar name / address"
+                      placeholder: t("Bar name / address")
                     }
                   )
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-5 sm:grid-cols-2", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Start time / Tbilisi (UTC+04)" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Start time / Tbilisi (UTC+04)") }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
                       "input",
                       {
@@ -48129,7 +49836,7 @@ function TournamentsPage() {
                     )
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Expected players" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Expected players") }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
                       "input",
                       {
@@ -48143,10 +49850,10 @@ function TournamentsPage() {
                         onChange: (event) => setCapacity(event.target.value)
                       }
                     ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-2 block text-xs text-base-content/50", children: "Planning estimate. Registration stays open." })
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-2 block text-xs text-base-content/50", children: t("Planning estimate. Registration stays open.") })
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Game mode" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Game mode") }),
                     /* @__PURE__ */ jsxRuntimeExports.jsxs(
                       "select",
                       {
@@ -48155,14 +49862,14 @@ function TournamentsPage() {
                         value: format,
                         onChange: (event) => setFormat(event.target.value),
                         children: [
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: TournamentFormat.singles, children: "Singles" }),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: TournamentFormat.doubles, children: "Doubles" })
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: TournamentFormat.singles, children: t("Singles") }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: TournamentFormat.doubles, children: t("Doubles") })
                         ]
                       }
                     )
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Status" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Status") }),
                     /* @__PURE__ */ jsxRuntimeExports.jsxs(
                       "select",
                       {
@@ -48171,16 +49878,16 @@ function TournamentsPage() {
                         value: status,
                         onChange: (event) => setStatus(event.target.value),
                         children: [
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: TournamentStatus.upcoming, children: "Upcoming" }),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: TournamentStatus.live, children: "Live now" }),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: TournamentStatus.completed, children: "Completed" })
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: TournamentStatus.upcoming, children: t("Upcoming") }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: TournamentStatus.live, children: t("Live now") }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: TournamentStatus.completed, children: t("Completed") })
                         ]
                       }
                     )
                   ] })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "The details / optional" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("The details / optional") }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "textarea",
                     {
@@ -48190,7 +49897,9 @@ function TournamentsPage() {
                       maxLength: 2e3,
                       value: description,
                       onChange: (event) => setDescription(event.target.value),
-                      placeholder: "Rules, arrival instructions, entry details. Everything the players need."
+                      placeholder: t(
+                        "Rules, arrival instructions, entry details. Everything the players need."
+                      )
                     }
                   )
                 ] }),
@@ -48200,7 +49909,7 @@ function TournamentsPage() {
                     "data-ocid": "tournaments.form_error",
                     role: "alert",
                     className: "border border-error/40 px-3 py-3 text-sm text-error",
-                    children: formError ?? (saveMutation.error instanceof Error ? saveMutation.error.message : "Couldn't save this tournament. Try again.")
+                    children: t(formError) ?? (saveMutation.error instanceof Error ? translateError(saveMutation.error.message) : t("Couldn't save this tournament. Try again."))
                   }
                 ) : null,
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-3 border-t border-base-300 pt-5", children: [
@@ -48210,7 +49919,7 @@ function TournamentsPage() {
                       variant: "ghost",
                       disabled: saveMutation.isPending,
                       onClick: closeEditor,
-                      children: "Cancel"
+                      children: t("Cancel")
                     }
                   ),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -48219,7 +49928,7 @@ function TournamentsPage() {
                       type: "submit",
                       "data-ocid": "tournaments.save_button",
                       loading: saveMutation.isPending,
-                      children: editor === "new" ? "Create tournament" : "Save changes"
+                      children: editor === "new" ? t("Create tournament") : t("Save changes")
                     }
                   )
                 ] })
@@ -48254,13 +49963,14 @@ function memberInitials(name) {
   return name.trim().split(/\s+/).slice(0, 2).map((part) => part.charAt(0)).join("").toUpperCase();
 }
 function memberDate(timestamp) {
-  return new Date(Number(timestamp / 1000000n)).toLocaleDateString("en-GB", {
+  return formatClubDate(new Date(Number(timestamp / 1000000n)), {
     month: "short",
     year: "numeric",
     timeZone: "Asia/Tbilisi"
   });
 }
 function UsersPage() {
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient2 = useQueryClient();
@@ -48296,9 +50006,10 @@ function UsersPage() {
       return editor === "new" ? userService.create(actor, memberId, input) : userService.update(actor, memberId, input);
     },
     onSuccess: (user) => {
-      setNotice(
-        `${user.displayName || user.username || "This member"}'s member details are saved.`
-      );
+      setNotice({
+        message: "{name}'s member details are saved.",
+        params: { name: user.displayName || user.username || t("This member") }
+      });
       setEditor(null);
       void queryClient2.invalidateQueries({ queryKey: USERS_QUERY_KEY });
       void queryClient2.invalidateQueries({ queryKey: ["adminUsers"] });
@@ -48365,18 +50076,20 @@ function UsersPage() {
   const query = search.trim().toLowerCase();
   const filteredUsers = users.filter(
     (user) => (roleFilter === "all" || user.role === Role.admin) && (!query || `${user.displayName} ${user.username} ${user.bio ?? ""}`.toLowerCase().includes(query))
-  ).sort((a2, b2) => a2.displayName.localeCompare(b2.displayName));
+  ).sort((a2, b2) => a2.displayName.localeCompare(b2.displayName, getLocale()));
   const loading = usersQuery.isLoading || isFetching && !usersQuery.data;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "users_page", className: "club-page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-10 flex flex-wrap items-end justify-between gap-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: "CHILLPONG / ADMIN ACCOUNTS" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: t("CHILLPONG / ADMIN ACCOUNTS") }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "page-title", children: [
-          "CLUB",
+          t("CLUB"),
           /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "ACCOUNTS." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: t("ACCOUNTS.") })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-5 max-w-xl text-sm leading-relaxed text-base-content/60", children: "Manage member identities and account details. Tournament entrants are listed on the Players page." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-5 max-w-xl text-sm leading-relaxed text-base-content/60", children: t(
+          "Manage member identities and account details. Tournament entrants are listed on the Players page."
+        ) })
       ] }),
       isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
         Button,
@@ -48385,16 +50098,17 @@ function UsersPage() {
           onClick: () => openEditor("new"),
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-4", "aria-hidden": "true" }),
-            " Add user"
+            " ",
+            t("Add user")
           ]
         }
       ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-2 border-l border-primary pl-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-4 text-primary", "aria-hidden": "true" }),
-        loading ? "Connecting" : `${users.length} club members`
+        loading ? t("Connecting") : t("{v1} club members", { v1: users.length })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-toolbar mb-6 flex flex-wrap items-center justify-between gap-4 border-y border-base-300 py-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-1", "aria-label": "Filter members", children: ["all", "admin"].map((filter) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-1", "aria-label": t("Filter members"), children: ["all", "admin"].map((filter) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "button",
         {
           type: "button",
@@ -48403,7 +50117,7 @@ function UsersPage() {
           className: `club-filter ${roleFilter === filter ? "is-active" : ""}`,
           onClick: () => setRoleFilter(filter),
           children: [
-            filter === "all" ? "All users" : "Admins",
+            filter === "all" ? t("All users") : t("Admins"),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 opacity-50", children: filter === "all" ? users.length : users.filter((user) => user.role === Role.admin).length })
           ]
         },
@@ -48422,8 +50136,8 @@ function UsersPage() {
           {
             type: "search",
             "data-ocid": "users.search_input",
-            "aria-label": "Search users",
-            placeholder: "FIND YOUR PEOPLE",
+            "aria-label": t("Search users"),
+            placeholder: t("FIND YOUR PEOPLE"),
             value: search,
             onChange: (event) => setSearch(event.target.value),
             className: "min-w-0 flex-1 bg-transparent py-3 font-mono text-xs outline-none placeholder:text-base-content/40"
@@ -48439,7 +50153,7 @@ function UsersPage() {
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-4 text-primary", "aria-hidden": "true" }),
           " ",
-          notice
+          t(notice)
         ]
       }
     ) : null,
@@ -48449,7 +50163,7 @@ function UsersPage() {
         "data-ocid": "users.loading_state",
         "aria-live": "polite",
         "aria-busy": "true",
-        "aria-label": "Loading users",
+        "aria-label": t("Loading users"),
         className: "grid gap-4 sm:grid-cols-2 xl:grid-cols-3",
         children: [
           [1, 2, 3, 4, 5, 6].map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -48464,7 +50178,7 @@ function UsersPage() {
             },
             item
           )),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Loading the member directory." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Loading the member directory.") })
         ]
       }
     ) : usersQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "users.error_state", role: "alert", className: "club-state", children: [
@@ -48475,21 +50189,21 @@ function UsersPage() {
           "aria-hidden": "true"
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: "Directory unavailable." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-base-content/60", children: "We couldn't load the club members. Try connecting again." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: t("Directory unavailable.") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-base-content/60", children: t("We couldn't load the club members. Try connecting again.") }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
           className: "mt-6",
           variant: "outline",
           onClick: () => void usersQuery.refetch(),
-          children: "Try again"
+          children: t("Try again")
         }
       )
     ] }) : filteredUsers.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "users.empty_state", className: "club-state", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "mb-4 size-8 text-primary", "aria-hidden": "true" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-3xl font-bold uppercase", children: users.length ? "No matches." : "The lineup starts here." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-md text-sm text-base-content/60", children: users.length ? "Try another name or switch the member filter." : isAdmin ? "Add the first members and build the ChillPong community." : "Club members will appear here once the crew is added." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-3xl font-bold uppercase", children: users.length ? t("No matches.") : t("The lineup starts here.") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-md text-sm text-base-content/60", children: users.length ? t("Try another name or switch the member filter.") : isAdmin ? t("Add the first members and build the ChillPong community.") : t("Club members will appear here once the crew is added.") }),
       users.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
@@ -48499,18 +50213,18 @@ function UsersPage() {
             setSearch("");
             setRoleFilter("all");
           },
-          children: "Reset filters"
+          children: t("Reset filters")
         }
       ) : isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { className: "mt-6", onClick: () => openEditor("new"), children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-4", "aria-hidden": "true" }),
-        " Add user"
+        " ",
+        t("Add user")
       ] }) : null
     ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "technical-label mb-4 text-base-content/45", children: [
-        filteredUsers.length,
+        countLabel(filteredUsers.length, "person"),
         " ",
-        filteredUsers.length === 1 ? "person" : "people",
-        " / IN THE CLUB"
+        t("/ IN THE CLUB")
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "ul",
@@ -48537,7 +50251,7 @@ function UsersPage() {
                   user.role === Role.admin ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-1.5 text-primary", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "size-3.5", "aria-hidden": "true" }),
                     " ",
-                    "Admin"
+                    t("Admin")
                   ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
                     ArrowUpRight,
                     {
@@ -48546,12 +50260,13 @@ function UsersPage() {
                     }
                   )
                 ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "break-words font-display text-xl font-bold uppercase tracking-tight", children: user.displayName || user.username || "Club member" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 break-words font-mono text-xs text-base-content/50", children: user.username ? `@${user.username}` : "Username not set" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "break-words font-display text-xl font-bold uppercase tracking-tight", children: user.displayName || user.username || t("Club member") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 break-words font-mono text-xs text-base-content/50", children: user.username ? `@${user.username}` : t("Username not set") }),
                 user.bio ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 whitespace-pre-wrap break-words text-sm leading-relaxed text-base-content/65", children: user.bio }) : null,
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-6 flex items-center justify-between gap-3 border-t border-base-300 pt-4", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label text-[10px] text-base-content/40", children: [
-                    "Joined ",
+                    t("Joined"),
+                    " ",
                     memberDate(user.createdAt)
                   ] }),
                   isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -48563,10 +50278,11 @@ function UsersPage() {
                       onClick: () => openEditor(user),
                       children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "size-3", "aria-hidden": "true" }),
-                        " Edit",
+                        " ",
+                        t("Edit"),
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
                           " ",
-                          user.displayName || user.username || "Club member"
+                          user.displayName || user.username || t("Club member")
                         ] })
                       ]
                     }
@@ -48602,13 +50318,13 @@ function UsersPage() {
         children: editor && isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "modal-box max-w-xl rounded-none border border-base-300 bg-base-200 p-6 sm:p-8", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-7 flex items-start justify-between gap-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-2", children: "CHILLPONG / MEMBER FILE" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-2", children: t("CHILLPONG / MEMBER FILE") }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "h2",
                 {
                   id: "user-dialog-title",
                   className: "font-display text-3xl font-bold uppercase tracking-tight",
-                  children: editor === "new" ? "Add to the lineup." : "Edit member."
+                  children: editor === "new" ? t("Add to the lineup.") : t("Edit member.")
                 }
               )
             ] }),
@@ -48616,7 +50332,7 @@ function UsersPage() {
               "button",
               {
                 type: "button",
-                "aria-label": "Close member editor",
+                "aria-label": t("Close member editor"),
                 className: "btn btn-ghost btn-square btn-sm",
                 disabled: saveMutation.isPending,
                 onClick: closeEditor,
@@ -48634,8 +50350,10 @@ function UsersPage() {
               className: "space-y-5",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Member principal" }),
-                  editor === "new" ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mb-3 block text-xs leading-relaxed text-base-content/60", children: "Ask the member to sign in and copy their Member ID from the account menu." }) : null,
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Member principal") }),
+                  editor === "new" ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mb-3 block text-xs leading-relaxed text-base-content/60", children: t(
+                    "Ask the member to sign in and copy their Member ID from the account menu."
+                  ) }) : null,
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "input",
                     {
@@ -48648,10 +50366,12 @@ function UsersPage() {
                       placeholder: "xxxxx-xxxxx-xxxxx-xxxxx-cai"
                     }
                   ),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-2 block text-xs text-base-content/50", children: editor === "new" ? "Use the principal shown to this member after signing in." : "This identity stays attached to the member." })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-2 block text-xs text-base-content/50", children: editor === "new" ? t(
+                    "Use the principal shown to this member after signing in."
+                  ) : t("This identity stays attached to the member.") })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Display name" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Display name") }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "input",
                     {
@@ -48660,12 +50380,12 @@ function UsersPage() {
                       maxLength: 80,
                       value: displayName,
                       onChange: (event) => setDisplayName(event.target.value),
-                      placeholder: "Name on the table"
+                      placeholder: t("Name on the table")
                     }
                   )
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Username" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Username") }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "input",
                     {
@@ -48675,13 +50395,15 @@ function UsersPage() {
                       maxLength: 30,
                       value: username,
                       onChange: (event) => setUsername(event.target.value),
-                      placeholder: "your-handle"
+                      placeholder: t("your-handle")
                     }
                   ),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-2 block text-xs text-base-content/50", children: keepsExistingUsername ? "Keep this handle, or choose a new one." : "3–30 letters, numbers, underscores or hyphens. Saved in lowercase." })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-2 block text-xs text-base-content/50", children: keepsExistingUsername ? t("Keep this handle, or choose a new one.") : t(
+                    "3–30 letters, numbers, underscores or hyphens. Saved in lowercase."
+                  ) })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: "Bio / optional" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Bio / optional") }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "textarea",
                     {
@@ -48691,7 +50413,7 @@ function UsersPage() {
                       maxLength: 500,
                       value: bio,
                       onChange: (event) => setBio(event.target.value),
-                      placeholder: "A few words about this member."
+                      placeholder: t("A few words about this member.")
                     }
                   )
                 ] }),
@@ -48701,7 +50423,7 @@ function UsersPage() {
                     "data-ocid": "users.form_error",
                     role: "alert",
                     className: "border border-error/40 px-3 py-3 text-sm text-error",
-                    children: formError ?? (saveMutation.error instanceof Error ? saveMutation.error.message : "Couldn't save this member. Try again.")
+                    children: t(formError) ?? (saveMutation.error instanceof Error ? translateError(saveMutation.error.message) : t("Couldn't save this member. Try again."))
                   }
                 ) : null,
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-3 border-t border-base-300 pt-5", children: [
@@ -48711,7 +50433,7 @@ function UsersPage() {
                       variant: "ghost",
                       disabled: saveMutation.isPending,
                       onClick: closeEditor,
-                      children: "Cancel"
+                      children: t("Cancel")
                     }
                   ),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -48720,7 +50442,7 @@ function UsersPage() {
                       type: "submit",
                       "data-ocid": "users.save_button",
                       loading: saveMutation.isPending,
-                      children: editor === "new" ? "Add user" : "Save changes"
+                      children: editor === "new" ? t("Add user") : t("Save changes")
                     }
                   )
                 ] })
@@ -48732,13 +50454,17 @@ function UsersPage() {
     )
   ] });
 }
+function NotFoundPage() {
+  const { t } = useI18n();
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-page club-state", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker", children: t("404 / OUT OF BOUNDS") }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: t("Wrong side of the table.") }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/tournaments", className: "btn btn-primary mt-6", children: t("Back to tournaments") })
+  ] });
+}
 const rootRoute = createRootRoute({
   component: MainLayout,
-  notFoundComponent: () => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-page club-state", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker", children: "404 / OUT OF BOUNDS" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: "Wrong side of the table." }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/tournaments", className: "btn btn-primary mt-6", children: "Back to tournaments" })
-  ] })
+  notFoundComponent: NotFoundPage
 });
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -48770,11 +50496,12 @@ const tournamentDetailRoute = createRoute({
   component: TournamentRoomRoute
 });
 function TournamentRoomRoute() {
+  const { t } = useI18n();
   const { tournamentId } = tournamentDetailRoute.useParams();
   if (!/^\d+$/.test(tournamentId)) {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-page club-state", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: "Tournament not found." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/tournaments", className: "btn btn-primary mt-6", children: "Back to tournaments" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: t("Tournament not found.") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/tournaments", className: "btn btn-primary mt-6", children: t("Back to tournaments") })
     ] });
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx(TournamentDetailPage, { tournamentId: BigInt(tournamentId) });
