@@ -1,4 +1,5 @@
 import type { Tournament } from "@/backend";
+import { getLocale, translate as t } from "@/i18n";
 
 export type Elimination = "single" | "double";
 export type BracketLane = "winners" | "losers" | "grandFinal" | "resetFinal";
@@ -186,18 +187,21 @@ export function sourceLabel(
   source: MatchSourceView,
   matches: TournamentMatchView[],
 ) {
-  if (source.kind === "bye") return "BYE";
-  if (source.kind === "empty") return "Awaiting player";
-  if (source.kind === "player") return "Awaiting player";
+  if (source.kind === "bye") return t("BYE");
+  if (source.kind === "empty") return t("Awaiting player");
+  if (source.kind === "player") return t("Awaiting player");
   const match = matches.find((item) => item.id === source.id);
-  return `${source.kind === "winner" ? "Winner" : "Loser"} / ${match ? matchLabel(match) : `M${source.id}`}`;
+  return `${t(source.kind === "winner" ? "Winner" : "Loser")} / ${match ? matchLabel(match) : `M${source.id}`}`;
 }
 
 export function tbilisiTime(timestamp: bigint) {
-  return new Date(Number(timestamp / 1_000_000n)).toLocaleTimeString("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "Asia/Tbilisi",
-    hourCycle: "h23",
-  });
+  return new Date(Number(timestamp / 1_000_000n)).toLocaleTimeString(
+    getLocale(),
+    {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Tbilisi",
+      hourCycle: "h23",
+    },
+  );
 }

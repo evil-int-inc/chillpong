@@ -1,3 +1,4 @@
+import { useI18n } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 export type LoaderSize = "sm" | "md" | "lg";
@@ -15,6 +16,7 @@ const sizeClasses: Record<LoaderSize, string> = {
 };
 
 export function Loader({ size = "md", label, className }: LoaderProps) {
+  const { t } = useI18n();
   return (
     <output
       data-ocid="loading_state"
@@ -28,8 +30,8 @@ export function Loader({ size = "md", label, className }: LoaderProps) {
         )}
         aria-hidden="true"
       />
-      {label ? <span className="text-sm">{label}</span> : null}
-      <span className="sr-only">Loading</span>
+      {label ? <span className="text-sm">{t(label)}</span> : null}
+      <span className="sr-only">{t("Loading")}</span>
     </output>
   );
 }

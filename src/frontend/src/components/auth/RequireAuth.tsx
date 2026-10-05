@@ -1,3 +1,4 @@
+import { useI18n } from "@/i18n";
 import { useAuth } from "@/services/hooks";
 import { Loader2, ShieldAlert } from "lucide-react";
 import { type ReactNode, useEffect } from "react";
@@ -8,6 +9,7 @@ import { type ReactNode, useEffect } from "react";
  * shows a loading state; otherwise it renders the protected content.
  */
 export function RequireAuth({ children }: { children: ReactNode }) {
+  const { t } = useI18n();
   const { isAuthenticated, isInitializing, login } = useAuth();
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
           className="size-6 animate-spin text-primary"
           aria-hidden="true"
         />
-        <span className="sr-only">Loading</span>
+        <span className="sr-only">{t("Loading")}</span>
       </div>
     );
   }
@@ -41,7 +43,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
           className="size-6 animate-spin text-primary"
           aria-hidden="true"
         />
-        <span className="sr-only">Signing in</span>
+        <span className="sr-only">{t("Signing in")}</span>
       </div>
     );
   }
@@ -54,6 +56,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
  * is resolving, and a "not authorized" state for signed-in non-admins.
  */
 export function RequireAdmin({ children }: { children: ReactNode }) {
+  const { t } = useI18n();
   const { isAuthenticated, isInitializing, isAdmin, roleLoading, login } =
     useAuth();
 
@@ -73,7 +76,7 @@ export function RequireAdmin({ children }: { children: ReactNode }) {
           className="size-6 animate-spin text-primary"
           aria-hidden="true"
         />
-        <span className="sr-only">Checking permissions</span>
+        <span className="sr-only">{t("Checking permissions")}</span>
       </div>
     );
   }
@@ -88,7 +91,7 @@ export function RequireAdmin({ children }: { children: ReactNode }) {
           className="size-6 animate-spin text-primary"
           aria-hidden="true"
         />
-        <span className="sr-only">Signing in</span>
+        <span className="sr-only">{t("Signing in")}</span>
       </div>
     );
   }
@@ -100,10 +103,11 @@ export function RequireAdmin({ children }: { children: ReactNode }) {
         className="flex min-h-[50vh] flex-col items-center justify-center gap-3 px-6 text-center"
       >
         <ShieldAlert className="size-8 text-error" aria-hidden="true" />
-        <h1 className="text-xl font-semibold">Admins only</h1>
+        <h1 className="text-xl font-semibold">{t("Admins only")}</h1>
         <p className="max-w-sm text-sm text-base-content/60">
-          You do not have permission to view this page. Ask an administrator if
-          you believe this is a mistake.
+          {t(
+            "You do not have permission to view this page. Ask an administrator if you believe this is a mistake.",
+          )}
         </p>
       </div>
     );

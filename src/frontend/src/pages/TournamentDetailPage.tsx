@@ -9,6 +9,9 @@ import { PlayersPanel } from "@/components/tournaments/PlayersPanel";
 import { StandardView } from "@/components/tournaments/StandardView";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
+import { translateError, translateHistory, useI18n } from "@/i18n";
+import { formatClubDate } from "@/i18n/date";
+import { countLabel } from "@/i18n/plurals";
 import {
   type OrganizerAction,
   tournamentManagerService,
@@ -49,6 +52,7 @@ function OrganizerSetup({
   onAction: (action: OrganizerAction) => void;
   onOpen: (modal: OrganizerModal) => void;
 }) {
+  const { t } = useI18n();
   const [elimination, setElimination] = useState<Elimination>(view.elimination);
   const [tables, setTables] = useState(view.tableCount.toString());
   const [setupOpen, setSetupOpen] = useState(view.canChangeFormat);
@@ -71,14 +75,14 @@ function OrganizerSetup({
     >
       <header className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="technical-label flex items-center gap-2 text-primary">
-          <Flag className="size-3.5" aria-hidden="true" /> Organizer desk
+          <Flag className="size-3.5" aria-hidden="true" /> {t("Organizer desk")}
         </h2>
         <div className="flex flex-wrap items-center gap-1">
           <span
             aria-live="polite"
             className="mr-3 font-mono text-[9px] uppercase tracking-wider text-base-content/35"
           >
-            {pending ? "Saving…" : "Auto-save on"}
+            {pending ? t("Saving…") : t("Auto-save on")}
           </span>
           <Button
             size="sm"
@@ -87,7 +91,7 @@ function OrganizerSetup({
             aria-controls="tournament-setup-fields"
             onClick={() => setSetupOpen((open) => !open)}
           >
-            Table setup
+            {t("Table setup")}
             <ChevronDown
               className={`size-3.5 transition-transform ${setupOpen ? "rotate-180" : ""}`}
               aria-hidden="true"
@@ -100,7 +104,8 @@ function OrganizerSetup({
             disabled={pending || !view.canUndo}
             onClick={() => onOpen({ kind: "undo" })}
           >
-            <Undo2 className="size-3.5" aria-hidden="true" /> Undo last action
+            <Undo2 className="size-3.5" aria-hidden="true" />{" "}
+            {t("Undo last action")}
           </Button>
         </div>
       </header>
@@ -121,7 +126,7 @@ function OrganizerSetup({
         >
           <label className="min-w-48 flex-1">
             <span className="technical-label mb-2 block text-[10px]">
-              Elimination format
+              {t("Elimination format")}
             </span>
             <select
               data-ocid="tournament.elimination_select"
@@ -132,13 +137,13 @@ function OrganizerSetup({
                 setElimination(event.target.value as Elimination)
               }
             >
-              <option value="single">Single elimination</option>
-              <option value="double">Double elimination</option>
+              <option value="single">{t("Single elimination")}</option>
+              <option value="double">{t("Double elimination")}</option>
             </select>
           </label>
           <label className="w-36">
             <span className="technical-label mb-2 block text-[10px]">
-              Number of tables
+              {t("Number of tables")}
             </span>
             <input
               data-ocid="tournament.table_count_input"
@@ -154,7 +159,7 @@ function OrganizerSetup({
             />
           </label>
           <Button type="submit" variant="outline" disabled={pending || !valid}>
-            Save setup
+            {t("Save setup")}
           </Button>
           <Button
             data-ocid="tournament.generate_button"
@@ -162,13 +167,17 @@ function OrganizerSetup({
             onClick={() => onOpen({ kind: "generate" })}
           >
             <GitBranch className="size-4" aria-hidden="true" />
-            {view.generated ? "Regenerate bracket" : "Generate bracket"}
+            {view.generated ? t("Regenerate bracket") : t("Generate bracket")}
           </Button>
         </form>
         <p className="mt-4 text-xs leading-relaxed text-base-content/40">
           {view.canChangeFormat
-            ? "Choose the format and 1–20 physical tables before the first match starts. Player registrations survive changes to the unplayed draw."
-            : "The elimination format is locked after the first match begins. You can still adjust the table count; occupied tables cannot be removed."}
+            ? t(
+                "Choose the format and 1–20 physical tables before the first match starts. Player registrations survive changes to the unplayed draw.",
+              )
+            : t(
+                "The elimination format is locked after the first match begins. You can still adjust the table count; occupied tables cannot be removed.",
+              )}
         </p>
       </div>
     </section>
@@ -178,6 +187,7 @@ function OrganizerSetup({
 export function TournamentDetailPage({
   tournamentId,
 }: { tournamentId: bigint }) {
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
@@ -265,7 +275,7 @@ export function TournamentDetailPage({
           ))}
         </div>
         <span className="sr-only">
-          Loading the tournament floor and bracket.
+          {t("Loading the tournament floor and bracket.")}
         </span>
       </div>
     );
@@ -282,13 +292,13 @@ export function TournamentDetailPage({
             aria-hidden="true"
           />
           <h1 className="font-display text-3xl font-bold uppercase">
-            The match desk is offline.
+            {t("The match desk is offline.")}
           </h1>
           <p className="mt-3 text-sm text-base-content/50">
-            We couldn't load the tournament state.
+            {t("We couldn't load the tournament state.")}
           </p>
           <Button className="mt-6" onClick={() => void stateQuery.refetch()}>
-            <RefreshCw className="size-4" aria-hidden="true" /> Try again
+            <RefreshCw className="size-4" aria-hidden="true" /> {t("Try again")}
           </Button>
         </div>
       </div>
@@ -298,10 +308,10 @@ export function TournamentDetailPage({
       <div className="club-page">
         <div className="club-state">
           <h1 className="font-display text-3xl font-bold uppercase">
-            Tournament not found.
+            {t("Tournament not found.")}
           </h1>
           <Link to="/tournaments" className="btn btn-outline mt-6">
-            Back to tournaments
+            {t("Back to tournaments")}
           </Link>
         </div>
       </div>
@@ -322,7 +332,8 @@ export function TournamentDetailPage({
         to="/tournaments"
         className="technical-label mb-8 inline-flex items-center gap-2 text-base-content/45 hover:text-primary"
       >
-        <ArrowLeft className="size-3.5" aria-hidden="true" /> Tournament board
+        <ArrowLeft className="size-3.5" aria-hidden="true" />{" "}
+        {t("Tournament board")}
       </Link>
       <header className="mb-8">
         <div className="mb-4 flex flex-wrap items-center gap-4">
@@ -333,12 +344,12 @@ export function TournamentDetailPage({
             className={`technical-label border px-2 py-1 text-[9px] ${view.complete ? "border-primary/40 text-primary" : !view.canChangeFormat ? "border-secondary/40 text-secondary" : "border-base-300 text-base-content/45"}`}
           >
             {view.complete
-              ? "Completed"
+              ? t("Completed")
               : !view.canChangeFormat
-                ? "Live"
+                ? t("Live")
                 : view.generated
-                  ? "Draw ready"
-                  : "Registration open"}
+                  ? t("Draw ready")
+                  : t("Registration open")}
           </span>
         </div>
         <h1 className="break-words font-display text-4xl font-bold uppercase leading-[0.98] tracking-tighter sm:text-5xl lg:text-6xl">
@@ -350,30 +361,32 @@ export function TournamentDetailPage({
             {view.tournament.venue}
           </span>
           <span>
-            {new Date(
-              Number(view.tournament.startsAt / 1_000_000n),
-            ).toLocaleDateString("en-GB", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-              timeZone: "Asia/Tbilisi",
-            })}{" "}
-            / {tbilisiTime(view.tournament.startsAt)} Tbilisi
+            {formatClubDate(
+              new Date(Number(view.tournament.startsAt / 1_000_000n)),
+              {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                timeZone: "Asia/Tbilisi",
+              },
+            )}{" "}
+            / {tbilisiTime(view.tournament.startsAt)} {t("Tbilisi")}
           </span>
           <span className="inline-flex items-center gap-2">
             <GitBranch className="size-3.5" aria-hidden="true" />
             {view.elimination === "double"
-              ? "Double elimination"
-              : "Single elimination"}
+              ? t("Double elimination")
+              : t("Single elimination")}
           </span>
-          <span>{activePlayers.length} players</span>
+          <span>{countLabel(activePlayers.length, "player")}</span>
           <span className="inline-flex items-center gap-2">
             <Table2 className="size-3.5" aria-hidden="true" />
-            {view.tableCount} {view.tableCount === 1 ? "table" : "tables"}
+            {countLabel(view.tableCount, "table")}
           </span>
           {overrides ? (
             <span className="inline-flex items-center gap-1.5 text-secondary">
-              <Flag className="size-3" aria-hidden="true" /> Manual override
+              <Flag className="size-3" aria-hidden="true" />{" "}
+              {t("Manual override")}
             </span>
           ) : null}
         </div>
@@ -386,10 +399,10 @@ export function TournamentDetailPage({
           />
           <div>
             <p className="technical-label mb-2 text-primary">
-              THE FINAL POINT / TOURNAMENT CHAMPION
+              {t("THE FINAL POINT / TOURNAMENT CHAMPION")}
             </p>
             <h2 className="font-display text-3xl font-bold uppercase">
-              {champion.name} wins.
+              {champion.name} {t("wins.")}
             </h2>
           </div>
         </section>
@@ -408,7 +421,7 @@ export function TournamentDetailPage({
           className="mb-6 flex items-center gap-2 border border-primary/25 bg-primary/5 px-4 py-3 text-sm"
         >
           <Check className="size-4 shrink-0 text-primary" aria-hidden="true" />
-          {notice}
+          {t(notice)}
         </output>
       ) : null}
       {actionError && !modal ? (
@@ -416,7 +429,7 @@ export function TournamentDetailPage({
           role="alert"
           className="mb-6 border border-error/35 px-4 py-3 text-sm text-error"
         >
-          {actionError}
+          {translateError(actionError)}
         </p>
       ) : null}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-y border-base-300 py-4">
@@ -424,27 +437,27 @@ export function TournamentDetailPage({
           <button
             type="button"
             data-ocid="tournament.standard_tab"
-            aria-label="Standard view"
+            aria-label={t("Standard view")}
             aria-pressed={display === "standard"}
             className={`club-filter ${display === "standard" ? "is-active" : ""}`}
             onClick={() => setDisplay("standard")}
           >
-            Standard{" "}
+            {t("Standard")}{" "}
             <span className="ml-2 hidden font-normal opacity-50 sm:inline">
-              / Live floor
+              {t("/ Live floor")}
             </span>
           </button>
           <button
             type="button"
             data-ocid="tournament.extended_tab"
-            aria-label="Extended view"
+            aria-label={t("Extended view")}
             aria-pressed={display === "extended"}
             className={`club-filter ${display === "extended" ? "is-active" : ""}`}
             onClick={() => setDisplay("extended")}
           >
-            Extended{" "}
+            {t("Extended")}{" "}
             <span className="ml-2 hidden font-normal opacity-50 sm:inline">
-              / Full bracket
+              {t("/ Full bracket")}
             </span>
           </button>
         </div>
@@ -454,11 +467,11 @@ export function TournamentDetailPage({
             variant="outline"
             onClick={() => openModal({ kind: "player" })}
           >
-            <Plus className="size-3.5" aria-hidden="true" /> Add player
+            <Plus className="size-3.5" aria-hidden="true" /> {t("Add player")}
           </Button>
         ) : (
           <span className="technical-label text-[9px] text-base-content/35">
-            Live tournament / public view
+            {t("Live tournament / public view")}
           </span>
         )}
       </div>
@@ -494,7 +507,7 @@ export function TournamentDetailPage({
       {view.tournament.description ? (
         <section className="mt-8 border-t border-base-300 pt-6">
           <h2 className="technical-label mb-3 text-base-content/45">
-            The night / organizer notes
+            {t("The night / organizer notes")}
           </h2>
           <p className="max-w-3xl whitespace-pre-wrap break-words text-sm leading-relaxed text-base-content/60">
             {view.tournament.description}
@@ -504,7 +517,7 @@ export function TournamentDetailPage({
       {isAdmin && recentActions.length ? (
         <section className="mt-8 border-t border-base-300 pt-6">
           <h2 className="technical-label mb-4 text-base-content/45">
-            Recent organizer actions
+            {t("Recent organizer actions")}
           </h2>
           <ol className="space-y-3">
             {recentActions.map((action) => (
@@ -515,7 +528,7 @@ export function TournamentDetailPage({
                 <span className="text-base-content/25">
                   {tbilisiTime(action.createdAt)}
                 </span>
-                <span>{action.label}</span>
+                <span>{translateHistory(action.label)}</span>
               </li>
             ))}
           </ol>

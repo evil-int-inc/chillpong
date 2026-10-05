@@ -1,5 +1,6 @@
 import { RequireAdmin, RequireAuth } from "@/components/auth/RequireAuth";
 import { MainLayout } from "@/components/ui/layouts/MainLayout";
+import { useI18n } from "@/i18n";
 import { AdminPage } from "@/pages/AdminPage";
 import { PlayersPage } from "@/pages/PlayersPage";
 import { ProfilePage } from "@/pages/ProfilePage";
@@ -15,19 +16,23 @@ import {
   redirect,
 } from "@tanstack/react-router";
 
-const rootRoute = createRootRoute({
-  component: MainLayout,
-  notFoundComponent: () => (
+function NotFoundPage() {
+  const { t } = useI18n();
+  return (
     <div className="club-page club-state">
-      <p className="section-kicker">404 / OUT OF BOUNDS</p>
+      <p className="section-kicker">{t("404 / OUT OF BOUNDS")}</p>
       <h1 className="font-display text-3xl font-bold uppercase">
-        Wrong side of the table.
+        {t("Wrong side of the table.")}
       </h1>
       <Link to="/tournaments" className="btn btn-primary mt-6">
-        Back to tournaments
+        {t("Back to tournaments")}
       </Link>
     </div>
-  ),
+  );
+}
+const rootRoute = createRootRoute({
+  component: MainLayout,
+  notFoundComponent: NotFoundPage,
 });
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -60,15 +65,16 @@ const tournamentDetailRoute = createRoute({
 });
 
 function TournamentRoomRoute() {
+  const { t } = useI18n();
   const { tournamentId } = tournamentDetailRoute.useParams();
   if (!/^\d+$/.test(tournamentId)) {
     return (
       <div className="club-page club-state">
         <h1 className="font-display text-3xl font-bold uppercase">
-          Tournament not found.
+          {t("Tournament not found.")}
         </h1>
         <Link to="/tournaments" className="btn btn-primary mt-6">
-          Back to tournaments
+          {t("Back to tournaments")}
         </Link>
       </div>
     );

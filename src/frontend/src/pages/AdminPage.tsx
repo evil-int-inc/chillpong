@@ -6,6 +6,8 @@ import { ErrorState } from "@/components/ui/ErrorState";
 import { Input } from "@/components/ui/Input";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useAuth } from "@/hooks/useAuth";
+import { type LocalizedMessage, translateError, useI18n } from "@/i18n";
+import { countLabel } from "@/i18n/plurals";
 import type { UserRoleView } from "@/types";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -52,11 +54,12 @@ function AdminSkeleton() {
 }
 
 export function AdminPage() {
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { principal, isAdmin } = useAuth();
   const queryClient = useQueryClient();
   const [pendingId, setPendingId] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<LocalizedMessage | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [copyError, setCopyError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -84,11 +87,12 @@ export function AdminPage() {
       return grant ? actor.grantAdminRole(id) : actor.revokeAdminRole(id);
     },
     onSuccess: (updated, variables) => {
-      setNotice(
-        variables.grant
-          ? `${updated.displayName || updated.id.toString()} is now an admin.`
-          : `${updated.displayName || updated.id.toString()} is no longer an admin.`,
-      );
+      setNotice({
+        message: variables.grant
+          ? "{name} is now an admin."
+          : "{name} is no longer an admin.",
+        params: { name: updated.displayName || updated.id.toString() },
+      });
       void queryClient.invalidateQueries({ queryKey: USERS_QUERY_KEY });
       void queryClient.invalidateQueries({ queryKey: ["users"] });
       void queryClient.invalidateQueries({ queryKey: ["myRole"] });
@@ -134,10 +138,10 @@ export function AdminPage() {
         <div className="mx-auto w-full max-w-5xl space-y-6">
           <header className="space-y-1">
             <h1 className="font-display text-4xl font-bold uppercase tracking-tight text-foreground">
-              Admin access
+              {t("Admin access")}
             </h1>
             <p className="text-sm text-muted-foreground">
-              Authenticated accounts and their admin access.
+              {t("Authenticated accounts and their admin access.")}
             </p>
           </header>
           <AdminSkeleton />
@@ -151,8 +155,10 @@ export function AdminPage() {
       <div data-ocid="admin_page" className="club-page">
         <div className="mx-auto w-full max-w-5xl">
           <ErrorState
-            title="Couldn't load accounts"
-            message="Something went wrong while fetching authenticated accounts."
+            title={t("Couldn't load accounts")}
+            message={t(
+              "Something went wrong while fetching authenticated accounts.",
+            )}
             onRetry={() => void usersQuery.refetch()}
           />
         </div>
@@ -165,18 +171,21 @@ export function AdminPage() {
       <div className="mx-auto w-full max-w-5xl space-y-6">
         <header className="flex flex-wrap items-end justify-between gap-3">
           <div className="space-y-1">
-            <p className="section-kicker mb-4">CHILLPONG / CONTROL ROOM</p>
+            <p className="section-kicker mb-4">
+              {t("CHILLPONG / CONTROL ROOM")}
+            </p>
             <h1 className="font-display text-4xl font-bold uppercase tracking-tight text-foreground">
-              Admin access
+              {t("Admin access")}
             </h1>
             <p className="text-sm text-muted-foreground">
-              All signed-in accounts and their member IDs. Assign or revoke
-              admin access here.
+              {t(
+                "All signed-in accounts and their member IDs. Assign or revoke admin access here.",
+              )}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <a href="/admin/accounts" className="btn btn-outline btn-sm">
-              Edit profiles
+              {t("Edit profiles")}
             </a>
             <Button
               variant="outline"
@@ -185,15 +194,15 @@ export function AdminPage() {
               onClick={() => void usersQuery.refetch()}
             >
               <RefreshCw className="size-4" aria-hidden="true" />
-              Refresh accounts
+              {t("Refresh accounts")}
             </Button>
             <span
               data-ocid="admin_count"
               className="inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-sm text-muted-foreground"
             >
               <ShieldCheck className="size-4" aria-hidden="true" />
-              {users.length} accounts / {adminCount}{" "}
-              {adminCount === 1 ? "admin" : "admins"}
+              {countLabel(users.length, "account")} /{" "}
+              {countLabel(adminCount, "admin")}
             </span>
           </div>
         </header>
@@ -201,8 +210,8 @@ export function AdminPage() {
         <div className="space-y-2">
           <Input
             type="search"
-            label="Search by member ID"
-            placeholder="Paste a principal ID or part of it"
+            label={t("Search by member ID")}
+            placeholder={t("Paste a principal ID or part of it")}
             className="font-mono text-sm"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
@@ -210,7 +219,10 @@ export function AdminPage() {
           />
           {searchTerm ? (
             <p className="text-xs text-muted-foreground" aria-live="polite">
-              {visibleUsers.length} of {users.length} accounts match
+              {t("{matched} of {total} accounts match", {
+                matched: visibleUsers.length,
+                total: users.length,
+              })}
             </p>
           ) : null}
         </div>
@@ -224,7 +236,7 @@ export function AdminPage() {
               className="size-5 shrink-0 text-success"
               aria-hidden="true"
             />
-            {notice}
+            {t(notice)}
           </output>
         ) : null}
 
@@ -239,10 +251,10 @@ export function AdminPage() {
               aria-hidden="true"
             />
             <span>
-              {copyError ||
+              {t(copyError) ||
                 (roleMutation.error instanceof Error
-                  ? roleMutation.error.message
-                  : "Couldn't update that role. Please try again.")}
+                  ? translateError(roleMutation.error.message)
+                  : t("Couldn't update that role. Please try again."))}
             </span>
           </div>
         ) : null}
@@ -250,17 +262,19 @@ export function AdminPage() {
         {users.length === 0 ? (
           <EmptyState
             icon={<Users className="size-7" aria-hidden="true" />}
-            title="No signed-in accounts yet"
-            description="Accounts appear automatically after signing in to ChillPong."
+            title={t("No signed-in accounts yet")}
+            description={t(
+              "Accounts appear automatically after signing in to ChillPong.",
+            )}
           />
         ) : visibleUsers.length === 0 ? (
           <EmptyState
             icon={<Search className="size-7" aria-hidden="true" />}
-            title="No matching member ID"
-            description="Try a different principal ID or clear the search."
+            title={t("No matching member ID")}
+            description={t("Try a different principal ID or clear the search.")}
             action={
               <Button variant="outline" onClick={() => setSearch("")}>
-                Clear search
+                {t("Clear search")}
               </Button>
             }
           />
@@ -281,29 +295,48 @@ export function AdminPage() {
                   className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-4 p-5 md:grid-cols-[auto_minmax(0,1fr)_auto]"
                 >
                   <Avatar
-                    name={user.displayName || user.username || "Member"}
+                    name={
+                      (user.displayName === "Signed-in member" && !user.username
+                        ? t("Signed-in member")
+                        : user.displayName) ||
+                      user.username ||
+                      t("Member")
+                    }
                     size="md"
-                    alt={`${user.displayName || user.username || "Member"} avatar`}
+                    alt={t("{v1} avatar", {
+                      v1:
+                        (user.displayName === "Signed-in member" &&
+                        !user.username
+                          ? t("Signed-in member")
+                          : user.displayName) ||
+                        user.username ||
+                        t("Member"),
+                    })}
                   />
                   <div className="min-w-0 space-y-2">
                     <p className="flex items-center gap-2 truncate font-medium text-foreground">
                       <span className="truncate">
-                        {user.displayName ||
+                        {(user.displayName === "Signed-in member" &&
+                        !user.username
+                          ? t("Signed-in member")
+                          : user.displayName) ||
                           user.username ||
-                          "Signed-in member"}
+                          t("Signed-in member")}
                       </span>
                       {isSelf ? (
                         <span className="shrink-0 rounded-none bg-base-300 px-2 py-0.5 text-xs text-muted-foreground">
-                          You
+                          {t("You")}
                         </span>
                       ) : null}
                     </p>
                     <p className="truncate text-sm text-muted-foreground">
-                      {user.username ? `@${user.username}` : "Username not set"}
+                      {user.username
+                        ? `@${user.username}`
+                        : t("Username not set")}
                     </p>
                     <div className="space-y-1">
                       <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                        Member ID / Principal ID
+                        {t("Member ID / Principal ID")}
                       </p>
                       <div className="flex items-start gap-2">
                         <code className="min-w-0 break-all font-mono text-xs leading-6 text-foreground select-all">
@@ -313,7 +346,9 @@ export function AdminPage() {
                           variant="ghost"
                           size="icon"
                           className="btn-xs shrink-0"
-                          aria-label={`Copy member ID ${user.id.toString()}`}
+                          aria-label={t("Copy member ID {v1}", {
+                            v1: user.id.toString(),
+                          })}
                           onClick={() => void copyPrincipal(user.id.toString())}
                         >
                           {copiedId === user.id.toString() ? (
@@ -342,7 +377,7 @@ export function AdminPage() {
                       ) : (
                         <ShieldMinus className="size-3.5" aria-hidden="true" />
                       )}
-                      {admin ? "Admin" : "Member"}
+                      {admin ? t("Admin") : t("Member")}
                     </span>
 
                     <Button
@@ -351,10 +386,15 @@ export function AdminPage() {
                       data-ocid={`admin_user.toggle_button.${index + 1}`}
                       loading={isPending}
                       disabled={roleMutation.isPending || (isSelf && admin)}
-                      aria-label={`${admin ? "Revoke admin from" : "Assign admin to"} ${user.id.toString()}`}
+                      aria-label={t(
+                        admin
+                          ? "Revoke admin from {id}"
+                          : "Assign admin to {id}",
+                        { id: user.id.toString() },
+                      )}
                       title={
                         isSelf && admin
-                          ? "You can't revoke your own admin role."
+                          ? t("You can't revoke your own admin role.")
                           : undefined
                       }
                       onClick={() => handleToggle(user)}
@@ -362,12 +402,12 @@ export function AdminPage() {
                       {admin ? (
                         <>
                           <ShieldMinus className="size-4" aria-hidden="true" />
-                          Revoke admin
+                          {t("Revoke admin")}
                         </>
                       ) : (
                         <>
                           <ShieldPlus className="size-4" aria-hidden="true" />
-                          Assign admin
+                          {t("Assign admin")}
                         </>
                       )}
                     </Button>

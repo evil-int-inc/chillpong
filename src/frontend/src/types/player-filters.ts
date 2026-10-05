@@ -1,3 +1,4 @@
+import { getLocale, translate as t } from "@/i18n";
 import {
   BRACKET_LABELS,
   type TournamentManagerView,
@@ -58,8 +59,8 @@ export function roundKey(match: TournamentMatchView) {
 }
 export function roundLabel(match: TournamentMatchView) {
   return match.bracket === "grandFinal" || match.bracket === "resetFinal"
-    ? BRACKET_LABELS[match.bracket]
-    : `${BRACKET_LABELS[match.bracket]} / ${match.round === 0 ? "Qualifiers" : `Round ${match.round}`}`;
+    ? t(BRACKET_LABELS[match.bracket])
+    : `${t(BRACKET_LABELS[match.bracket])} / ${match.round === 0 ? t("Qualifiers") : t("Round {round}", { round: match.round })}`;
 }
 
 function registrationOrder(a: TournamentPlayerView, b: TournamentPlayerView) {
@@ -100,7 +101,7 @@ export function selectPlayers(
     .sort((a, b) => {
       const difference =
         filters.sort === "name"
-          ? a.name.localeCompare(b.name, undefined, {
+          ? a.name.localeCompare(b.name, getLocale(), {
               sensitivity: "base",
               numeric: true,
             })

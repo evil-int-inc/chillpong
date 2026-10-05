@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/Button";
+import { translateError, translateHistory, useI18n } from "@/i18n";
+import { countLabel } from "@/i18n/plurals";
 import type { OrganizerAction } from "@/services/tournament-manager";
 import {
   SKILL_LEVELS,
@@ -50,6 +52,7 @@ function PlayerForm({
   pending: boolean;
   onAction: DialogProps["onAction"];
 }) {
+  const { t } = useI18n();
   const [name, setName] = useState(player?.name ?? "");
   const [skill, setSkill] = useState(player?.skill ?? 1);
   const valid = name.trim().length > 0 && name.trim().length <= 80;
@@ -71,7 +74,7 @@ function PlayerForm({
       }}
     >
       <label className="block">
-        <span className="technical-label mb-2 block">Player name</span>
+        <span className="technical-label mb-2 block">{t("Player name")}</span>
         <input
           data-ocid="tournament.player_name_input"
           className="input w-full rounded-none"
@@ -80,11 +83,11 @@ function PlayerForm({
           value={name}
           disabled={pending}
           onChange={(event) => setName(event.target.value)}
-          placeholder="Name on the table"
+          placeholder={t("Name on the table")}
         />
       </label>
       <label className="block">
-        <span className="technical-label mb-2 block">Skill level</span>
+        <span className="technical-label mb-2 block">{t("Skill level")}</span>
         <select
           data-ocid="tournament.player_skill_select"
           className="select w-full rounded-none"
@@ -94,15 +97,20 @@ function PlayerForm({
         >
           {SKILL_LEVELS.map((level, index) => (
             <option key={level} value={index + 1}>
-              L{index + 1} — {level}
+              L{index + 1} — {t(level)}
             </option>
           ))}
         </select>
       </label>
       <p className="text-xs leading-relaxed text-base-content/45">
         {player
-          ? `${registrationLabel(player.registrationNumber)} and the original registration time remain unchanged. Skill changes apply to future matchmaking.`
-          : "A new permanent registration number and timestamp are saved automatically. The player joins after earlier registrations."}
+          ? t(
+              "{v1} and the original registration time remain unchanged. Skill changes apply to future matchmaking.",
+              { v1: registrationLabel(player.registrationNumber) },
+            )
+          : t(
+              "A new permanent registration number and timestamp are saved automatically. The player joins after earlier registrations.",
+            )}
       </p>
       <div className="flex flex-wrap justify-end gap-3 border-t border-base-300 pt-5">
         {!player && view.generated ? (
@@ -111,7 +119,7 @@ function PlayerForm({
             disabled={!valid || pending}
             onClick={() => save(true)}
           >
-            Register & place manually
+            {t("Register & place manually")}
           </Button>
         ) : null}
         <Button
@@ -120,7 +128,7 @@ function PlayerForm({
           loading={pending}
           disabled={!valid}
         >
-          {player ? "Save player" : "Add to waiting queue"}
+          {player ? t("Save player") : t("Add to waiting queue")}
         </Button>
       </div>
     </form>
@@ -138,6 +146,7 @@ function MovePlayerForm({
   pending: boolean;
   onAction: DialogProps["onAction"];
 }) {
+  const { t } = useI18n();
   const { entrant, targets: options } = playerMovement(view, player);
   const [target, setTarget] = useState(options[0]?.id.toString() ?? "");
   const [slot, setSlot] = useState<"a" | "b">("a");
@@ -157,20 +166,27 @@ function MovePlayerForm({
       }}
     >
       <p className="text-sm leading-relaxed text-base-content/60">
-        Place <strong className="text-base-content">{player.name}</strong> in{" "}
+        {t("Place")}{" "}
+        <strong className="text-base-content">{player.name}</strong> {t("in")}{" "}
         {entrant
-          ? "a pending winners-bracket slot"
-          : "their current unplayed bracket round"}
-        . The registration remains{" "}
+          ? t("a pending winners-bracket slot")
+          : t("their current unplayed bracket round")}
+        {t(". The registration remains")}{" "}
         {registrationLabel(player.registrationNumber)}.{" "}
         {entrant
-          ? "An empty slot admits them directly. An occupied eligible slot creates a qualifier against its current player or incoming winner, keeping both players in the tournament. Opening qualifiers are round zero."
-          : "An occupied pending slot swaps both incoming bracket positions; an empty slot moves this player. Completed results and original registration details remain unchanged."}
+          ? t(
+              "An empty slot admits them directly. An occupied eligible slot creates a qualifier against its current player or incoming winner, keeping both players in the tournament. Opening qualifiers are round zero.",
+            )
+          : t(
+              "An occupied pending slot swaps both incoming bracket positions; an empty slot moves this player. Completed results and original registration details remain unchanged.",
+            )}
       </p>
       <label className="block">
-        <span className="technical-label mb-2 block">Destination match</span>
+        <span className="technical-label mb-2 block">
+          {t("Destination match")}
+        </span>
         <select
-          aria-label="Destination match"
+          aria-label={t("Destination match")}
           className="select w-full rounded-none"
           value={target}
           disabled={pending}
@@ -182,35 +198,38 @@ function MovePlayerForm({
                 {matchLabel(match)} /{" "}
                 {playerById(view.players, match.playerAId)?.name ??
                   sourceLabel(match.sourceA, view.matches)}{" "}
-                vs{" "}
+                {t("vs")}{" "}
                 {playerById(view.players, match.playerBId)?.name ??
                   sourceLabel(match.sourceB, view.matches)}
               </option>
             ))
           ) : (
-            <option value="">No safe opening slots</option>
+            <option value="">{t("No safe opening slots")}</option>
           )}
         </select>
       </label>
       <label className="block">
-        <span className="technical-label mb-2 block">Destination slot</span>
+        <span className="technical-label mb-2 block">
+          {t("Destination slot")}
+        </span>
         <select
           className="select w-full rounded-none"
           value={slot}
           disabled={pending}
           onChange={(event) => setSlot(event.target.value as "a" | "b")}
         >
-          <option value="a">Player A</option>
-          <option value="b">Player B</option>
+          <option value="a">{t("Player A")}</option>
+          <option value="b">{t("Player B")}</option>
         </select>
       </label>
       <p className="text-xs leading-relaxed text-secondary/80">
-        Manual override. The backend rejects changes that would overwrite a
-        played match or an active downstream match.
+        {t(
+          "Manual override. The backend rejects changes that would overwrite a played match or an active downstream match.",
+        )}
       </p>
       <div className="flex justify-end border-t border-base-300 pt-5">
         <Button type="submit" loading={pending} disabled={!validTarget}>
-          Place player
+          {t("Place player")}
         </Button>
       </div>
     </form>
@@ -232,6 +251,7 @@ function MatchEditor({
   onAction: DialogProps["onAction"];
   onOpen: DialogProps["onOpen"];
 }) {
+  const { t } = useI18n();
   const [scoreA, setScoreA] = useState(match.scoreA?.toString() ?? "");
   const [scoreB, setScoreB] = useState(match.scoreB?.toString() ?? "");
   const [table, setTable] = useState(match.table?.toString() ?? "");
@@ -303,7 +323,7 @@ function MatchEditor({
                 </p>
                 {player ? (
                   <p className="mt-1 font-mono text-[10px] text-base-content/45">
-                    L{player.skill} / {SKILL_LEVELS[player.skill - 1]} /{" "}
+                    L{player.skill} / {t(SKILL_LEVELS[player.skill - 1])} /{" "}
                     {registrationLabel(player.registrationNumber)}
                   </p>
                 ) : null}
@@ -314,13 +334,18 @@ function MatchEditor({
         })}
       </div>
       <div className="flex flex-wrap gap-5 font-mono text-[10px] uppercase tracking-wider text-base-content/45">
-        <span>Status / {match.status}</span>
         <span>
-          {match.table ? `Table ${match.table}` : "No table assigned"}
+          {t("Status /")} {t(match.status)}
+        </span>
+        <span>
+          {match.table
+            ? t("Table {v1}", { v1: match.table })
+            : t("No table assigned")}
         </span>
         {match.manualOverride || match.prioritized ? (
           <span className="flex items-center gap-1 text-secondary">
-            <Flag className="size-3" aria-hidden="true" /> Manual override
+            <Flag className="size-3" aria-hidden="true" />{" "}
+            {t("Manual override")}
           </span>
         ) : null}
       </div>
@@ -329,10 +354,10 @@ function MatchEditor({
           <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto]">
             <label>
               <span className="technical-label mb-2 block text-[10px]">
-                Assign table
+                {t("Assign table")}
               </span>
               <select
-                aria-label="Assign table"
+                aria-label={t("Assign table")}
                 className="select w-full rounded-none"
                 value={table}
                 disabled={
@@ -343,7 +368,7 @@ function MatchEditor({
                 }
                 onChange={(event) => setTable(event.target.value)}
               >
-                <option value="">Unassigned</option>
+                <option value="">{t("Unassigned")}</option>
                 {view.tables.map((item) => (
                   <option
                     key={item.number}
@@ -354,7 +379,7 @@ function MatchEditor({
                       (item.status === "playing" || item.status === "waiting")
                     }
                   >
-                    Table {item.number} / {item.status}
+                    {t("Table")} {item.number} / {t(item.status)}
                   </option>
                 ))}
               </select>
@@ -379,7 +404,7 @@ function MatchEditor({
                 )
               }
             >
-              Assign table
+              {t("Assign table")}
             </Button>
             <Button
               className="sm:self-end"
@@ -397,7 +422,7 @@ function MatchEditor({
                 )
               }
             >
-              Start match
+              {t("Start match")}
             </Button>
           </div>
           {match.status === "playing" || match.status === "completed" ? (
@@ -437,13 +462,13 @@ function MatchEditor({
             >
               <p className="technical-label text-primary">
                 {match.status === "completed"
-                  ? "Correct the result"
-                  : "Save the result"}
+                  ? t("Correct the result")
+                  : t("Save the result")}
               </p>
               <div className="grid grid-cols-2 gap-4">
                 <label>
                   <span className="technical-label mb-2 block text-[10px]">
-                    Score A
+                    {t("Score A")}
                   </span>
                   <input
                     type="number"
@@ -458,7 +483,7 @@ function MatchEditor({
                 </label>
                 <label>
                   <span className="technical-label mb-2 block text-[10px]">
-                    Score B
+                    {t("Score B")}
                   </span>
                   <input
                     type="number"
@@ -474,19 +499,20 @@ function MatchEditor({
               </div>
               {validation ? (
                 <p role="alert" className="text-xs text-error">
-                  {validation}
+                  {t(validation)}
                 </p>
               ) : null}
               <p className="text-xs leading-relaxed text-base-content/45">
-                Winners advance and the table is freed automatically. Changing a
-                winner after downstream games requires a confirmed reset.
+                {t(
+                  "Winners advance and the table is freed automatically. Changing a winner after downstream games requires a confirmed reset.",
+                )}
               </p>
               <Button
                 type="submit"
                 data-ocid="tournament.save_result_button"
                 loading={pending}
               >
-                Save result
+                {t("Save result")}
               </Button>
             </form>
           ) : null}
@@ -502,7 +528,7 @@ function MatchEditor({
                 )
               }
             >
-              Prioritize match
+              {t("Prioritize match")}
             </Button>
             <Button
               variant="danger"
@@ -515,19 +541,19 @@ function MatchEditor({
               }
               onClick={() => onOpen({ kind: "reset", matchId: match.id })}
             >
-              Reset match / undo result
+              {t("Reset match / undo result")}
             </Button>
           </div>
           {canSwapBracket ? (
             <details className="border-t border-base-300 pt-5">
               <summary className="technical-label cursor-pointer text-secondary">
-                Manual override / players & byes
+                {t("Manual override / players & byes")}
               </summary>
               <div className="mt-5 space-y-5">
                 <p className="text-xs leading-relaxed text-base-content/45">
-                  Opening slots can be replaced. Later ready matches can swap
-                  opponents within the same bracket and round. Registration
-                  numbers never change.
+                  {t(
+                    "Opening slots can be replaced. Later ready matches can swap opponents within the same bracket and round. Registration numbers never change.",
+                  )}
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {[
@@ -544,7 +570,7 @@ function MatchEditor({
                   ].map((side) => (
                     <label key={side.label}>
                       <span className="technical-label mb-2 block text-[10px]">
-                        {side.label}
+                        {t(side.label)}
                       </span>
                       <select
                         className="select w-full rounded-none"
@@ -552,14 +578,15 @@ function MatchEditor({
                         disabled={pending || !editableOpening}
                         onChange={(event) => side.setter(event.target.value)}
                       >
-                        <option value="">BYE / empty slot</option>
+                        <option value="">{t("BYE / empty slot")}</option>
                         {activePlayers.map((player) => (
                           <option
                             key={player.id.toString()}
                             value={player.id.toString()}
                           >
                             {registrationLabel(player.registrationNumber)}{" "}
-                            {player.name} / L{player.skill}
+                            {player.name} {t("/ L")}
+                            {player.skill}
                           </option>
                         ))}
                       </select>
@@ -586,12 +613,12 @@ function MatchEditor({
                     )
                   }
                 >
-                  Change matchup
+                  {t("Change matchup")}
                 </Button>
                 <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
                   <label>
                     <span className="technical-label mb-2 block text-[10px]">
-                      Assign BYE to slot
+                      {t("Assign BYE to slot")}
                     </span>
                     <select
                       className="select w-full rounded-none"
@@ -601,8 +628,8 @@ function MatchEditor({
                         setByeSlot(event.target.value as "a" | "b")
                       }
                     >
-                      <option value="a">Player A</option>
-                      <option value="b">Player B</option>
+                      <option value="a">{t("Player A")}</option>
+                      <option value="b">{t("Player B")}</option>
                     </select>
                   </label>
                   <Button
@@ -617,17 +644,17 @@ function MatchEditor({
                       )
                     }
                   >
-                    Assign BYE
+                    {t("Assign BYE")}
                   </Button>
                 </div>
                 <div className="space-y-3 border-t border-base-300 pt-4">
                   <p className="technical-label text-[10px]">
-                    Swap players between ready matches
+                    {t("Swap players between ready matches")}
                   </p>
                   <div className="grid gap-3 sm:grid-cols-3">
                     <label>
                       <span className="technical-label mb-2 block text-[9px]">
-                        This match slot
+                        {t("This match slot")}
                       </span>
                       <select
                         className="select w-full rounded-none"
@@ -637,13 +664,13 @@ function MatchEditor({
                           setFirstSlot(event.target.value as "a" | "b")
                         }
                       >
-                        <option value="a">Player A</option>
-                        <option value="b">Player B</option>
+                        <option value="a">{t("Player A")}</option>
+                        <option value="b">{t("Player B")}</option>
                       </select>
                     </label>
                     <label>
                       <span className="technical-label mb-2 block text-[9px]">
-                        Other match
+                        {t("Other match")}
                       </span>
                       <select
                         className="select w-full rounded-none"
@@ -651,7 +678,7 @@ function MatchEditor({
                         disabled={pending}
                         onChange={(event) => setOtherMatch(event.target.value)}
                       >
-                        <option value="">Choose match</option>
+                        <option value="">{t("Choose match")}</option>
                         {swapMatches.map((item) => (
                           <option
                             key={item.id.toString()}
@@ -664,7 +691,7 @@ function MatchEditor({
                     </label>
                     <label>
                       <span className="technical-label mb-2 block text-[9px]">
-                        Other match slot
+                        {t("Other match slot")}
                       </span>
                       <select
                         className="select w-full rounded-none"
@@ -674,8 +701,8 @@ function MatchEditor({
                           setOtherSlot(event.target.value as "a" | "b")
                         }
                       >
-                        <option value="a">Player A</option>
-                        <option value="b">Player B</option>
+                        <option value="a">{t("Player A")}</option>
+                        <option value="b">{t("Player B")}</option>
                       </select>
                     </label>
                   </div>
@@ -700,21 +727,24 @@ function MatchEditor({
                       )
                     }
                   >
-                    Swap players
+                    {t("Swap players")}
                   </Button>
                 </div>
               </div>
             </details>
           ) : (
             <p className="border-t border-base-300 pt-4 text-xs leading-relaxed text-base-content/45">
-              Finalist positions stay fixed because they determine whether a
-              double elimination reset final is required.
+              {t(
+                "Finalist positions stay fixed because they determine whether a double elimination reset final is required.",
+              )}
             </p>
           )}
         </>
       ) : (
         <p className="text-xs text-base-content/45">
-          Results and assignments are managed by the tournament organizer.
+          {t(
+            "Results and assignments are managed by the tournament organizer.",
+          )}
         </p>
       )}
     </div>
@@ -730,14 +760,16 @@ function ResetForm({
   pending: boolean;
   onAction: DialogProps["onAction"];
 }) {
+  const { t } = useI18n();
   const [cascade, setCascade] = useState(false);
   return (
     <div className="space-y-5">
       <p className="text-sm leading-relaxed text-base-content/65">
-        Resetting{" "}
+        {t("Resetting")}{" "}
         <strong className="text-base-content">{matchLabel(match)}</strong>{" "}
-        clears its score, winner and table assignment. Earlier registration
-        details remain unchanged.
+        {t(
+          "clears its score, winner and table assignment. Earlier registration details remain unchanged.",
+        )}
       </p>
       <label className="flex items-start gap-3 border border-secondary/30 p-4">
         <input
@@ -749,18 +781,19 @@ function ResetForm({
         />
         <span>
           <span className="block text-sm font-semibold">
-            Also reset completed downstream results
+            {t("Also reset completed downstream results")}
           </span>
           <span className="mt-1 block text-xs leading-relaxed text-base-content/45">
-            This can erase scores in later rounds. Active downstream matches
-            must be resolved first; the backend prevents resetting across a
-            playing match.
+            {t(
+              "This can erase scores in later rounds. Active downstream matches must be resolved first; the backend prevents resetting across a playing match.",
+            )}
           </span>
         </span>
       </label>
       <p className="text-xs text-secondary/80">
-        If later rounds depend on this result, a plain reset is rejected until
-        downstream results are explicitly included.
+        {t(
+          "If later rounds depend on this result, a plain reset is rejected until downstream results are explicitly included.",
+        )}
       </p>
       <Button
         variant="danger"
@@ -770,7 +803,7 @@ function ResetForm({
           onAction({ kind: "resetMatch", matchId: match.id, cascade })
         }
       >
-        Confirm reset
+        {t("Confirm reset")}
       </Button>
     </div>
   );
@@ -786,6 +819,7 @@ export function OrganizerDialogs({
   onOpen,
   onAction,
 }: DialogProps) {
+  const { t } = useI18n();
   const ref = useRef<HTMLDialogElement>(null);
   const allowed = !!modal && (isAdmin || modal.kind === "match");
   useEffect(() => {
@@ -827,7 +861,9 @@ export function OrganizerDialogs({
               ? "Undo last action?"
               : modal.kind === "reset"
                 ? "Reset this result?"
-                : `Match ${match ? matchLabel(match) : "unavailable"}`;
+                : t("Match {match}", {
+                    match: match ? matchLabel(match) : t("unavailable"),
+                  });
   return (
     <dialog
       ref={ref}
@@ -853,19 +889,19 @@ export function OrganizerDialogs({
           <header className="mb-7 flex items-start justify-between gap-4">
             <div>
               <p className="section-kicker mb-2">
-                CHILLPONG /{" "}
-                {modal.kind === "match" ? "MATCH FILE" : "ORGANIZER DESK"}
+                {t("CHILLPONG /")}{" "}
+                {modal.kind === "match" ? t("MATCH FILE") : t("ORGANIZER DESK")}
               </p>
               <h2
                 id="organizer-dialog-title"
                 className="font-display text-3xl font-bold uppercase tracking-tight"
               >
-                {title}
+                {t(title)}
               </h2>
             </div>
             <button
               type="button"
-              aria-label="Close tournament controls"
+              aria-label={t("Close tournament controls")}
               className="btn btn-ghost btn-square btn-sm"
               disabled={pending}
               onClick={onClose}
@@ -925,16 +961,21 @@ export function OrganizerDialogs({
                 />
                 <p className="text-sm leading-relaxed text-base-content/65">
                   {modal.player.status === "playing"
-                    ? "This player is currently playing. Their opponent may advance by forfeit when they are removed. "
-                    : "The player leaves the waiting queue and unplayed bracket slots. "}
-                  Completed results remain in history. Pending dependencies are
-                  updated where safe; active downstream matches can block
-                  removal.
+                    ? t(
+                        "This player is currently playing. Their opponent may advance by forfeit when they are removed.",
+                      )
+                    : t(
+                        "The player leaves the waiting queue and unplayed bracket slots.",
+                      )}
+                  {t(
+                    "Completed results remain in history. Pending dependencies are updated where safe; active downstream matches can block removal.",
+                  )}
                 </p>
               </div>
               <p className="text-xs text-base-content/45">
-                Their permanent registration number is retained and will not be
-                reused.
+                {t(
+                  "Their permanent registration number is retained and will not be reused.",
+                )}
               </p>
               <Button
                 variant="danger"
@@ -944,33 +985,35 @@ export function OrganizerDialogs({
                   onAction({ kind: "removePlayer", playerId: modal.player.id })
                 }
               >
-                Remove player
+                {t("Remove player")}
               </Button>
             </div>
           ) : null}
           {modal.kind === "generate" ? (
             <div className="space-y-5">
               <p className="font-display text-2xl font-bold">
-                {playerCount} players / {bracketSize} opening slots
+                {countLabel(playerCount, "player")} /{" "}
+                {countLabel(bracketSize, "slot")}
               </p>
               <p className="font-mono text-xs text-primary">
-                {bracketSize - playerCount} BYEs /{" "}
+                {bracketSize - playerCount} {t("BYEs /")}{" "}
                 {view.elimination === "double"
-                  ? "Double elimination"
-                  : "Single elimination"}
+                  ? t("Double elimination")
+                  : t("Single elimination")}
               </p>
               <p className="text-sm leading-relaxed text-base-content/60">
-                The draw pairs compatible skill levels first, then uses
-                permanent registration order to settle equal choices. Winners
-                advance automatically;{" "}
+                {t(
+                  "The draw pairs compatible skill levels first, then uses permanent registration order to settle equal choices. Winners advance automatically;",
+                )}{" "}
                 {view.elimination === "double"
-                  ? "players leave after their second loss."
-                  : "one loss eliminates a player."}
+                  ? t("players leave after their second loss.")
+                  : t("one loss eliminates a player.")}
               </p>
               {view.generated ? (
                 <p className="border border-secondary/30 p-3 text-xs text-secondary/90">
-                  This regenerates the unplayed bracket and replaces manual
-                  opening assignments. Registered players stay intact.
+                  {t(
+                    "This regenerates the unplayed bracket and replaces manual opening assignments. Registered players stay intact.",
+                  )}
                 </p>
               ) : null}
               <Button
@@ -979,23 +1022,26 @@ export function OrganizerDialogs({
                 disabled={playerCount < 2 || !view.canChangeFormat}
                 onClick={() => onAction({ kind: "generateBracket" })}
               >
-                Generate bracket
+                {t("Generate bracket")}
               </Button>
             </div>
           ) : null}
           {modal.kind === "undo" ? (
             <div className="space-y-5">
               <p className="text-sm text-base-content/60">
-                Restore the tournament state immediately before the most recent
-                organizer action.
+                {t(
+                  "Restore the tournament state immediately before the most recent organizer action.",
+                )}
               </p>
               <p className="border border-base-300 p-4 font-mono text-xs">
-                {lastAction?.label ?? "Most recent action"}
+                {lastAction
+                  ? translateHistory(lastAction.label)
+                  : t("Most recent action")}
               </p>
               <p className="text-xs leading-relaxed text-base-content/45">
-                Player registration counters continue forward so registration
-                numbers remain permanent. Restored results, assignments and
-                queue positions are saved automatically.
+                {t(
+                  "Player registration counters continue forward so registration numbers remain permanent. Restored results, assignments and queue positions are saved automatically.",
+                )}
               </p>
               <Button
                 data-ocid="tournament.confirm_undo_button"
@@ -1003,7 +1049,7 @@ export function OrganizerDialogs({
                 disabled={!view.canUndo}
                 onClick={() => onAction({ kind: "undo" })}
               >
-                Confirm undo
+                {t("Confirm undo")}
               </Button>
             </div>
           ) : null}
@@ -1013,12 +1059,12 @@ export function OrganizerDialogs({
               role="alert"
               className="mt-5 border border-error/35 px-4 py-3 text-sm text-error"
             >
-              {error}
+              {translateError(error)}
             </p>
           ) : null}
           <footer className="mt-6 flex justify-end border-t border-base-300 pt-4">
             <Button variant="ghost" disabled={pending} onClick={onClose}>
-              {modal.kind === "match" ? "Close" : "Cancel"}
+              {modal.kind === "match" ? t("Close") : t("Cancel")}
             </Button>
           </footer>
         </div>

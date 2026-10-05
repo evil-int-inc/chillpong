@@ -1,3 +1,4 @@
+import { useI18n } from "@/i18n";
 import {
   BRACKET_LABELS,
   type BracketLane,
@@ -25,6 +26,7 @@ export function BracketGraph({
   players,
   onSelect,
 }: BracketGraphProps) {
+  const { t } = useI18n();
   const [zoom, setZoom] = useState(1);
   const viewportRef = useRef<HTMLDivElement>(null);
   const layout = useMemo(() => {
@@ -89,7 +91,9 @@ export function BracketGraph({
             index: column,
             caption: groupRounds
               .map((round) =>
-                round === 0 ? "Qualifiers / round 0" : `Round ${round}`,
+                round === 0
+                  ? t("Qualifiers / round 0")
+                  : t("Round {round}", { round }),
               )
               .join(" + "),
           };
@@ -120,7 +124,7 @@ export function BracketGraph({
       width: 56 + columns * COLUMN_WIDTH - (COLUMN_WIDTH - CARD_WIDTH),
       height: top,
     };
-  }, [matches]);
+  }, [matches, t]);
   const byId = new Map(
     layout.nodes.map((node) => [node.match.id.toString(), node]),
   );
@@ -129,18 +133,19 @@ export function BracketGraph({
     return (
       <div className="club-state">
         <p className="font-display text-2xl font-bold uppercase">
-          No bracket yet.
+          {t("No bracket yet.")}
         </p>
         <p className="mt-3 text-sm text-base-content/50">
-          The full tournament tree appears when the organizer generates the
-          bracket.
+          {t(
+            "The full tournament tree appears when the organizer generates the bracket.",
+          )}
         </p>
       </div>
     );
   }
 
   return (
-    <section aria-label="Complete tournament bracket">
+    <section aria-label={t("Complete tournament bracket")}>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-wider text-base-content/45">
           <span className="flex items-center gap-2">
@@ -148,22 +153,22 @@ export function BracketGraph({
               className="w-5 border-t border-primary/60"
               aria-hidden="true"
             />{" "}
-            Winner advances
+            {t("Winner advances")}
           </span>
           <span className="flex items-center gap-2">
             <span
               className="w-5 border-t border-dashed border-secondary/60"
               aria-hidden="true"
             />{" "}
-            Loser drops
+            {t("Loser drops")}
           </span>
-          <span>Scroll to pan / select any match</span>
+          <span>{t("Scroll to pan / select any match")}</span>
         </div>
         <div className="flex items-center gap-2 border border-base-300 p-1">
           <button
             type="button"
             className="btn btn-ghost btn-square btn-xs"
-            aria-label="Zoom bracket out"
+            aria-label={t("Zoom bracket out")}
             disabled={zoom <= 0.1}
             onClick={() =>
               setZoom((value) =>
@@ -175,14 +180,14 @@ export function BracketGraph({
           </button>
           <output
             className="w-10 text-center font-mono text-[10px]"
-            aria-label="Bracket zoom"
+            aria-label={t("Bracket zoom")}
           >
             {Math.round(zoom * 100)}%
           </output>
           <button
             type="button"
             className="btn btn-ghost btn-square btn-xs"
-            aria-label="Zoom bracket in"
+            aria-label={t("Zoom bracket in")}
             disabled={zoom >= 1.6}
             onClick={() =>
               setZoom((value) =>
@@ -211,12 +216,13 @@ export function BracketGraph({
               viewport.scrollTo({ top: 0, left: 0 });
             }}
           >
-            <Maximize2 className="size-3.5" aria-hidden="true" /> Fit bracket
+            <Maximize2 className="size-3.5" aria-hidden="true" />{" "}
+            {t("Fit bracket")}
           </button>
           <button
             type="button"
             className="btn btn-ghost btn-square btn-xs"
-            aria-label="Reset bracket zoom"
+            aria-label={t("Reset bracket zoom")}
             onClick={() => setZoom(1)}
           >
             <RotateCcw className="size-3.5" aria-hidden="true" />
@@ -227,7 +233,7 @@ export function BracketGraph({
         ref={viewportRef}
         data-ocid="tournament.bracket"
         className="bracket-viewport max-h-[75vh] overflow-auto border border-base-300 bg-base-100"
-        aria-label="Scrollable bracket graph"
+        aria-label={t("Scrollable bracket graph")}
       >
         <div
           style={{ width: layout.width * zoom, height: layout.height * zoom }}
@@ -287,12 +293,12 @@ export function BracketGraph({
                   className="absolute left-7 font-display text-lg font-bold uppercase tracking-tight"
                   style={{ top: heading.top }}
                 >
-                  {BRACKET_LABELS[heading.lane]}
+                  {t(BRACKET_LABELS[heading.lane])}
                   <span className="ml-3 font-mono text-[10px] font-normal text-base-content/30">
                     {heading.lane === "resetFinal"
-                      ? "Only if the unbeaten finalist loses"
+                      ? t("Only if the unbeaten finalist loses")
                       : heading.lane === "losers"
-                        ? "Second loss = elimination"
+                        ? t("Second loss = elimination")
                         : ""}
                   </span>
                 </h3>
@@ -307,8 +313,8 @@ export function BracketGraph({
                   >
                     {heading.lane === "grandFinal" ||
                     heading.lane === "resetFinal"
-                      ? "Championship"
-                      : column.caption}
+                      ? t("Championship")
+                      : t(column.caption)}
                   </p>
                 ))}
               </div>

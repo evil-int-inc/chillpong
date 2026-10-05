@@ -1,6 +1,14 @@
 import { Role, type User, createActor } from "@/backend";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  type LocalizedMessage,
+  getLocale,
+  translateError,
+  useI18n,
+} from "@/i18n";
+import { formatClubDate } from "@/i18n/date";
+import { countLabel } from "@/i18n/plurals";
 import { userService } from "@/services/users";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { Principal } from "@icp-sdk/core/principal";
@@ -31,7 +39,7 @@ function memberInitials(name: string) {
 }
 
 function memberDate(timestamp: bigint) {
-  return new Date(Number(timestamp / 1_000_000n)).toLocaleDateString("en-GB", {
+  return formatClubDate(new Date(Number(timestamp / 1_000_000n)), {
     month: "short",
     year: "numeric",
     timeZone: "Asia/Tbilisi",
@@ -39,6 +47,7 @@ function memberDate(timestamp: bigint) {
 }
 
 export function UsersPage() {
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
@@ -50,7 +59,7 @@ export function UsersPage() {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<LocalizedMessage | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const keepsExistingUsername =
     editor !== null &&
@@ -83,9 +92,10 @@ export function UsersPage() {
         : userService.update(actor, memberId, input);
     },
     onSuccess: (user) => {
-      setNotice(
-        `${user.displayName || user.username || "This member"}'s member details are saved.`,
-      );
+      setNotice({
+        message: "{name}'s member details are saved.",
+        params: { name: user.displayName || user.username || t("This member") },
+      });
       setEditor(null);
       void queryClient.invalidateQueries({ queryKey: USERS_QUERY_KEY });
       void queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
@@ -167,22 +177,25 @@ export function UsersPage() {
             .toLowerCase()
             .includes(query)),
     )
-    .sort((a, b) => a.displayName.localeCompare(b.displayName));
+    .sort((a, b) => a.displayName.localeCompare(b.displayName, getLocale()));
   const loading = usersQuery.isLoading || (isFetching && !usersQuery.data);
 
   return (
     <div data-ocid="users_page" className="club-page">
       <header className="mb-10 flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p className="section-kicker mb-4">CHILLPONG / ADMIN ACCOUNTS</p>
+          <p className="section-kicker mb-4">
+            {t("CHILLPONG / ADMIN ACCOUNTS")}
+          </p>
           <h1 className="page-title">
-            CLUB
+            {t("CLUB")}
             <br />
-            <span className="text-primary">ACCOUNTS.</span>
+            <span className="text-primary">{t("ACCOUNTS.")}</span>
           </h1>
           <p className="mt-5 max-w-xl text-sm leading-relaxed text-base-content/60">
-            Manage member identities and account details. Tournament entrants
-            are listed on the Players page.
+            {t(
+              "Manage member identities and account details. Tournament entrants are listed on the Players page.",
+            )}
           </p>
         </div>
         {isAdmin ? (
@@ -190,18 +203,20 @@ export function UsersPage() {
             data-ocid="users.add_button"
             onClick={() => openEditor("new")}
           >
-            <Plus className="size-4" aria-hidden="true" /> Add user
+            <Plus className="size-4" aria-hidden="true" /> {t("Add user")}
           </Button>
         ) : (
           <span className="technical-label flex items-center gap-2 border-l border-primary pl-4">
             <Users className="size-4 text-primary" aria-hidden="true" />
-            {loading ? "Connecting" : `${users.length} club members`}
+            {loading
+              ? t("Connecting")
+              : t("{v1} club members", { v1: users.length })}
           </span>
         )}
       </header>
 
       <div className="club-toolbar mb-6 flex flex-wrap items-center justify-between gap-4 border-y border-base-300 py-4">
-        <div className="flex gap-1" aria-label="Filter members">
+        <div className="flex gap-1" aria-label={t("Filter members")}>
           {(["all", "admin"] as const).map((filter) => (
             <button
               key={filter}
@@ -211,7 +226,7 @@ export function UsersPage() {
               className={`club-filter ${roleFilter === filter ? "is-active" : ""}`}
               onClick={() => setRoleFilter(filter)}
             >
-              {filter === "all" ? "All users" : "Admins"}
+              {filter === "all" ? t("All users") : t("Admins")}
               <span className="ml-2 opacity-50">
                 {filter === "all"
                   ? users.length
@@ -228,8 +243,8 @@ export function UsersPage() {
           <input
             type="search"
             data-ocid="users.search_input"
-            aria-label="Search users"
-            placeholder="FIND YOUR PEOPLE"
+            aria-label={t("Search users")}
+            placeholder={t("FIND YOUR PEOPLE")}
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             className="min-w-0 flex-1 bg-transparent py-3 font-mono text-xs outline-none placeholder:text-base-content/40"
@@ -242,7 +257,8 @@ export function UsersPage() {
           data-ocid="users.success_state"
           className="mb-5 flex items-center gap-2 border border-primary/30 bg-primary/5 px-4 py-3 text-sm"
         >
-          <Check className="size-4 text-primary" aria-hidden="true" /> {notice}
+          <Check className="size-4 text-primary" aria-hidden="true" />{" "}
+          {t(notice)}
         </output>
       ) : null}
 
@@ -251,7 +267,7 @@ export function UsersPage() {
           data-ocid="users.loading_state"
           aria-live="polite"
           aria-busy="true"
-          aria-label="Loading users"
+          aria-label={t("Loading users")}
           className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
         >
           {[1, 2, 3, 4, 5, 6].map((item) => (
@@ -264,7 +280,7 @@ export function UsersPage() {
               <div className="h-3 w-1/3 bg-base-300" />
             </div>
           ))}
-          <span className="sr-only">Loading the member directory.</span>
+          <span className="sr-only">{t("Loading the member directory.")}</span>
         </div>
       ) : usersQuery.isError ? (
         <div data-ocid="users.error_state" role="alert" className="club-state">
@@ -273,31 +289,31 @@ export function UsersPage() {
             aria-hidden="true"
           />
           <h2 className="font-display text-2xl font-bold uppercase">
-            Directory unavailable.
+            {t("Directory unavailable.")}
           </h2>
           <p className="mt-2 text-sm text-base-content/60">
-            We couldn't load the club members. Try connecting again.
+            {t("We couldn't load the club members. Try connecting again.")}
           </p>
           <Button
             className="mt-6"
             variant="outline"
             onClick={() => void usersQuery.refetch()}
           >
-            Try again
+            {t("Try again")}
           </Button>
         </div>
       ) : filteredUsers.length === 0 ? (
         <div data-ocid="users.empty_state" className="club-state">
           <Users className="mb-4 size-8 text-primary" aria-hidden="true" />
           <h2 className="font-display text-3xl font-bold uppercase">
-            {users.length ? "No matches." : "The lineup starts here."}
+            {users.length ? t("No matches.") : t("The lineup starts here.")}
           </h2>
           <p className="mt-3 max-w-md text-sm text-base-content/60">
             {users.length
-              ? "Try another name or switch the member filter."
+              ? t("Try another name or switch the member filter.")
               : isAdmin
-                ? "Add the first members and build the ChillPong community."
-                : "Club members will appear here once the crew is added."}
+                ? t("Add the first members and build the ChillPong community.")
+                : t("Club members will appear here once the crew is added.")}
           </p>
           {users.length ? (
             <Button
@@ -308,19 +324,18 @@ export function UsersPage() {
                 setRoleFilter("all");
               }}
             >
-              Reset filters
+              {t("Reset filters")}
             </Button>
           ) : isAdmin ? (
             <Button className="mt-6" onClick={() => openEditor("new")}>
-              <Plus className="size-4" aria-hidden="true" /> Add user
+              <Plus className="size-4" aria-hidden="true" /> {t("Add user")}
             </Button>
           ) : null}
         </div>
       ) : (
         <>
           <p className="technical-label mb-4 text-base-content/45">
-            {filteredUsers.length}{" "}
-            {filteredUsers.length === 1 ? "person" : "people"} / IN THE CLUB
+            {countLabel(filteredUsers.length, "person")} {t("/ IN THE CLUB")}
           </p>
           <ul
             data-ocid="users.list"
@@ -349,7 +364,7 @@ export function UsersPage() {
                   {user.role === Role.admin ? (
                     <span className="technical-label flex items-center gap-1.5 text-primary">
                       <ShieldCheck className="size-3.5" aria-hidden="true" />{" "}
-                      Admin
+                      {t("Admin")}
                     </span>
                   ) : (
                     <ArrowUpRight
@@ -359,10 +374,10 @@ export function UsersPage() {
                   )}
                 </div>
                 <h2 className="break-words font-display text-xl font-bold uppercase tracking-tight">
-                  {user.displayName || user.username || "Club member"}
+                  {user.displayName || user.username || t("Club member")}
                 </h2>
                 <p className="mt-1 break-words font-mono text-xs text-base-content/50">
-                  {user.username ? `@${user.username}` : "Username not set"}
+                  {user.username ? `@${user.username}` : t("Username not set")}
                 </p>
                 {user.bio ? (
                   <p className="mt-4 whitespace-pre-wrap break-words text-sm leading-relaxed text-base-content/65">
@@ -371,7 +386,7 @@ export function UsersPage() {
                 ) : null}
                 <div className="mt-6 flex items-center justify-between gap-3 border-t border-base-300 pt-4">
                   <span className="technical-label text-[10px] text-base-content/40">
-                    Joined {memberDate(user.createdAt)}
+                    {t("Joined")} {memberDate(user.createdAt)}
                   </span>
                   {isAdmin ? (
                     <button
@@ -380,10 +395,11 @@ export function UsersPage() {
                       className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-primary hover:underline"
                       onClick={() => openEditor(user)}
                     >
-                      <Pencil className="size-3" aria-hidden="true" /> Edit
+                      <Pencil className="size-3" aria-hidden="true" />{" "}
+                      {t("Edit")}
                       <span className="sr-only">
                         {" "}
-                        {user.displayName || user.username || "Club member"}
+                        {user.displayName || user.username || t("Club member")}
                       </span>
                     </button>
                   ) : null}
@@ -417,17 +433,21 @@ export function UsersPage() {
           <div className="modal-box max-w-xl rounded-none border border-base-300 bg-base-200 p-6 sm:p-8">
             <header className="mb-7 flex items-start justify-between gap-4">
               <div>
-                <p className="section-kicker mb-2">CHILLPONG / MEMBER FILE</p>
+                <p className="section-kicker mb-2">
+                  {t("CHILLPONG / MEMBER FILE")}
+                </p>
                 <h2
                   id="user-dialog-title"
                   className="font-display text-3xl font-bold uppercase tracking-tight"
                 >
-                  {editor === "new" ? "Add to the lineup." : "Edit member."}
+                  {editor === "new"
+                    ? t("Add to the lineup.")
+                    : t("Edit member.")}
                 </h2>
               </div>
               <button
                 type="button"
-                aria-label="Close member editor"
+                aria-label={t("Close member editor")}
                 className="btn btn-ghost btn-square btn-sm"
                 disabled={saveMutation.isPending}
                 onClick={closeEditor}
@@ -444,12 +464,13 @@ export function UsersPage() {
             >
               <label className="block">
                 <span className="technical-label mb-2 block">
-                  Member principal
+                  {t("Member principal")}
                 </span>
                 {editor === "new" ? (
                   <span className="mb-3 block text-xs leading-relaxed text-base-content/60">
-                    Ask the member to sign in and copy their Member ID from the
-                    account menu.
+                    {t(
+                      "Ask the member to sign in and copy their Member ID from the account menu.",
+                    )}
                   </span>
                 ) : null}
                 <input
@@ -463,23 +484,29 @@ export function UsersPage() {
                 />
                 <span className="mt-2 block text-xs text-base-content/50">
                   {editor === "new"
-                    ? "Use the principal shown to this member after signing in."
-                    : "This identity stays attached to the member."}
+                    ? t(
+                        "Use the principal shown to this member after signing in.",
+                      )
+                    : t("This identity stays attached to the member.")}
                 </span>
               </label>
               <label className="block">
-                <span className="technical-label mb-2 block">Display name</span>
+                <span className="technical-label mb-2 block">
+                  {t("Display name")}
+                </span>
                 <input
                   data-ocid="users.name_input"
                   className="input w-full rounded-none"
                   maxLength={80}
                   value={displayName}
                   onChange={(event) => setDisplayName(event.target.value)}
-                  placeholder="Name on the table"
+                  placeholder={t("Name on the table")}
                 />
               </label>
               <label className="block">
-                <span className="technical-label mb-2 block">Username</span>
+                <span className="technical-label mb-2 block">
+                  {t("Username")}
+                </span>
                 <input
                   data-ocid="users.username_input"
                   className="input w-full rounded-none font-mono"
@@ -487,17 +514,19 @@ export function UsersPage() {
                   maxLength={30}
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
-                  placeholder="your-handle"
+                  placeholder={t("your-handle")}
                 />
                 <span className="mt-2 block text-xs text-base-content/50">
                   {keepsExistingUsername
-                    ? "Keep this handle, or choose a new one."
-                    : "3–30 letters, numbers, underscores or hyphens. Saved in lowercase."}
+                    ? t("Keep this handle, or choose a new one.")
+                    : t(
+                        "3–30 letters, numbers, underscores or hyphens. Saved in lowercase.",
+                      )}
                 </span>
               </label>
               <label className="block">
                 <span className="technical-label mb-2 block">
-                  Bio / optional
+                  {t("Bio / optional")}
                 </span>
                 <textarea
                   data-ocid="users.bio_input"
@@ -506,7 +535,7 @@ export function UsersPage() {
                   maxLength={500}
                   value={bio}
                   onChange={(event) => setBio(event.target.value)}
-                  placeholder="A few words about this member."
+                  placeholder={t("A few words about this member.")}
                 />
               </label>
               {formError || saveMutation.isError ? (
@@ -515,10 +544,10 @@ export function UsersPage() {
                   role="alert"
                   className="border border-error/40 px-3 py-3 text-sm text-error"
                 >
-                  {formError ??
+                  {t(formError) ??
                     (saveMutation.error instanceof Error
-                      ? saveMutation.error.message
-                      : "Couldn't save this member. Try again.")}
+                      ? translateError(saveMutation.error.message)
+                      : t("Couldn't save this member. Try again."))}
                 </p>
               ) : null}
               <div className="flex justify-end gap-3 border-t border-base-300 pt-5">
@@ -527,14 +556,14 @@ export function UsersPage() {
                   disabled={saveMutation.isPending}
                   onClick={closeEditor}
                 >
-                  Cancel
+                  {t("Cancel")}
                 </Button>
                 <Button
                   type="submit"
                   data-ocid="users.save_button"
                   loading={saveMutation.isPending}
                 >
-                  {editor === "new" ? "Add user" : "Save changes"}
+                  {editor === "new" ? t("Add user") : t("Save changes")}
                 </Button>
               </div>
             </form>

@@ -1,5 +1,6 @@
 import { Avatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 import { Link, useLocation } from "@tanstack/react-router";
 import {
   ArrowUpRight,
@@ -10,8 +11,10 @@ import {
   UserRound,
 } from "lucide-react";
 import { useState } from "react";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
+  const { t } = useI18n();
   const { pathname } = useLocation();
   const {
     isAuthenticated,
@@ -54,14 +57,14 @@ export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
           type="button"
           className="btn btn-ghost btn-square lg:hidden"
           onClick={onOpenSidebar}
-          aria-label="Open sidebar"
+          aria-label={t("Open sidebar")}
           data-ocid="layout.sidebar_toggle"
         >
           <Menu className="size-5" />
         </button>
         <Link
           to="/tournaments"
-          aria-label="ChillPong home"
+          aria-label={t("ChillPong home")}
           className="shrink-0"
         >
           <img
@@ -72,36 +75,37 @@ export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
             className="size-9 rounded-full"
           />
         </Link>
+        <LanguageSwitcher />
         <div className="hidden items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em] sm:flex">
           <span className="text-base-content/40">CHILL PONG</span>
           <span className="text-base-content/25">/</span>
-          <span>{title}</span>
+          <span>{t(title)}</span>
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-4">
         <span className="hidden items-center gap-2 font-mono text-[10px] tracking-[0.14em] text-base-content/50 xl:flex">
           <span className="size-1.5 bg-secondary" />
-          TBILISI / AFTER HOURS
+          {t("TBILISI / AFTER HOURS")}
         </span>
         {isAuthenticated ? (
           <details className="dropdown dropdown-end border-l border-base-300 pl-3">
             <summary
               data-ocid="layout.user_identity"
-              aria-label="Account details"
+              aria-label={t("Account details")}
               className="btn btn-ghost flex items-center gap-2.5 px-1 normal-case"
             >
               <Avatar
                 src={profile?.avatar?.getDirectURL()}
-                name={profile?.displayName || profile?.username || "Member"}
+                name={profile?.displayName || profile?.username || t("Member")}
                 size="sm"
               />
               <span className="hidden max-w-36 truncate text-sm sm:block">
-                {profile?.displayName || profile?.username || "Club member"}
+                {profile?.displayName || profile?.username || t("Club member")}
               </span>
               {isAdmin ? (
                 <ShieldCheck
                   className="size-4 text-primary"
-                  aria-label="Admin account"
+                  aria-label={t("Admin account")}
                 />
               ) : null}
             </summary>
@@ -116,10 +120,10 @@ export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
                 }
               >
                 <UserRound className="size-4" aria-hidden="true" />
-                My profile
+                {t("My profile")}
               </Link>
               <p className="technical-label mb-3 text-base-content/60">
-                Your Member ID
+                {t("Your Member ID")}
               </p>
               <code className="block select-all break-all font-mono text-xs leading-relaxed">
                 {principal}
@@ -131,16 +135,16 @@ export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
                 disabled={!principal}
               >
                 <Copy className="size-3.5" />
-                Copy member ID
+                {t("Copy member ID")}
               </button>
               <p className="mt-3 text-xs text-base-content/60">
-                Share this ID with an admin to join the lineup.
+                {t("Share this ID with an admin to join the lineup.")}
               </p>
               <output
                 className="mt-2 block text-xs text-primary"
                 aria-live="polite"
               >
-                {copyNotice}
+                {t(copyNotice)}
               </output>
             </div>
           </details>
@@ -153,7 +157,7 @@ export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
             data-ocid="sign_in_button"
           >
             <LogIn className="size-4" />
-            <span>Sign in</span>
+            <span>{t("Sign in")}</span>
             <ArrowUpRight className="hidden size-3.5 sm:block" />
           </button>
         )}

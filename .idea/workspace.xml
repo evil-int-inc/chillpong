@@ -4,30 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="feature/functionality">
-      <change beforePath="$PROJECT_DIR$/mops.toml" beforeDir="false" afterPath="$PROJECT_DIR$/mops.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/dist/backend.did" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/dist/backend.did" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/dist/backend.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/dist/backend.wasm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/lib/roles.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/lib/roles.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/lib/users.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/lib/users.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/mixins/api-doc.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/mixins/api-doc.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/mixins/roles-api.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/mixins/roles-api.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/mixins/users-api.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/mixins/users-api.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/types/users.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/types/users.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-DrnkZXhp.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-SMdeMff-.js" beforeDir="false" />
+    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="feature/user-pfoile">
+      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-CpZqi8VU.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-Dc--mfFV.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/backend.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/backend.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/backend.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/backend.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/auth/RequireAuth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/auth/RequireAuth.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/components/layout/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/layout/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/mocks/backend.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/mocks/backend.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/layout/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/layout/Sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/MatchCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/MatchCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/PlayersPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/PlayersPanel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/StandardView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/StandardView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/ui/Button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/ui/Button.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/ui/ErrorState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/ui/ErrorState.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/ui/Loader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/ui/Loader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/ui/layouts/MainLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/ui/layouts/MainLayout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/AdminPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/AdminPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/PlayersPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/PlayersPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/ProfilePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/ProfilePage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentsPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/UsersPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/UsersPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/services/auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/services/auth.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/pocketic/backend.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/pocketic/backend.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/types/player-filters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/types/player-filters.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/types/tournament-manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/types/tournament-manager.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +118,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791152384273</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feature/user-pfoile">
+      <option name="closed" value="true" />
+      <created>1791192461856</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1791192461857</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TerminalProjectNonSharedOptionsProvider">
@@ -137,6 +146,7 @@
     <MESSAGE value="feature/redesign" />
     <MESSAGE value="feature/redesign-2" />
     <MESSAGE value="feature/functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature/functionality" />
+    <MESSAGE value="feature/user-pfoile" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature/user-pfoile" />
   </component>
 </project>

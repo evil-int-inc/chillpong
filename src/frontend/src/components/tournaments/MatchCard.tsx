@@ -1,3 +1,4 @@
+import { useI18n } from "@/i18n";
 import {
   BRACKET_LABELS,
   type TournamentMatchView,
@@ -24,6 +25,7 @@ export function MatchCard({
   onSelect,
   compact = false,
 }: MatchCardProps) {
+  const { t } = useI18n();
   const sides = [
     {
       id: match.playerAId,
@@ -49,11 +51,14 @@ export function MatchCard({
         <span className="technical-label flex items-center gap-2 text-[9px] text-base-content/45">
           {compact
             ? matchLabel(match)
-            : `${BRACKET_LABELS[match.bracket]} / R${match.round}`}
+            : t("{v1} / R{v2}", {
+                v1: t(BRACKET_LABELS[match.bracket]),
+                v2: match.round,
+              })}
           {compact && (match.manualOverride || match.prioritized) ? (
-            <span title="Manual override" className="text-secondary">
+            <span title={t("Manual override")} className="text-secondary">
               <Flag className="size-3" aria-hidden="true" />
-              <span className="sr-only">Manual override</span>
+              <span className="sr-only">{t("Manual override")}</span>
             </span>
           ) : null}
         </span>
@@ -63,18 +68,18 @@ export function MatchCard({
           {match.table ? (
             <>
               <Table2 className="size-3" aria-hidden="true" /> T{match.table} /{" "}
-              {match.status}
+              {t(match.status)}
             </>
           ) : match.status === "completed" ? (
-            "Final"
+            t("Final")
           ) : match.status === "bye" ? (
-            "BYE"
+            t("BYE")
           ) : match.status === "void" ? (
-            "Voided"
+            t("Voided")
           ) : match.status === "ready" ? (
-            "Ready"
+            t("Ready")
           ) : (
-            "Waiting"
+            t("Waiting")
           )}
         </span>
       </div>
@@ -101,8 +106,8 @@ export function MatchCard({
                 ) : (
                   <p className="mt-0.5 font-mono text-[9px] text-base-content/25">
                     {side.source.kind === "bye"
-                      ? "Automatic advance"
-                      : "Bracket dependency"}
+                      ? t("Automatic advance")
+                      : t("Bracket dependency")}
                   </p>
                 )}
               </div>
@@ -118,11 +123,12 @@ export function MatchCard({
       {!compact ? (
         <div className="mt-4 flex items-center justify-between border-t border-base-300 pt-3">
           <span className="technical-label text-[9px] text-base-content/40">
-            {matchLabel(match)} / {match.status}
+            {matchLabel(match)} / {t(match.status)}
           </span>
           {match.manualOverride || match.prioritized ? (
             <span className="technical-label flex items-center gap-1 text-[8px] text-secondary">
-              <Flag className="size-3" aria-hidden="true" /> Manual override
+              <Flag className="size-3" aria-hidden="true" />{" "}
+              {t("Manual override")}
             </span>
           ) : (
             <ArrowUpRight

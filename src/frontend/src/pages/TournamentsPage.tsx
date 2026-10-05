@@ -7,6 +7,14 @@ import {
 } from "@/backend";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  type LocalizedMessage,
+  getLocale,
+  translateError,
+  useI18n,
+} from "@/i18n";
+import { formatClubDate } from "@/i18n/date";
+import { countLabel } from "@/i18n/plurals";
 import { tournamentService } from "@/services/tournaments";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -37,14 +45,14 @@ function eventDate(timestamp: bigint) {
 }
 
 function datePart(timestamp: bigint, options: Intl.DateTimeFormatOptions) {
-  return eventDate(timestamp).toLocaleDateString("en-GB", {
+  return formatClubDate(eventDate(timestamp), {
     ...options,
     timeZone: TBILISI_TIME_ZONE,
   });
 }
 
 function eventTime(timestamp: bigint) {
-  return eventDate(timestamp).toLocaleTimeString("en-GB", {
+  return eventDate(timestamp).toLocaleTimeString(getLocale(), {
     hour: "2-digit",
     minute: "2-digit",
     hourCycle: "h23",
@@ -69,6 +77,7 @@ function toVenueDateTime(timestamp: bigint) {
 }
 
 function CourtGraphic() {
+  const { t } = useI18n();
   return (
     <div
       className="tournament-art relative hidden min-h-72 overflow-hidden lg:flex lg:items-center lg:justify-center"
@@ -131,7 +140,7 @@ function CourtGraphic() {
           fontSize="9"
           letterSpacing="3"
         >
-          THE TABLE IS THE DANCE FLOOR.
+          {t("THE TABLE IS THE DANCE FLOOR.")}
         </text>
         <text
           x="280"
@@ -146,13 +155,14 @@ function CourtGraphic() {
         </text>
       </svg>
       <span className="absolute right-3 top-5 border border-primary px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-primary rotate-[-5deg]">
-        Tbilisi / After hours
+        {t("Tbilisi / After hours")}
       </span>
     </div>
   );
 }
 
 function TournamentBadge({ status }: { status: TournamentStatus }) {
+  const { t } = useI18n();
   return (
     <span
       className={`tournament-status tournament-status-${status} technical-label inline-flex items-center gap-2 border px-2.5 py-1 text-[10px] ${status === TournamentStatus.live ? "border-secondary/50 text-secondary" : status === TournamentStatus.upcoming ? "border-primary/35 text-primary" : "border-base-300 text-base-content/40"}`}
@@ -161,15 +171,16 @@ function TournamentBadge({ status }: { status: TournamentStatus }) {
         <span className="size-1.5 bg-secondary" aria-hidden="true" />
       ) : null}
       {status === TournamentStatus.completed
-        ? "Completed"
+        ? t("Completed")
         : status === TournamentStatus.live
-          ? "Live now"
-          : "Upcoming"}
+          ? t("Live now")
+          : t("Upcoming")}
     </span>
   );
 }
 
 export function TournamentsPage() {
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
@@ -185,7 +196,7 @@ export function TournamentsPage() {
   const [capacity, setCapacity] = useState("16");
   const [status, setStatus] = useState(TournamentStatus.upcoming);
   const [formError, setFormError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<LocalizedMessage | null>(null);
   const editorRef = useRef<HTMLDialogElement>(null);
   const detailRef = useRef<HTMLDialogElement>(null);
 
@@ -207,7 +218,10 @@ export function TournamentsPage() {
         : tournamentService.update(actor, editor.id, input);
     },
     onSuccess: (tournament) => {
-      setNotice(`${tournament.title} is saved. See you at the table.`);
+      setNotice({
+        message: "{title} is saved. See you at the table.",
+        params: { title: tournament.title },
+      });
       setEditor(null);
       void queryClient.invalidateQueries({ queryKey: TOURNAMENTS_QUERY_KEY });
     },
@@ -307,7 +321,8 @@ export function TournamentsPage() {
       const priority = { live: 0, upcoming: 1, completed: 2 };
       const byStatus = priority[a.status] - priority[b.status];
       if (byStatus) return byStatus;
-      if (a.startsAt === b.startsAt) return a.title.localeCompare(b.title);
+      if (a.startsAt === b.startsAt)
+        return a.title.localeCompare(b.title, getLocale());
       const byDate = a.startsAt < b.startsAt ? -1 : 1;
       return a.status === TournamentStatus.completed ? -byDate : byDate;
     });
@@ -324,28 +339,30 @@ export function TournamentsPage() {
     <div data-ocid="tournaments_page" className="club-page">
       <section className="tournament-hero relative grid gap-4 border-b border-base-300 pb-9 lg:grid-cols-[1.2fr_1fr]">
         <div className="relative z-10">
-          <p className="section-kicker mb-5">CHILLPONG / TBILISI UNDERGROUND</p>
+          <p className="section-kicker mb-5">
+            {t("CHILLPONG / TBILISI UNDERGROUND")}
+          </p>
           <h1 className="page-title">
-            AFTER DARK.
+            {t("AFTER DARK.")}
             <br />
-            <span className="text-primary">GAME ON.</span>
+            <span className="text-primary">{t("GAME ON.")}</span>
           </h1>
           <p className="mt-6 max-w-md text-sm leading-relaxed text-base-content/60">
-            Underground ping-pong. Tbilisi nights.
+            {t("Underground ping-pong. Tbilisi nights.")}
             <br />
-            Find your next tournament and meet us at the table.
+            {t("Find your next tournament and meet us at the table.")}
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-5">
             <a
               href="#tournament-board"
               className="technical-label inline-flex items-center gap-3 text-base-content hover:text-primary"
             >
-              Explore tournaments{" "}
+              {t("Explore tournaments")}{" "}
               <ArrowDown className="size-4" aria-hidden="true" />
             </a>
             <span className="h-5 border-l border-base-300" aria-hidden="true" />
             <span className="technical-label text-base-content/40">
-              Paddles up. Phones down.
+              {t("Paddles up. Phones down.")}
             </span>
           </div>
         </div>
@@ -363,12 +380,15 @@ export function TournamentsPage() {
               id="tournament-board-title"
               className="font-display text-2xl font-bold uppercase tracking-tight"
             >
-              The tournament board
+              {t("The tournament board")}
             </h2>
             <span className="technical-label text-base-content/40">
               {loading
-                ? "Connecting…"
-                : `${upcomingCount} upcoming / ${liveCount} live`}
+                ? t("Connecting…")
+                : t("{v1} upcoming / {v2} live", {
+                    v1: upcomingCount,
+                    v2: liveCount,
+                  })}
             </span>
           </div>
           {isAdmin ? (
@@ -376,12 +396,16 @@ export function TournamentsPage() {
               data-ocid="tournaments.add_button"
               onClick={() => openEditor("new")}
             >
-              <Plus className="size-4" aria-hidden="true" /> New tournament
+              <Plus className="size-4" aria-hidden="true" />{" "}
+              {t("New tournament")}
             </Button>
           ) : null}
         </header>
         <div className="club-toolbar mb-6 flex flex-wrap items-center justify-between gap-4 border-y border-base-300 py-4">
-          <div className="flex flex-wrap gap-1" aria-label="Filter tournaments">
+          <div
+            className="flex flex-wrap gap-1"
+            aria-label={t("Filter tournaments")}
+          >
             {FILTERS.map((item) => (
               <button
                 key={item}
@@ -392,12 +416,12 @@ export function TournamentsPage() {
                 onClick={() => setFilter(item)}
               >
                 {item === "all"
-                  ? "All tournaments"
+                  ? t("All tournaments")
                   : item === "completed"
-                    ? "Past games"
+                    ? t("Past games")
                     : item === "live"
-                      ? "Live now"
-                      : "Upcoming"}
+                      ? t("Live now")
+                      : t("Upcoming")}
               </button>
             ))}
           </div>
@@ -409,8 +433,8 @@ export function TournamentsPage() {
             <input
               type="search"
               data-ocid="tournaments.search_input"
-              aria-label="Search tournaments"
-              placeholder="FIND A TOURNAMENT"
+              aria-label={t("Search tournaments")}
+              placeholder={t("FIND A TOURNAMENT")}
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               className="min-w-0 flex-1 bg-transparent py-3 font-mono text-xs outline-none placeholder:text-base-content/40"
@@ -424,7 +448,7 @@ export function TournamentsPage() {
             className="mb-5 flex items-center gap-2 border border-primary/30 bg-primary/5 px-4 py-3 text-sm"
           >
             <Check className="size-4 text-primary" aria-hidden="true" />
-            {notice}
+            {t(notice)}
           </output>
         ) : null}
 
@@ -433,7 +457,7 @@ export function TournamentsPage() {
             data-ocid="tournaments.loading_state"
             aria-live="polite"
             aria-busy="true"
-            aria-label="Loading tournaments"
+            aria-label={t("Loading tournaments")}
             className="space-y-3"
           >
             {[1, 2, 3].map((item) => (
@@ -448,7 +472,9 @@ export function TournamentsPage() {
                 </div>
               </div>
             ))}
-            <span className="sr-only">Loading the tournament board.</span>
+            <span className="sr-only">
+              {t("Loading the tournament board.")}
+            </span>
           </div>
         ) : tournamentsQuery.isError ? (
           <div
@@ -461,17 +487,17 @@ export function TournamentsPage() {
               aria-hidden="true"
             />
             <h3 className="font-display text-2xl font-bold uppercase">
-              The board is offline.
+              {t("The board is offline.")}
             </h3>
             <p className="mt-2 text-sm text-base-content/60">
-              We couldn't load the tournaments. Try connecting again.
+              {t("We couldn't load the tournaments. Try connecting again.")}
             </p>
             <Button
               variant="outline"
               className="mt-6"
               onClick={() => void tournamentsQuery.refetch()}
             >
-              Try again
+              {t("Try again")}
             </Button>
           </div>
         ) : filteredTournaments.length === 0 ? (
@@ -479,15 +505,19 @@ export function TournamentsPage() {
             <Trophy className="mb-5 size-8 text-primary" aria-hidden="true" />
             <h3 className="font-display text-3xl font-bold uppercase">
               {tournaments.length
-                ? "No games in this corner."
-                : "The next night is loading."}
+                ? t("No games in this corner.")
+                : t("The next night is loading.")}
             </h3>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-base-content/60">
               {tournaments.length
-                ? "Try a different filter or search to find your tournament."
+                ? t("Try a different filter or search to find your tournament.")
                 : isAdmin
-                  ? "Set the venue, pick a date and put the first tournament on the board."
-                  : "New tournaments will land here. Check back for the next night at the table."}
+                  ? t(
+                      "Set the venue, pick a date and put the first tournament on the board.",
+                    )
+                  : t(
+                      "New tournaments will land here. Check back for the next night at the table.",
+                    )}
             </p>
             {tournaments.length ? (
               <Button
@@ -498,11 +528,12 @@ export function TournamentsPage() {
                   setFilter("all");
                 }}
               >
-                Reset filters
+                {t("Reset filters")}
               </Button>
             ) : isAdmin ? (
               <Button className="mt-6" onClick={() => openEditor("new")}>
-                <Plus className="size-4" aria-hidden="true" /> New tournament
+                <Plus className="size-4" aria-hidden="true" />{" "}
+                {t("New tournament")}
               </Button>
             ) : null}
           </div>
@@ -532,7 +563,7 @@ export function TournamentsPage() {
                   <div className="mb-3 flex flex-wrap items-center gap-3">
                     <TournamentBadge status={tournament.status} />
                     <span className="technical-label text-[10px] text-base-content/35">
-                      CP / {tournament.id.toString().padStart(3, "0")}
+                      {t("CP /")} {tournament.id.toString().padStart(3, "0")}
                     </span>
                   </div>
                   <h3 className="break-words font-display text-xl font-bold uppercase tracking-tight sm:text-2xl">
@@ -552,27 +583,29 @@ export function TournamentsPage() {
                     </span>
                     <span className="inline-flex items-center gap-1.5">
                       <Clock3 className="size-3.5" aria-hidden="true" />
-                      {eventTime(tournament.startsAt)} Tbilisi
+                      {eventTime(tournament.startsAt)} {t("Tbilisi")}
                     </span>
                   </div>
                 </div>
                 <div className="hidden space-y-2 lg:block">
                   <p className="technical-label text-[11px] text-base-content/65">
                     {tournament.format === TournamentFormat.doubles
-                      ? "Doubles"
-                      : "Singles"}
+                      ? t("Doubles")
+                      : t("Singles")}
                   </p>
                   <p className="font-mono text-[11px] text-base-content/40">
-                    {tournament.capacity.toString()} expected players
+                    {countLabel(tournament.capacity, "expectedPlayer")}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 sm:flex-col sm:items-end">
                   <a
                     href={`/tournaments/${tournament.id.toString()}`}
                     className="btn btn-primary btn-sm"
-                    aria-label={`Open tournament room for ${tournament.title}`}
+                    aria-label={t("Open tournament room for {v1}", {
+                      v1: tournament.title,
+                    })}
                   >
-                    Open room{" "}
+                    {t("Open room")}{" "}
                     <ArrowUpRight className="size-4" aria-hidden="true" />
                   </a>
                   <Button
@@ -581,9 +614,12 @@ export function TournamentsPage() {
                     size="sm"
                     onClick={() => setDetail(tournament)}
                   >
-                    Details{" "}
+                    {t("Details")}{" "}
                     <ArrowUpRight className="size-4" aria-hidden="true" />
-                    <span className="sr-only"> for {tournament.title}</span>
+                    <span className="sr-only">
+                      {" "}
+                      {t("for")} {tournament.title}
+                    </span>
                   </Button>
                   {isAdmin ? (
                     <button
@@ -592,7 +628,8 @@ export function TournamentsPage() {
                       className="flex items-center gap-1.5 px-2 py-2 font-mono text-[11px] uppercase tracking-wider text-base-content/50 hover:text-primary"
                       onClick={() => openEditor(tournament)}
                     >
-                      <Pencil className="size-3" aria-hidden="true" /> Edit
+                      <Pencil className="size-3" aria-hidden="true" />{" "}
+                      {t("Edit")}
                       <span className="sr-only"> {tournament.title}</span>
                     </button>
                   ) : null}
@@ -602,7 +639,7 @@ export function TournamentsPage() {
           </ul>
         )}
         <p className="technical-label mt-6 text-[10px] text-base-content/35">
-          All start times are local to Tbilisi / UTC +04:00
+          {t("All start times are local to Tbilisi / UTC +04:00")}
         </p>
       </section>
 
@@ -630,13 +667,14 @@ export function TournamentsPage() {
             <header className="mb-7 flex items-start justify-between gap-4">
               <div>
                 <p className="section-kicker mb-3">
-                  CHILLPONG / TOURNAMENT {detail.id.toString().padStart(3, "0")}
+                  {t("CHILLPONG / TOURNAMENT")}{" "}
+                  {detail.id.toString().padStart(3, "0")}
                 </p>
                 <TournamentBadge status={detail.status} />
               </div>
               <button
                 type="button"
-                aria-label="Close tournament details"
+                aria-label={t("Close tournament details")}
                 className="btn btn-ghost btn-square btn-sm"
                 onClick={() => setDetail(null)}
               >
@@ -652,8 +690,8 @@ export function TournamentsPage() {
             <dl className="my-7 grid gap-5 border-y border-base-300 py-6 sm:grid-cols-2">
               <div>
                 <dt className="technical-label mb-2 flex items-center gap-2 text-base-content/45">
-                  <CalendarDays className="size-3.5" aria-hidden="true" /> Date
-                  / time
+                  <CalendarDays className="size-3.5" aria-hidden="true" />{" "}
+                  {t("Date / time")}
                 </dt>
                 <dd className="text-sm">
                   {datePart(detail.startsAt, {
@@ -663,33 +701,35 @@ export function TournamentsPage() {
                     year: "numeric",
                   })}
                   <br />
-                  {eventTime(detail.startsAt)} / Tbilisi
+                  {eventTime(detail.startsAt)} {t("/ Tbilisi")}
                 </dd>
               </div>
               <div>
                 <dt className="technical-label mb-2 flex items-center gap-2 text-base-content/45">
-                  <MapPin className="size-3.5" aria-hidden="true" /> Venue
+                  <MapPin className="size-3.5" aria-hidden="true" />{" "}
+                  {t("Venue")}
                 </dt>
                 <dd className="break-words text-sm">{detail.venue}</dd>
               </div>
               <div>
                 <dt className="technical-label mb-2 flex items-center gap-2 text-base-content/45">
-                  <Trophy className="size-3.5" aria-hidden="true" /> Game mode
+                  <Trophy className="size-3.5" aria-hidden="true" />{" "}
+                  {t("Game mode")}
                 </dt>
                 <dd className="text-sm">
                   {detail.format === TournamentFormat.doubles
-                    ? "Doubles / teams of two"
-                    : "Singles / one vs. one"}
+                    ? t("Doubles / teams of two")
+                    : t("Singles / one vs. one")}
                 </dd>
               </div>
               <div>
                 <dt className="technical-label mb-2 flex items-center gap-2 text-base-content/45">
-                  <Users className="size-3.5" aria-hidden="true" /> Expected
-                  players
+                  <Users className="size-3.5" aria-hidden="true" />{" "}
+                  {t("Expected players")}
                 </dt>
                 <dd className="text-sm">
-                  {detail.capacity.toString()} expected players / registration
-                  stays open
+                  {countLabel(detail.capacity, "expectedPlayer")} /{" "}
+                  {t("registration stays open")}
                 </dd>
               </div>
             </dl>
@@ -699,24 +739,24 @@ export function TournamentsPage() {
               </p>
             ) : (
               <p className="text-sm text-base-content/45">
-                More details will be announced by the crew.
+                {t("More details will be announced by the crew.")}
               </p>
             )}
             <footer className="mt-8 flex flex-wrap justify-end gap-3">
               <Button variant="ghost" onClick={() => setDetail(null)}>
-                Close
+                {t("Close")}
               </Button>
               <a
                 href={`/tournaments/${detail.id.toString()}`}
                 className="btn btn-primary"
               >
-                Open tournament room{" "}
+                {t("Open tournament room")}{" "}
                 <ArrowUpRight className="size-4" aria-hidden="true" />
               </a>
               {isAdmin ? (
                 <Button variant="outline" onClick={() => openEditor(detail)}>
-                  <Pencil className="size-4" aria-hidden="true" /> Edit
-                  tournament
+                  <Pencil className="size-4" aria-hidden="true" />{" "}
+                  {t("Edit tournament")}
                 </Button>
               ) : null}
             </footer>
@@ -747,17 +787,21 @@ export function TournamentsPage() {
           <div className="modal-box max-w-2xl rounded-none border border-base-300 bg-base-200 p-6 sm:p-8">
             <header className="mb-7 flex items-start justify-between gap-4">
               <div>
-                <p className="section-kicker mb-2">CHILLPONG / SET THE NIGHT</p>
+                <p className="section-kicker mb-2">
+                  {t("CHILLPONG / SET THE NIGHT")}
+                </p>
                 <h2
                   id="tournament-editor-title"
                   className="font-display text-3xl font-bold uppercase tracking-tight"
                 >
-                  {editor === "new" ? "New tournament." : "Edit tournament."}
+                  {editor === "new"
+                    ? t("New tournament.")
+                    : t("Edit tournament.")}
                 </h2>
               </div>
               <button
                 type="button"
-                aria-label="Close tournament editor"
+                aria-label={t("Close tournament editor")}
                 className="btn btn-ghost btn-square btn-sm"
                 disabled={saveMutation.isPending}
                 onClick={closeEditor}
@@ -774,7 +818,7 @@ export function TournamentsPage() {
             >
               <label className="block">
                 <span className="technical-label mb-2 block">
-                  Tournament title
+                  {t("Tournament title")}
                 </span>
                 <input
                   data-ocid="tournaments.title_input"
@@ -783,11 +827,11 @@ export function TournamentsPage() {
                   maxLength={100}
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
-                  placeholder="Give the night a name"
+                  placeholder={t("Give the night a name")}
                 />
               </label>
               <label className="block">
-                <span className="technical-label mb-2 block">Venue</span>
+                <span className="technical-label mb-2 block">{t("Venue")}</span>
                 <input
                   data-ocid="tournaments.venue_input"
                   className="input w-full rounded-none"
@@ -795,13 +839,13 @@ export function TournamentsPage() {
                   maxLength={150}
                   value={venue}
                   onChange={(event) => setVenue(event.target.value)}
-                  placeholder="Bar name / address"
+                  placeholder={t("Bar name / address")}
                 />
               </label>
               <div className="grid gap-5 sm:grid-cols-2">
                 <label className="block">
                   <span className="technical-label mb-2 block">
-                    Start time / Tbilisi (UTC+04)
+                    {t("Start time / Tbilisi (UTC+04)")}
                   </span>
                   <input
                     data-ocid="tournaments.date_input"
@@ -814,7 +858,7 @@ export function TournamentsPage() {
                 </label>
                 <label className="block">
                   <span className="technical-label mb-2 block">
-                    Expected players
+                    {t("Expected players")}
                   </span>
                   <input
                     data-ocid="tournaments.capacity_input"
@@ -827,11 +871,13 @@ export function TournamentsPage() {
                     onChange={(event) => setCapacity(event.target.value)}
                   />
                   <span className="mt-2 block text-xs text-base-content/50">
-                    Planning estimate. Registration stays open.
+                    {t("Planning estimate. Registration stays open.")}
                   </span>
                 </label>
                 <label className="block">
-                  <span className="technical-label mb-2 block">Game mode</span>
+                  <span className="technical-label mb-2 block">
+                    {t("Game mode")}
+                  </span>
                   <select
                     data-ocid="tournaments.format_select"
                     className="select w-full rounded-none"
@@ -840,12 +886,18 @@ export function TournamentsPage() {
                       setFormat(event.target.value as TournamentFormat)
                     }
                   >
-                    <option value={TournamentFormat.singles}>Singles</option>
-                    <option value={TournamentFormat.doubles}>Doubles</option>
+                    <option value={TournamentFormat.singles}>
+                      {t("Singles")}
+                    </option>
+                    <option value={TournamentFormat.doubles}>
+                      {t("Doubles")}
+                    </option>
                   </select>
                 </label>
                 <label className="block">
-                  <span className="technical-label mb-2 block">Status</span>
+                  <span className="technical-label mb-2 block">
+                    {t("Status")}
+                  </span>
                   <select
                     data-ocid="tournaments.status_select"
                     className="select w-full rounded-none"
@@ -854,17 +906,21 @@ export function TournamentsPage() {
                       setStatus(event.target.value as TournamentStatus)
                     }
                   >
-                    <option value={TournamentStatus.upcoming}>Upcoming</option>
-                    <option value={TournamentStatus.live}>Live now</option>
+                    <option value={TournamentStatus.upcoming}>
+                      {t("Upcoming")}
+                    </option>
+                    <option value={TournamentStatus.live}>
+                      {t("Live now")}
+                    </option>
                     <option value={TournamentStatus.completed}>
-                      Completed
+                      {t("Completed")}
                     </option>
                   </select>
                 </label>
               </div>
               <label className="block">
                 <span className="technical-label mb-2 block">
-                  The details / optional
+                  {t("The details / optional")}
                 </span>
                 <textarea
                   data-ocid="tournaments.description_input"
@@ -873,7 +929,9 @@ export function TournamentsPage() {
                   maxLength={2000}
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
-                  placeholder="Rules, arrival instructions, entry details. Everything the players need."
+                  placeholder={t(
+                    "Rules, arrival instructions, entry details. Everything the players need.",
+                  )}
                 />
               </label>
               {formError || saveMutation.isError ? (
@@ -882,10 +940,10 @@ export function TournamentsPage() {
                   role="alert"
                   className="border border-error/40 px-3 py-3 text-sm text-error"
                 >
-                  {formError ??
+                  {t(formError) ??
                     (saveMutation.error instanceof Error
-                      ? saveMutation.error.message
-                      : "Couldn't save this tournament. Try again.")}
+                      ? translateError(saveMutation.error.message)
+                      : t("Couldn't save this tournament. Try again."))}
                 </p>
               ) : null}
               <div className="flex justify-end gap-3 border-t border-base-300 pt-5">
@@ -894,14 +952,16 @@ export function TournamentsPage() {
                   disabled={saveMutation.isPending}
                   onClick={closeEditor}
                 >
-                  Cancel
+                  {t("Cancel")}
                 </Button>
                 <Button
                   type="submit"
                   data-ocid="tournaments.save_button"
                   loading={saveMutation.isPending}
                 >
-                  {editor === "new" ? "Create tournament" : "Save changes"}
+                  {editor === "new"
+                    ? t("Create tournament")
+                    : t("Save changes")}
                 </Button>
               </div>
             </form>

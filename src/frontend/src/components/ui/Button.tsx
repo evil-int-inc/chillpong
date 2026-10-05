@@ -1,3 +1,4 @@
+import { useI18n } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { type ButtonHTMLAttributes, forwardRef } from "react";
@@ -41,6 +42,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
+    const { t } = useI18n();
     return (
       <button
         ref={ref}
@@ -60,7 +62,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {loading ? (
           <>
             <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-            <span className="sr-only">Loading</span>
+            <span className="sr-only">{t("Loading")}</span>
           </>
         ) : null}
         {children}

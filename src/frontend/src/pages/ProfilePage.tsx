@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { Input } from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
+import { translateError, useI18n } from "@/i18n";
 import { authService } from "@/services/auth";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -23,6 +24,7 @@ function ProfileEditor({
   principal: string;
   profile: User | null;
 }) {
+  const { t } = useI18n();
   const queryClient = useQueryClient();
   const [name, setName] = useState(profile?.displayName ?? "");
   const [username, setUsername] = useState(profile?.username ?? "");
@@ -77,17 +79,17 @@ function ProfileEditor({
       <div className="flex items-center gap-3 border-b border-base-300 pb-5">
         <UserRound className="size-5 text-primary" aria-hidden="true" />
         <h2 className="font-display text-xl font-semibold uppercase">
-          Your club identity
+          {t("Your club identity")}
         </h2>
       </div>
       <Input
-        label="Name / optional"
+        label={t("Name / optional")}
         autoComplete="name"
         maxLength={80}
-        placeholder="Name at the table"
+        placeholder={t("Name at the table")}
         value={name}
         disabled={saveMutation.isPending}
-        hint="Leave blank if you prefer. Up to 80 characters."
+        hint={t("Leave blank if you prefer. Up to 80 characters.")}
         onChange={(event) => {
           setName(event.target.value);
           setFormError(null);
@@ -95,19 +97,21 @@ function ProfileEditor({
         }}
       />
       <Input
-        label="Username / optional"
+        label={t("Username / optional")}
         autoComplete="username"
         autoCapitalize="none"
         spellCheck={false}
         className="font-mono"
         maxLength={keepsExistingUsername ? undefined : 30}
-        placeholder="your-handle"
+        placeholder={t("your-handle")}
         value={username}
         disabled={saveMutation.isPending}
         hint={
           keepsExistingUsername && username
-            ? "Keep this username, choose another one, or leave it blank."
-            : "Optional. If provided, use 3–30 letters, numbers, underscores or hyphens. Saved in lowercase."
+            ? t("Keep this username, choose another one, or leave it blank.")
+            : t(
+                "Optional. If provided, use 3–30 letters, numbers, underscores or hyphens. Saved in lowercase.",
+              )
         }
         onChange={(event) => {
           setUsername(event.target.value);
@@ -120,10 +124,10 @@ function ProfileEditor({
           role="alert"
           className="border border-error/40 p-4 text-sm text-error"
         >
-          {formError ||
+          {t(formError) ||
             (saveMutation.error instanceof Error
-              ? saveMutation.error.message
-              : "Couldn't save your profile. Try again.")}
+              ? translateError(saveMutation.error.message)
+              : t("Couldn't save your profile. Try again."))}
         </p>
       ) : null}
       {saveMutation.isSuccess ? (
@@ -132,13 +136,13 @@ function ProfileEditor({
           aria-live="polite"
         >
           <CheckCircle2 className="size-4" aria-hidden="true" />
-          Profile saved.
+          {t("Profile saved.")}
         </output>
       ) : null}
       <div className="flex justify-end border-t border-base-300 pt-5">
         <Button type="submit" loading={saveMutation.isPending}>
           <Save className="size-4" aria-hidden="true" />
-          Save profile
+          {t("Save profile")}
         </Button>
       </div>
     </form>
@@ -146,6 +150,7 @@ function ProfileEditor({
 }
 
 export function ProfilePage() {
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { principal, isAuthenticated } = useAuth();
   const profileQuery = useQuery({
@@ -163,30 +168,36 @@ export function ProfilePage() {
     <div data-ocid="profile_page" className="club-page">
       <div className="mx-auto max-w-2xl space-y-8">
         <header>
-          <p className="section-kicker mb-4">CHILLPONG / MEMBER FILE</p>
+          <p className="section-kicker mb-4">{t("CHILLPONG / MEMBER FILE")}</p>
           <h1 className="page-title">
-            YOUR <span className="text-primary">PROFILE.</span>
+            {t("YOUR")} <span className="text-primary">{t("PROFILE.")}</span>
           </h1>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            A name for the club. A handle for the crew. Both are optional.
+            {t(
+              "A name for the club. A handle for the crew. Both are optional.",
+            )}
           </p>
         </header>
         <div className="space-y-2 border-l-2 border-primary pl-4">
-          <p className="technical-label">Your member ID / Principal ID</p>
+          <p className="technical-label">
+            {t("Your member ID / Principal ID")}
+          </p>
           <code className="block select-all break-all font-mono text-xs leading-relaxed">
             {principal}
           </code>
         </div>
         {profileQuery.isError ? (
           <ErrorState
-            title="Couldn't load your profile"
-            message="Your details are unavailable. Try again before editing."
+            title={t("Couldn't load your profile")}
+            message={t(
+              "Your details are unavailable. Try again before editing.",
+            )}
             onRetry={() => void profileQuery.refetch()}
           />
         ) : profileQuery.isPending || isFetching || !actor ? (
           <output className="flex items-center justify-center gap-3 border border-base-300 p-12 text-sm text-muted-foreground">
             <Loader2 className="size-5 animate-spin" aria-hidden="true" />
-            Loading your profile
+            {t("Loading your profile")}
           </output>
         ) : (
           <ProfileEditor

@@ -7,6 +7,7 @@ import {
 import { PlayersPanel } from "@/components/tournaments/PlayersPanel";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
+import { translateError, useI18n } from "@/i18n";
 import {
   type OrganizerAction,
   tournamentManagerService,
@@ -24,6 +25,7 @@ import {
 import { useEffect, useState } from "react";
 
 export function PlayersPage() {
+  const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
@@ -132,18 +134,19 @@ export function PlayersPage() {
   return (
     <div data-ocid="players_page" className="club-page">
       <header className="mb-8">
-        <p className="section-kicker mb-4">CHILLPONG / THE LINEUP</p>
+        <p className="section-kicker mb-4">{t("CHILLPONG / THE LINEUP")}</p>
         <h1 className="page-title">
-          THE <span className="text-primary">PLAYERS.</span>
+          {t("THE")} <span className="text-primary">{t("PLAYERS.")}</span>
         </h1>
         <p className="mt-5 max-w-xl text-sm leading-relaxed text-base-content/60">
-          Find your next opponent. Follow the lineup by skill, status, table and
-          round.
+          {t(
+            "Find your next opponent. Follow the lineup by skill, status, table and round.",
+          )}
         </p>
       </header>
       {loading ? (
         <div className="club-state" aria-busy="true" aria-live="polite">
-          Loading players…
+          {t("Loading players…")}
         </div>
       ) : tournamentsQuery.isError ? (
         <div className="club-state" role="alert">
@@ -152,29 +155,29 @@ export function PlayersPage() {
             aria-hidden="true"
           />
           <h2 className="font-display text-2xl font-bold uppercase">
-            The lineup is offline.
+            {t("The lineup is offline.")}
           </h2>
           <p className="mt-3 text-sm text-base-content/50">
-            We couldn't load the tournament board.
+            {t("We couldn't load the tournament board.")}
           </p>
           <Button
             className="mt-6"
             onClick={() => void tournamentsQuery.refetch()}
           >
-            Try again
+            {t("Try again")}
           </Button>
         </div>
       ) : !tournaments.length ? (
         <div className="club-state">
           <Users className="mb-4 size-8 text-primary" aria-hidden="true" />
           <h2 className="font-display text-2xl font-bold uppercase">
-            The lineup starts with a tournament.
+            {t("The lineup starts with a tournament.")}
           </h2>
           <p className="mt-3 text-sm text-base-content/50">
-            Players appear here when they register for a tournament.
+            {t("Players appear here when they register for a tournament.")}
           </p>
           <a href="/tournaments" className="btn btn-outline mt-6">
-            Tournament board
+            {t("Tournament board")}
           </a>
         </div>
       ) : (
@@ -182,7 +185,7 @@ export function PlayersPage() {
           <div className="flex flex-wrap items-end justify-between gap-4 border-y border-base-300 py-5">
             <label className="w-full sm:max-w-xs">
               <span className="technical-label mb-2 block text-base-content/50">
-                Tournament
+                {t("Tournament")}
               </span>
               <select
                 className="select w-full rounded-none"
@@ -197,7 +200,7 @@ export function PlayersPage() {
               >
                 {tournaments.map((item) => (
                   <option key={item.id.toString()} value={item.id.toString()}>
-                    {item.title} / {item.status}
+                    {item.title} / {t(item.status)}
                   </option>
                 ))}
               </select>
@@ -207,21 +210,21 @@ export function PlayersPage() {
                 href={`/tournaments/${tournament.id}`}
                 className="btn btn-outline btn-sm"
               >
-                Open tournament room{" "}
+                {t("Open tournament room")}{" "}
                 <ArrowUpRight className="size-3.5" aria-hidden="true" />
               </a>
             ) : null}
           </div>
           {tournament ? (
             <p className="mt-4 text-xs text-base-content/45">
-              {tournament.venue} · Registration order belongs to this
-              tournament.
+              {tournament.venue}{" "}
+              {t("· Registration order belongs to this tournament.")}
             </p>
           ) : null}
           {notice ? (
             <output className="mt-6 flex items-center gap-2 border border-primary/25 bg-primary/5 px-4 py-3 text-sm">
               <Check className="size-4 text-primary" aria-hidden="true" />
-              {notice}
+              {t(notice)}
             </output>
           ) : null}
           {stateQuery.isLoading || !tournament ? (
@@ -230,32 +233,32 @@ export function PlayersPage() {
               aria-busy="true"
               aria-live="polite"
             >
-              Loading the selected lineup…
+              {t("Loading the selected lineup…")}
             </div>
           ) : stateQuery.isError ? (
             <div className="club-state mt-8" role="alert">
               <h2 className="font-display text-2xl font-bold uppercase">
-                Players unavailable.
+                {t("Players unavailable.")}
               </h2>
               <p className="mt-3 text-sm text-base-content/50">
-                We couldn't load this tournament's players.
+                {t("We couldn't load this tournament's players.")}
               </p>
               <Button
                 className="mt-6"
                 onClick={() => void stateQuery.refetch()}
               >
                 <RefreshCw className="size-4" aria-hidden="true" />
-                Try again
+                {t("Try again")}
               </Button>
             </div>
           ) : !view ? (
             <div className="club-state mt-8">
-              <p>This tournament is no longer available.</p>
+              <p>{t("This tournament is no longer available.")}</p>
               <Button
                 className="mt-4"
                 onClick={() => void tournamentsQuery.refetch()}
               >
-                Refresh tournaments
+                {t("Refresh tournaments")}
               </Button>
             </div>
           ) : (
@@ -293,7 +296,7 @@ export function PlayersPage() {
               role="alert"
               className="mt-5 border border-error/40 p-4 text-sm text-error"
             >
-              {error}
+              {translateError(error)}
             </p>
           ) : null}
         </>

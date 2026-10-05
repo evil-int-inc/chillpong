@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/Button";
+import { useI18n } from "@/i18n";
+import { countLabel } from "@/i18n/plurals";
 import {
   DEFAULT_PLAYER_FILTERS,
   PLAYER_STATUSES,
@@ -44,6 +46,7 @@ export function PlayersPanel({
   onMove,
   standalone = false,
 }: PlayersPanelProps) {
+  const { t } = useI18n();
   const [filters, setFilters] = useState<PlayerFilters>(DEFAULT_PLAYER_FILTERS);
   const players = selectPlayers(view, filters);
   const rounds = [
@@ -63,7 +66,7 @@ export function PlayersPanel({
       <header className="mb-5 flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className={standalone ? "sr-only" : "section-kicker mb-2"}>
-            THE LINEUP / PERMANENT REGISTRATION
+            {t("THE LINEUP / PERMANENT REGISTRATION")}
           </p>
           <h2
             id="players-title"
@@ -73,7 +76,7 @@ export function PlayersPanel({
                 : "font-display text-2xl font-bold uppercase"
             }
           >
-            Players{" "}
+            {t("Players")}{" "}
             <span className="font-mono text-sm font-normal text-base-content/30">
               /
               {
@@ -85,7 +88,7 @@ export function PlayersPanel({
         </div>
         {isAdmin ? (
           <Button data-ocid="tournament.add_player_button" onClick={onAdd}>
-            <Plus className="size-4" aria-hidden="true" /> Add player
+            <Plus className="size-4" aria-hidden="true" /> {t("Add player")}
           </Button>
         ) : null}
       </header>
@@ -94,8 +97,8 @@ export function PlayersPanel({
           <Search className="size-4 text-base-content/40" aria-hidden="true" />
           <input
             type="search"
-            aria-label="Search tournament players"
-            placeholder="NAME / REGISTRATION NUMBER"
+            aria-label={t("Search tournament players")}
+            placeholder={t("NAME / REGISTRATION NUMBER")}
             className="min-w-0 flex-1 bg-transparent py-3 font-mono text-xs outline-none placeholder:text-base-content/35"
             value={filters.search}
             onChange={(event) =>
@@ -122,13 +125,13 @@ export function PlayersPanel({
               }))
             }
           />{" "}
-          Include removed players
+          {t("Include removed players")}
         </label>
       </div>
       <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
         <label>
           <span className="technical-label mb-2 block text-base-content/50">
-            Skill level
+            {t("Skill level")}
           </span>
           <select
             className="select w-full rounded-none"
@@ -140,17 +143,17 @@ export function PlayersPanel({
               }))
             }
           >
-            <option value="all">All skill levels</option>
+            <option value="all">{t("All skill levels")}</option>
             {SKILL_LEVELS.map((level, index) => (
               <option key={level} value={index + 1}>
-                L{index + 1} / {level}
+                L{index + 1} / {t(level)}
               </option>
             ))}
           </select>
         </label>
         <label>
           <span className="technical-label mb-2 block text-base-content/50">
-            Status
+            {t("Status")}
           </span>
           <select
             className="select w-full rounded-none"
@@ -164,17 +167,19 @@ export function PlayersPanel({
               }))
             }
           >
-            <option value="all">All statuses</option>
+            <option value="all">{t("All statuses")}</option>
             {PLAYER_STATUSES.map((status) => (
               <option key={status} value={status}>
-                {status.charAt(0).toUpperCase() + status.slice(1)}
+                {t(status).replace(/^./, (character) =>
+                  character.toUpperCase(),
+                )}
               </option>
             ))}
           </select>
         </label>
         <label>
           <span className="technical-label mb-2 block text-base-content/50">
-            Table
+            {t("Table")}
           </span>
           <select
             className="select w-full rounded-none"
@@ -186,18 +191,18 @@ export function PlayersPanel({
               }))
             }
           >
-            <option value="all">All tables</option>
-            <option value="none">No table assigned</option>
+            <option value="all">{t("All tables")}</option>
+            <option value="none">{t("No table assigned")}</option>
             {view.tables.map((table) => (
               <option key={table.number} value={table.number}>
-                Table {table.number}
+                {t("Table")} {table.number}
               </option>
             ))}
           </select>
         </label>
         <label>
           <span className="technical-label mb-2 block text-base-content/50">
-            Current round
+            {t("Current round")}
           </span>
           <select
             className="select w-full rounded-none"
@@ -209,8 +214,8 @@ export function PlayersPanel({
               }))
             }
           >
-            <option value="all">All rounds</option>
-            <option value="none">No current round</option>
+            <option value="all">{t("All rounds")}</option>
+            <option value="none">{t("No current round")}</option>
             {rounds.map((match) => (
               <option key={roundKey(match)} value={roundKey(match)}>
                 {roundLabel(match)}
@@ -220,7 +225,7 @@ export function PlayersPanel({
         </label>
         <label className="col-span-2 sm:col-span-1">
           <span className="technical-label mb-2 block text-primary">
-            Sort by
+            {t("Sort by")}
           </span>
           <select
             className="select w-full rounded-none"
@@ -232,10 +237,10 @@ export function PlayersPanel({
               }))
             }
           >
-            <option value="registration">Registration order</option>
-            <option value="name">Name / A–Z</option>
-            <option value="skill">Skill level / L1–L5</option>
-            <option value="status">Status / live first</option>
+            <option value="registration">{t("Registration order")}</option>
+            <option value="name">{t("Name / A–Z")}</option>
+            <option value="skill">{t("Skill level / L1–L5")}</option>
+            <option value="status">{t("Status / live first")}</option>
           </select>
         </label>
       </div>
@@ -245,12 +250,14 @@ export function PlayersPanel({
           aria-live="polite"
         >
           {players.length} /{" "}
-          {
+          {countLabel(
             view.players.filter(
               (player) => filters.showRemoved || player.status !== "removed",
-            ).length
-          }{" "}
-          players · Original registration numbers and times stay fixed.
+            ).length,
+            "player",
+          )}
+          {" · "}
+          {t("Original registration numbers and times stay fixed.")}
         </p>
         {filtered || filters.sort !== "registration" ? (
           <button
@@ -258,7 +265,7 @@ export function PlayersPanel({
             className="btn btn-ghost btn-xs"
             onClick={() => setFilters(DEFAULT_PLAYER_FILTERS)}
           >
-            Reset filters & sort
+            {t("Reset filters & sort")}
           </button>
         ) : null}
       </div>
@@ -274,38 +281,38 @@ export function PlayersPanel({
                   scope="col"
                   className="technical-label px-3 py-3 text-[9px] font-normal text-base-content/35"
                 >
-                  Reg / time
+                  {t("Reg / time")}
                 </th>
                 <th
                   scope="col"
                   className="technical-label px-3 py-3 text-[9px] font-normal text-base-content/35"
                 >
-                  Player
+                  {t("Player")}
                 </th>
                 <th
                   scope="col"
                   className="technical-label px-3 py-3 text-[9px] font-normal text-base-content/35"
                 >
-                  Skill
+                  {t("Skill")}
                 </th>
                 <th
                   scope="col"
                   className="technical-label px-3 py-3 text-[9px] font-normal text-base-content/35"
                 >
-                  Status / losses
+                  {t("Status / losses")}
                 </th>
                 <th
                   scope="col"
                   className="technical-label px-3 py-3 text-[9px] font-normal text-base-content/35"
                 >
-                  Match / table / seed
+                  {t("Match / table / seed")}
                 </th>
                 {isAdmin ? (
                   <th
                     scope="col"
                     className="technical-label px-3 py-3 text-[9px] font-normal text-base-content/35"
                   >
-                    Organizer controls
+                    {t("Organizer controls")}
                   </th>
                 ) : null}
               </tr>
@@ -339,25 +346,26 @@ export function PlayersPanel({
                     <td className="px-3 py-4">
                       <p className="font-mono text-xs">L{player.skill}</p>
                       <p className="mt-1 text-[10px] text-base-content/40">
-                        {SKILL_LEVELS[player.skill - 1]}
+                        {t(SKILL_LEVELS[player.skill - 1])}
                       </p>
                     </td>
                     <td className="px-3 py-4">
                       <p
                         className={`technical-label text-[9px] ${player.status === "champion" ? "text-primary" : player.status === "playing" ? "text-secondary" : "text-base-content/60"}`}
                       >
-                        {player.status}
+                        {t(player.status)}
                       </p>
                       <p className="mt-1 font-mono text-[10px] text-base-content/35">
-                        {player.losses}{" "}
-                        {player.losses === 1 ? "loss" : "losses"}
+                        {countLabel(player.losses, "loss")}
                       </p>
                     </td>
                     <td className="px-3 py-4 font-mono text-[10px] text-base-content/45">
                       {match ? matchLabel(match) : "—"} /{" "}
                       {match?.table ? `T${match.table}` : "—"}
                       {player.seed !== undefined ? (
-                        <p className="mt-1">Seed {player.seed.toString()}</p>
+                        <p className="mt-1">
+                          {t("Seed")} {player.seed.toString()}
+                        </p>
                       ) : null}
                     </td>
                     {isAdmin ? (
@@ -366,7 +374,7 @@ export function PlayersPanel({
                           <button
                             type="button"
                             className="btn btn-ghost btn-square btn-xs"
-                            aria-label={`Edit ${player.name}`}
+                            aria-label={t("Edit {v1}", { v1: player.name })}
                             disabled={pending || player.status === "removed"}
                             onClick={() => onEdit(player)}
                           >
@@ -375,7 +383,9 @@ export function PlayersPanel({
                           <button
                             type="button"
                             className="btn btn-ghost btn-square btn-xs"
-                            aria-label={`Prioritize ${player.name} in queue`}
+                            aria-label={t("Prioritize {v1} in queue", {
+                              v1: player.name,
+                            })}
                             disabled={pending || !canPrioritize}
                             onClick={() => onPrioritize(player)}
                           >
@@ -391,12 +401,13 @@ export function PlayersPanel({
                             }
                             onClick={() => onMove(player)}
                           >
-                            Move<span className="sr-only"> {player.name}</span>
+                            {t("Move")}
+                            <span className="sr-only"> {player.name}</span>
                           </button>
                           <button
                             type="button"
                             className="btn btn-ghost btn-square btn-xs text-secondary"
-                            aria-label={`Remove ${player.name}`}
+                            aria-label={t("Remove {v1}", { v1: player.name })}
                             disabled={pending || player.status === "removed"}
                             onClick={() => onRemove(player)}
                           >
@@ -415,13 +426,17 @@ export function PlayersPanel({
         <div className="border border-dashed border-base-300 px-6 py-10 text-center">
           <p className="font-display text-lg font-bold uppercase">
             {view.players.length
-              ? "No matching players."
-              : "An open table. An open lineup."}
+              ? t("No matching players.")
+              : t("An open table. An open lineup.")}
           </p>
           <p className="mt-2 text-sm text-base-content/45">
             {view.players.length
-              ? "Try another name or adjust the skill, status, table or round filters."
-              : "Players added here receive permanent registration numbers and join the queue."}
+              ? t(
+                  "Try another name or adjust the skill, status, table or round filters.",
+                )
+              : t(
+                  "Players added here receive permanent registration numbers and join the queue.",
+                )}
           </p>
         </div>
       )}

@@ -1,3 +1,4 @@
+import { useI18n } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
 import type { ReactNode } from "react";
@@ -19,6 +20,7 @@ export function ErrorState({
   action,
   className,
 }: ErrorStateProps) {
+  const { t } = useI18n();
   return (
     <div
       data-ocid="error_state"
@@ -32,7 +34,7 @@ export function ErrorState({
         <AlertTriangle className="size-7" aria-hidden="true" />
       </div>
       <h3 className="font-display text-lg font-semibold text-base-content">
-        {title}
+        {t(title)}
       </h3>
       {message ? (
         <p className="max-w-sm text-sm text-base-content/60">{message}</p>
@@ -46,7 +48,7 @@ export function ErrorState({
           className="btn btn-primary btn-sm mt-2"
           onClick={onRetry}
         >
-          {retryLabel}
+          {t(retryLabel)}
         </button>
       ) : null}
     </div>
