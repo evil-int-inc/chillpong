@@ -454,8 +454,8 @@ export const ru = {
   "Score A": "Счёт A",
   "Score B": "Счёт B",
   "Scores must be at most 999": "Счёт не может превышать 999",
-  "Scroll to pan / select any match":
-    "Прокрутка для перемещения / выберите любой матч",
+  "Drag or scroll to pan / select any match":
+    "Перетаскивайте или прокручивайте / выберите любой матч",
   "Scrollable bracket graph": "Прокручиваемая сетка турнира",
   "Search by member ID": "Поиск по ID участника",
   "Search tournament players": "Поиск игроков турнира",

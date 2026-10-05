@@ -456,8 +456,8 @@ export const ka = {
   "Score A": "ანგარიში A",
   "Score B": "ანგარიში B",
   "Scores must be at most 999": "ანგარიში მაქსიმუმ 999 უნდა იყოს",
-  "Scroll to pan / select any match":
-    "გადაადგილება სქროლით / აირჩიეთ ნებისმიერი მატჩი",
+  "Drag or scroll to pan / select any match":
+    "გადაადგილება გადათრევით ან სქროლით / აირჩიეთ ნებისმიერი მატჩი",
   "Scrollable bracket graph": "გადასაადგილებელი ტურნირის ბადე",
   "Search by member ID": "ძებნა წევრის ID-ით",
   "Search tournament players": "ტურნირის მოთამაშეების ძებნა",

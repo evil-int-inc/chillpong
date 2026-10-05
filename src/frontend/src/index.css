@@ -248,12 +248,18 @@
   border-color: #666957;
 }
 .bracket-viewport {
+  cursor: grab;
+  user-select: none;
   overscroll-behavior: contain;
   scrollbar-color: #666957 var(--color-base-100);
   scrollbar-width: thin;
   background-image: linear-gradient(#30303055 1px, transparent 1px),
     linear-gradient(90deg, #30303055 1px, transparent 1px);
   background-size: 24px 24px;
+}
+.bracket-viewport[data-panning],
+.bracket-viewport[data-panning] * {
+  cursor: grabbing;
 }
 .bracket-canvas {
   isolation: isolate;

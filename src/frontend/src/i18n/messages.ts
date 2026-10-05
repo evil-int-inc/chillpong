@@ -367,7 +367,7 @@ export const messages = [
   "Score A",
   "Score B",
   "Scores must be at most 999",
-  "Scroll to pan / select any match",
+  "Drag or scroll to pan / select any match",
   "Scrollable bracket graph",
   "Search by member ID",
   "Search tournament players",

@@ -6,7 +6,7 @@ import {
   type TournamentPlayerView,
 } from "@/types/tournament-manager";
 import { Maximize2, Minus, Plus, RotateCcw } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MatchCard } from "./MatchCard";
 
 const CARD_WIDTH = 248;
@@ -28,7 +28,37 @@ export function BracketGraph({
 }: BracketGraphProps) {
   const { t } = useI18n();
   const [zoom, setZoom] = useState(1);
+  const [isPanning, setIsPanning] = useState(false);
   const viewportRef = useRef<HTMLDivElement>(null);
+  const panRef = useRef<{
+    pointerId: number;
+    x: number;
+    y: number;
+    left: number;
+    top: number;
+    dragging: boolean;
+  } | null>(null);
+  const suppressClickRef = useRef(false);
+
+  const endPan = useCallback((pointerId?: number) => {
+    const pan = panRef.current;
+    if (!pan || (pointerId !== undefined && pan.pointerId !== pointerId))
+      return;
+    panRef.current = null;
+    setIsPanning(false);
+    const viewport = viewportRef.current;
+    if (viewport?.hasPointerCapture(pan.pointerId))
+      viewport.releasePointerCapture(pan.pointerId);
+  }, []);
+
+  useEffect(() => {
+    function handleBlur() {
+      endPan();
+    }
+    window.addEventListener("blur", handleBlur);
+    return () => window.removeEventListener("blur", handleBlur);
+  }, [endPan]);
+
   const layout = useMemo(() => {
     const nodes: { match: TournamentMatchView; x: number; y: number }[] = [];
     const headings: {
@@ -162,7 +192,7 @@ export function BracketGraph({
             />{" "}
             {t("Loser drops")}
           </span>
-          <span>{t("Scroll to pan / select any match")}</span>
+          <span>{t("Drag or scroll to pan / select any match")}</span>
         </div>
         <div className="flex items-center gap-2 border border-base-300 p-1">
           <button
@@ -232,8 +262,57 @@ export function BracketGraph({
       <div
         ref={viewportRef}
         data-ocid="tournament.bracket"
+        data-panning={isPanning || undefined}
         className="bracket-viewport max-h-[75vh] overflow-auto border border-base-300 bg-base-100"
         aria-label={t("Scrollable bracket graph")}
+        onPointerDown={(event) => {
+          if (
+            event.pointerType !== "mouse" ||
+            event.button !== 0 ||
+            !event.isPrimary
+          )
+            return;
+          suppressClickRef.current = false;
+          panRef.current = {
+            pointerId: event.pointerId,
+            x: event.clientX,
+            y: event.clientY,
+            left: event.currentTarget.scrollLeft,
+            top: event.currentTarget.scrollTop,
+            dragging: false,
+          };
+        }}
+        onPointerMove={(event) => {
+          const pan = panRef.current;
+          if (!pan || pan.pointerId !== event.pointerId) return;
+          if (!(event.buttons & 1)) {
+            endPan(event.pointerId);
+            return;
+          }
+          const dx = event.clientX - pan.x;
+          const dy = event.clientY - pan.y;
+          if (!pan.dragging) {
+            if (Math.hypot(dx, dy) < 4) return;
+            pan.dragging = true;
+            suppressClickRef.current = true;
+            event.currentTarget.setPointerCapture(event.pointerId);
+            setIsPanning(true);
+          }
+          event.preventDefault();
+          event.currentTarget.scrollLeft = pan.left - dx;
+          event.currentTarget.scrollTop = pan.top - dy;
+        }}
+        onPointerUp={(event) => endPan(event.pointerId)}
+        onPointerCancel={(event) => endPan(event.pointerId)}
+        onLostPointerCapture={(event) => endPan(event.pointerId)}
+        onClickCapture={(event) => {
+          if (suppressClickRef.current && event.detail > 0) {
+            event.preventDefault();
+            event.stopPropagation();
+            suppressClickRef.current = false;
+          }
+        }}
+        onDragStart={(event) => event.preventDefault()}
       >
         <div
           style={{ width: layout.width * zoom, height: layout.height * zoom }}
