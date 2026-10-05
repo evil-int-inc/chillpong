@@ -33418,6 +33418,10 @@ const UserRoleView = Record({
   "displayName": Text,
   "role": Opt(Role$1)
 });
+const ProfileInput = Record({
+  "username": Text,
+  "displayName": Text
+});
 Service({
   "_immutableObjectStorageBlobsAreLive": Func(
     [Vec(Vec(Nat8))],
@@ -33476,6 +33480,7 @@ Service({
   "listUsers": Func([], [Vec(User$1)], ["query"]),
   "listUsersWithRoles": Func([], [Vec(UserRoleView)], ["query"]),
   "revokeAdminRole": Func([UserId], [UserRoleView], []),
+  "saveCallerProfile": Func([ProfileInput], [User$1], []),
   "schema": Func([], [Text], ["query"]),
   "updateTournament": Func([Nat, TournamentInput], [Tournament], []),
   "updateUser": Func([UserId, UserInput], [User$1], [])
@@ -33734,6 +33739,10 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "displayName": IDL2.Text,
     "role": IDL2.Opt(Role2)
   });
+  const ProfileInput2 = IDL2.Record({
+    "username": IDL2.Text,
+    "displayName": IDL2.Text
+  });
   return IDL2.Service({
     "_immutableObjectStorageBlobsAreLive": IDL2.Func(
       [IDL2.Vec(IDL2.Vec(IDL2.Nat8))],
@@ -33792,6 +33801,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "listUsers": IDL2.Func([], [IDL2.Vec(User2)], ["query"]),
     "listUsersWithRoles": IDL2.Func([], [IDL2.Vec(UserRoleView2)], ["query"]),
     "revokeAdminRole": IDL2.Func([UserId2], [UserRoleView2], []),
+    "saveCallerProfile": IDL2.Func([ProfileInput2], [User2], []),
     "schema": IDL2.Func([], [IDL2.Text], ["query"]),
     "updateTournament": IDL2.Func([IDL2.Nat, TournamentInput2], [Tournament2], []),
     "updateUser": IDL2.Func([UserId2, UserInput2], [User2], [])
@@ -34244,6 +34254,20 @@ class Backend {
     } else {
       const result = await this.actor.revokeAdminRole(arg0);
       return from_candid_UserRoleView_n85(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async saveCallerProfile(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.saveCallerProfile(arg0);
+        return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.saveCallerProfile(arg0);
+      return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
     }
   }
   async schema() {
@@ -34814,6 +34838,9 @@ class AuthService {
   getCallerProfile(actor) {
     return actor.getCallerProfile();
   }
+  saveCallerProfile(actor, input) {
+    return actor.saveCallerProfile(input);
+  }
   /**
    * Fetches the authenticated caller's role.
    * Returns `null` for regular users (no admin role).
@@ -34996,11 +35023,33 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$C = [
+const __iconNode$E = [
   ["path", { d: "M12 5v14", key: "s699le" }],
   ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$C);
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$E);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$D = [
+  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+];
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$D);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$C = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+];
+const ArrowRight = createLucideIcon("arrow-right", __iconNode$C);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35008,10 +35057,10 @@ const ArrowDown = createLucideIcon("arrow-down", __iconNode$C);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$B = [
-  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
-  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+  ["path", { d: "M7 7h10v10", key: "1tivn9" }],
+  ["path", { d: "M7 17 17 7", key: "1vkiza" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$B);
+const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$B);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35019,10 +35068,10 @@ const ArrowLeft = createLucideIcon("arrow-left", __iconNode$B);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$A = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
+  ["path", { d: "M12 19V5", key: "x0mq9r" }]
 ];
-const ArrowRight = createLucideIcon("arrow-right", __iconNode$A);
+const ArrowUp = createLucideIcon("arrow-up", __iconNode$A);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35030,28 +35079,6 @@ const ArrowRight = createLucideIcon("arrow-right", __iconNode$A);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$z = [
-  ["path", { d: "M7 7h10v10", key: "1tivn9" }],
-  ["path", { d: "M7 17 17 7", key: "1vkiza" }]
-];
-const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$z);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$y = [
-  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
-  ["path", { d: "M12 19V5", key: "x0mq9r" }]
-];
-const ArrowUp = createLucideIcon("arrow-up", __iconNode$y);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$x = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -35063,23 +35090,46 @@ const __iconNode$x = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M16 18h.01", key: "kzsmim" }]
 ];
-const CalendarDays = createLucideIcon("calendar-days", __iconNode$x);
+const CalendarDays = createLucideIcon("calendar-days", __iconNode$z);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$w = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$w);
+const __iconNode$y = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$y);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$v = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$v);
+const __iconNode$x = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$x);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$w = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
+  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+];
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$w);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$v = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+];
+const CircleCheck = createLucideIcon("circle-check", __iconNode$v);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35088,10 +35138,9 @@ const ChevronDown = createLucideIcon("chevron-down", __iconNode$v);
  */
 const __iconNode$u = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
-  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+  ["polyline", { points: "12 6 12 12 16.5 12", key: "1aq6pp" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$u);
+const Clock3 = createLucideIcon("clock-3", __iconNode$u);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35099,10 +35148,10 @@ const CircleAlert = createLucideIcon("circle-alert", __iconNode$u);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$t = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
+  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$t);
+const Copy = createLucideIcon("copy", __iconNode$t);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35110,10 +35159,10 @@ const CircleCheck = createLucideIcon("circle-check", __iconNode$t);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$s = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16.5 12", key: "1aq6pp" }]
+  ["path", { d: "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z", key: "i9b6wo" }],
+  ["line", { x1: "4", x2: "4", y1: "22", y2: "15", key: "1cm3nv" }]
 ];
-const Clock3 = createLucideIcon("clock-3", __iconNode$s);
+const Flag = createLucideIcon("flag", __iconNode$s);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35121,10 +35170,12 @@ const Clock3 = createLucideIcon("clock-3", __iconNode$s);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$r = [
-  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
-  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
+  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
+  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
+  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
+  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
 ];
-const Copy = createLucideIcon("copy", __iconNode$r);
+const GitBranch = createLucideIcon("git-branch", __iconNode$r);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35132,30 +35183,6 @@ const Copy = createLucideIcon("copy", __iconNode$r);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$q = [
-  ["path", { d: "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z", key: "i9b6wo" }],
-  ["line", { x1: "4", x2: "4", y1: "22", y2: "15", key: "1cm3nv" }]
-];
-const Flag = createLucideIcon("flag", __iconNode$q);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$p = [
-  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
-  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
-  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
-  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
-];
-const GitBranch = createLucideIcon("git-branch", __iconNode$p);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$o = [
   ["polyline", { points: "22 12 16 12 14 15 10 15 8 12 2 12", key: "o97t9d" }],
   [
     "path",
@@ -35165,15 +35192,39 @@ const __iconNode$o = [
     }
   ]
 ];
-const Inbox = createLucideIcon("inbox", __iconNode$o);
+const Inbox = createLucideIcon("inbox", __iconNode$q);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$n = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$n);
+const __iconNode$p = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$p);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$o = [
+  ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
+  ["path", { d: "M15 12H3", key: "6jk70r" }],
+  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
+];
+const LogIn = createLucideIcon("log-in", __iconNode$o);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$n = [
+  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
+  ["path", { d: "M21 12H9", key: "dn1m92" }],
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
+];
+const LogOut = createLucideIcon("log-out", __iconNode$n);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35181,30 +35232,6 @@ const LoaderCircle = createLucideIcon("loader-circle", __iconNode$n);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$m = [
-  ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
-  ["path", { d: "M15 12H3", key: "6jk70r" }],
-  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
-];
-const LogIn = createLucideIcon("log-in", __iconNode$m);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$l = [
-  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
-  ["path", { d: "M21 12H9", key: "dn1m92" }],
-  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
-];
-const LogOut = createLucideIcon("log-out", __iconNode$l);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$k = [
   [
     "path",
     {
@@ -35214,20 +35241,40 @@ const __iconNode$k = [
   ],
   ["circle", { cx: "12", cy: "10", r: "3", key: "ilqhr7" }]
 ];
-const MapPin = createLucideIcon("map-pin", __iconNode$k);
+const MapPin = createLucideIcon("map-pin", __iconNode$m);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$j = [
+const __iconNode$l = [
   ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
   ["path", { d: "m21 3-7 7", key: "1l2asr" }],
   ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
   ["path", { d: "M9 21H3v-6", key: "wtvkvv" }]
 ];
-const Maximize2 = createLucideIcon("maximize-2", __iconNode$j);
+const Maximize2 = createLucideIcon("maximize-2", __iconNode$l);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$k = [
+  ["path", { d: "M4 12h16", key: "1lakjw" }],
+  ["path", { d: "M4 18h16", key: "19g7jn" }],
+  ["path", { d: "M4 6h16", key: "1o0s65" }]
+];
+const Menu = createLucideIcon("menu", __iconNode$k);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$j = [["path", { d: "M5 12h14", key: "1ays0h" }]];
+const Minus = createLucideIcon("minus", __iconNode$j);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35235,26 +35282,6 @@ const Maximize2 = createLucideIcon("maximize-2", __iconNode$j);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$i = [
-  ["path", { d: "M4 12h16", key: "1lakjw" }],
-  ["path", { d: "M4 18h16", key: "19g7jn" }],
-  ["path", { d: "M4 6h16", key: "1o0s65" }]
-];
-const Menu = createLucideIcon("menu", __iconNode$i);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$h = [["path", { d: "M5 12h14", key: "1ays0h" }]];
-const Minus = createLucideIcon("minus", __iconNode$h);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$g = [
   [
     "path",
     {
@@ -35264,7 +35291,31 @@ const __iconNode$g = [
   ],
   ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
 ];
-const Pencil = createLucideIcon("pencil", __iconNode$g);
+const Pencil = createLucideIcon("pencil", __iconNode$i);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$h = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "M12 5v14", key: "s699le" }]
+];
+const Plus = createLucideIcon("plus", __iconNode$h);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$g = [
+  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
+  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
+  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
+  ["path", { d: "M8 16H3v5", key: "1cv678" }]
+];
+const RefreshCw = createLucideIcon("refresh-cw", __iconNode$g);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35272,10 +35323,10 @@ const Pencil = createLucideIcon("pencil", __iconNode$g);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$f = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
+  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$f);
+const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$f);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35283,12 +35334,17 @@ const Plus = createLucideIcon("plus", __iconNode$f);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$e = [
-  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
-  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
-  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
-  ["path", { d: "M8 16H3v5", key: "1cv678" }]
+  [
+    "path",
+    {
+      d: "M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z",
+      key: "1c8476"
+    }
+  ],
+  ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
+  ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
 ];
-const RefreshCw = createLucideIcon("refresh-cw", __iconNode$e);
+const Save = createLucideIcon("save", __iconNode$e);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35296,10 +35352,10 @@ const RefreshCw = createLucideIcon("refresh-cw", __iconNode$e);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$d = [
-  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
-  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
+  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
 ];
-const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$d);
+const Search = createLucideIcon("search", __iconNode$d);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35307,10 +35363,17 @@ const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$d);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$c = [
-  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
-  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ],
+  ["path", { d: "M12 8v4", key: "1got3b" }],
+  ["path", { d: "M12 16h.01", key: "1drbdi" }]
 ];
-const Search = createLucideIcon("search", __iconNode$c);
+const ShieldAlert = createLucideIcon("shield-alert", __iconNode$c);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35325,10 +35388,9 @@ const __iconNode$b = [
       key: "oel41y"
     }
   ],
-  ["path", { d: "M12 8v4", key: "1got3b" }],
-  ["path", { d: "M12 16h.01", key: "1drbdi" }]
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const ShieldAlert = createLucideIcon("shield-alert", __iconNode$b);
+const ShieldCheck = createLucideIcon("shield-check", __iconNode$b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35343,9 +35405,9 @@ const __iconNode$a = [
       key: "oel41y"
     }
   ],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+  ["path", { d: "M9 12h6", key: "1c52cq" }]
 ];
-const ShieldCheck = createLucideIcon("shield-check", __iconNode$a);
+const ShieldMinus = createLucideIcon("shield-minus", __iconNode$a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35360,9 +35422,10 @@ const __iconNode$9 = [
       key: "oel41y"
     }
   ],
-  ["path", { d: "M9 12h6", key: "1c52cq" }]
+  ["path", { d: "M9 12h6", key: "1c52cq" }],
+  ["path", { d: "M12 9v6", key: "199k2o" }]
 ];
-const ShieldMinus = createLucideIcon("shield-minus", __iconNode$9);
+const ShieldPlus = createLucideIcon("shield-plus", __iconNode$9);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35373,14 +35436,12 @@ const __iconNode$8 = [
   [
     "path",
     {
-      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
-      key: "oel41y"
+      d: "M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18",
+      key: "gugj83"
     }
-  ],
-  ["path", { d: "M9 12h6", key: "1c52cq" }],
-  ["path", { d: "M12 9v6", key: "199k2o" }]
+  ]
 ];
-const ShieldPlus = createLucideIcon("shield-plus", __iconNode$8);
+const Table2 = createLucideIcon("table-2", __iconNode$8);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35388,15 +35449,13 @@ const ShieldPlus = createLucideIcon("shield-plus", __iconNode$8);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$7 = [
-  [
-    "path",
-    {
-      d: "M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18",
-      key: "gugj83"
-    }
-  ]
+  ["path", { d: "M3 6h18", key: "d0wm0j" }],
+  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
+  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
+  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
+  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
 ];
-const Table2 = createLucideIcon("table-2", __iconNode$7);
+const Trash2 = createLucideIcon("trash-2", __iconNode$7);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35404,20 +35463,6 @@ const Table2 = createLucideIcon("table-2", __iconNode$7);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$6 = [
-  ["path", { d: "M3 6h18", key: "d0wm0j" }],
-  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
-  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
-  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
-  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
-];
-const Trash2 = createLucideIcon("trash-2", __iconNode$6);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$5 = [
   [
     "path",
     {
@@ -35428,14 +35473,14 @@ const __iconNode$5 = [
   ["path", { d: "M12 9v4", key: "juzpu7" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$5);
+const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$6);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$4 = [
+const __iconNode$5 = [
   ["path", { d: "M6 9H4.5a2.5 2.5 0 0 1 0-5H6", key: "17hqa7" }],
   ["path", { d: "M18 9h1.5a2.5 2.5 0 0 0 0-5H18", key: "lmptdp" }],
   ["path", { d: "M4 22h16", key: "57wxv0" }],
@@ -35443,7 +35488,18 @@ const __iconNode$4 = [
   ["path", { d: "M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22", key: "1np0yb" }],
   ["path", { d: "M18 2H6v7a6 6 0 0 0 12 0V2Z", key: "u46fv3" }]
 ];
-const Trophy = createLucideIcon("trophy", __iconNode$4);
+const Trophy = createLucideIcon("trophy", __iconNode$5);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$4 = [
+  ["path", { d: "M9 14 4 9l5-5", key: "102s5s" }],
+  ["path", { d: "M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11", key: "f3b9sd" }]
+];
+const Undo2 = createLucideIcon("undo-2", __iconNode$4);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35451,10 +35507,10 @@ const Trophy = createLucideIcon("trophy", __iconNode$4);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$3 = [
-  ["path", { d: "M9 14 4 9l5-5", key: "102s5s" }],
-  ["path", { d: "M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11", key: "f3b9sd" }]
+  ["circle", { cx: "12", cy: "8", r: "5", key: "1hypcn" }],
+  ["path", { d: "M20 21a8 8 0 0 0-16 0", key: "rfgkzh" }]
 ];
-const Undo2 = createLucideIcon("undo-2", __iconNode$3);
+const UserRound = createLucideIcon("user-round", __iconNode$3);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35490,6 +35546,53 @@ const __iconNode = [
   ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
 ];
 const X = createLucideIcon("x", __iconNode);
+function RequireAuth({ children }) {
+  const { isAuthenticated, isInitializing, login } = useAuth();
+  reactExports.useEffect(() => {
+    if (!isInitializing && !isAuthenticated) {
+      login();
+    }
+  }, [isInitializing, isAuthenticated, login]);
+  if (isInitializing) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        "data-ocid": "loading_state",
+        className: "flex min-h-[50vh] items-center justify-center",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            LoaderCircle,
+            {
+              className: "size-6 animate-spin text-primary",
+              "aria-hidden": "true"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Loading" })
+        ]
+      }
+    );
+  }
+  if (!isAuthenticated) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        "data-ocid": "loading_state",
+        className: "flex min-h-[50vh] items-center justify-center",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            LoaderCircle,
+            {
+              className: "size-6 animate-spin text-primary",
+              "aria-hidden": "true"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Signing in" })
+        ]
+      }
+    );
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children });
+}
 function RequireAdmin({ children }) {
   const { isAuthenticated, isInitializing, isAdmin, roleLoading, login } = useAuth();
   reactExports.useEffect(() => {
@@ -43304,7 +43407,7 @@ function Header({ onOpenSidebar }) {
       setCopyNotice("Select the Member ID above to copy it.");
     }
   }
-  const title = pathname === "/players" || pathname === "/users" ? "Players" : pathname === "/admin/accounts" ? "Accounts" : pathname === "/admin" ? "Admin" : pathname.startsWith("/tournaments/") ? "Tournament room" : "Tournaments";
+  const title = pathname === "/players" || pathname === "/users" ? "Players" : pathname === "/admin/accounts" ? "Accounts" : pathname === "/profile" ? "Profile" : pathname === "/admin" ? "Admin" : pathname.startsWith("/tournaments/") ? "Tournament room" : "Tournaments";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "header",
     {
@@ -43364,11 +43467,11 @@ function Header({ onOpenSidebar }) {
                     Avatar,
                     {
                       src: (_a2 = profile == null ? void 0 : profile.avatar) == null ? void 0 : _a2.getDirectURL(),
-                      name: (profile == null ? void 0 : profile.displayName) || "Member",
+                      name: (profile == null ? void 0 : profile.displayName) || (profile == null ? void 0 : profile.username) || "Member",
                       size: "sm"
                     }
                   ),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden max-w-36 truncate text-sm sm:block", children: (profile == null ? void 0 : profile.displayName) || "Club member" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden max-w-36 truncate text-sm sm:block", children: (profile == null ? void 0 : profile.displayName) || (profile == null ? void 0 : profile.username) || "Club member" }),
                   isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(
                     ShieldCheck,
                     {
@@ -43380,6 +43483,21 @@ function Header({ onOpenSidebar }) {
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "dropdown-content z-50 mt-4 w-72 border border-base-300 bg-base-200 p-5 shadow-lg", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                Link,
+                {
+                  to: "/profile",
+                  className: "btn btn-primary btn-sm mb-5 w-full",
+                  onClick: (event) => {
+                    var _a3;
+                    return (_a3 = event.currentTarget.closest("details")) == null ? void 0 : _a3.removeAttribute("open");
+                  },
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(UserRound, { className: "size-4", "aria-hidden": "true" }),
+                    "My profile"
+                  ]
+                }
+              ),
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mb-3 text-base-content/60", children: "Your Member ID" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "block select-all break-all font-mono text-xs leading-relaxed", children: principal }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -43705,6 +43823,47 @@ function ErrorState({
     }
   );
 }
+const Input = reactExports.forwardRef(
+  ({ className, label, hint, error, rightElement, id, ...props }, ref) => {
+    const autoId = reactExports.useId();
+    const inputId = id ?? autoId;
+    const errorId = `${inputId}-error`;
+    const hintId = `${inputId}-hint`;
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full", children: [
+      label ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "label",
+        {
+          htmlFor: inputId,
+          className: "mb-1.5 block text-sm font-medium text-base-content",
+          children: label
+        }
+      ) : null,
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            ref,
+            id: inputId,
+            "data-ocid": "input",
+            "aria-invalid": error ? true : void 0,
+            "aria-describedby": error ? errorId : hint ? hintId : void 0,
+            className: cn(
+              "input input-bordered w-full bg-base-100 text-base-content transition-smooth",
+              "focus:outline-none focus:ring-2 focus:ring-primary",
+              error && "input-error",
+              rightElement && "pr-10",
+              className
+            ),
+            ...props
+          }
+        ),
+        rightElement ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "pointer-events-none absolute inset-y-0 right-3 flex items-center text-base-content/60", children: rightElement }) : null
+      ] }),
+      error ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { id: errorId, className: "mt-1.5 text-sm text-error", children: error }) : hint ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { id: hintId, className: "mt-1.5 text-sm text-base-content/60", children: hint }) : null
+    ] });
+  }
+);
+Input.displayName = "Input";
 function Skeleton({
   className,
   circle = false,
@@ -43745,17 +43904,21 @@ function AdminSkeleton() {
 }
 function AdminPage() {
   const { actor, isFetching } = useActor(createActor);
-  const { principal } = useAuth();
+  const { principal, isAdmin } = useAuth();
   const queryClient2 = useQueryClient();
   const [pendingId, setPendingId] = reactExports.useState(null);
   const [notice, setNotice] = reactExports.useState(null);
+  const [copiedId, setCopiedId] = reactExports.useState(null);
+  const [copyError, setCopyError] = reactExports.useState(null);
+  const [search, setSearch] = reactExports.useState("");
   const usersQuery = useQuery({
-    queryKey: USERS_QUERY_KEY$1,
+    queryKey: [...USERS_QUERY_KEY$1, principal],
     queryFn: async () => {
       if (!actor) return [];
       return actor.listUsersWithRoles();
     },
-    enabled: !!actor && !isFetching
+    enabled: !!actor && !isFetching && isAdmin,
+    refetchInterval: 3e4
   });
   const roleMutation = useMutation({
     mutationFn: async ({
@@ -43763,11 +43926,12 @@ function AdminPage() {
       grant
     }) => {
       if (!actor) throw new Error("Backend is not ready");
+      if (!isAdmin) throw new Error("Only admins can manage account access");
       return grant ? actor.grantAdminRole(id) : actor.revokeAdminRole(id);
     },
     onSuccess: (updated, variables) => {
       setNotice(
-        variables.grant ? `${updated.displayName} is now an admin.` : `${updated.displayName} is no longer an admin.`
+        variables.grant ? `${updated.displayName || updated.id.toString()} is now an admin.` : `${updated.displayName || updated.id.toString()} is no longer an admin.`
       );
       void queryClient2.invalidateQueries({ queryKey: USERS_QUERY_KEY$1 });
       void queryClient2.invalidateQueries({ queryKey: ["users"] });
@@ -43776,7 +43940,12 @@ function AdminPage() {
   });
   const users = usersQuery.data ?? [];
   const adminCount = users.filter((user) => isAdminRole(user.role)).length;
+  const searchTerm = search.trim().toLowerCase();
+  const visibleUsers = users.filter(
+    (user) => user.id.toString().toLowerCase().includes(searchTerm)
+  );
   function handleToggle(user) {
+    if (!isAdmin || roleMutation.isPending) return;
     const grant = !isAdminRole(user.role);
     setNotice(null);
     setPendingId(user.id.toString());
@@ -43785,11 +43954,24 @@ function AdminPage() {
       { onSettled: () => setPendingId(null) }
     );
   }
+  async function copyPrincipal(id) {
+    setCopyError(null);
+    setCopiedId(null);
+    try {
+      await navigator.clipboard.writeText(id);
+      setCopiedId(id);
+    } catch {
+      setCopyError(
+        "Couldn't copy the member ID. You can select and copy it below."
+      );
+    }
+  }
+  if (!isAdmin) return null;
   if (usersQuery.isLoading || isFetching && !usersQuery.data) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "data-ocid": "admin_page", className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto w-full max-w-5xl space-y-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "space-y-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-4xl font-bold uppercase tracking-tight text-foreground", children: "Admin access" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Manage the people behind ChillPong." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Authenticated accounts and their admin access." })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(AdminSkeleton, {})
     ] }) });
@@ -43798,8 +43980,8 @@ function AdminPage() {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "data-ocid": "admin_page", className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mx-auto w-full max-w-5xl", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       ErrorState,
       {
-        title: "Couldn't load users",
-        message: "Something went wrong while fetching the user list. You may not have permission to view it.",
+        title: "Couldn't load accounts",
+        message: "Something went wrong while fetching authenticated accounts.",
         onRetry: () => void usersQuery.refetch()
       }
     ) }) });
@@ -43809,10 +43991,23 @@ function AdminPage() {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: "CHILLPONG / CONTROL ROOM" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-4xl font-bold uppercase tracking-tight text-foreground", children: "Admin access" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Admins manage the lineup and tournament board. Grant or revoke access below." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "All signed-in accounts and their member IDs. Assign or revoke admin access here." })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/admin/accounts", className: "btn btn-outline btn-sm", children: "Manage accounts" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/admin/accounts", className: "btn btn-outline btn-sm", children: "Edit profiles" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            loading: usersQuery.isFetching,
+            onClick: () => void usersQuery.refetch(),
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "size-4", "aria-hidden": "true" }),
+              "Refresh accounts"
+            ]
+          }
+        ),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "span",
           {
@@ -43820,6 +44015,8 @@ function AdminPage() {
             className: "inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-sm text-muted-foreground",
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "size-4", "aria-hidden": "true" }),
+              users.length,
+              " accounts / ",
               adminCount,
               " ",
               adminCount === 1 ? "admin" : "admins"
@@ -43827,6 +44024,26 @@ function AdminPage() {
           }
         )
       ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Input,
+        {
+          type: "search",
+          label: "Search by member ID",
+          placeholder: "Paste a principal ID or part of it",
+          className: "font-mono text-sm",
+          value: search,
+          onChange: (event) => setSearch(event.target.value),
+          rightElement: /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "size-4", "aria-hidden": "true" })
+        }
+      ),
+      searchTerm ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", "aria-live": "polite", children: [
+        visibleUsers.length,
+        " of ",
+        users.length,
+        " accounts match"
+      ] }) : null
     ] }),
     notice ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "output",
@@ -43845,7 +44062,7 @@ function AdminPage() {
         ]
       }
     ) : null,
-    roleMutation.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    roleMutation.isError || copyError ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
         "data-ocid": "error_state",
@@ -43859,7 +44076,7 @@ function AdminPage() {
               "aria-hidden": "true"
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: roleMutation.error instanceof Error ? roleMutation.error.message : "Couldn't update that role. Please try again." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: copyError || (roleMutation.error instanceof Error ? roleMutation.error.message : "Couldn't update that role. Please try again.") })
         ]
       }
     ) : null,
@@ -43867,15 +44084,23 @@ function AdminPage() {
       EmptyState,
       {
         icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-7", "aria-hidden": "true" }),
-        title: "No users yet",
-        description: "Add members through Manage accounts to manage their access here."
+        title: "No signed-in accounts yet",
+        description: "Accounts appear automatically after signing in to ChillPong."
+      }
+    ) : visibleUsers.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      EmptyState,
+      {
+        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "size-7", "aria-hidden": "true" }),
+        title: "No matching member ID",
+        description: "Try a different principal ID or clear the search.",
+        action: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", onClick: () => setSearch(""), children: "Clear search" })
       }
     ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
       "ul",
       {
         "data-ocid": "admin_user_list",
         className: "divide-y divide-border overflow-hidden rounded-box border border-border bg-card",
-        children: users.map((user, index2) => {
+        children: visibleUsers.map((user, index2) => {
           const admin = isAdminRole(user.role);
           const isSelf = principal !== null && user.id.toString() === principal;
           const isPending = pendingId === user.id.toString();
@@ -43883,56 +44108,79 @@ function AdminPage() {
             "li",
             {
               "data-ocid": `admin_user.item.${index2 + 1}`,
-              className: "flex flex-wrap items-center gap-4 p-4",
+              className: "grid grid-cols-[auto_minmax(0,1fr)] items-start gap-4 p-5 md:grid-cols-[auto_minmax(0,1fr)_auto]",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   Avatar,
                   {
-                    name: user.displayName || user.username,
+                    name: user.displayName || user.username || "Member",
                     size: "md",
-                    alt: `${user.displayName || user.username} avatar`
+                    alt: `${user.displayName || user.username || "Member"} avatar`
                   }
                 ),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 space-y-2", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "flex items-center gap-2 truncate font-medium text-foreground", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: user.displayName || user.username }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: user.displayName || user.username || "Signed-in member" }),
                     isSelf ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "shrink-0 rounded-none bg-base-300 px-2 py-0.5 text-xs text-muted-foreground", children: "You" }) : null
                   ] }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "truncate text-sm text-muted-foreground", children: [
-                    "@",
-                    user.username
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "truncate text-sm text-muted-foreground", children: user.username ? `@${user.username}` : "Username not set" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: "Member ID / Principal ID" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "min-w-0 break-all font-mono text-xs leading-6 text-foreground select-all", children: user.id.toString() }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Button,
+                        {
+                          variant: "ghost",
+                          size: "icon",
+                          className: "btn-xs shrink-0",
+                          "aria-label": `Copy member ID ${user.id.toString()}`,
+                          onClick: () => void copyPrincipal(user.id.toString()),
+                          children: copiedId === user.id.toString() ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            Check,
+                            {
+                              className: "size-3.5 text-primary",
+                              "aria-hidden": "true"
+                            }
+                          ) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { className: "size-3.5", "aria-hidden": "true" })
+                        }
+                      )
+                    ] })
                   ] })
                 ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  "span",
-                  {
-                    "data-ocid": `admin_user.role.${index2 + 1}`,
-                    className: admin ? "inline-flex items-center gap-1.5 rounded-none border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary" : "inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-xs font-medium text-muted-foreground",
-                    children: [
-                      admin ? /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "size-3.5", "aria-hidden": "true" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldMinus, { className: "size-3.5", "aria-hidden": "true" }),
-                      admin ? "Admin" : "Member"
-                    ]
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Button,
-                  {
-                    variant: admin ? "outline" : "primary",
-                    size: "sm",
-                    "data-ocid": `admin_user.toggle_button.${index2 + 1}`,
-                    loading: isPending,
-                    disabled: isSelf && admin,
-                    title: isSelf && admin ? "You can't revoke your own admin role." : void 0,
-                    onClick: () => handleToggle(user),
-                    children: admin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldMinus, { className: "size-4", "aria-hidden": "true" }),
-                      "Revoke admin"
-                    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldPlus, { className: "size-4", "aria-hidden": "true" }),
-                      "Make admin"
-                    ] })
-                  }
-                )
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "col-start-2 flex flex-wrap items-center gap-3 md:col-start-3 md:row-start-1 md:justify-end", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "span",
+                    {
+                      "data-ocid": `admin_user.role.${index2 + 1}`,
+                      className: admin ? "inline-flex items-center gap-1.5 rounded-none border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary" : "inline-flex items-center gap-1.5 rounded-none border border-border bg-base-100 px-3 py-1 text-xs font-medium text-muted-foreground",
+                      children: [
+                        admin ? /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "size-3.5", "aria-hidden": "true" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldMinus, { className: "size-3.5", "aria-hidden": "true" }),
+                        admin ? "Admin" : "Member"
+                      ]
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      variant: admin ? "outline" : "primary",
+                      size: "sm",
+                      "data-ocid": `admin_user.toggle_button.${index2 + 1}`,
+                      loading: isPending,
+                      disabled: roleMutation.isPending || isSelf && admin,
+                      "aria-label": `${admin ? "Revoke admin from" : "Assign admin to"} ${user.id.toString()}`,
+                      title: isSelf && admin ? "You can't revoke your own admin role." : void 0,
+                      onClick: () => handleToggle(user),
+                      children: admin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldMinus, { className: "size-4", "aria-hidden": "true" }),
+                        "Revoke admin"
+                      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldPlus, { className: "size-4", "aria-hidden": "true" }),
+                        "Assign admin"
+                      ] })
+                    }
+                  )
+                ] })
               ]
             },
             user.id.toString()
@@ -45781,6 +46029,168 @@ function PlayersPage() {
       ) : null
     ] })
   ] });
+}
+function ProfileEditor({
+  actor,
+  principal,
+  profile
+}) {
+  const queryClient2 = useQueryClient();
+  const [name, setName] = reactExports.useState((profile == null ? void 0 : profile.displayName) ?? "");
+  const [username, setUsername] = reactExports.useState((profile == null ? void 0 : profile.username) ?? "");
+  const [formError, setFormError] = reactExports.useState(null);
+  const keepsExistingUsername = !!profile && username.trim() === profile.username.trim();
+  const saveMutation = useMutation({
+    mutationFn: (input) => authService.saveCallerProfile(actor, input),
+    onSuccess: (saved) => {
+      queryClient2.setQueryData(["profile", principal], saved);
+      void queryClient2.invalidateQueries({ queryKey: ["users"] });
+      void queryClient2.invalidateQueries({ queryKey: ["adminUsers"] });
+      setName(saved.displayName);
+      setUsername(saved.username);
+    }
+  });
+  function saveProfile() {
+    setFormError(null);
+    const trimmedName = name.trim();
+    const trimmedUsername = username.trim().toLowerCase();
+    if (trimmedName.length > 80) {
+      setFormError("Keep your name to 80 characters or fewer.");
+      return;
+    }
+    if (trimmedUsername && !keepsExistingUsername && !/^[a-z0-9_-]{3,30}$/.test(trimmedUsername)) {
+      setFormError(
+        "Username needs 3–30 letters, numbers, underscores or hyphens."
+      );
+      return;
+    }
+    saveMutation.mutate({
+      displayName: trimmedName,
+      username: keepsExistingUsername ? profile.username : trimmedUsername
+    });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "form",
+    {
+      className: "space-y-6 border border-base-300 bg-base-200 p-6 sm:p-8",
+      onSubmit: (event) => {
+        event.preventDefault();
+        saveProfile();
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 border-b border-base-300 pb-5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(UserRound, { className: "size-5 text-primary", "aria-hidden": "true" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-xl font-semibold uppercase", children: "Your club identity" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            label: "Name / optional",
+            autoComplete: "name",
+            maxLength: 80,
+            placeholder: "Name at the table",
+            value: name,
+            disabled: saveMutation.isPending,
+            hint: "Leave blank if you prefer. Up to 80 characters.",
+            onChange: (event) => {
+              setName(event.target.value);
+              setFormError(null);
+              saveMutation.reset();
+            }
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            label: "Username / optional",
+            autoComplete: "username",
+            autoCapitalize: "none",
+            spellCheck: false,
+            className: "font-mono",
+            maxLength: keepsExistingUsername ? void 0 : 30,
+            placeholder: "your-handle",
+            value: username,
+            disabled: saveMutation.isPending,
+            hint: keepsExistingUsername && username ? "Keep this username, choose another one, or leave it blank." : "Optional. If provided, use 3–30 letters, numbers, underscores or hyphens. Saved in lowercase.",
+            onChange: (event) => {
+              setUsername(event.target.value);
+              setFormError(null);
+              saveMutation.reset();
+            }
+          }
+        ),
+        formError || saveMutation.isError ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "p",
+          {
+            role: "alert",
+            className: "border border-error/40 p-4 text-sm text-error",
+            children: formError || (saveMutation.error instanceof Error ? saveMutation.error.message : "Couldn't save your profile. Try again.")
+          }
+        ) : null,
+        saveMutation.isSuccess ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "output",
+          {
+            className: "flex items-center gap-2 text-sm text-primary",
+            "aria-live": "polite",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "size-4", "aria-hidden": "true" }),
+              "Profile saved."
+            ]
+          }
+        ) : null,
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-end border-t border-base-300 pt-5", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { type: "submit", loading: saveMutation.isPending, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Save, { className: "size-4", "aria-hidden": "true" }),
+          "Save profile"
+        ] }) })
+      ]
+    }
+  );
+}
+function ProfilePage() {
+  const { actor, isFetching } = useActor(createActor);
+  const { principal, isAuthenticated } = useAuth();
+  const profileQuery = useQuery({
+    queryKey: ["profile", principal],
+    queryFn: () => {
+      if (!actor) throw new Error("Your account is still connecting.");
+      return authService.getCallerProfile(actor);
+    },
+    enabled: !!actor && !isFetching && isAuthenticated
+  });
+  if (!isAuthenticated || !principal) return null;
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "data-ocid": "profile_page", className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto max-w-2xl space-y-8", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-4", children: "CHILLPONG / MEMBER FILE" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "page-title", children: [
+        "YOUR ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "PROFILE." })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 text-sm leading-relaxed text-muted-foreground", children: "A name for the club. A handle for the crew. Both are optional." })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2 border-l-2 border-primary pl-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label", children: "Your member ID / Principal ID" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "block select-all break-all font-mono text-xs leading-relaxed", children: principal })
+    ] }),
+    profileQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ErrorState,
+      {
+        title: "Couldn't load your profile",
+        message: "Your details are unavailable. Try again before editing.",
+        onRetry: () => void profileQuery.refetch()
+      }
+    ) : profileQuery.isPending || isFetching || !actor ? /* @__PURE__ */ jsxRuntimeExports.jsxs("output", { className: "flex items-center justify-center gap-3 border border-base-300 p-12 text-sm text-muted-foreground", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "size-5 animate-spin", "aria-hidden": "true" }),
+      "Loading your profile"
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ProfileEditor,
+      {
+        actor,
+        principal,
+        profile: profileQuery.data ?? null
+      },
+      principal
+    )
+  ] }) });
 }
 function MatchCard({
   match,
@@ -47886,7 +48296,9 @@ function UsersPage() {
       return editor === "new" ? userService.create(actor, memberId, input) : userService.update(actor, memberId, input);
     },
     onSuccess: (user) => {
-      setNotice(`${user.displayName}'s member details are saved.`);
+      setNotice(
+        `${user.displayName || user.username || "This member"}'s member details are saved.`
+      );
       setEditor(null);
       void queryClient2.invalidateQueries({ queryKey: USERS_QUERY_KEY });
       void queryClient2.invalidateQueries({ queryKey: ["adminUsers"] });
@@ -47933,11 +48345,11 @@ function UsersPage() {
       );
       return;
     }
-    if (!displayName.trim() || displayName.trim().length > 80) {
-      setFormError("Display name must contain between 1 and 80 characters.");
+    if (displayName.trim().length > 80) {
+      setFormError("Display name must contain at most 80 characters.");
       return;
     }
-    if (!keepsExistingUsername && !/^[a-z0-9_-]{3,30}$/.test(username.trim().toLowerCase())) {
+    if (!keepsExistingUsername && username.trim() !== "" && !/^[a-z0-9_-]{3,30}$/.test(username.trim().toLowerCase())) {
       setFormError(
         "Username needs 3–30 letters, numbers, underscores or hyphens."
       );
@@ -48119,7 +48531,9 @@ function UsersPage() {
                       alt: "",
                       className: "size-full object-cover"
                     }
-                  ) : memberInitials(user.displayName) }),
+                  ) : memberInitials(
+                    user.displayName || user.username || "Member"
+                  ) }),
                   user.role === Role.admin ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-1.5 text-primary", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "size-3.5", "aria-hidden": "true" }),
                     " ",
@@ -48132,11 +48546,8 @@ function UsersPage() {
                     }
                   )
                 ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "break-words font-display text-xl font-bold uppercase tracking-tight", children: user.displayName }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1 break-words font-mono text-xs text-base-content/50", children: [
-                  "@",
-                  user.username
-                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "break-words font-display text-xl font-bold uppercase tracking-tight", children: user.displayName || user.username || "Club member" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 break-words font-mono text-xs text-base-content/50", children: user.username ? `@${user.username}` : "Username not set" }),
                 user.bio ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 whitespace-pre-wrap break-words text-sm leading-relaxed text-base-content/65", children: user.bio }) : null,
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-6 flex items-center justify-between gap-3 border-t border-base-300 pt-4", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label text-[10px] text-base-content/40", children: [
@@ -48155,7 +48566,7 @@ function UsersPage() {
                         " Edit",
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
                           " ",
-                          user.displayName
+                          user.displayName || user.username || "Club member"
                         ] })
                       ]
                     }
@@ -48246,7 +48657,6 @@ function UsersPage() {
                     {
                       "data-ocid": "users.name_input",
                       className: "input w-full rounded-none",
-                      required: true,
                       maxLength: 80,
                       value: displayName,
                       onChange: (event) => setDisplayName(event.target.value),
@@ -48261,7 +48671,6 @@ function UsersPage() {
                     {
                       "data-ocid": "users.username_input",
                       className: "input w-full rounded-none font-mono",
-                      required: true,
                       minLength: keepsExistingUsername ? void 0 : 3,
                       maxLength: 30,
                       value: username,
@@ -48380,6 +48789,11 @@ const accountsRoute = createRoute({
   path: "/admin/accounts",
   component: () => /* @__PURE__ */ jsxRuntimeExports.jsx(RequireAdmin, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(UsersPage, {}) })
 });
+const profileRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/profile",
+  component: () => /* @__PURE__ */ jsxRuntimeExports.jsx(RequireAuth, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProfilePage, {}) })
+});
 const router = createRouter({
   routeTree: rootRoute.addChildren([
     indexRoute,
@@ -48388,7 +48802,8 @@ const router = createRouter({
     tournamentsRoute,
     tournamentDetailRoute,
     adminRoute,
-    accountsRoute
+    accountsRoute,
+    profileRoute
   ]),
   defaultPreload: "intent"
 });
