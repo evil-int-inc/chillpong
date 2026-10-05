@@ -40,7 +40,7 @@ export function LanguageSwitcher() {
         >
           <Globe2 className="size-4" aria-hidden="true" />
           <span className="font-mono text-[10px]">
-            {language.toUpperCase()}
+            {language === "ka" ? "GEO" : language.toUpperCase()}
           </span>
         </button>
       </div>

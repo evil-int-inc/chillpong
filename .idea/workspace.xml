@@ -4,31 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="feature/user-pfoile">
+    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="feature/language">
       <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-CpZqi8VU.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-Dc--mfFV.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-Dc--mfFV.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/assets/index-5sSb17hA.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/auth/RequireAuth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/auth/RequireAuth.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/layout/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/layout/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/layout/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/layout/Sidebar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/MatchCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/MatchCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/PlayersPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/PlayersPanel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/StandardView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/StandardView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/ui/Button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/ui/Button.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/ui/ErrorState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/ui/ErrorState.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/ui/Loader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/ui/Loader.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/ui/layouts/MainLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/ui/layouts/MainLayout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/AdminPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/AdminPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/PlayersPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/PlayersPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/ProfilePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/ProfilePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentsPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/UsersPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/UsersPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/types/player-filters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/types/player-filters.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/types/tournament-manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/types/tournament-manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/Language.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/Language.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/layout/LanguageSwitcher.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/layout/LanguageSwitcher.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +107,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791192461857</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="feature/language">
+      <option name="closed" value="true" />
+      <created>1791198176180</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1791198176180</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TerminalProjectNonSharedOptionsProvider">
@@ -147,6 +136,7 @@
     <MESSAGE value="feature/redesign-2" />
     <MESSAGE value="feature/functionality" />
     <MESSAGE value="feature/user-pfoile" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature/user-pfoile" />
+    <MESSAGE value="feature/language" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature/language" />
   </component>
 </project>

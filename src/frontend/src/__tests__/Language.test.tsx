@@ -160,7 +160,7 @@ describe("language selection", () => {
     expect(getLanguage()).toBe("ka");
     expect(
       screen.getByRole("button", { name: "ენის შეცვლა" }),
-    ).toHaveTextContent("KA");
+    ).toHaveTextContent("GEO");
   });
 
   it("syncs an existing page when another tab changes or clears the preference", () => {
