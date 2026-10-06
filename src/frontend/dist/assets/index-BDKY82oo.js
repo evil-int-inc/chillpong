@@ -33601,7 +33601,7 @@ const ka = {
   "Score A": "ანგარიში A",
   "Score B": "ანგარიში B",
   "Scores must be at most 999": "ანგარიში მაქსიმუმ 999 უნდა იყოს",
-  "Scroll to pan / select any match": "გადაადგილება სქროლით / აირჩიეთ ნებისმიერი მატჩი",
+  "Drag or scroll to pan / select any match": "გადაადგილება გადათრევით ან სქროლით / აირჩიეთ ნებისმიერი მატჩი",
   "Scrollable bracket graph": "გადასაადგილებელი ტურნირის ბადე",
   "Search by member ID": "ძებნა წევრის ID-ით",
   "Search tournament players": "ტურნირის მოთამაშეების ძებნა",
@@ -34187,7 +34187,7 @@ const ru = {
   "Score A": "Счёт A",
   "Score B": "Счёт B",
   "Scores must be at most 999": "Счёт не может превышать 999",
-  "Scroll to pan / select any match": "Прокрутка для перемещения / выберите любой матч",
+  "Drag or scroll to pan / select any match": "Перетаскивайте или прокручивайте / выберите любой матч",
   "Scrollable bracket graph": "Прокручиваемая сетка турнира",
   "Search by member ID": "Поиск по ID участника",
   "Search tournament players": "Поиск игроков турнира",
@@ -47915,7 +47915,27 @@ function BracketGraph({
 }) {
   const { t } = useI18n();
   const [zoom, setZoom] = reactExports.useState(1);
+  const [isPanning, setIsPanning] = reactExports.useState(false);
   const viewportRef = reactExports.useRef(null);
+  const panRef = reactExports.useRef(null);
+  const suppressClickRef = reactExports.useRef(false);
+  const endPan = reactExports.useCallback((pointerId) => {
+    const pan = panRef.current;
+    if (!pan || pointerId !== void 0 && pan.pointerId !== pointerId)
+      return;
+    panRef.current = null;
+    setIsPanning(false);
+    const viewport = viewportRef.current;
+    if (viewport == null ? void 0 : viewport.hasPointerCapture(pan.pointerId))
+      viewport.releasePointerCapture(pan.pointerId);
+  }, []);
+  reactExports.useEffect(() => {
+    function handleBlur() {
+      endPan();
+    }
+    window.addEventListener("blur", handleBlur);
+    return () => window.removeEventListener("blur", handleBlur);
+  }, [endPan]);
   const layout = reactExports.useMemo(() => {
     const nodes = [];
     const headings = [];
@@ -48028,7 +48048,7 @@ function BracketGraph({
           " ",
           t("Loser drops")
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t("Scroll to pan / select any match") })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t("Drag or scroll to pan / select any match") })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 border border-base-300 p-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -48112,8 +48132,53 @@ function BracketGraph({
       {
         ref: viewportRef,
         "data-ocid": "tournament.bracket",
+        "data-panning": isPanning || void 0,
         className: "bracket-viewport max-h-[75vh] overflow-auto border border-base-300 bg-base-100",
         "aria-label": t("Scrollable bracket graph"),
+        onPointerDown: (event) => {
+          if (event.pointerType !== "mouse" || event.button !== 0 || !event.isPrimary)
+            return;
+          suppressClickRef.current = false;
+          panRef.current = {
+            pointerId: event.pointerId,
+            x: event.clientX,
+            y: event.clientY,
+            left: event.currentTarget.scrollLeft,
+            top: event.currentTarget.scrollTop,
+            dragging: false
+          };
+        },
+        onPointerMove: (event) => {
+          const pan = panRef.current;
+          if (!pan || pan.pointerId !== event.pointerId) return;
+          if (!(event.buttons & 1)) {
+            endPan(event.pointerId);
+            return;
+          }
+          const dx = event.clientX - pan.x;
+          const dy = event.clientY - pan.y;
+          if (!pan.dragging) {
+            if (Math.hypot(dx, dy) < 4) return;
+            pan.dragging = true;
+            suppressClickRef.current = true;
+            event.currentTarget.setPointerCapture(event.pointerId);
+            setIsPanning(true);
+          }
+          event.preventDefault();
+          event.currentTarget.scrollLeft = pan.left - dx;
+          event.currentTarget.scrollTop = pan.top - dy;
+        },
+        onPointerUp: (event) => endPan(event.pointerId),
+        onPointerCancel: (event) => endPan(event.pointerId),
+        onLostPointerCapture: (event) => endPan(event.pointerId),
+        onClickCapture: (event) => {
+          if (suppressClickRef.current && event.detail > 0) {
+            event.preventDefault();
+            event.stopPropagation();
+            suppressClickRef.current = false;
+          }
+        },
+        onDragStart: (event) => event.preventDefault(),
         children: /* @__PURE__ */ jsxRuntimeExports.jsx(
           "div",
           {

@@ -5492,6 +5492,11 @@
     outline-width: 1px;
   }
 
+  .blur {
+    --tw-blur: blur(8px);
+    filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
+  }
+
   .filter {
     filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
   }
@@ -6016,11 +6021,18 @@
 }
 
 .bracket-viewport {
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
   overscroll-behavior: contain;
   scrollbar-color: #666957 var(--color-base-100);
   scrollbar-width: thin;
   background-image: linear-gradient(#30303055 1px, #0000 1px), linear-gradient(90deg, #30303055 1px, #0000 1px);
   background-size: 24px 24px;
+}
+
+.bracket-viewport[data-panning], .bracket-viewport[data-panning] * {
+  cursor: grabbing;
 }
 
 .bracket-canvas {
