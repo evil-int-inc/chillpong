@@ -1,5 +1,5 @@
 import { RequireAdmin, RequireAuth } from "@/components/auth/RequireAuth";
-import { MainLayout } from "@/components/ui/layouts/MainLayout";
+import { MainLayout } from "@/components/layout/MainLayout";
 import { useI18n } from "@/i18n";
 import { AdminPage } from "@/pages/AdminPage";
 import { PlayersPage } from "@/pages/PlayersPage";
