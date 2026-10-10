@@ -1,5 +1,7 @@
 import { createActor } from "@/backend";
 import { BracketGraph } from "@/components/tournaments/BracketGraph";
+import { CopyBracketLink } from "@/components/tournaments/CopyBracketLink";
+import { FullscreenBracketFrame } from "@/components/tournaments/FullscreenBracketFrame";
 import {
   type ActionOptions,
   OrganizerDialogs,
@@ -24,7 +26,7 @@ import {
 } from "@/types/tournament-manager";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -33,13 +35,14 @@ import {
   Flag,
   GitBranch,
   MapPin,
+  Maximize2,
   Plus,
   RefreshCw,
   Table2,
   Trophy,
   Undo2,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useState } from "react";
 
 function OrganizerSetup({
   view,
@@ -188,11 +191,37 @@ export function TournamentDetailPage({
   tournamentId,
 }: { tournamentId: bigint }) {
   const { t } = useI18n();
+  const fullscreen = useSearch({
+    strict: false,
+    select: (search) => search.view === "bracket",
+  });
+  const navigate = useNavigate();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
   const queryKey = ["tournamentState", tournamentId.toString()] as const;
   const [display, setDisplay] = useState<"standard" | "extended">("standard");
+  const changeFullscreen = useCallback(
+    (next: boolean) => {
+      setDisplay("extended");
+      void navigate({
+        to: "/tournaments/$tournamentId",
+        params: { tournamentId: tournamentId.toString() },
+        search: (previous) => ({
+          ...previous,
+          view: next ? ("bracket" as const) : undefined,
+        }),
+      });
+    },
+    [navigate, tournamentId],
+  );
+  const closeFullscreen = useCallback(
+    () => changeFullscreen(false),
+    [changeFullscreen],
+  );
+  useEffect(() => {
+    if (fullscreen) setDisplay("extended");
+  }, [fullscreen]);
   const [modal, setModal] = useState<OrganizerModal | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const stateQuery = useQuery({
@@ -256,8 +285,21 @@ export function TournamentDetailPage({
       : "This action couldn't be saved. Try again."
     : null;
   const loading = stateQuery.isLoading || (isFetching && !view);
+  function frame(content: ReactNode) {
+    return fullscreen ? (
+      <FullscreenBracketFrame
+        tournamentId={tournamentId}
+        title={view?.tournament.title}
+        onClose={closeFullscreen}
+      >
+        {content}
+      </FullscreenBracketFrame>
+    ) : (
+      content
+    );
+  }
   if (loading)
-    return (
+    return frame(
       <div
         className="club-page"
         data-ocid="tournament.loading_state"
@@ -277,10 +319,10 @@ export function TournamentDetailPage({
         <span className="sr-only">
           {t("Loading the tournament floor and bracket.")}
         </span>
-      </div>
+      </div>,
     );
   if (stateQuery.isError)
-    return (
+    return frame(
       <div className="club-page">
         <div
           data-ocid="tournament.error_state"
@@ -301,10 +343,10 @@ export function TournamentDetailPage({
             <RefreshCw className="size-4" aria-hidden="true" /> {t("Try again")}
           </Button>
         </div>
-      </div>
+      </div>,
     );
   if (!view)
-    return (
+    return frame(
       <div className="club-page">
         <div className="club-state">
           <h1 className="font-display text-3xl font-bold uppercase">
@@ -314,7 +356,7 @@ export function TournamentDetailPage({
             {t("Back to tournaments")}
           </Link>
         </div>
-      </div>
+      </div>,
     );
   const champion = playerById(view.players, view.championId);
   const activePlayers = view.players.filter(
@@ -326,6 +368,32 @@ export function TournamentDetailPage({
   const recentActions = [...view.history]
     .sort((a, b) => (a.id > b.id ? -1 : 1))
     .slice(0, 6);
+  const dialogs = (
+    <OrganizerDialogs
+      view={view}
+      modal={modal}
+      isAdmin={isAdmin}
+      pending={actionMutation.isPending}
+      error={actionError}
+      onClose={() => {
+        if (!actionMutation.isPending) setModal(null);
+      }}
+      onOpen={openModal}
+      onAction={applyAction}
+    />
+  );
+  if (fullscreen)
+    return frame(
+      <>
+        <BracketGraph
+          fullscreen
+          matches={view.matches}
+          players={view.players}
+          onSelect={(match) => openModal({ kind: "match", matchId: match.id })}
+        />
+        {dialogs}
+      </>,
+    );
   return (
     <div data-ocid="tournament.detail_page" className="club-page">
       <Link
@@ -461,19 +529,32 @@ export function TournamentDetailPage({
             </span>
           </button>
         </div>
-        {isAdmin ? (
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => openModal({ kind: "player" })}
+        <div className="flex flex-wrap items-center gap-2">
+          <CopyBracketLink tournamentId={tournamentId} compact />
+          <button
+            type="button"
+            data-ocid="tournament.open_fullscreen_button"
+            className="btn btn-ghost btn-square btn-sm"
+            aria-label={t("Open fullscreen bracket")}
+            title={t("Open fullscreen bracket")}
+            onClick={() => changeFullscreen(true)}
           >
-            <Plus className="size-3.5" aria-hidden="true" /> {t("Add player")}
-          </Button>
-        ) : (
-          <span className="technical-label text-[9px] text-base-content/35">
-            {t("Live tournament / public view")}
-          </span>
-        )}
+            <Maximize2 className="size-4" aria-hidden="true" />
+          </button>
+          {isAdmin ? (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => openModal({ kind: "player" })}
+            >
+              <Plus className="size-3.5" aria-hidden="true" /> {t("Add player")}
+            </Button>
+          ) : (
+            <span className="technical-label text-[9px] text-base-content/35">
+              {t("Live tournament / public view")}
+            </span>
+          )}
+        </div>
       </div>
       {display === "standard" ? (
         <StandardView
@@ -534,18 +615,7 @@ export function TournamentDetailPage({
           </ol>
         </section>
       ) : null}
-      <OrganizerDialogs
-        view={view}
-        modal={modal}
-        isAdmin={isAdmin}
-        pending={actionMutation.isPending}
-        error={actionError}
-        onClose={() => {
-          if (!actionMutation.isPending) setModal(null);
-        }}
-        onOpen={openModal}
-        onAction={applyAction}
-      />
+      {dialogs}
     </div>
   );
 }

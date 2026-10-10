@@ -454,8 +454,8 @@ export const ru = {
   "Score A": "Счёт A",
   "Score B": "Счёт B",
   "Scores must be at most 999": "Счёт не может превышать 999",
-  "Drag or scroll to pan / select any match":
-    "Перетаскивайте или прокручивайте / выберите любой матч",
+  "Drag to pan / scroll or pinch to zoom":
+    "Перетаскивайте для перемещения / колесо или два пальца для масштаба",
   "Scrollable bracket graph": "Прокручиваемая сетка турнира",
   "Search by member ID": "Поиск по ID участника",
   "Search tournament players": "Поиск игроков турнира",
@@ -730,4 +730,12 @@ export const ru = {
   "{v1} upcoming / {v2} live": "{v1} скоро / {v2} сейчас",
   "· Registration order belongs to this tournament.":
     "· Порядок регистрации относится к этому турниру.",
+  "Full bracket": "Полная сетка",
+  "Open fullscreen bracket": "Открыть сетку на весь экран",
+  "Close fullscreen bracket": "Закрыть полноэкранную сетку",
+  "Copy bracket link": "Скопировать ссылку на сетку",
+  "Bracket link copied": "Ссылка на сетку скопирована",
+  "Could not copy the link. Copy it below.":
+    "Не удалось скопировать ссылку. Скопируйте её ниже.",
+  "Full bracket URL": "Ссылка на полную сетку",
 } satisfies Record<Message, string>;

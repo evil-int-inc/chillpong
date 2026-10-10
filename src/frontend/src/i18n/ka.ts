@@ -456,8 +456,8 @@ export const ka = {
   "Score A": "ანგარიში A",
   "Score B": "ანგარიში B",
   "Scores must be at most 999": "ანგარიში მაქსიმუმ 999 უნდა იყოს",
-  "Drag or scroll to pan / select any match":
-    "გადაადგილება გადათრევით ან სქროლით / აირჩიეთ ნებისმიერი მატჩი",
+  "Drag to pan / scroll or pinch to zoom":
+    "გადაადგილება გადათრევით / მასშტაბი სქროლით ან ორი თითით",
   "Scrollable bracket graph": "გადასაადგილებელი ტურნირის ბადე",
   "Search by member ID": "ძებნა წევრის ID-ით",
   "Search tournament players": "ტურნირის მოთამაშეების ძებნა",
@@ -730,4 +730,12 @@ export const ka = {
   "{v1} upcoming / {v2} live": "{v1} მომავალი / {v2} მიმდინარე",
   "· Registration order belongs to this tournament.":
     "· რეგისტრაციის რიგი ამ ტურნირს ეკუთვნის.",
+  "Full bracket": "სრული ბადე",
+  "Open fullscreen bracket": "ბადის სრულ ეკრანზე გახსნა",
+  "Close fullscreen bracket": "სრულეკრანიანი ბადის დახურვა",
+  "Copy bracket link": "ბადის ბმულის კოპირება",
+  "Bracket link copied": "ბადის ბმული დაკოპირებულია",
+  "Could not copy the link. Copy it below.":
+    "ბმული ვერ დაკოპირდა. დააკოპირეთ ქვემოთ.",
+  "Full bracket URL": "სრული ბადის ბმული",
 } satisfies Record<Message, string>;

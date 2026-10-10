@@ -5,6 +5,7 @@ import {
   TournamentStatus,
   createActor,
 } from "@/backend";
+import { CopyBracketLink } from "@/components/tournaments/CopyBracketLink";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -621,6 +622,10 @@ export function TournamentsPage() {
                       {t("for")} {tournament.title}
                     </span>
                   </Button>
+                  <CopyBracketLink
+                    tournamentId={tournament.id}
+                    data-ocid={`tournaments.copy_bracket_button.${index + 1}`}
+                  />
                   {isAdmin ? (
                     <button
                       type="button"
@@ -743,6 +748,11 @@ export function TournamentsPage() {
               </p>
             )}
             <footer className="mt-8 flex flex-wrap justify-end gap-3">
+              <CopyBracketLink
+                key={detail.id.toString()}
+                tournamentId={detail.id}
+                data-ocid="tournaments.details_copy_bracket_button"
+              />
               <Button variant="ghost" onClick={() => setDetail(null)}>
                 {t("Close")}
               </Button>

@@ -367,7 +367,7 @@ export const messages = [
   "Score A",
   "Score B",
   "Scores must be at most 999",
-  "Drag or scroll to pan / select any match",
+  "Drag to pan / scroll or pinch to zoom",
   "Scrollable bracket graph",
   "Search by member ID",
   "Search tournament players",
@@ -583,6 +583,13 @@ export const messages = [
   "{v1} club members",
   "{v1} upcoming / {v2} live",
   "· Registration order belongs to this tournament.",
+  "Full bracket",
+  "Open fullscreen bracket",
+  "Close fullscreen bracket",
+  "Copy bracket link",
+  "Bracket link copied",
+  "Could not copy the link. Copy it below.",
+  "Full bracket URL",
 ] as const;
 
 export type Message = (typeof messages)[number];

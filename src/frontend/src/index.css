@@ -250,6 +250,7 @@
 .bracket-viewport {
   cursor: grab;
   user-select: none;
+  touch-action: none;
   overscroll-behavior: contain;
   scrollbar-color: #666957 var(--color-base-100);
   scrollbar-width: thin;

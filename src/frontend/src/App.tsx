@@ -61,6 +61,8 @@ const tournamentsRoute = createRoute({
 const tournamentDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/tournaments/$tournamentId",
+  validateSearch: (search: Record<string, unknown>): { view?: "bracket" } =>
+    search.view === "bracket" ? { view: "bracket" } : {},
   component: TournamentRoomRoute,
 });
 
@@ -108,17 +110,18 @@ const profileRoute = createRoute({
     </RequireAuth>
   ),
 });
+export const routeTree = rootRoute.addChildren([
+  indexRoute,
+  playersRoute,
+  usersRoute,
+  tournamentsRoute,
+  tournamentDetailRoute,
+  adminRoute,
+  accountsRoute,
+  profileRoute,
+]);
 const router = createRouter({
-  routeTree: rootRoute.addChildren([
-    indexRoute,
-    playersRoute,
-    usersRoute,
-    tournamentsRoute,
-    tournamentDetailRoute,
-    adminRoute,
-    accountsRoute,
-    profileRoute,
-  ]),
+  routeTree,
   defaultPreload: "intent",
 });
 declare module "@tanstack/react-router" {

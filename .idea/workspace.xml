@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="refactor/update-idea-settings" />
+    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="refactor/update-idea-settings">
+      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-BDKY82oo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-D2e7tcRY.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/BracketPan.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/BracketPan.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/layout/MainLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/layout/MainLayout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/ka.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/ka.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/ru.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/ru.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentsPage.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

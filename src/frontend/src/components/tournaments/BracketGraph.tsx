@@ -6,8 +6,13 @@ import {
   type TournamentPlayerView,
 } from "@/types/tournament-manager";
 import { Maximize2, Minus, Plus, RotateCcw } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { MatchCard } from "./MatchCard";
+import {
+  MAX_BRACKET_ZOOM,
+  MIN_BRACKET_ZOOM,
+  useBracketNavigation,
+} from "./useBracketNavigation";
 
 const CARD_WIDTH = 248;
 const CARD_HEIGHT = 148;
@@ -19,45 +24,24 @@ interface BracketGraphProps {
   matches: TournamentMatchView[];
   players: TournamentPlayerView[];
   onSelect: (match: TournamentMatchView) => void;
+  fullscreen?: boolean;
 }
 
 export function BracketGraph({
   matches,
   players,
   onSelect,
+  fullscreen = false,
 }: BracketGraphProps) {
   const { t } = useI18n();
-  const [zoom, setZoom] = useState(1);
-  const [isPanning, setIsPanning] = useState(false);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const panRef = useRef<{
-    pointerId: number;
-    x: number;
-    y: number;
-    left: number;
-    top: number;
-    dragging: boolean;
-  } | null>(null);
-  const suppressClickRef = useRef(false);
-
-  const endPan = useCallback((pointerId?: number) => {
-    const pan = panRef.current;
-    if (!pan || (pointerId !== undefined && pan.pointerId !== pointerId))
-      return;
-    panRef.current = null;
-    setIsPanning(false);
-    const viewport = viewportRef.current;
-    if (viewport?.hasPointerCapture(pan.pointerId))
-      viewport.releasePointerCapture(pan.pointerId);
-  }, []);
-
-  useEffect(() => {
-    function handleBlur() {
-      endPan();
-    }
-    window.addEventListener("blur", handleBlur);
-    return () => window.removeEventListener("blur", handleBlur);
-  }, [endPan]);
+  const {
+    viewportRef,
+    zoom,
+    isPanning,
+    zoomTo,
+    fitZoom,
+    ...navigationHandlers
+  } = useBracketNavigation(matches.length > 0);
 
   const layout = useMemo(() => {
     const nodes: { match: TournamentMatchView; x: number; y: number }[] = [];
@@ -161,7 +145,7 @@ export function BracketGraph({
 
   if (!matches.length) {
     return (
-      <div className="club-state">
+      <div className={`club-state${fullscreen ? " flex-1" : ""}`}>
         <p className="font-display text-2xl font-bold uppercase">
           {t("No bracket yet.")}
         </p>
@@ -175,7 +159,10 @@ export function BracketGraph({
   }
 
   return (
-    <section aria-label={t("Complete tournament bracket")}>
+    <section
+      aria-label={t("Complete tournament bracket")}
+      className={fullscreen ? "flex min-h-0 flex-1 flex-col" : undefined}
+    >
       <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-wider text-base-content/45">
           <span className="flex items-center gap-2">
@@ -192,19 +179,15 @@ export function BracketGraph({
             />{" "}
             {t("Loser drops")}
           </span>
-          <span>{t("Drag or scroll to pan / select any match")}</span>
+          <span>{t("Drag to pan / scroll or pinch to zoom")}</span>
         </div>
         <div className="flex items-center gap-2 border border-base-300 p-1">
           <button
             type="button"
             className="btn btn-ghost btn-square btn-xs"
             aria-label={t("Zoom bracket out")}
-            disabled={zoom <= 0.1}
-            onClick={() =>
-              setZoom((value) =>
-                Math.max(0.1, Math.round((value - 0.1) * 10) / 10),
-              )
-            }
+            disabled={zoom <= MIN_BRACKET_ZOOM}
+            onClick={() => zoomTo(Math.round((zoom - 0.1) * 100) / 100)}
           >
             <Minus className="size-3.5" aria-hidden="true" />
           </button>
@@ -218,12 +201,8 @@ export function BracketGraph({
             type="button"
             className="btn btn-ghost btn-square btn-xs"
             aria-label={t("Zoom bracket in")}
-            disabled={zoom >= 1.6}
-            onClick={() =>
-              setZoom((value) =>
-                Math.min(1.6, Math.round((value + 0.1) * 10) / 10),
-              )
-            }
+            disabled={zoom >= MAX_BRACKET_ZOOM}
+            onClick={() => zoomTo(Math.round((zoom + 0.1) * 100) / 100)}
           >
             <Plus className="size-3.5" aria-hidden="true" />
           </button>
@@ -233,17 +212,12 @@ export function BracketGraph({
             onClick={() => {
               const viewport = viewportRef.current;
               if (!viewport?.clientWidth || !viewport.clientHeight) return;
-              setZoom(
-                Math.max(
-                  0.05,
-                  Math.min(
-                    1.6,
-                    viewport.clientWidth / layout.width,
-                    viewport.clientHeight / layout.height,
-                  ),
+              fitZoom(
+                Math.min(
+                  viewport.clientWidth / layout.width,
+                  viewport.clientHeight / layout.height,
                 ),
               );
-              viewport.scrollTo({ top: 0, left: 0 });
             }}
           >
             <Maximize2 className="size-3.5" aria-hidden="true" />{" "}
@@ -253,7 +227,7 @@ export function BracketGraph({
             type="button"
             className="btn btn-ghost btn-square btn-xs"
             aria-label={t("Reset bracket zoom")}
-            onClick={() => setZoom(1)}
+            onClick={() => zoomTo(1)}
           >
             <RotateCcw className="size-3.5" aria-hidden="true" />
           </button>
@@ -263,58 +237,13 @@ export function BracketGraph({
         ref={viewportRef}
         data-ocid="tournament.bracket"
         data-panning={isPanning || undefined}
-        className="bracket-viewport max-h-[75vh] overflow-auto border border-base-300 bg-base-100"
+        className={`bracket-viewport overflow-auto border border-base-300 bg-base-100 ${fullscreen ? "min-h-0 flex-1" : "max-h-[75vh]"}`}
         aria-label={t("Scrollable bracket graph")}
-        onPointerDown={(event) => {
-          if (
-            event.pointerType !== "mouse" ||
-            event.button !== 0 ||
-            !event.isPrimary
-          )
-            return;
-          suppressClickRef.current = false;
-          panRef.current = {
-            pointerId: event.pointerId,
-            x: event.clientX,
-            y: event.clientY,
-            left: event.currentTarget.scrollLeft,
-            top: event.currentTarget.scrollTop,
-            dragging: false,
-          };
-        }}
-        onPointerMove={(event) => {
-          const pan = panRef.current;
-          if (!pan || pan.pointerId !== event.pointerId) return;
-          if (!(event.buttons & 1)) {
-            endPan(event.pointerId);
-            return;
-          }
-          const dx = event.clientX - pan.x;
-          const dy = event.clientY - pan.y;
-          if (!pan.dragging) {
-            if (Math.hypot(dx, dy) < 4) return;
-            pan.dragging = true;
-            suppressClickRef.current = true;
-            event.currentTarget.setPointerCapture(event.pointerId);
-            setIsPanning(true);
-          }
-          event.preventDefault();
-          event.currentTarget.scrollLeft = pan.left - dx;
-          event.currentTarget.scrollTop = pan.top - dy;
-        }}
-        onPointerUp={(event) => endPan(event.pointerId)}
-        onPointerCancel={(event) => endPan(event.pointerId)}
-        onLostPointerCapture={(event) => endPan(event.pointerId)}
-        onClickCapture={(event) => {
-          if (suppressClickRef.current && event.detail > 0) {
-            event.preventDefault();
-            event.stopPropagation();
-            suppressClickRef.current = false;
-          }
-        }}
+        {...navigationHandlers}
         onDragStart={(event) => event.preventDefault()}
       >
         <div
+          className="overflow-hidden"
           style={{ width: layout.width * zoom, height: layout.height * zoom }}
         >
           <div
