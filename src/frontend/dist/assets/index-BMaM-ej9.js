@@ -33363,6 +33363,15 @@ const ka = {
   "Copy member ID": "წევრის ID-ის კოპირება",
   "Copy member ID {v1}": "წევრის ID-ის კოპირება: {v1}",
   "Correct the result": "შედეგის შესწორება",
+  "Edit match players": "მატჩის მონაწილეების რედაქტირება",
+  "Back to match": "მატჩზე დაბრუნება",
+  "Reset this match before changing its participants.": "მონაწილეების შეცვლამდე გაანულეთ მატჩი.",
+  "Reset match to edit players": "მატჩის განულება და მონაწილეების შეცვლა",
+  "Replace participants in an unplayed opening match, or swap players between ready matches in the same round.": "შეცვალეთ მონაწილეები ჯერ არჩატარებულ პირველი რაუნდის მატჩში, ან გაცვალეთ მოთამაშეები იმავე რაუნდის მზადყოფნაში მყოფ მატჩებს შორის.",
+  "Scores must be at most 999.": "ანგარიში არ უნდა აღემატებოდეს 999-ს.",
+  "Enter score": "ანგარიშის შეყვანა",
+  "Manage match": "მატჩის მართვა",
+  "Save result & finish match": "შედეგის შენახვა და მატჩის დასრულება",
   "Couldn't copy the member ID. You can select and copy it below.": "ID ვერ დაკოპირდა. მონიშნეთ და დააკოპირეთ ქვემოთ.",
   "Couldn't load accounts": "ანგარიშები ვერ ჩაიტვირთა",
   "Couldn't load your profile": "პროფილი ვერ ჩაიტვირთა",
@@ -33956,6 +33965,15 @@ const ru = {
   "Copy member ID": "Скопировать ID участника",
   "Copy member ID {v1}": "Скопировать ID участника {v1}",
   "Correct the result": "Исправить результат",
+  "Edit match players": "Редактировать участников матча",
+  "Back to match": "Вернуться к матчу",
+  "Reset this match before changing its participants.": "Сбросьте матч перед изменением его участников.",
+  "Reset match to edit players": "Сбросить матч и изменить участников",
+  "Replace participants in an unplayed opening match, or swap players between ready matches in the same round.": "Замените участников несыгранного матча первого раунда или поменяйте игроков между готовыми матчами одного раунда.",
+  "Scores must be at most 999.": "Счёт не должен превышать 999.",
+  "Enter score": "Ввести счёт",
+  "Manage match": "Управление матчем",
+  "Save result & finish match": "Сохранить счёт и завершить матч",
   "Couldn't copy the member ID. You can select and copy it below.": "Не удалось скопировать ID. Выделите и скопируйте его ниже.",
   "Couldn't load accounts": "Не удалось загрузить аккаунты",
   "Couldn't load your profile": "Не удалось загрузить профиль",
@@ -45830,6 +45848,7 @@ function tbilisiTime(timestamp) {
 function PlayerForm({
   view,
   player,
+  returnToMatch,
   pending,
   onAction
 }) {
@@ -45841,7 +45860,7 @@ function PlayerForm({
     if (!valid) return;
     onAction(
       player ? { kind: "editPlayer", playerId: player.id, name: name.trim(), skill } : { kind: "addPlayer", name: name.trim(), skill },
-      { placeNewPlayer }
+      { placeNewPlayer, returnToMatch }
     );
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -46023,7 +46042,7 @@ function MatchEditor({
   onAction,
   onOpen
 }) {
-  var _a2, _b2, _c2, _d2, _e2;
+  var _a2, _b2, _c2, _d2, _e2, _f2, _g2;
   const { t } = useI18n();
   const [scoreA, setScoreA] = reactExports.useState(((_a2 = match.scoreA) == null ? void 0 : _a2.toString()) ?? "");
   const [scoreB, setScoreB] = reactExports.useState(((_b2 = match.scoreB) == null ? void 0 : _b2.toString()) ?? "");
@@ -46035,10 +46054,15 @@ function MatchEditor({
   const [otherMatch, setOtherMatch] = reactExports.useState("");
   const [otherSlot, setOtherSlot] = reactExports.useState("b");
   const [validation, setValidation] = reactExports.useState(null);
+  const playersChanged = playerA !== (((_f2 = match.playerAId) == null ? void 0 : _f2.toString()) ?? "") || playerB !== (((_g2 = match.playerBId) == null ? void 0 : _g2.toString()) ?? "");
   const editableOpening = match.bracket === "winners" && match.round === 1 && match.status !== "playing" && match.status !== "completed";
-  const activePlayers = view.players.filter(
-    (player) => player.status !== "removed" && player.status !== "eliminated"
-  );
+  const activePlayers = view.players.filter((player) => {
+    if (player.id === match.playerAId || player.id === match.playerBId)
+      return true;
+    return player.status !== "removed" && player.status !== "eliminated" && !view.matches.some(
+      (other) => other.id !== match.id && (other.sourceA.kind === "player" && other.sourceA.id === player.id || other.sourceB.kind === "player" && other.sourceB.id === player.id)
+    );
+  });
   const canSwapBracket = match.bracket === "winners" || match.bracket === "losers";
   const swapMatches = view.matches.filter(
     (item) => canSwapBracket && item.id !== match.id && item.bracket === match.bracket && item.round === match.round && (item.status === "ready" || editableOpening && item.status === "bye")
@@ -46079,7 +46103,7 @@ function MatchEditor({
         {
           className: "flex items-center justify-between gap-4 py-4",
           children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 break-words", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "p",
                 {
@@ -46095,9 +46119,25 @@ function MatchEditor({
                 " /",
                 " ",
                 registrationLabel(player.registrationNumber)
-              ] }) : null
+              ] }) : null,
+              isAdmin && player ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button,
+                {
+                  size: "sm",
+                  variant: "outline",
+                  className: "mt-3",
+                  "aria-label": t("Edit {v1}", { v1: player.name }),
+                  disabled: pending,
+                  onClick: () => onOpen({
+                    kind: "player",
+                    player,
+                    returnToMatch: match.id
+                  }),
+                  children: t("Edit player.")
+                }
+              ) : null
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-3xl", children: side.score ?? "—" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "shrink-0 font-mono text-3xl", children: side.score ?? "—" })
           ]
         },
         side.slot
@@ -46117,6 +46157,286 @@ function MatchEditor({
       ] }) : null
     ] }),
     isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      (match.status === "ready" || match.status === "playing" || match.status === "completed") && match.playerAId !== void 0 && match.playerBId !== void 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "form",
+        {
+          className: "space-y-4 border border-base-300 p-4",
+          onSubmit: (event) => {
+            event.preventDefault();
+            setValidation(null);
+            const a2 = Number(scoreA);
+            const b2 = Number(scoreB);
+            if (!scoreA || !scoreB || !Number.isSafeInteger(a2) || !Number.isSafeInteger(b2) || a2 < 0 || b2 < 0) {
+              setValidation(
+                "Enter a non-negative whole-number score for both players."
+              );
+              return;
+            }
+            if (a2 === b2) {
+              setValidation(
+                "A knockout match needs a winner. Scores cannot be tied."
+              );
+              return;
+            }
+            if (a2 > 999 || b2 > 999) {
+              setValidation("Scores must be at most 999.");
+              return;
+            }
+            onAction({
+              kind: "recordResult",
+              matchId: match.id,
+              scoreA: a2,
+              scoreB: b2
+            });
+          },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-primary", children: match.status === "completed" ? t("Correct the result") : t("Save the result") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Score A") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "input",
+                  {
+                    type: "number",
+                    inputMode: "numeric",
+                    "data-ocid": "tournament.score_a_input",
+                    className: "input w-full rounded-none font-mono text-xl",
+                    min: 0,
+                    max: 999,
+                    step: 1,
+                    required: true,
+                    value: scoreA,
+                    disabled: pending,
+                    onChange: (event) => setScoreA(event.target.value)
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Score B") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "input",
+                  {
+                    type: "number",
+                    inputMode: "numeric",
+                    "data-ocid": "tournament.score_b_input",
+                    className: "input w-full rounded-none font-mono text-xl",
+                    min: 0,
+                    max: 999,
+                    step: 1,
+                    required: true,
+                    value: scoreB,
+                    disabled: pending,
+                    onChange: (event) => setScoreB(event.target.value)
+                  }
+                )
+              ] })
+            ] }),
+            validation ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { role: "alert", className: "text-xs text-error", children: t(validation) }) : null,
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
+              "Winners advance and the table is freed automatically. Changing a winner after downstream games requires a confirmed reset."
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                type: "submit",
+                "data-ocid": "tournament.save_result_button",
+                className: "w-full sm:w-auto",
+                loading: pending,
+                children: match.status !== "completed" ? t("Save result & finish match") : t("Save result")
+              }
+            )
+          ]
+        }
+      ) : null,
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "section",
+        {
+          className: "space-y-4 border border-base-300 p-4",
+          "aria-labelledby": "match-players-title",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "h3",
+              {
+                id: "match-players-title",
+                className: "technical-label text-primary",
+                children: t("Edit match players")
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: !canSwapBracket ? t(
+              "Finalist positions stay fixed because they determine whether a double elimination reset final is required."
+            ) : match.status === "playing" || match.status === "completed" ? t("Reset this match before changing its participants.") : t(
+              "Replace participants in an unplayed opening match, or swap players between ready matches in the same round."
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-3 sm:grid-cols-2", children: [
+              {
+                label: "Player A slot",
+                value: playerA,
+                setter: setPlayerA
+              },
+              {
+                label: "Player B slot",
+                value: playerB,
+                setter: setPlayerB
+              }
+            ].map((side) => /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t(side.label) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "select",
+                {
+                  className: "select w-full rounded-none",
+                  value: side.value,
+                  disabled: pending || !editableOpening,
+                  onChange: (event) => side.setter(event.target.value),
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("BYE / empty slot") }),
+                    activePlayers.map((player) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                      "option",
+                      {
+                        value: player.id.toString(),
+                        disabled: player.status === "removed" || player.id.toString() === (side.label === "Player A slot" ? playerB : playerA) || view.matches.some(
+                          (other) => other.id !== match.id && (other.sourceA.kind === "player" && other.sourceA.id === player.id || other.sourceB.kind === "player" && other.sourceB.id === player.id)
+                        ),
+                        children: [
+                          registrationLabel(player.registrationNumber),
+                          " ",
+                          player.name,
+                          " ",
+                          t("/ L"),
+                          player.skill
+                        ]
+                      },
+                      player.id.toString()
+                    ))
+                  ]
+                }
+              )
+            ] }, side.label)) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "outline",
+                size: "sm",
+                disabled: pending || !editableOpening || !playersChanged || !!playerA && playerA === playerB,
+                onClick: () => onAction(
+                  {
+                    kind: "setMatchPlayers",
+                    matchId: match.id,
+                    playerA: playerA ? BigInt(playerA) : void 0,
+                    playerB: playerB ? BigInt(playerB) : void 0
+                  },
+                  { close: false }
+                ),
+                children: t("Change matchup")
+              }
+            ),
+            canSwapBracket ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 border-t border-base-300 pt-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[10px]", children: t("Swap players between ready matches") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-3 sm:grid-cols-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: t("This match slot") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "select",
+                    {
+                      className: "select w-full rounded-none",
+                      value: firstSlot,
+                      disabled: pending,
+                      onChange: (event) => setFirstSlot(event.target.value),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: t("Player A") }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: t("Player B") })
+                      ]
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: t("Other match") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "select",
+                    {
+                      className: "select w-full rounded-none",
+                      value: otherMatch,
+                      disabled: pending,
+                      onChange: (event) => setOtherMatch(event.target.value),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("Choose match") }),
+                        swapMatches.map((item) => {
+                          var _a3, _b3;
+                          return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                            "option",
+                            {
+                              value: item.id.toString(),
+                              children: [
+                                matchLabel(item),
+                                " /",
+                                " ",
+                                ((_a3 = playerById(view.players, item.playerAId)) == null ? void 0 : _a3.name) ?? sourceLabel(item.sourceA, view.matches),
+                                " ",
+                                t("vs"),
+                                " ",
+                                ((_b3 = playerById(view.players, item.playerBId)) == null ? void 0 : _b3.name) ?? sourceLabel(item.sourceB, view.matches)
+                              ]
+                            },
+                            item.id.toString()
+                          );
+                        })
+                      ]
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: t("Other match slot") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "select",
+                    {
+                      className: "select w-full rounded-none",
+                      value: otherSlot,
+                      disabled: pending,
+                      onChange: (event) => setOtherSlot(event.target.value),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: t("Player A") }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: t("Player B") })
+                      ]
+                    }
+                  )
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button,
+                {
+                  variant: "outline",
+                  size: "sm",
+                  disabled: pending || !otherMatch || match.status !== "ready" && !editableOpening,
+                  onClick: () => onAction(
+                    {
+                      kind: "swapPlayers",
+                      firstMatchId: match.id,
+                      firstSlot,
+                      secondMatchId: BigInt(otherMatch),
+                      secondSlot: otherSlot
+                    },
+                    { close: false }
+                  ),
+                  children: t("Swap players")
+                }
+              )
+            ] }) : null,
+            canSwapBracket && (match.status === "playing" || match.status === "completed") ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "outline",
+                className: "w-full sm:w-auto",
+                disabled: pending,
+                onClick: () => onOpen({
+                  kind: "reset",
+                  matchId: match.id,
+                  returnToMatch: match.id
+                }),
+                children: t("Reset match to edit players")
+              }
+            ) : null
+          ]
+        }
+      ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-3 sm:grid-cols-[1fr_auto_auto]", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Assign table") }),
@@ -46179,86 +46499,6 @@ function MatchEditor({
           }
         )
       ] }),
-      match.status === "playing" || match.status === "completed" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        "form",
-        {
-          className: "space-y-4 border border-base-300 p-4",
-          onSubmit: (event) => {
-            event.preventDefault();
-            setValidation(null);
-            const a2 = Number(scoreA);
-            const b2 = Number(scoreB);
-            if (!scoreA || !scoreB || !Number.isSafeInteger(a2) || !Number.isSafeInteger(b2) || a2 < 0 || b2 < 0) {
-              setValidation(
-                "Enter a non-negative whole-number score for both players."
-              );
-              return;
-            }
-            if (a2 === b2) {
-              setValidation(
-                "A knockout match needs a winner. Scores cannot be tied."
-              );
-              return;
-            }
-            onAction({
-              kind: "recordResult",
-              matchId: match.id,
-              scoreA: a2,
-              scoreB: b2
-            });
-          },
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-primary", children: match.status === "completed" ? t("Correct the result") : t("Save the result") }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Score A") }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "input",
-                  {
-                    type: "number",
-                    className: "input w-full rounded-none font-mono text-xl",
-                    min: 0,
-                    step: 1,
-                    required: true,
-                    value: scoreA,
-                    disabled: pending,
-                    onChange: (event) => setScoreA(event.target.value)
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Score B") }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "input",
-                  {
-                    type: "number",
-                    className: "input w-full rounded-none font-mono text-xl",
-                    min: 0,
-                    step: 1,
-                    required: true,
-                    value: scoreB,
-                    disabled: pending,
-                    onChange: (event) => setScoreB(event.target.value)
-                  }
-                )
-              ] })
-            ] }),
-            validation ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { role: "alert", className: "text-xs text-error", children: t(validation) }) : null,
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
-              "Winners advance and the table is freed automatically. Changing a winner after downstream games requires a confirmed reset."
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              Button,
-              {
-                type: "submit",
-                "data-ocid": "tournament.save_result_button",
-                loading: pending,
-                children: t("Save result")
-              }
-            )
-          ]
-        }
-      ) : null,
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           Button,
@@ -46290,65 +46530,6 @@ function MatchEditor({
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
             "Opening slots can be replaced. Later ready matches can swap opponents within the same bracket and round. Registration numbers never change."
           ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-3 sm:grid-cols-2", children: [
-            {
-              label: "Player A slot",
-              value: playerA,
-              setter: setPlayerA
-            },
-            {
-              label: "Player B slot",
-              value: playerB,
-              setter: setPlayerB
-            }
-          ].map((side) => /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t(side.label) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "select",
-              {
-                className: "select w-full rounded-none",
-                value: side.value,
-                disabled: pending || !editableOpening,
-                onChange: (event) => side.setter(event.target.value),
-                children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("BYE / empty slot") }),
-                  activePlayers.map((player) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                    "option",
-                    {
-                      value: player.id.toString(),
-                      children: [
-                        registrationLabel(player.registrationNumber),
-                        " ",
-                        player.name,
-                        " ",
-                        t("/ L"),
-                        player.skill
-                      ]
-                    },
-                    player.id.toString()
-                  ))
-                ]
-              }
-            )
-          ] }, side.label)) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button,
-            {
-              variant: "outline",
-              size: "sm",
-              disabled: pending || !editableOpening || !!playerA && playerA === playerB,
-              onClick: () => onAction(
-                {
-                  kind: "setMatchPlayers",
-                  matchId: match.id,
-                  playerA: playerA ? BigInt(playerA) : void 0,
-                  playerB: playerB ? BigInt(playerB) : void 0
-                },
-                { close: false }
-              ),
-              children: t("Change matchup")
-            }
-          ),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-3 sm:grid-cols-[1fr_auto]", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Assign BYE to slot") }),
@@ -46380,85 +46561,6 @@ function MatchEditor({
                 children: t("Assign BYE")
               }
             )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 border-t border-base-300 pt-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[10px]", children: t("Swap players between ready matches") }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-3 sm:grid-cols-3", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: t("This match slot") }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  "select",
-                  {
-                    className: "select w-full rounded-none",
-                    value: firstSlot,
-                    disabled: pending,
-                    onChange: (event) => setFirstSlot(event.target.value),
-                    children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: t("Player A") }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: t("Player B") })
-                    ]
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: t("Other match") }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  "select",
-                  {
-                    className: "select w-full rounded-none",
-                    value: otherMatch,
-                    disabled: pending,
-                    onChange: (event) => setOtherMatch(event.target.value),
-                    children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("Choose match") }),
-                      swapMatches.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        "option",
-                        {
-                          value: item.id.toString(),
-                          children: matchLabel(item)
-                        },
-                        item.id.toString()
-                      ))
-                    ]
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[9px]", children: t("Other match slot") }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  "select",
-                  {
-                    className: "select w-full rounded-none",
-                    value: otherSlot,
-                    disabled: pending,
-                    onChange: (event) => setOtherSlot(event.target.value),
-                    children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "a", children: t("Player A") }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "b", children: t("Player B") })
-                    ]
-                  }
-                )
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              Button,
-              {
-                variant: "outline",
-                size: "sm",
-                disabled: pending || !otherMatch || match.status !== "ready" && !editableOpening,
-                onClick: () => onAction(
-                  {
-                    kind: "swapPlayers",
-                    firstMatchId: match.id,
-                    firstSlot,
-                    secondMatchId: BigInt(otherMatch),
-                    secondSlot: otherSlot
-                  },
-                  { close: false }
-                ),
-                children: t("Swap players")
-              }
-            )
           ] })
         ] })
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border-t border-base-300 pt-4 text-xs leading-relaxed text-base-content/45", children: t(
@@ -46471,6 +46573,7 @@ function MatchEditor({
 }
 function ResetForm({
   match,
+  returnToMatch,
   pending,
   onAction
 }) {
@@ -46513,7 +46616,10 @@ function ResetForm({
         variant: "danger",
         "data-ocid": "tournament.confirm_reset_button",
         loading: pending,
-        onClick: () => onAction({ kind: "resetMatch", matchId: match.id, cascade }),
+        onClick: () => onAction(
+          { kind: "resetMatch", matchId: match.id, cascade },
+          { returnToMatch }
+        ),
         children: t("Confirm reset")
       }
     )
@@ -46534,17 +46640,13 @@ function OrganizerDialogs({
   const ref = reactExports.useRef(null);
   const allowed = !!modal && (isAdmin || modal.kind === "match");
   reactExports.useEffect(() => {
-    var _a3;
     const dialog = ref.current;
     if (!dialog) return;
     if (allowed && modal) {
       if (!dialog.open) dialog.showModal();
-      (_a3 = dialog.querySelector(
-        "input:not([disabled]), select:not([disabled])"
-      )) == null ? void 0 : _a3.focus();
     } else if (dialog.open) dialog.close();
   }, [allowed, modal]);
-  const match = modal && (modal.kind === "match" || modal.kind === "reset") ? view.matches.find((item) => item.id === modal.matchId) : void 0;
+  const match = modal && (modal.kind === "match" || modal.kind === "reset") ? view.matches.find((item) => item.id === modal.matchId) : (modal == null ? void 0 : modal.kind) === "player" && modal.returnToMatch !== void 0 ? view.matches.find((item) => item.id === modal.returnToMatch) : void 0;
   const lastAction = [...view.history].sort(
     (a2, b2) => a2.id > b2.id ? -1 : 1
   )[0];
@@ -46575,9 +46677,9 @@ function OrganizerDialogs({
       onClick: (event) => {
         if (event.target === event.currentTarget && !pending) onClose();
       },
-      children: allowed && modal ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "modal-box max-w-2xl rounded-none border border-base-300 bg-base-200 p-6 sm:p-8", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-7 flex items-start justify-between gap-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      children: allowed && modal ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "modal-box flex max-h-[calc(100dvh-2rem)] w-[calc(100%-1rem)] max-w-2xl flex-col overflow-hidden rounded-none border border-base-300 bg-base-200 p-4 sm:p-8", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex shrink-0 items-start justify-between gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 break-words", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "section-kicker mb-2", children: [
               t("CHILLPONG /"),
               " ",
@@ -46597,157 +46699,164 @@ function OrganizerDialogs({
             {
               type: "button",
               "aria-label": t("Close tournament controls"),
-              className: "btn btn-ghost btn-square btn-sm",
+              className: "btn btn-ghost btn-square btn-sm shrink-0",
               disabled: pending,
               onClick: onClose,
               children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "size-5", "aria-hidden": "true" })
             }
           )
         ] }),
-        modal.kind === "player" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-          PlayerForm,
-          {
-            view,
-            player: modal.player,
-            pending,
-            onAction
-          },
-          ((_a2 = modal.player) == null ? void 0 : _a2.id.toString()) ?? "new"
-        ) : null,
-        modal.kind === "move" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-          MovePlayerForm,
-          {
-            view,
-            player: modal.player,
-            pending,
-            onAction
-          },
-          modal.player.id.toString()
-        ) : null,
-        modal.kind === "match" && match ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-          MatchEditor,
-          {
-            view,
-            match,
-            isAdmin,
-            pending,
-            onAction,
-            onOpen
-          },
-          match.id.toString()
-        ) : null,
-        modal.kind === "reset" && match ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-          ResetForm,
-          {
-            match,
-            pending,
-            onAction
-          },
-          match.id.toString()
-        ) : null,
-        modal.kind === "remove" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-display text-xl font-bold", children: [
-            modal.player.name,
-            " ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-xs font-normal text-primary", children: registrationLabel(modal.player.registrationNumber) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3 border border-secondary/30 bg-secondary/5 p-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              TriangleAlert,
-              {
-                className: "mt-0.5 size-5 shrink-0 text-secondary",
-                "aria-hidden": "true"
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/65", children: [
-              modal.player.status === "playing" ? t(
-                "This player is currently playing. Their opponent may advance by forfeit when they are removed."
-              ) : t(
-                "The player leaves the waiting queue and unplayed bracket slots."
-              ),
-              t(
-                "Completed results remain in history. Pending dependencies are updated where safe; active downstream matches can block removal."
-              )
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-base-content/45", children: t(
-            "Their permanent registration number is retained and will not be reused."
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button,
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-0 overflow-y-auto overscroll-contain pr-1", children: [
+          modal.kind === "player" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+            PlayerForm,
             {
-              variant: "danger",
-              "data-ocid": "tournament.confirm_remove_button",
-              loading: pending,
-              onClick: () => onAction({ kind: "removePlayer", playerId: modal.player.id }),
-              children: t("Remove player")
-            }
-          )
-        ] }) : null,
-        modal.kind === "generate" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-display text-2xl font-bold", children: [
-            countLabel(playerCount, "player"),
-            " /",
-            " ",
-            countLabel(bracketSize, "slot")
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-xs text-primary", children: [
-            bracketSize - playerCount,
-            " ",
-            t("BYEs /"),
-            " ",
-            view.elimination === "double" ? t("Double elimination") : t("Single elimination")
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/60", children: [
-            t(
-              "The draw pairs compatible skill levels first, then uses permanent registration order to settle equal choices. Winners advance automatically;"
-            ),
-            " ",
-            view.elimination === "double" ? t("players leave after their second loss.") : t("one loss eliminates a player.")
-          ] }),
-          view.generated ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border border-secondary/30 p-3 text-xs text-secondary/90", children: t(
-            "This regenerates the unplayed bracket and replaces manual opening assignments. Registered players stay intact."
+              view,
+              player: modal.player,
+              returnToMatch: modal.returnToMatch,
+              pending,
+              onAction
+            },
+            ((_a2 = modal.player) == null ? void 0 : _a2.id.toString()) ?? "new"
+          ) : null,
+          modal.kind === "move" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+            MovePlayerForm,
+            {
+              view,
+              player: modal.player,
+              pending,
+              onAction
+            },
+            modal.player.id.toString()
+          ) : null,
+          match && (modal.kind === "match" || (modal.kind === "player" || modal.kind === "reset") && modal.returnToMatch !== void 0) ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { hidden: modal.kind !== "match", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            MatchEditor,
+            {
+              view,
+              match,
+              isAdmin,
+              pending,
+              onAction,
+              onOpen
+            },
+            match.id.toString()
           ) }) : null,
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button,
+          modal.kind === "reset" && match ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+            ResetForm,
             {
-              "data-ocid": "tournament.confirm_generate_button",
-              loading: pending,
-              disabled: playerCount < 2 || !view.canChangeFormat,
-              onClick: () => onAction({ kind: "generateBracket" }),
-              children: t("Generate bracket")
-            }
-          )
-        ] }) : null,
-        modal.kind === "undo" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-base-content/60", children: t(
-            "Restore the tournament state immediately before the most recent organizer action."
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border border-base-300 p-4 font-mono text-xs", children: lastAction ? translateHistory(lastAction.label) : t("Most recent action") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
-            "Player registration counters continue forward so registration numbers remain permanent. Restored results, assignments and queue positions are saved automatically."
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button,
+              match,
+              returnToMatch: modal.returnToMatch,
+              pending,
+              onAction
+            },
+            match.id.toString()
+          ) : null,
+          modal.kind === "remove" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-display text-xl font-bold", children: [
+              modal.player.name,
+              " ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-xs font-normal text-primary", children: registrationLabel(modal.player.registrationNumber) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3 border border-secondary/30 bg-secondary/5 p-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                TriangleAlert,
+                {
+                  className: "mt-0.5 size-5 shrink-0 text-secondary",
+                  "aria-hidden": "true"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/65", children: [
+                modal.player.status === "playing" ? t(
+                  "This player is currently playing. Their opponent may advance by forfeit when they are removed."
+                ) : t(
+                  "The player leaves the waiting queue and unplayed bracket slots."
+                ),
+                t(
+                  "Completed results remain in history. Pending dependencies are updated where safe; active downstream matches can block removal."
+                )
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-base-content/45", children: t(
+              "Their permanent registration number is retained and will not be reused."
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "danger",
+                "data-ocid": "tournament.confirm_remove_button",
+                loading: pending,
+                onClick: () => onAction({
+                  kind: "removePlayer",
+                  playerId: modal.player.id
+                }),
+                children: t("Remove player")
+              }
+            )
+          ] }) : null,
+          modal.kind === "generate" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-display text-2xl font-bold", children: [
+              countLabel(playerCount, "player"),
+              " /",
+              " ",
+              countLabel(bracketSize, "slot")
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-xs text-primary", children: [
+              bracketSize - playerCount,
+              " ",
+              t("BYEs /"),
+              " ",
+              view.elimination === "double" ? t("Double elimination") : t("Single elimination")
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/60", children: [
+              t(
+                "The draw pairs compatible skill levels first, then uses permanent registration order to settle equal choices. Winners advance automatically;"
+              ),
+              " ",
+              view.elimination === "double" ? t("players leave after their second loss.") : t("one loss eliminates a player.")
+            ] }),
+            view.generated ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border border-secondary/30 p-3 text-xs text-secondary/90", children: t(
+              "This regenerates the unplayed bracket and replaces manual opening assignments. Registered players stay intact."
+            ) }) : null,
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                "data-ocid": "tournament.confirm_generate_button",
+                loading: pending,
+                disabled: playerCount < 2 || !view.canChangeFormat,
+                onClick: () => onAction({ kind: "generateBracket" }),
+                children: t("Generate bracket")
+              }
+            )
+          ] }) : null,
+          modal.kind === "undo" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-base-content/60", children: t(
+              "Restore the tournament state immediately before the most recent organizer action."
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border border-base-300 p-4 font-mono text-xs", children: lastAction ? translateHistory(lastAction.label) : t("Most recent action") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
+              "Player registration counters continue forward so registration numbers remain permanent. Restored results, assignments and queue positions are saved automatically."
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                "data-ocid": "tournament.confirm_undo_button",
+                loading: pending,
+                disabled: !view.canUndo,
+                onClick: () => onAction({ kind: "undo" }),
+                children: t("Confirm undo")
+              }
+            )
+          ] }) : null,
+          error ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "p",
             {
-              "data-ocid": "tournament.confirm_undo_button",
-              loading: pending,
-              disabled: !view.canUndo,
-              onClick: () => onAction({ kind: "undo" }),
-              children: t("Confirm undo")
+              "data-ocid": "tournament.action_error",
+              role: "alert",
+              className: "mt-5 border border-error/35 px-4 py-3 text-sm text-error",
+              children: translateError(error)
             }
-          )
-        ] }) : null,
-        error ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "p",
-          {
-            "data-ocid": "tournament.action_error",
-            role: "alert",
-            className: "mt-5 border border-error/35 px-4 py-3 text-sm text-error",
-            children: translateError(error)
-          }
-        ) : null,
-        /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "mt-6 flex justify-end border-t border-base-300 pt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", disabled: pending, onClick: onClose, children: modal.kind === "match" ? t("Close") : t("Cancel") }) })
+          ) : null
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "mt-4 flex shrink-0 justify-end border-t border-base-300 pt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", disabled: pending, onClick: onClose, children: (modal.kind === "player" || modal.kind === "reset") && modal.returnToMatch !== void 0 ? t("Back to match") : modal.kind === "match" ? t("Close") : t("Cancel") }) })
       ] }) : null
     }
   );
@@ -47029,13 +47138,13 @@ function PlayersPanel({
             }
           ) : null
         ] }),
-        players.length ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto border-y border-base-300", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        players.length ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:overflow-x-auto lg:border-y lg:border-base-300", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "table",
           {
             "data-ocid": "tournament.players_table",
-            className: "w-full min-w-[760px] text-left",
+            className: "block w-full text-left lg:table lg:min-w-[760px]",
             children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-base-300", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { className: "hidden lg:table-header-group", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-base-300", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "th",
                   {
@@ -47085,15 +47194,23 @@ function PlayersPanel({
                   }
                 ) : null
               ] }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: players.map((player) => {
+              /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { className: "grid gap-4 sm:grid-cols-2 lg:table-row-group", children: players.map((player) => {
                 const match = currentPlayerMatch(view, player);
                 const canPrioritize = player.status === "waiting" || player.status === "ready" || player.status === "advanced";
                 return /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "tr",
                   {
-                    className: `player-row border-b border-base-300/70 last:border-b-0 ${player.status === "removed" ? "opacity-40" : ""}`,
+                    className: `player-row grid min-w-0 grid-cols-2 gap-x-4 gap-y-5 border border-base-300 bg-base-200/30 p-4 lg:table-row lg:border-x-0 lg:border-t-0 lg:border-b-base-300/70 lg:bg-transparent lg:p-0 lg:last:border-b-0 ${player.status === "removed" ? "opacity-40" : ""}`,
                     children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-3 py-4", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "block min-w-0 lg:table-cell lg:px-3 lg:py-4", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "p",
+                          {
+                            className: "technical-label mb-2 text-[9px] text-base-content/35 lg:hidden",
+                            "aria-hidden": "true",
+                            children: t("Reg / time")
+                          }
+                        ),
                         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs text-primary", children: registrationLabel(player.registrationNumber) }),
                         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 font-mono text-[10px] text-base-content/40", children: tbilisiTime(player.registeredAt) })
                       ] }),
@@ -47101,18 +47218,34 @@ function PlayersPanel({
                         "th",
                         {
                           scope: "row",
-                          className: "max-w-64 break-words px-3 py-4 font-display text-sm font-bold",
+                          className: "order-first col-span-2 block min-w-0 break-words font-display text-xl font-bold lg:table-cell lg:max-w-64 lg:px-3 lg:py-4 lg:text-sm",
                           children: player.name
                         }
                       ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-3 py-4", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "block min-w-0 lg:table-cell lg:px-3 lg:py-4", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "p",
+                          {
+                            className: "technical-label mb-2 text-[9px] text-base-content/35 lg:hidden",
+                            "aria-hidden": "true",
+                            children: t("Skill")
+                          }
+                        ),
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-xs", children: [
                           "L",
                           player.skill
                         ] }),
                         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-[10px] text-base-content/40", children: t(SKILL_LEVELS[player.skill - 1]) })
                       ] }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-3 py-4", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "block min-w-0 lg:table-cell lg:px-3 lg:py-4", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "p",
+                          {
+                            className: "technical-label mb-2 text-[9px] text-base-content/35 lg:hidden",
+                            "aria-hidden": "true",
+                            children: t("Status / losses")
+                          }
+                        ),
                         /* @__PURE__ */ jsxRuntimeExports.jsx(
                           "p",
                           {
@@ -47122,7 +47255,15 @@ function PlayersPanel({
                         ),
                         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 font-mono text-[10px] text-base-content/35", children: countLabel(player.losses, "loss") })
                       ] }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-3 py-4 font-mono text-[10px] text-base-content/45", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "block min-w-0 font-mono text-[10px] text-base-content/45 lg:table-cell lg:px-3 lg:py-4", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "p",
+                          {
+                            className: "technical-label mb-2 text-[9px] text-base-content/35 lg:hidden",
+                            "aria-hidden": "true",
+                            children: t("Match / table / seed")
+                          }
+                        ),
                         match ? matchLabel(match) : "—",
                         " /",
                         " ",
@@ -47133,59 +47274,76 @@ function PlayersPanel({
                           player.seed.toString()
                         ] }) : null
                       ] }),
-                      isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1", children: [
+                      isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "col-span-2 block min-w-0 border-t border-base-300 pt-3 lg:table-cell lg:border-t-0 lg:px-3 lg:py-4", children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsx(
-                          "button",
+                          "p",
                           {
-                            type: "button",
-                            className: "btn btn-ghost btn-square btn-xs",
-                            "aria-label": t("Edit {v1}", { v1: player.name }),
-                            disabled: pending || player.status === "removed",
-                            onClick: () => onEdit(player),
-                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "size-3.5", "aria-hidden": "true" })
+                            className: "technical-label mb-2 text-[9px] text-base-content/35 lg:hidden",
+                            "aria-hidden": "true",
+                            children: t("Organizer controls")
                           }
                         ),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(
-                          "button",
-                          {
-                            type: "button",
-                            className: "btn btn-ghost btn-square btn-xs",
-                            "aria-label": t("Prioritize {v1} in queue", {
-                              v1: player.name
-                            }),
-                            disabled: pending || !canPrioritize,
-                            onClick: () => onPrioritize(player),
-                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUp, { className: "size-3.5", "aria-hidden": "true" })
-                          }
-                        ),
-                        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                          "button",
-                          {
-                            type: "button",
-                            className: "btn btn-ghost btn-xs font-mono text-[9px]",
-                            disabled: pending || !view.generated || !playerMovement(view, player).targets.length,
-                            onClick: () => onMove(player),
-                            children: [
-                              t("Move"),
-                              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
-                                " ",
-                                player.name
-                              ] })
-                            ]
-                          }
-                        ),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(
-                          "button",
-                          {
-                            type: "button",
-                            className: "btn btn-ghost btn-square btn-xs text-secondary",
-                            "aria-label": t("Remove {v1}", { v1: player.name }),
-                            disabled: pending || player.status === "removed",
-                            onClick: () => onRemove(player),
-                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "size-3.5", "aria-hidden": "true" })
-                          }
-                        )
-                      ] }) }) : null
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2 lg:flex-nowrap lg:gap-1", children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                            "button",
+                            {
+                              type: "button",
+                              className: "btn btn-ghost min-h-11 min-w-11 px-3 lg:btn-square lg:btn-xs lg:min-h-0 lg:min-w-0 lg:px-0",
+                              "aria-label": t("Edit {v1}", { v1: player.name }),
+                              disabled: pending || player.status === "removed",
+                              onClick: () => onEdit(player),
+                              children: [
+                                /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "size-3.5", "aria-hidden": "true" }),
+                                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "lg:hidden", "aria-hidden": "true", children: t("Edit") })
+                              ]
+                            }
+                          ),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "button",
+                            {
+                              type: "button",
+                              className: "btn btn-ghost btn-square min-h-11 min-w-11 lg:btn-xs lg:min-h-0 lg:min-w-0",
+                              "aria-label": t("Prioritize {v1} in queue", {
+                                v1: player.name
+                              }),
+                              title: t("Prioritize {v1} in queue", {
+                                v1: player.name
+                              }),
+                              disabled: pending || !canPrioritize,
+                              onClick: () => onPrioritize(player),
+                              children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUp, { className: "size-3.5", "aria-hidden": "true" })
+                            }
+                          ),
+                          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                            "button",
+                            {
+                              type: "button",
+                              className: "btn btn-ghost min-h-11 min-w-11 font-mono lg:btn-xs lg:min-h-0 lg:min-w-0 lg:text-[9px]",
+                              disabled: pending || !view.generated || !playerMovement(view, player).targets.length,
+                              onClick: () => onMove(player),
+                              children: [
+                                t("Move"),
+                                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
+                                  " ",
+                                  player.name
+                                ] })
+                              ]
+                            }
+                          ),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "button",
+                            {
+                              type: "button",
+                              className: "btn btn-ghost btn-square min-h-11 min-w-11 text-secondary lg:btn-xs lg:min-h-0 lg:min-w-0",
+                              "aria-label": t("Remove {v1}", { v1: player.name }),
+                              title: t("Remove {v1}", { v1: player.name }),
+                              disabled: pending || player.status === "removed",
+                              onClick: () => onRemove(player),
+                              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "size-3.5", "aria-hidden": "true" })
+                            }
+                          )
+                        ] })
+                      ] }) : null
                     ]
                   },
                   player.id.toString()
@@ -47842,9 +48000,11 @@ function MatchCard({
   players,
   matches,
   onSelect,
-  compact = false
+  compact = false,
+  isAdmin = false
 }) {
   const { t } = useI18n();
+  const actionLabel = match.status === "playing" ? t("Enter score") : match.status === "completed" ? t("Correct the result") : t("Manage match");
   const sides = [
     {
       id: match.playerAId,
@@ -47929,12 +48089,12 @@ function MatchCard({
             side.slot
           );
         }) }),
+        compact && isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-2 flex items-center justify-between font-mono text-[9px] uppercase text-primary", children: [
+          actionLabel,
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "size-3", "aria-hidden": "true" })
+        ] }) : null,
         !compact ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 flex items-center justify-between border-t border-base-300 pt-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label text-[9px] text-base-content/40", children: [
-            matchLabel(match),
-            " / ",
-            t(match.status)
-          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/40", children: isAdmin ? actionLabel : `${matchLabel(match)} / ${t(match.status)}` }),
           match.manualOverride || match.prioritized ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-1 text-[8px] text-secondary", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
             " ",
@@ -48267,7 +48427,8 @@ function BracketGraph({
   matches,
   players,
   onSelect,
-  fullscreen = false
+  fullscreen = false,
+  isAdmin = false
 }) {
   const { t } = useI18n();
   const {
@@ -48570,6 +48731,7 @@ function BracketGraph({
                               players,
                               matches,
                               onSelect,
+                              isAdmin,
                               compact: true
                             }
                           )
@@ -48812,7 +48974,8 @@ function StandardView({
                       match,
                       players: view.players,
                       matches: view.matches,
-                      onSelect
+                      onSelect,
+                      isAdmin
                     }
                   ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-h-40 flex-col items-center justify-center border border-dashed border-base-300 text-center", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -48889,7 +49052,8 @@ function StandardView({
                 match,
                 players: view.players,
                 matches: view.matches,
-                onSelect
+                onSelect,
+                isAdmin
               }
             )
           ] }, match.id.toString()))
@@ -49230,7 +49394,7 @@ function TournamentDetailPage({
       );
     },
     onSuccess: (updated, variables) => {
-      var _a2, _b2;
+      var _a2, _b2, _c2;
       queryClient2.setQueryData(queryKey, updated);
       void queryClient2.invalidateQueries({ queryKey });
       void queryClient2.invalidateQueries({ queryKey: ["tournaments"] });
@@ -49242,7 +49406,9 @@ function TournamentDetailPage({
           (a2, b2) => a2.registrationNumber > b2.registrationNumber ? -1 : 1
         )[0];
         if (newPlayer) setModal({ kind: "move", player: newPlayer });
-      } else if (((_b2 = variables.options) == null ? void 0 : _b2.close) !== false) setModal(null);
+      } else if (((_b2 = variables.options) == null ? void 0 : _b2.returnToMatch) !== void 0) {
+        setModal({ kind: "match", matchId: variables.options.returnToMatch });
+      } else if (((_c2 = variables.options) == null ? void 0 : _c2.close) !== false) setModal(null);
     }
   });
   function openModal(next) {
@@ -49343,7 +49509,11 @@ function TournamentDetailPage({
       pending: actionMutation.isPending,
       error: actionError,
       onClose: () => {
-        if (!actionMutation.isPending) setModal(null);
+        if (actionMutation.isPending) return;
+        actionMutation.reset();
+        if (((modal == null ? void 0 : modal.kind) === "player" || (modal == null ? void 0 : modal.kind) === "reset") && modal.returnToMatch !== void 0) {
+          setModal({ kind: "match", matchId: modal.returnToMatch });
+        } else setModal(null);
       },
       onOpen: openModal,
       onAction: applyAction
@@ -49356,6 +49526,7 @@ function TournamentDetailPage({
           BracketGraph,
           {
             fullscreen: true,
+            isAdmin,
             matches: view.matches,
             players: view.players,
             onSelect: (match) => openModal({ kind: "match", matchId: match.id })
@@ -49550,6 +49721,7 @@ function TournamentDetailPage({
     ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
       BracketGraph,
       {
+        isAdmin,
         matches: view.matches,
         players: view.players,
         onSelect: (match) => openModal({ kind: "match", matchId: match.id })
@@ -50144,7 +50316,7 @@ function TournamentsPage() {
                       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[11px] text-base-content/65", children: tournament.format === TournamentFormat.doubles ? t("Doubles") : t("Singles") }),
                       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-[11px] text-base-content/40", children: countLabel(tournament.capacity, "expectedPlayer") })
                     ] }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 sm:flex-col sm:items-end", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-w-0 flex-wrap items-center gap-2 sm:flex-col sm:items-end", children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsxs(
                         "a",
                         {
@@ -50192,7 +50364,7 @@ function TournamentsPage() {
                         {
                           type: "button",
                           "data-ocid": `tournaments.edit_button.${index2 + 1}`,
-                          className: "flex items-center gap-1.5 px-2 py-2 font-mono text-[11px] uppercase tracking-wider text-base-content/50 hover:text-primary",
+                          className: "flex min-h-11 items-center gap-1.5 px-2 py-2 font-mono text-[11px] uppercase tracking-wider text-base-content/50 hover:text-primary sm:min-h-0",
                           onClick: () => openEditor(tournament),
                           children: [
                             /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "size-3", "aria-hidden": "true" }),
