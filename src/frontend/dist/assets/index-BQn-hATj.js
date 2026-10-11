@@ -33296,6 +33296,18 @@ const ka = {
   "Assign manual bye": "თამაშის გარეშე გასვლის ხელით მინიჭება",
   "Assign next match": "შემდეგი მატჩის დანიშვნა",
   "Assign table": "მაგიდის დანიშვნა",
+  "Match for table {v1}": "მატჩი მაგიდისთვის {v1}",
+  "No match / clear table": "მატჩის გარეშე / მაგიდის გათავისუფლება",
+  "Apply assignment": "დანიშვნის დადასტურება",
+  "Apply assignment to table {v1}": "მაგიდა {v1}-ის დანიშვნის დადასტურება",
+  "Choose any ready or playing match. Assigning a ready match does not start it.": "აირჩიეთ მზადყოფნაში მყოფი ან მიმდინარე მატჩი. მზადყოფნაში მყოფი მატჩის დანიშვნა მას არ იწყებს.",
+  "Table assignments will be exchanged with table {v1}.": "მატჩები მაგიდა {v1}-თან გაცვლიან მაგიდებს.",
+  "The current match returns to ready without a table. Results and bracket progress are preserved.": "მიმდინარე მატჩი დაუბრუნდება მზადყოფნის სტატუსს მაგიდის გარეშე. შედეგები და სატურნირო ბადე შენარჩუნდება.",
+  "The match currently on table {v1} returns to ready without a table.": "მაგიდა {v1}-ზე დანიშნული მატჩი დაუბრუნდება მზადყოფნის სტატუსს მაგიდის გარეშე.",
+  "Moving this match frees table {v1}.": "ამ მატჩის გადატანა გაათავისუფლებს მაგიდა {v1}-ს.",
+  "Replace table match": "მაგიდაზე მატჩის ჩანაცვლება",
+  "Swap table assignments": "მაგიდების გაცვლა",
+  "Release table": "მაგიდის გათავისუფლება",
   "At least 2 active players are required": "საჭიროა სულ მცირე 2 აქტიური მოთამაშე",
   "At most 4096 active players are supported": "მხარდაჭერილია მაქსიმუმ 4096 აქტიური მოთამაშე",
   "Authenticated accounts and their admin access.": "ავტორიზებული ანგარიშები და ადმინისტრატორის წვდომა.",
@@ -33898,6 +33910,18 @@ const ru = {
   "Assign manual bye": "Назначить проход без игры вручную",
   "Assign next match": "Назначить следующий матч",
   "Assign table": "Назначить стол",
+  "Match for table {v1}": "Матч для стола {v1}",
+  "No match / clear table": "Без матча / освободить стол",
+  "Apply assignment": "Применить назначение",
+  "Apply assignment to table {v1}": "Применить назначение для стола {v1}",
+  "Choose any ready or playing match. Assigning a ready match does not start it.": "Выберите готовый или идущий матч. Назначение готового матча не запускает его.",
+  "Table assignments will be exchanged with table {v1}.": "Матчи поменяются столами со столом {v1}.",
+  "The current match returns to ready without a table. Results and bracket progress are preserved.": "Текущий матч вернётся в статус готового без стола. Результаты и турнирная сетка сохранятся.",
+  "The match currently on table {v1} returns to ready without a table.": "Матч, который сейчас назначен на стол {v1}, вернётся в статус готового без стола.",
+  "Moving this match frees table {v1}.": "Перенос этого матча освободит стол {v1}.",
+  "Replace table match": "Заменить матч на столе",
+  "Swap table assignments": "Поменять матчи столами",
+  "Release table": "Освободить стол",
   "At least 2 active players are required": "Нужно минимум 2 активных игрока",
   "At most 4096 active players are supported": "Поддерживается не более 4096 активных игроков",
   "Authenticated accounts and their admin access.": "Авторизованные аккаунты и доступ администратора.",
@@ -36386,22 +36410,11 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$G = [
+const __iconNode$F = [
   ["path", { d: "M12 5v14", key: "s699le" }],
   ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$G);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$F = [
-  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
-  ["path", { d: "M19 12H5", key: "x3x0zl" }]
-];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$F);
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$F);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36409,10 +36422,10 @@ const ArrowLeft = createLucideIcon("arrow-left", __iconNode$F);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$E = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+  ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowRight = createLucideIcon("arrow-right", __iconNode$E);
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$E);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -46042,7 +46055,7 @@ function MatchEditor({
   onAction,
   onOpen
 }) {
-  var _a2, _b2, _c2, _d2, _e2, _f2, _g2;
+  var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2;
   const { t } = useI18n();
   const [scoreA, setScoreA] = reactExports.useState(((_a2 = match.scoreA) == null ? void 0 : _a2.toString()) ?? "");
   const [scoreB, setScoreB] = reactExports.useState(((_b2 = match.scoreB) == null ? void 0 : _b2.toString()) ?? "");
@@ -46054,7 +46067,20 @@ function MatchEditor({
   const [otherMatch, setOtherMatch] = reactExports.useState("");
   const [otherSlot, setOtherSlot] = reactExports.useState("b");
   const [validation, setValidation] = reactExports.useState(null);
-  const playersChanged = playerA !== (((_f2 = match.playerAId) == null ? void 0 : _f2.toString()) ?? "") || playerB !== (((_g2 = match.playerBId) == null ? void 0 : _g2.toString()) ?? "");
+  const canAssignTable = match.status === "ready" || match.status === "playing";
+  const tableChanged = table !== (((_f2 = match.table) == null ? void 0 : _f2.toString()) ?? "");
+  const tableOccupant = table ? view.matches.find(
+    (other) => other.id !== match.id && other.table === Number(table) && (other.status === "ready" || other.status === "playing")
+  ) : void 0;
+  const assignmentHint = !canAssignTable || !tableChanged ? null : !table ? t(
+    "The current match returns to ready without a table. Results and bracket progress are preserved."
+  ) : tableOccupant ? match.table !== void 0 ? t("Table assignments will be exchanged with table {v1}.", {
+    v1: Number(table)
+  }) : t(
+    "The match currently on table {v1} returns to ready without a table.",
+    { v1: Number(table) }
+  ) : match.table !== void 0 ? t("Moving this match frees table {v1}.", { v1: match.table }) : null;
+  const playersChanged = playerA !== (((_g2 = match.playerAId) == null ? void 0 : _g2.toString()) ?? "") || playerB !== (((_h2 = match.playerBId) == null ? void 0 : _h2.toString()) ?? "");
   const editableOpening = match.bracket === "winners" && match.round === 1 && match.status !== "playing" && match.status !== "completed";
   const activePlayers = view.players.filter((player) => {
     if (player.id === match.playerAId || player.id === match.playerBId)
@@ -46446,25 +46472,17 @@ function MatchEditor({
               "aria-label": t("Assign table"),
               className: "select w-full rounded-none",
               value: table,
-              disabled: pending || match.status === "completed" || match.status === "bye" || match.status === "void",
+              disabled: pending || !canAssignTable,
               onChange: (event) => setTable(event.target.value),
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("Unassigned") }),
-                view.tables.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  "option",
-                  {
-                    value: item.number,
-                    disabled: item.matchId !== void 0 && item.matchId !== match.id && (item.status === "playing" || item.status === "waiting"),
-                    children: [
-                      t("Table"),
-                      " ",
-                      item.number,
-                      " / ",
-                      t(item.status)
-                    ]
-                  },
-                  item.number
-                ))
+                view.tables.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: item.number, children: [
+                  t("Table"),
+                  " ",
+                  item.number,
+                  " / ",
+                  t(item.status)
+                ] }, item.number))
               ]
             }
           )
@@ -46474,7 +46492,7 @@ function MatchEditor({
           {
             variant: "outline",
             className: "sm:self-end",
-            disabled: pending || match.status === "completed" || match.status === "bye" || match.status === "void",
+            disabled: pending || !canAssignTable || !tableChanged,
             onClick: () => onAction(
               {
                 kind: "assignTable",
@@ -46499,6 +46517,7 @@ function MatchEditor({
           }
         )
       ] }),
+      assignmentHint ? /* @__PURE__ */ jsxRuntimeExports.jsx("output", { className: "block text-xs leading-relaxed text-secondary", children: assignmentHint }) : null,
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           Button,
@@ -48907,6 +48926,100 @@ function FullscreenBracketFrame({
     }
   );
 }
+function TableAssignment({
+  view,
+  table,
+  pending,
+  onAssign
+}) {
+  const { t } = useI18n();
+  const candidates = view.matches.filter(
+    (match) => (match.status === "ready" || match.status === "playing") && match.playerAId !== void 0 && match.playerBId !== void 0
+  );
+  const current = candidates.find((match) => match.id === table.matchId);
+  const currentId = (current == null ? void 0 : current.id.toString()) ?? "";
+  const [selectedId, setSelectedId] = reactExports.useState(currentId);
+  const selected = candidates.find(
+    (match) => match.id.toString() === selectedId
+  );
+  const selectionAvailable = selectedId === "" || !!selected;
+  reactExports.useEffect(() => {
+    setSelectedId(currentId);
+  }, [currentId]);
+  reactExports.useEffect(() => {
+    if (!selectionAvailable) setSelectedId(currentId);
+  }, [currentId, selectionAvailable]);
+  const changed = selectedId !== currentId;
+  const otherTable = (selected == null ? void 0 : selected.table) !== void 0 && selected.table !== table.number ? selected.table : void 0;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "form",
+    {
+      className: "mt-4 space-y-3 border-t border-base-300 pt-4",
+      onSubmit: (event) => {
+        event.preventDefault();
+        if (pending || !changed || !selectionAvailable) return;
+        if (selected) onAssign(selected.id, table.number);
+        else if (current) onAssign(current.id, void 0);
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Match for table {v1}", { v1: table.number }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "select",
+            {
+              "data-ocid": `tournament.table_match_select.${table.number}`,
+              className: "select w-full min-w-0 rounded-none",
+              value: selectedId,
+              disabled: pending || !candidates.length,
+              onChange: (event) => setSelectedId(event.target.value),
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("No match / clear table") }),
+                candidates.map((match) => {
+                  var _a2, _b2;
+                  return /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: match.id.toString(), children: [
+                    matchLabel(match),
+                    " /",
+                    " ",
+                    (_a2 = playerById(view.players, match.playerAId)) == null ? void 0 : _a2.name,
+                    " ",
+                    t("vs"),
+                    " ",
+                    (_b2 = playerById(view.players, match.playerBId)) == null ? void 0 : _b2.name,
+                    " /",
+                    " ",
+                    t(match.status),
+                    match.table !== void 0 ? ` / ${t("Table")} ${match.table}` : ""
+                  ] }, match.id.toString());
+                })
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
+          "Choose any ready or playing match. Assigning a ready match does not start it."
+        ) }),
+        changed && current ? /* @__PURE__ */ jsxRuntimeExports.jsx("output", { className: "block text-xs leading-relaxed text-secondary", children: otherTable !== void 0 ? t("Table assignments will be exchanged with table {v1}.", {
+          v1: otherTable
+        }) : t(
+          "The current match returns to ready without a table. Results and bracket progress are preserved."
+        ) }) : changed && otherTable !== void 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("output", { className: "block text-xs leading-relaxed text-secondary", children: t("Moving this match frees table {v1}.", { v1: otherTable }) }) : null,
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            type: "submit",
+            variant: "outline",
+            className: "w-full",
+            "data-ocid": `tournament.table_match_apply.${table.number}`,
+            "aria-label": t("Apply assignment to table {v1}", { v1: table.number }),
+            loading: pending,
+            disabled: !changed || !selectionAvailable,
+            children: t("Apply assignment")
+          }
+        )
+      ]
+    }
+  );
+}
 function StandardView({
   view,
   isAdmin,
@@ -48917,7 +49030,6 @@ function StandardView({
   const { t } = useI18n();
   const next = view.nextMatches.map((id) => view.matches.find((match) => match.id === id)).filter((match) => !!match).slice(0, 5);
   const queue = view.waitingQueue.map((id) => playerById(view.players, id)).filter((player) => player !== void 0);
-  const nextUnassigned = next.find((match) => match.table === void 0);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-10", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-labelledby": "floor-title", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex items-center justify-between gap-4", children: [
@@ -48940,7 +49052,6 @@ function StandardView({
             const match = view.matches.find(
               (item) => item.id === table.matchId
             );
-            const available = table.status === "available" || table.status === "finished";
             return /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "article",
               {
@@ -48988,25 +49099,13 @@ function StandardView({
                     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-lg font-bold uppercase", children: t("Table is clear.") }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-xs text-base-content/40", children: view.generated ? t("Ready for the next rally.") : t("Waiting for the tournament draw.") })
                   ] }),
-                  isAdmin && available && nextUnassigned ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                    Button,
+                  isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    TableAssignment,
                     {
-                      size: "sm",
-                      variant: "outline",
-                      className: "mt-3 w-full",
-                      loading: pending,
-                      onClick: () => onAssign(nextUnassigned.id, table.number),
-                      children: [
-                        t("Assign next match"),
-                        " ",
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { className: "size-3.5", "aria-hidden": "true" }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
-                          " ",
-                          t("to table"),
-                          " ",
-                          table.number
-                        ] })
-                      ]
+                      view,
+                      table,
+                      pending,
+                      onAssign
                     }
                   ) : null
                 ]
