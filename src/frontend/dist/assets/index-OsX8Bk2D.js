@@ -33601,7 +33601,7 @@ const ka = {
   "Score A": "ანგარიში A",
   "Score B": "ანგარიში B",
   "Scores must be at most 999": "ანგარიში მაქსიმუმ 999 უნდა იყოს",
-  "Drag or scroll to pan / select any match": "გადაადგილება გადათრევით ან სქროლით / აირჩიეთ ნებისმიერი მატჩი",
+  "Drag to pan / scroll or pinch to zoom": "გადაადგილება გადათრევით / მასშტაბი სქროლით ან ორი თითით",
   "Scrollable bracket graph": "გადასაადგილებელი ტურნირის ბადე",
   "Search by member ID": "ძებნა წევრის ID-ით",
   "Search tournament players": "ტურნირის მოთამაშეების ძებნა",
@@ -33816,7 +33816,14 @@ const ka = {
   "{v1} avatar": "ავატარი: {v1}",
   "{v1} club members": "კლუბის წევრები: {v1}",
   "{v1} upcoming / {v2} live": "{v1} მომავალი / {v2} მიმდინარე",
-  "· Registration order belongs to this tournament.": "· რეგისტრაციის რიგი ამ ტურნირს ეკუთვნის."
+  "· Registration order belongs to this tournament.": "· რეგისტრაციის რიგი ამ ტურნირს ეკუთვნის.",
+  "Full bracket": "სრული ბადე",
+  "Open fullscreen bracket": "ბადის სრულ ეკრანზე გახსნა",
+  "Close fullscreen bracket": "სრულეკრანიანი ბადის დახურვა",
+  "Copy bracket link": "ბადის ბმულის კოპირება",
+  "Bracket link copied": "ბადის ბმული დაკოპირებულია",
+  "Could not copy the link. Copy it below.": "ბმული ვერ დაკოპირდა. დააკოპირეთ ქვემოთ.",
+  "Full bracket URL": "სრული ბადის ბმული"
 };
 const ru = {
   "Clear search": "Очистить поиск",
@@ -34187,7 +34194,7 @@ const ru = {
   "Score A": "Счёт A",
   "Score B": "Счёт B",
   "Scores must be at most 999": "Счёт не может превышать 999",
-  "Drag or scroll to pan / select any match": "Перетаскивайте или прокручивайте / выберите любой матч",
+  "Drag to pan / scroll or pinch to zoom": "Перетаскивайте для перемещения / колесо или два пальца для масштаба",
   "Scrollable bracket graph": "Прокручиваемая сетка турнира",
   "Search by member ID": "Поиск по ID участника",
   "Search tournament players": "Поиск игроков турнира",
@@ -34402,7 +34409,14 @@ const ru = {
   "{v1} avatar": "Аватар: {v1}",
   "{v1} club members": "Участников клуба: {v1}",
   "{v1} upcoming / {v2} live": "{v1} скоро / {v2} сейчас",
-  "· Registration order belongs to this tournament.": "· Порядок регистрации относится к этому турниру."
+  "· Registration order belongs to this tournament.": "· Порядок регистрации относится к этому турниру.",
+  "Full bracket": "Полная сетка",
+  "Open fullscreen bracket": "Открыть сетку на весь экран",
+  "Close fullscreen bracket": "Закрыть полноэкранную сетку",
+  "Copy bracket link": "Скопировать ссылку на сетку",
+  "Bracket link copied": "Ссылка на сетку скопирована",
+  "Could not copy the link. Copy it below.": "Не удалось скопировать ссылку. Скопируйте её ниже.",
+  "Full bracket URL": "Ссылка на полную сетку"
 };
 const LANGUAGE_STORAGE_KEY = "chillpong.language";
 const LANGUAGES = [
@@ -36354,11 +36368,22 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$F = [
+const __iconNode$G = [
   ["path", { d: "M12 5v14", key: "s699le" }],
   ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$F);
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$G);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$F = [
+  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+];
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$F);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36366,10 +36391,10 @@ const ArrowDown = createLucideIcon("arrow-down", __iconNode$F);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$E = [
-  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
-  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$E);
+const ArrowRight = createLucideIcon("arrow-right", __iconNode$E);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36377,10 +36402,10 @@ const ArrowLeft = createLucideIcon("arrow-left", __iconNode$E);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$D = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+  ["path", { d: "M7 7h10v10", key: "1tivn9" }],
+  ["path", { d: "M7 17 17 7", key: "1vkiza" }]
 ];
-const ArrowRight = createLucideIcon("arrow-right", __iconNode$D);
+const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$D);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36388,10 +36413,10 @@ const ArrowRight = createLucideIcon("arrow-right", __iconNode$D);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$C = [
-  ["path", { d: "M7 7h10v10", key: "1tivn9" }],
-  ["path", { d: "M7 17 17 7", key: "1vkiza" }]
+  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
+  ["path", { d: "M12 19V5", key: "x0mq9r" }]
 ];
-const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$C);
+const ArrowUp = createLucideIcon("arrow-up", __iconNode$C);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36399,17 +36424,6 @@ const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$C);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$B = [
-  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
-  ["path", { d: "M12 19V5", key: "x0mq9r" }]
-];
-const ArrowUp = createLucideIcon("arrow-up", __iconNode$B);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$A = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -36421,23 +36435,35 @@ const __iconNode$A = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M16 18h.01", key: "kzsmim" }]
 ];
-const CalendarDays = createLucideIcon("calendar-days", __iconNode$A);
+const CalendarDays = createLucideIcon("calendar-days", __iconNode$B);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$z = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$z);
+const __iconNode$A = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$A);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$y = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$y);
+const __iconNode$z = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$z);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$y = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
+  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+];
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$y);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36446,10 +36472,9 @@ const ChevronDown = createLucideIcon("chevron-down", __iconNode$y);
  */
 const __iconNode$x = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
-  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$x);
+const CircleCheck = createLucideIcon("circle-check", __iconNode$x);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36458,9 +36483,9 @@ const CircleAlert = createLucideIcon("circle-alert", __iconNode$x);
  */
 const __iconNode$w = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+  ["polyline", { points: "12 6 12 12 16.5 12", key: "1aq6pp" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$w);
+const Clock3 = createLucideIcon("clock-3", __iconNode$w);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36468,10 +36493,10 @@ const CircleCheck = createLucideIcon("circle-check", __iconNode$w);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$v = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16.5 12", key: "1aq6pp" }]
+  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
+  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
 ];
-const Clock3 = createLucideIcon("clock-3", __iconNode$v);
+const Copy = createLucideIcon("copy", __iconNode$v);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36479,17 +36504,6 @@ const Clock3 = createLucideIcon("clock-3", __iconNode$v);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$u = [
-  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
-  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
-];
-const Copy = createLucideIcon("copy", __iconNode$u);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$t = [
   ["path", { d: "M21.54 15H17a2 2 0 0 0-2 2v4.54", key: "1djwo0" }],
   [
     "path",
@@ -36501,7 +36515,18 @@ const __iconNode$t = [
   ["path", { d: "M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05", key: "14pb5j" }],
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
 ];
-const Earth = createLucideIcon("earth", __iconNode$t);
+const Earth = createLucideIcon("earth", __iconNode$u);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$t = [
+  ["path", { d: "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z", key: "i9b6wo" }],
+  ["line", { x1: "4", x2: "4", y1: "22", y2: "15", key: "1cm3nv" }]
+];
+const Flag = createLucideIcon("flag", __iconNode$t);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36509,10 +36534,12 @@ const Earth = createLucideIcon("earth", __iconNode$t);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$s = [
-  ["path", { d: "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z", key: "i9b6wo" }],
-  ["line", { x1: "4", x2: "4", y1: "22", y2: "15", key: "1cm3nv" }]
+  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
+  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
+  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
+  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
 ];
-const Flag = createLucideIcon("flag", __iconNode$s);
+const GitBranch = createLucideIcon("git-branch", __iconNode$s);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36520,19 +36547,6 @@ const Flag = createLucideIcon("flag", __iconNode$s);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$r = [
-  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
-  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
-  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
-  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
-];
-const GitBranch = createLucideIcon("git-branch", __iconNode$r);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$q = [
   ["polyline", { points: "22 12 16 12 14 15 10 15 8 12 2 12", key: "o97t9d" }],
   [
     "path",
@@ -36542,7 +36556,19 @@ const __iconNode$q = [
     }
   ]
 ];
-const Inbox = createLucideIcon("inbox", __iconNode$q);
+const Inbox = createLucideIcon("inbox", __iconNode$r);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$q = [
+  ["path", { d: "M9 17H7A5 5 0 0 1 7 7h2", key: "8i5ue5" }],
+  ["path", { d: "M15 7h2a5 5 0 1 1 0 10h-2", key: "1b9ql8" }],
+  ["line", { x1: "8", x2: "16", y1: "12", y2: "12", key: "1jonct" }]
+];
+const Link2 = createLucideIcon("link-2", __iconNode$q);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -40988,7 +41014,7 @@ function sortRoutes(routes) {
   return flatRoutes;
 }
 function processRouteTree({
-  routeTree,
+  routeTree: routeTree2,
   initRoute
 }) {
   const routesById = {};
@@ -41014,7 +41040,7 @@ function processRouteTree({
       }
     });
   };
-  recurseRoutes([routeTree]);
+  recurseRoutes([routeTree2]);
   const flatRoutes = sortRoutes(Object.values(routesById));
   return { routesById, routesByPath, flatRoutes };
 }
@@ -45115,55 +45141,77 @@ function Sidebar({ onNavigate }) {
 }
 function MainLayout() {
   const { t } = useI18n();
+  const fullscreen = useRouterState({
+    select: (state) => /^\/tournaments\/\d+\/?$/.test(state.location.pathname) && state.location.search.view === "bracket"
+  });
   const [drawerOpen, setDrawerOpen] = reactExports.useState(false);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "drawer min-h-svh overflow-x-clip lg:drawer-open", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "input",
-      {
-        id: "sidebar-drawer",
-        type: "checkbox",
-        className: "drawer-toggle",
-        checked: drawerOpen,
-        onChange: (event) => setDrawerOpen(event.target.checked),
-        "aria-label": t("Sidebar visibility")
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "drawer-content flex min-w-0 flex-col", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Header, { onOpenSidebar: () => setDrawerOpen(true) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("main", { "data-ocid": "main_content", className: "club-content min-w-0 flex-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {}) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "flex flex-wrap items-center justify-between gap-3 border-t border-base-300 bg-base-100 px-6 py-5 font-mono text-[9px] uppercase tracking-[0.14em] text-base-content/40 sm:px-8", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-          "© ",
-          (/* @__PURE__ */ new Date()).getFullYear(),
-          " ",
-          t("ChillPong / Tbilisi")
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t("Serve. Rally. Repeat.") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "a",
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      className: fullscreen ? "h-dvh overflow-hidden" : "drawer min-h-svh overflow-x-clip lg:drawer-open",
+      children: [
+        !fullscreen ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
           {
-            href: "https://caffeine.ai",
-            target: "_blank",
-            rel: "noopener noreferrer",
-            className: "hover:text-primary",
-            children: t("Built with caffeine.ai ↗")
+            id: "sidebar-drawer",
+            type: "checkbox",
+            className: "drawer-toggle",
+            checked: drawerOpen,
+            onChange: (event) => setDrawerOpen(event.target.checked),
+            "aria-label": t("Sidebar visibility")
           }
-        )
-      ] })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "drawer-side z-40", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "button",
-        {
-          type: "button",
-          "aria-label": t("Close sidebar"),
-          className: "drawer-overlay lg:hidden",
-          onClick: () => setDrawerOpen(false)
-        }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Sidebar, { onNavigate: () => setDrawerOpen(false) })
-    ] })
-  ] });
+        ) : null,
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: `flex min-w-0 flex-col ${fullscreen ? "h-full" : "drawer-content"}`,
+            children: [
+              !fullscreen ? /* @__PURE__ */ jsxRuntimeExports.jsx(Header, { onOpenSidebar: () => setDrawerOpen(true) }) : null,
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "main",
+                {
+                  "data-ocid": "main_content",
+                  className: fullscreen ? "min-h-0 flex-1 overflow-hidden" : "club-content min-w-0 flex-1",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {})
+                }
+              ),
+              !fullscreen ? /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "flex flex-wrap items-center justify-between gap-3 border-t border-base-300 bg-base-100 px-6 py-5 font-mono text-[9px] uppercase tracking-[0.14em] text-base-content/40 sm:px-8", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                  "© ",
+                  (/* @__PURE__ */ new Date()).getFullYear(),
+                  " ",
+                  t("ChillPong / Tbilisi")
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t("Serve. Rally. Repeat.") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "a",
+                  {
+                    href: "https://caffeine.ai",
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    className: "hover:text-primary",
+                    children: t("Built with caffeine.ai ↗")
+                  }
+                )
+              ] }) : null
+            ]
+          }
+        ),
+        !fullscreen ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "drawer-side z-40", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              "aria-label": t("Close sidebar"),
+              className: "drawer-overlay lg:hidden",
+              onClick: () => setDrawerOpen(false)
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Sidebar, { onNavigate: () => setDrawerOpen(false) })
+        ] }) : null
+      ]
+    }
+  );
 }
 const variantClasses = {
   primary: "btn-primary",
@@ -47903,6 +47951,313 @@ function MatchCard({
     }
   );
 }
+const MIN_BRACKET_ZOOM = 0.05;
+const MAX_BRACKET_ZOOM = 1.6;
+const DRAG_THRESHOLD = 4;
+const WHEEL_ZOOM_SPEED = 15e-4;
+function clampZoom(value) {
+  return Math.max(MIN_BRACKET_ZOOM, Math.min(MAX_BRACKET_ZOOM, value));
+}
+function useBracketNavigation(enabled) {
+  const viewportRef = reactExports.useRef(null);
+  const [zoom, setZoom] = reactExports.useState(1);
+  const [isPanning, setIsPanning] = reactExports.useState(false);
+  const zoomRef = reactExports.useRef(1);
+  const renderedZoomRef = reactExports.useRef(1);
+  const pendingScrollRef = reactExports.useRef(null);
+  const panRef = reactExports.useRef(null);
+  const touchesRef = reactExports.useRef(/* @__PURE__ */ new Map());
+  const pinchRef = reactExports.useRef(null);
+  const suppressClickRef = reactExports.useRef(false);
+  const scrollPosition = reactExports.useCallback(() => {
+    const viewport = viewportRef.current;
+    return pendingScrollRef.current ?? {
+      left: (viewport == null ? void 0 : viewport.scrollLeft) ?? 0,
+      top: (viewport == null ? void 0 : viewport.scrollTop) ?? 0
+    };
+  }, []);
+  const localPoint = reactExports.useCallback((point) => {
+    const viewport = viewportRef.current;
+    if (!viewport) return point;
+    const bounds = viewport.getBoundingClientRect();
+    return {
+      x: point.x - bounds.left - viewport.clientLeft,
+      y: point.y - bounds.top - viewport.clientTop
+    };
+  }, []);
+  const commitScroll = reactExports.useCallback((position) => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    viewport.scrollLeft = position.left;
+    viewport.scrollTop = position.top;
+    const pan = panRef.current;
+    if (pan) {
+      pan.x = pan.lastX;
+      pan.y = pan.lastY;
+      pan.left = viewport.scrollLeft;
+      pan.top = viewport.scrollTop;
+    }
+  }, []);
+  const transform = reactExports.useCallback(
+    (nextZoom, position) => {
+      zoomRef.current = nextZoom;
+      if (nextZoom === renderedZoomRef.current) {
+        pendingScrollRef.current = null;
+        commitScroll(position);
+      } else {
+        pendingScrollRef.current = position;
+      }
+      setZoom(nextZoom);
+    },
+    [commitScroll]
+  );
+  reactExports.useLayoutEffect(() => {
+    renderedZoomRef.current = zoom;
+    const position = pendingScrollRef.current;
+    if (position) {
+      pendingScrollRef.current = null;
+      commitScroll(position);
+    }
+  }, [zoom, commitScroll]);
+  const zoomTo = reactExports.useCallback(
+    (value, anchor) => {
+      const viewport = viewportRef.current;
+      if (!viewport || !Number.isFinite(value)) return;
+      const nextZoom = clampZoom(value);
+      if (nextZoom === zoomRef.current) return;
+      const point = anchor ?? {
+        x: viewport.clientWidth / 2,
+        y: viewport.clientHeight / 2
+      };
+      const scroll = scrollPosition();
+      const ratio = nextZoom / zoomRef.current;
+      transform(nextZoom, {
+        left: (scroll.left + point.x) * ratio - point.x,
+        top: (scroll.top + point.y) * ratio - point.y
+      });
+    },
+    [scrollPosition, transform]
+  );
+  const fitZoom = reactExports.useCallback(
+    (value) => {
+      if (Number.isFinite(value))
+        transform(clampZoom(value), { left: 0, top: 0 });
+    },
+    [transform]
+  );
+  const capture = reactExports.useCallback((pointerId) => {
+    var _a2, _b2;
+    (_b2 = (_a2 = viewportRef.current) == null ? void 0 : _a2.setPointerCapture) == null ? void 0 : _b2.call(_a2, pointerId);
+  }, []);
+  const release = reactExports.useCallback((pointerId) => {
+    var _a2, _b2;
+    const viewport = viewportRef.current;
+    if ((_a2 = viewport == null ? void 0 : viewport.hasPointerCapture) == null ? void 0 : _a2.call(viewport, pointerId))
+      (_b2 = viewport.releasePointerCapture) == null ? void 0 : _b2.call(viewport, pointerId);
+  }, []);
+  const startPan = reactExports.useCallback(
+    (pointerId, pointerType, point, dragging = false) => {
+      panRef.current = {
+        pointerId,
+        pointerType,
+        ...point,
+        ...scrollPosition(),
+        lastX: point.x,
+        lastY: point.y,
+        dragging
+      };
+      setIsPanning(dragging);
+    },
+    [scrollPosition]
+  );
+  const startPinch = reactExports.useCallback(() => {
+    const entries = [...touchesRef.current.entries()];
+    if (entries.length < 2) return;
+    const [[firstId, first], [secondId, second]] = entries;
+    const midpoint = localPoint({
+      x: (first.x + second.x) / 2,
+      y: (first.y + second.y) / 2
+    });
+    const scroll = scrollPosition();
+    pinchRef.current = {
+      ids: [firstId, secondId],
+      distance: Math.max(1, Math.hypot(second.x - first.x, second.y - first.y)),
+      zoom: zoomRef.current,
+      content: {
+        x: (scroll.left + midpoint.x) / zoomRef.current,
+        y: (scroll.top + midpoint.y) / zoomRef.current
+      }
+    };
+    panRef.current = null;
+    suppressClickRef.current = true;
+    setIsPanning(true);
+    for (const [id] of entries) capture(id);
+  }, [capture, localPoint, scrollPosition]);
+  const endPointer = reactExports.useCallback(
+    (pointerId) => {
+      if (touchesRef.current.delete(pointerId)) {
+        const wasPinching = pinchRef.current !== null;
+        pinchRef.current = null;
+        panRef.current = null;
+        release(pointerId);
+        if (touchesRef.current.size >= 2) {
+          startPinch();
+        } else if (touchesRef.current.size === 1) {
+          const [[id, point]] = touchesRef.current;
+          startPan(id, "touch", point, wasPinching);
+        } else {
+          setIsPanning(false);
+        }
+        return;
+      }
+      const pan = panRef.current;
+      if (!pan || pan.pointerId !== pointerId) return;
+      panRef.current = null;
+      setIsPanning(false);
+      release(pointerId);
+    },
+    [release, startPan, startPinch]
+  );
+  reactExports.useEffect(() => {
+    const endAll = () => {
+      const ids = [...touchesRef.current.keys()];
+      if (panRef.current) ids.push(panRef.current.pointerId);
+      touchesRef.current.clear();
+      pinchRef.current = null;
+      panRef.current = null;
+      setIsPanning(false);
+      for (const id of ids) release(id);
+    };
+    const handleEnd = (event) => endPointer(event.pointerId);
+    window.addEventListener("blur", endAll);
+    window.addEventListener("pointerup", handleEnd);
+    window.addEventListener("pointercancel", handleEnd);
+    return () => {
+      window.removeEventListener("blur", endAll);
+      window.removeEventListener("pointerup", handleEnd);
+      window.removeEventListener("pointercancel", handleEnd);
+    };
+  }, [endPointer, release]);
+  reactExports.useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!enabled || !viewport) return;
+    const wheel = (event) => {
+      if (touchesRef.current.size) return;
+      const source = event.sourceCapabilities;
+      if (source == null ? void 0 : source.firesTouchEvents) return;
+      const delta = event.deltaY || event.deltaX;
+      if (!delta || !Number.isFinite(delta)) return;
+      event.preventDefault();
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? viewport.clientHeight : 1;
+      const pixels = Math.max(-1e3, Math.min(1e3, delta * unit));
+      zoomTo(
+        zoomRef.current * Math.exp(-pixels * WHEEL_ZOOM_SPEED),
+        localPoint({ x: event.clientX, y: event.clientY })
+      );
+    };
+    viewport.addEventListener("wheel", wheel, { passive: false });
+    return () => viewport.removeEventListener("wheel", wheel);
+  }, [enabled, localPoint, zoomTo]);
+  const onPointerDown = reactExports.useCallback(
+    (event) => {
+      var _a2;
+      const point = { x: event.clientX, y: event.clientY };
+      if (event.pointerType === "touch") {
+        if (((_a2 = panRef.current) == null ? void 0 : _a2.pointerType) === "mouse")
+          endPointer(panRef.current.pointerId);
+        if (!touchesRef.current.size) suppressClickRef.current = false;
+        touchesRef.current.set(event.pointerId, point);
+        if (touchesRef.current.size === 1) {
+          startPan(event.pointerId, "touch", point);
+        } else {
+          event.preventDefault();
+          startPinch();
+        }
+        return;
+      }
+      if (event.pointerType !== "mouse" || event.button !== 0 || !event.isPrimary || touchesRef.current.size)
+        return;
+      suppressClickRef.current = false;
+      startPan(event.pointerId, "mouse", point);
+    },
+    [endPointer, startPan, startPinch]
+  );
+  const onPointerMove = reactExports.useCallback(
+    (event) => {
+      if (touchesRef.current.has(event.pointerId)) {
+        touchesRef.current.set(event.pointerId, {
+          x: event.clientX,
+          y: event.clientY
+        });
+        const pinch = pinchRef.current;
+        if (pinch) {
+          const first = touchesRef.current.get(pinch.ids[0]);
+          const second = touchesRef.current.get(pinch.ids[1]);
+          if (!first || !second) return;
+          event.preventDefault();
+          const nextZoom = clampZoom(
+            pinch.zoom * Math.hypot(second.x - first.x, second.y - first.y) / pinch.distance
+          );
+          const midpoint = localPoint({
+            x: (first.x + second.x) / 2,
+            y: (first.y + second.y) / 2
+          });
+          transform(nextZoom, {
+            left: pinch.content.x * nextZoom - midpoint.x,
+            top: pinch.content.y * nextZoom - midpoint.y
+          });
+          return;
+        }
+      }
+      const pan = panRef.current;
+      if (!pan || pan.pointerId !== event.pointerId) return;
+      if (pan.pointerType === "mouse" && !(event.buttons & 1)) {
+        endPointer(event.pointerId);
+        return;
+      }
+      pan.lastX = event.clientX;
+      pan.lastY = event.clientY;
+      const dx = event.clientX - pan.x;
+      const dy = event.clientY - pan.y;
+      if (!pan.dragging) {
+        if (Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+        pan.dragging = true;
+        suppressClickRef.current = true;
+        capture(event.pointerId);
+        setIsPanning(true);
+      }
+      event.preventDefault();
+      const viewport = viewportRef.current;
+      if (viewport) {
+        viewport.scrollLeft = pan.left - dx;
+        viewport.scrollTop = pan.top - dy;
+      }
+    },
+    [capture, endPointer, localPoint, transform]
+  );
+  const onClickCapture = reactExports.useCallback((event) => {
+    if (suppressClickRef.current && event.detail > 0) {
+      event.preventDefault();
+      event.stopPropagation();
+      suppressClickRef.current = false;
+    }
+  }, []);
+  return {
+    viewportRef,
+    zoom,
+    isPanning,
+    zoomTo,
+    fitZoom,
+    onPointerDown,
+    onPointerMove,
+    onPointerUp: (event) => endPointer(event.pointerId),
+    onPointerCancel: (event) => endPointer(event.pointerId),
+    onLostPointerCapture: (event) => {
+      if (event.target === event.currentTarget) endPointer(event.pointerId);
+    },
+    onClickCapture
+  };
+}
 const CARD_WIDTH = 248;
 const CARD_HEIGHT = 148;
 const COLUMN_WIDTH = 316;
@@ -47911,31 +48266,18 @@ const LANES = ["winners", "losers", "grandFinal", "resetFinal"];
 function BracketGraph({
   matches,
   players,
-  onSelect
+  onSelect,
+  fullscreen = false
 }) {
   const { t } = useI18n();
-  const [zoom, setZoom] = reactExports.useState(1);
-  const [isPanning, setIsPanning] = reactExports.useState(false);
-  const viewportRef = reactExports.useRef(null);
-  const panRef = reactExports.useRef(null);
-  const suppressClickRef = reactExports.useRef(false);
-  const endPan = reactExports.useCallback((pointerId) => {
-    const pan = panRef.current;
-    if (!pan || pointerId !== void 0 && pan.pointerId !== pointerId)
-      return;
-    panRef.current = null;
-    setIsPanning(false);
-    const viewport = viewportRef.current;
-    if (viewport == null ? void 0 : viewport.hasPointerCapture(pan.pointerId))
-      viewport.releasePointerCapture(pan.pointerId);
-  }, []);
-  reactExports.useEffect(() => {
-    function handleBlur() {
-      endPan();
-    }
-    window.addEventListener("blur", handleBlur);
-    return () => window.removeEventListener("blur", handleBlur);
-  }, [endPan]);
+  const {
+    viewportRef,
+    zoom,
+    isPanning,
+    zoomTo,
+    fitZoom,
+    ...navigationHandlers
+  } = useBracketNavigation(matches.length > 0);
   const layout = reactExports.useMemo(() => {
     const nodes = [];
     const headings = [];
@@ -48016,277 +48358,392 @@ function BracketGraph({
     layout.nodes.map((node) => [node.match.id.toString(), node])
   );
   if (!matches.length) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", children: [
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `club-state${fullscreen ? " flex-1" : ""}`, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-2xl font-bold uppercase", children: t("No bracket yet.") }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t(
         "The full tournament tree appears when the organizer generates the bracket."
       ) })
     ] });
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-label": t("Complete tournament bracket"), children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex flex-wrap items-center justify-between gap-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-wider text-base-content/45", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "span",
-            {
-              className: "w-5 border-t border-primary/60",
-              "aria-hidden": "true"
-            }
-          ),
-          " ",
-          t("Winner advances")
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "span",
-            {
-              className: "w-5 border-t border-dashed border-secondary/60",
-              "aria-hidden": "true"
-            }
-          ),
-          " ",
-          t("Loser drops")
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t("Drag or scroll to pan / select any match") })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 border border-base-300 p-1", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            type: "button",
-            className: "btn btn-ghost btn-square btn-xs",
-            "aria-label": t("Zoom bracket out"),
-            disabled: zoom <= 0.1,
-            onClick: () => setZoom(
-              (value) => Math.max(0.1, Math.round((value - 0.1) * 10) / 10)
-            ),
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Minus, { className: "size-3.5", "aria-hidden": "true" })
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "output",
-          {
-            className: "w-10 text-center font-mono text-[10px]",
-            "aria-label": t("Bracket zoom"),
-            children: [
-              Math.round(zoom * 100),
-              "%"
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            type: "button",
-            className: "btn btn-ghost btn-square btn-xs",
-            "aria-label": t("Zoom bracket in"),
-            disabled: zoom >= 1.6,
-            onClick: () => setZoom(
-              (value) => Math.min(1.6, Math.round((value + 0.1) * 10) / 10)
-            ),
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-3.5", "aria-hidden": "true" })
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "button",
-          {
-            type: "button",
-            className: "btn btn-ghost btn-xs font-mono text-[9px]",
-            onClick: () => {
-              const viewport = viewportRef.current;
-              if (!(viewport == null ? void 0 : viewport.clientWidth) || !viewport.clientHeight) return;
-              setZoom(
-                Math.max(
-                  0.05,
-                  Math.min(
-                    1.6,
-                    viewport.clientWidth / layout.width,
-                    viewport.clientHeight / layout.height
-                  )
-                )
-              );
-              viewport.scrollTo({ top: 0, left: 0 });
-            },
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Maximize2, { className: "size-3.5", "aria-hidden": "true" }),
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "section",
+    {
+      "aria-label": t("Complete tournament bracket"),
+      className: fullscreen ? "flex min-h-0 flex-1 flex-col" : void 0,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex flex-wrap items-center justify-between gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-wider text-base-content/45", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "span",
+                {
+                  className: "w-5 border-t border-primary/60",
+                  "aria-hidden": "true"
+                }
+              ),
               " ",
-              t("Fit bracket")
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            type: "button",
-            className: "btn btn-ghost btn-square btn-xs",
-            "aria-label": t("Reset bracket zoom"),
-            onClick: () => setZoom(1),
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { className: "size-3.5", "aria-hidden": "true" })
-          }
-        )
-      ] })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "div",
-      {
-        ref: viewportRef,
-        "data-ocid": "tournament.bracket",
-        "data-panning": isPanning || void 0,
-        className: "bracket-viewport max-h-[75vh] overflow-auto border border-base-300 bg-base-100",
-        "aria-label": t("Scrollable bracket graph"),
-        onPointerDown: (event) => {
-          if (event.pointerType !== "mouse" || event.button !== 0 || !event.isPrimary)
-            return;
-          suppressClickRef.current = false;
-          panRef.current = {
-            pointerId: event.pointerId,
-            x: event.clientX,
-            y: event.clientY,
-            left: event.currentTarget.scrollLeft,
-            top: event.currentTarget.scrollTop,
-            dragging: false
-          };
-        },
-        onPointerMove: (event) => {
-          const pan = panRef.current;
-          if (!pan || pan.pointerId !== event.pointerId) return;
-          if (!(event.buttons & 1)) {
-            endPan(event.pointerId);
-            return;
-          }
-          const dx = event.clientX - pan.x;
-          const dy = event.clientY - pan.y;
-          if (!pan.dragging) {
-            if (Math.hypot(dx, dy) < 4) return;
-            pan.dragging = true;
-            suppressClickRef.current = true;
-            event.currentTarget.setPointerCapture(event.pointerId);
-            setIsPanning(true);
-          }
-          event.preventDefault();
-          event.currentTarget.scrollLeft = pan.left - dx;
-          event.currentTarget.scrollTop = pan.top - dy;
-        },
-        onPointerUp: (event) => endPan(event.pointerId),
-        onPointerCancel: (event) => endPan(event.pointerId),
-        onLostPointerCapture: (event) => endPan(event.pointerId),
-        onClickCapture: (event) => {
-          if (suppressClickRef.current && event.detail > 0) {
-            event.preventDefault();
-            event.stopPropagation();
-            suppressClickRef.current = false;
-          }
-        },
-        onDragStart: (event) => event.preventDefault(),
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "div",
-          {
-            style: { width: layout.width * zoom, height: layout.height * zoom },
-            children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "div",
+              t("Winner advances")
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "span",
+                {
+                  className: "w-5 border-t border-dashed border-secondary/60",
+                  "aria-hidden": "true"
+                }
+              ),
+              " ",
+              t("Loser drops")
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t("Drag to pan / scroll or pinch to zoom") })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 border border-base-300 p-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
               {
-                className: "bracket-canvas relative origin-top-left",
-                style: {
-                  width: layout.width,
-                  height: layout.height,
-                  transform: `scale(${zoom})`
+                type: "button",
+                className: "btn btn-ghost btn-square btn-xs",
+                "aria-label": t("Zoom bracket out"),
+                disabled: zoom <= MIN_BRACKET_ZOOM,
+                onClick: () => zoomTo(Math.round((zoom - 0.1) * 100) / 100),
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(Minus, { className: "size-3.5", "aria-hidden": "true" })
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "output",
+              {
+                className: "w-10 text-center font-mono text-[10px]",
+                "aria-label": t("Bracket zoom"),
+                children: [
+                  Math.round(zoom * 100),
+                  "%"
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                className: "btn btn-ghost btn-square btn-xs",
+                "aria-label": t("Zoom bracket in"),
+                disabled: zoom >= MAX_BRACKET_ZOOM,
+                onClick: () => zoomTo(Math.round((zoom + 0.1) * 100) / 100),
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-3.5", "aria-hidden": "true" })
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "button",
+              {
+                type: "button",
+                className: "btn btn-ghost btn-xs font-mono text-[9px]",
+                onClick: () => {
+                  const viewport = viewportRef.current;
+                  if (!(viewport == null ? void 0 : viewport.clientWidth) || !viewport.clientHeight) return;
+                  fitZoom(
+                    Math.min(
+                      viewport.clientWidth / layout.width,
+                      viewport.clientHeight / layout.height
+                    )
+                  );
                 },
                 children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    "svg",
-                    {
-                      "aria-hidden": "true",
-                      className: "pointer-events-none absolute inset-0",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Maximize2, { className: "size-3.5", "aria-hidden": "true" }),
+                  " ",
+                  t("Fit bracket")
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                className: "btn btn-ghost btn-square btn-xs",
+                "aria-label": t("Reset bracket zoom"),
+                onClick: () => zoomTo(1),
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { className: "size-3.5", "aria-hidden": "true" })
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            ref: viewportRef,
+            "data-ocid": "tournament.bracket",
+            "data-panning": isPanning || void 0,
+            className: `bracket-viewport overflow-auto border border-base-300 bg-base-100 ${fullscreen ? "min-h-0 flex-1" : "max-h-[75vh]"}`,
+            "aria-label": t("Scrollable bracket graph"),
+            ...navigationHandlers,
+            onDragStart: (event) => event.preventDefault(),
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: "overflow-hidden",
+                style: { width: layout.width * zoom, height: layout.height * zoom },
+                children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "div",
+                  {
+                    className: "bracket-canvas relative origin-top-left",
+                    style: {
                       width: layout.width,
                       height: layout.height,
-                      children: layout.nodes.flatMap(
-                        (node) => [
-                          { source: node.match.sourceA, slot: "a", offset: 69 },
-                          { source: node.match.sourceB, slot: "b", offset: 111 }
-                        ].map(({ source, slot, offset }) => {
-                          if (source.kind !== "winner" && source.kind !== "loser")
-                            return null;
-                          const parent = byId.get(source.id.toString());
-                          if (!parent) return null;
-                          const fromX = parent.x + CARD_WIDTH;
-                          const fromY = parent.y + CARD_HEIGHT / 2;
-                          const toX = node.x;
-                          const toY = node.y + offset;
-                          const bend = fromX < toX ? (fromX + toX) / 2 : fromX + 30;
-                          const crossLane = parent.match.bracket !== node.match.bracket;
-                          return /* @__PURE__ */ jsxRuntimeExports.jsx(
-                            "path",
-                            {
-                              d: `M ${fromX} ${fromY} C ${bend} ${fromY}, ${bend} ${toY}, ${toX} ${toY}`,
-                              fill: "none",
-                              stroke: source.kind === "loser" ? "var(--color-secondary)" : "var(--color-primary)",
-                              strokeWidth: 1,
-                              strokeDasharray: source.kind === "loser" ? "4 5" : void 0,
-                              opacity: crossLane ? 0.2 : 0.45
-                            },
-                            `${node.match.id}-${slot}`
-                          );
-                        })
-                      )
-                    }
-                  ),
-                  layout.headings.map((heading) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                      "h3",
-                      {
-                        className: "absolute left-7 font-display text-lg font-bold uppercase tracking-tight",
-                        style: { top: heading.top },
-                        children: [
-                          t(BRACKET_LABELS[heading.lane]),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-3 font-mono text-[10px] font-normal text-base-content/30", children: heading.lane === "resetFinal" ? t("Only if the unbeaten finalist loses") : heading.lane === "losers" ? t("Second loss = elimination") : "" })
-                        ]
-                      }
-                    ),
-                    heading.columns.map((column) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      "p",
-                      {
-                        className: "technical-label absolute text-[10px] text-base-content/40",
-                        style: {
-                          left: 28 + column.index * COLUMN_WIDTH,
-                          top: heading.top + 39
-                        },
-                        children: heading.lane === "grandFinal" || heading.lane === "resetFinal" ? t("Championship") : t(column.caption)
-                      },
-                      column.index
-                    ))
-                  ] }, heading.lane)),
-                  layout.nodes.map((node) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    "div",
-                    {
-                      className: "absolute",
-                      style: {
-                        left: node.x,
-                        top: node.y,
-                        width: CARD_WIDTH,
-                        height: CARD_HEIGHT
-                      },
-                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        MatchCard,
-                        {
-                          match: node.match,
-                          players,
-                          matches,
-                          onSelect,
-                          compact: true
-                        }
-                      )
+                      transform: `scale(${zoom})`
                     },
-                    node.match.id.toString()
-                  ))
-                ]
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "svg",
+                        {
+                          "aria-hidden": "true",
+                          className: "pointer-events-none absolute inset-0",
+                          width: layout.width,
+                          height: layout.height,
+                          children: layout.nodes.flatMap(
+                            (node) => [
+                              { source: node.match.sourceA, slot: "a", offset: 69 },
+                              { source: node.match.sourceB, slot: "b", offset: 111 }
+                            ].map(({ source, slot, offset }) => {
+                              if (source.kind !== "winner" && source.kind !== "loser")
+                                return null;
+                              const parent = byId.get(source.id.toString());
+                              if (!parent) return null;
+                              const fromX = parent.x + CARD_WIDTH;
+                              const fromY = parent.y + CARD_HEIGHT / 2;
+                              const toX = node.x;
+                              const toY = node.y + offset;
+                              const bend = fromX < toX ? (fromX + toX) / 2 : fromX + 30;
+                              const crossLane = parent.match.bracket !== node.match.bracket;
+                              return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                "path",
+                                {
+                                  d: `M ${fromX} ${fromY} C ${bend} ${fromY}, ${bend} ${toY}, ${toX} ${toY}`,
+                                  fill: "none",
+                                  stroke: source.kind === "loser" ? "var(--color-secondary)" : "var(--color-primary)",
+                                  strokeWidth: 1,
+                                  strokeDasharray: source.kind === "loser" ? "4 5" : void 0,
+                                  opacity: crossLane ? 0.2 : 0.45
+                                },
+                                `${node.match.id}-${slot}`
+                              );
+                            })
+                          )
+                        }
+                      ),
+                      layout.headings.map((heading) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "h3",
+                          {
+                            className: "absolute left-7 font-display text-lg font-bold uppercase tracking-tight",
+                            style: { top: heading.top },
+                            children: [
+                              t(BRACKET_LABELS[heading.lane]),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-3 font-mono text-[10px] font-normal text-base-content/30", children: heading.lane === "resetFinal" ? t("Only if the unbeaten finalist loses") : heading.lane === "losers" ? t("Second loss = elimination") : "" })
+                            ]
+                          }
+                        ),
+                        heading.columns.map((column) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "p",
+                          {
+                            className: "technical-label absolute text-[10px] text-base-content/40",
+                            style: {
+                              left: 28 + column.index * COLUMN_WIDTH,
+                              top: heading.top + 39
+                            },
+                            children: heading.lane === "grandFinal" || heading.lane === "resetFinal" ? t("Championship") : t(column.caption)
+                          },
+                          column.index
+                        ))
+                      ] }, heading.lane)),
+                      layout.nodes.map((node) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "div",
+                        {
+                          className: "absolute",
+                          style: {
+                            left: node.x,
+                            top: node.y,
+                            width: CARD_WIDTH,
+                            height: CARD_HEIGHT
+                          },
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            MatchCard,
+                            {
+                              match: node.match,
+                              players,
+                              matches,
+                              onSelect,
+                              compact: true
+                            }
+                          )
+                        },
+                        node.match.id.toString()
+                      ))
+                    ]
+                  }
+                )
               }
             )
           }
         )
+      ]
+    }
+  );
+}
+function bracketPath(tournamentId) {
+  return `/tournaments/${encodeURIComponent(tournamentId.toString())}?view=bracket`;
+}
+function bracketUrl(tournamentId, origin = window.location.origin) {
+  return new URL(bracketPath(tournamentId), origin).toString();
+}
+function CopyBracketLink({
+  tournamentId,
+  compact = false,
+  className,
+  "data-ocid": ocid
+}) {
+  const { t } = useI18n();
+  const [state, setState] = reactExports.useState(
+    "idle"
+  );
+  const attempt = reactExports.useRef(0);
+  const url = bracketUrl(tournamentId);
+  const previousUrl = reactExports.useRef(url);
+  reactExports.useEffect(() => {
+    if (previousUrl.current !== url) {
+      previousUrl.current = url;
+      setState("idle");
+    }
+    return () => {
+      attempt.current += 1;
+    };
+  }, [url]);
+  reactExports.useEffect(() => {
+    if (state !== "copied") return;
+    const timer = window.setTimeout(() => setState("idle"), 3e3);
+    return () => window.clearTimeout(timer);
+  }, [state]);
+  async function copy() {
+    var _a2;
+    const currentAttempt = ++attempt.current;
+    setState("copying");
+    try {
+      if (!((_a2 = navigator.clipboard) == null ? void 0 : _a2.writeText))
+        throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(url);
+      if (attempt.current === currentAttempt) setState("copied");
+    } catch {
+      if (attempt.current === currentAttempt) setState("failed");
+    }
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: cn("inline-flex max-w-full flex-col gap-2", className), children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Button,
+      {
+        variant: "outline",
+        size: compact ? "icon" : "sm",
+        "data-ocid": ocid,
+        "aria-label": t("Copy bracket link"),
+        title: t(
+          state === "copied" ? "Bracket link copied" : "Copy bracket link"
+        ),
+        loading: state === "copying",
+        onClick: (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          void copy();
+        },
+        children: [
+          state === "copied" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-4", "aria-hidden": "true" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Link2, { className: "size-4", "aria-hidden": "true" }),
+          !compact ? t(state === "copied" ? "Bracket link copied" : "Copy bracket link") : null
+        ]
       }
-    )
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("output", { "aria-live": "polite", className: "sr-only", children: state === "copied" ? t("Bracket link copied") : "" }),
+    state === "failed" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { role: "alert", className: "max-w-sm text-xs text-base-content/65", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-2", children: t("Could not copy the link. Copy it below.") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "input",
+        {
+          type: "url",
+          readOnly: true,
+          "aria-label": t("Full bracket URL"),
+          value: url,
+          onFocus: (event) => event.currentTarget.select(),
+          onClick: (event) => event.stopPropagation(),
+          className: "w-full border border-base-300 bg-base-100 px-2 py-2 font-mono text-xs text-base-content outline-none focus:border-primary"
+        }
+      )
+    ] }) : null
   ] });
+}
+function FullscreenBracketFrame({
+  tournamentId,
+  title,
+  onClose,
+  children
+}) {
+  const { t } = useI18n();
+  reactExports.useEffect(() => {
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    function closeOnEscape(event) {
+      if (event.key === "Escape" && !event.defaultPrevented && !document.querySelector("dialog[open]")) {
+        event.preventDefault();
+        onClose();
+      }
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = overflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [onClose]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      "data-ocid": "tournament.fullscreen_view",
+      className: "flex h-full min-h-0 flex-col gap-3 bg-base-100 p-3 sm:p-5",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "flex shrink-0 items-center gap-3 border-b border-base-300 pb-3 sm:gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Link,
+            {
+              to: "/tournaments",
+              "aria-label": t("ChillPong home"),
+              className: "shrink-0",
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "img",
+                {
+                  src: "/logo.jpg",
+                  alt: "",
+                  className: "size-9 rounded-full sm:size-11"
+                }
+              )
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "technical-label mb-1 text-[9px] text-primary", children: [
+              "CHILLPONG / ",
+              t("Full bracket")
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "truncate font-display text-lg font-bold uppercase sm:text-2xl", children: title ?? t("Complete tournament bracket") })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CopyBracketLink, { tournamentId, compact: true }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              "data-ocid": "tournament.close_fullscreen_button",
+              className: "btn btn-ghost btn-square btn-sm shrink-0",
+              "aria-label": t("Close fullscreen bracket"),
+              title: t("Close fullscreen bracket"),
+              onClick: onClose,
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "size-5", "aria-hidden": "true" })
+            }
+          )
+        ] }),
+        children
+      ]
+    }
+  );
 }
 function StandardView({
   view,
@@ -48712,11 +49169,37 @@ function TournamentDetailPage({
   tournamentId
 }) {
   const { t } = useI18n();
+  const fullscreen = useSearch({
+    strict: false,
+    select: (search) => search.view === "bracket"
+  });
+  const navigate = useNavigate();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient2 = useQueryClient();
   const queryKey = ["tournamentState", tournamentId.toString()];
   const [display, setDisplay] = reactExports.useState("standard");
+  const changeFullscreen = reactExports.useCallback(
+    (next) => {
+      setDisplay("extended");
+      void navigate({
+        to: "/tournaments/$tournamentId",
+        params: { tournamentId: tournamentId.toString() },
+        search: (previous) => ({
+          ...previous,
+          view: next ? "bracket" : void 0
+        })
+      });
+    },
+    [navigate, tournamentId]
+  );
+  const closeFullscreen = reactExports.useCallback(
+    () => changeFullscreen(false),
+    [changeFullscreen]
+  );
+  reactExports.useEffect(() => {
+    if (fullscreen) setDisplay("extended");
+  }, [fullscreen]);
   const [modal, setModal] = reactExports.useState(null);
   const [notice, setNotice] = reactExports.useState(null);
   const stateQuery = useQuery({
@@ -48774,58 +49257,75 @@ function TournamentDetailPage({
   }
   const actionError = actionMutation.isError ? actionMutation.error instanceof Error ? actionMutation.error.message : "This action couldn't be saved. Try again." : null;
   const loading = stateQuery.isLoading || isFetching && !view;
-  if (loading)
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "div",
+  function frame(content) {
+    return fullscreen ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      FullscreenBracketFrame,
       {
-        className: "club-page",
-        "data-ocid": "tournament.loading_state",
-        "aria-live": "polite",
-        "aria-busy": "true",
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-8 h-4 w-52 animate-pulse bg-base-300" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-8 h-20 w-2/3 animate-pulse bg-base-300" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-4 md:grid-cols-2", children: [1, 2].map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "div",
-            {
-              className: "h-60 animate-pulse border border-base-300 bg-base-200"
-            },
-            item
-          )) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Loading the tournament floor and bracket.") })
-        ]
+        tournamentId,
+        title: view == null ? void 0 : view.tournament.title,
+        onClose: closeFullscreen,
+        children: content
       }
+    ) : content;
+  }
+  if (loading)
+    return frame(
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "club-page",
+          "data-ocid": "tournament.loading_state",
+          "aria-live": "polite",
+          "aria-busy": "true",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-8 h-4 w-52 animate-pulse bg-base-300" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-8 h-20 w-2/3 animate-pulse bg-base-300" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-4 md:grid-cols-2", children: [1, 2].map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: "h-60 animate-pulse border border-base-300 bg-base-200"
+              },
+              item
+            )) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Loading the tournament floor and bracket.") })
+          ]
+        }
+      )
     );
   if (stateQuery.isError)
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "div",
-      {
-        "data-ocid": "tournament.error_state",
-        role: "alert",
-        className: "club-state",
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            TriangleAlert,
-            {
-              className: "mb-4 size-7 text-secondary",
-              "aria-hidden": "true"
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: t("The match desk is offline.") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t("We couldn't load the tournament state.") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { className: "mt-6", onClick: () => void stateQuery.refetch(), children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "size-4", "aria-hidden": "true" }),
-            " ",
-            t("Try again")
-          ] })
-        ]
-      }
-    ) });
+    return frame(
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          "data-ocid": "tournament.error_state",
+          role: "alert",
+          className: "club-state",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              TriangleAlert,
+              {
+                className: "mb-4 size-7 text-secondary",
+                "aria-hidden": "true"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: t("The match desk is offline.") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t("We couldn't load the tournament state.") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { className: "mt-6", onClick: () => void stateQuery.refetch(), children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "size-4", "aria-hidden": "true" }),
+              " ",
+              t("Try again")
+            ] })
+          ]
+        }
+      ) })
+    );
   if (!view)
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: t("Tournament not found.") }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/tournaments", className: "btn btn-outline mt-6", children: t("Back to tournaments") })
-    ] }) });
+    return frame(
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-page", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold uppercase", children: t("Tournament not found.") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/tournaments", className: "btn btn-outline mt-6", children: t("Back to tournaments") })
+      ] }) })
+    );
   const champion = playerById(view.players, view.championId);
   const activePlayers = view.players.filter(
     (player) => player.status !== "removed"
@@ -48834,6 +49334,36 @@ function TournamentDetailPage({
     (match) => match.manualOverride || match.prioritized
   );
   const recentActions = [...view.history].sort((a2, b2) => a2.id > b2.id ? -1 : 1).slice(0, 6);
+  const dialogs = /* @__PURE__ */ jsxRuntimeExports.jsx(
+    OrganizerDialogs,
+    {
+      view,
+      modal,
+      isAdmin,
+      pending: actionMutation.isPending,
+      error: actionError,
+      onClose: () => {
+        if (!actionMutation.isPending) setModal(null);
+      },
+      onOpen: openModal,
+      onAction: applyAction
+    }
+  );
+  if (fullscreen)
+    return frame(
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          BracketGraph,
+          {
+            fullscreen: true,
+            matches: view.matches,
+            players: view.players,
+            onSelect: (match) => openModal({ kind: "match", matchId: match.id })
+          }
+        ),
+        dialogs
+      ] })
+    );
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "tournament.detail_page", className: "club-page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
       Link,
@@ -48979,19 +49509,34 @@ function TournamentDetailPage({
           }
         )
       ] }),
-      isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        Button,
-        {
-          size: "sm",
-          variant: "outline",
-          onClick: () => openModal({ kind: "player" }),
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-3.5", "aria-hidden": "true" }),
-            " ",
-            t("Add player")
-          ]
-        }
-      ) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/35", children: t("Live tournament / public view") })
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CopyBracketLink, { tournamentId, compact: true }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            "data-ocid": "tournament.open_fullscreen_button",
+            className: "btn btn-ghost btn-square btn-sm",
+            "aria-label": t("Open fullscreen bracket"),
+            title: t("Open fullscreen bracket"),
+            onClick: () => changeFullscreen(true),
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Maximize2, { className: "size-4", "aria-hidden": "true" })
+          }
+        ),
+        isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            size: "sm",
+            variant: "outline",
+            onClick: () => openModal({ kind: "player" }),
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-3.5", "aria-hidden": "true" }),
+              " ",
+              t("Add player")
+            ]
+          }
+        ) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/35", children: t("Live tournament / public view") })
+      ] })
     ] }),
     display === "standard" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       StandardView,
@@ -49041,21 +49586,7 @@ function TournamentDetailPage({
         action.id.toString()
       )) })
     ] }) : null,
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      OrganizerDialogs,
-      {
-        view,
-        modal,
-        isAdmin,
-        pending: actionMutation.isPending,
-        error: actionError,
-        onClose: () => {
-          if (!actionMutation.isPending) setModal(null);
-        },
-        onOpen: openModal,
-        onAction: applyAction
-      }
-    )
+    dialogs
   ] });
 }
 const TOURNAMENTS_QUERY_KEY = ["tournaments"];
@@ -49649,6 +50180,13 @@ function TournamentsPage() {
                           ]
                         }
                       ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        CopyBracketLink,
+                        {
+                          tournamentId: tournament.id,
+                          "data-ocid": `tournaments.copy_bracket_button.${index2 + 1}`
+                        }
+                      ),
                       isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
                         "button",
                         {
@@ -49779,6 +50317,14 @@ function TournamentsPage() {
           ] }),
           detail.description ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "whitespace-pre-wrap break-words text-sm leading-relaxed text-base-content/70", children: detail.description }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-base-content/45", children: t("More details will be announced by the crew.") }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "mt-8 flex flex-wrap justify-end gap-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              CopyBracketLink,
+              {
+                tournamentId: detail.id,
+                "data-ocid": "tournaments.details_copy_bracket_button"
+              },
+              detail.id.toString()
+            ),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", onClick: () => setDetail(null), children: t("Close") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "a",
@@ -50558,6 +51104,7 @@ const tournamentsRoute = createRoute({
 const tournamentDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/tournaments/$tournamentId",
+  validateSearch: (search) => search.view === "bracket" ? { view: "bracket" } : {},
   component: TournamentRoomRoute
 });
 function TournamentRoomRoute() {
@@ -50586,17 +51133,18 @@ const profileRoute = createRoute({
   path: "/profile",
   component: () => /* @__PURE__ */ jsxRuntimeExports.jsx(RequireAuth, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProfilePage, {}) })
 });
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  playersRoute,
+  usersRoute,
+  tournamentsRoute,
+  tournamentDetailRoute,
+  adminRoute,
+  accountsRoute,
+  profileRoute
+]);
 const router = createRouter({
-  routeTree: rootRoute.addChildren([
-    indexRoute,
-    playersRoute,
-    usersRoute,
-    tournamentsRoute,
-    tournamentDetailRoute,
-    adminRoute,
-    accountsRoute,
-    profileRoute
-  ]),
+  routeTree,
   defaultPreload: "intent"
 });
 function App() {
