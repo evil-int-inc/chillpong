@@ -371,6 +371,183 @@ describe("mobile organizer match workflow", () => {
     ).toBeEnabled();
   });
 
+  it.each([
+    ["phone", 390],
+    ["desktop", 1280],
+  ])(
+    "assigns a ready match to an occupied table from the match editor on %s",
+    async (_device, width) => {
+      vi.stubGlobal("innerWidth", width);
+      const user = userEvent.setup();
+      const original = room();
+      const reassigned = room({
+        players: original.players.map((item) => ({
+          ...item,
+          status: TournamentPlayerStatus.ready,
+          table: item.id > 2n ? 1n : undefined,
+        })),
+        matches: [match(1n), match(2n, { table: 1n })],
+        waitingQueue: [1n, 2n],
+        nextMatches: [1n, 2n],
+        tables: [
+          { number: 1n, status: TournamentTableStatus.waiting, matchId: 2n },
+          original.tables[1]!,
+        ],
+      });
+      saveStates(reassigned);
+      renderRoom();
+      await user.click(await screen.findByTestId("match.card.2"));
+      const dialog = screen.getByRole("dialog");
+      const table = within(dialog).getByRole("combobox", {
+        name: "Assign table",
+      });
+      const assign = within(dialog).getByRole("button", {
+        name: "Assign table",
+      });
+      expect(assign).toBeDisabled();
+      expect(
+        within(table).getByRole("option", { name: "Table 1 / playing" }),
+      ).toBeEnabled();
+      await user.selectOptions(table, "1");
+      expect(within(dialog).getByRole("status")).toHaveTextContent(
+        "The match currently on table 1 returns to ready without a table.",
+      );
+      expect(assign).toBeEnabled();
+      await user.click(assign);
+      await waitFor(() =>
+        expect(
+          state.actor.applyTournamentCommand,
+        ).toHaveBeenCalledExactlyOnceWith(1n, {
+          __kind__: "assignTable",
+          assignTable: { matchId: 2n, table: 1n },
+        } satisfies TournamentCommand),
+      );
+      await waitFor(() => expect(table).toHaveValue("1"));
+      await waitFor(() => expect(assign).toBeDisabled());
+      expect(screen.getByRole("dialog")).toBeVisible();
+      expect(
+        within(screen.getByRole("dialog")).getByRole("button", {
+          name: "Start match",
+        }),
+      ).toBeEnabled();
+    },
+  );
+
+  it.each([
+    ["phone", 390],
+    ["desktop", 1280],
+  ])(
+    "exchanges occupied tables from a playing match editor on %s",
+    async (_device, width) => {
+      vi.stubGlobal("innerWidth", width);
+      const user = userEvent.setup();
+      const original = room();
+      const playing = room({
+        players: original.players.map((item) => ({
+          ...item,
+          status: TournamentPlayerStatus.playing,
+          table: item.id <= 2n ? 1n : 2n,
+        })),
+        matches: [
+          match(1n, { status: TournamentMatchStatus.playing, table: 1n }),
+          match(2n, { status: TournamentMatchStatus.playing, table: 2n }),
+        ],
+        waitingQueue: [],
+        nextMatches: [],
+        tables: [1n, 2n].map((number) => ({
+          number,
+          status: TournamentTableStatus.playing,
+          matchId: number,
+        })),
+      });
+      state.actor.getTournamentState.mockResolvedValue(playing);
+      saveStates({
+        ...playing,
+        players: playing.players.map((item) => ({
+          ...item,
+          table: item.id <= 2n ? 2n : 1n,
+        })),
+        matches: playing.matches.map((item) => ({
+          ...item,
+          table: item.id === 1n ? 2n : 1n,
+        })),
+        tables: playing.tables.map((item) => ({
+          ...item,
+          matchId: item.number === 1n ? 2n : 1n,
+        })),
+      });
+      renderRoom();
+      await user.click(await screen.findByTestId("match.card.1"));
+      const dialog = screen.getByRole("dialog");
+      const table = within(dialog).getByRole("combobox", {
+        name: "Assign table",
+      });
+      const assign = within(dialog).getByRole("button", {
+        name: "Assign table",
+      });
+      expect(assign).toBeDisabled();
+      expect(
+        within(table).getByRole("option", { name: "Table 2 / playing" }),
+      ).toBeEnabled();
+      await user.selectOptions(table, "2");
+      expect(within(dialog).getByRole("status")).toHaveTextContent(
+        "Table assignments will be exchanged with table 2.",
+      );
+      await user.click(assign);
+      await waitFor(() =>
+        expect(
+          state.actor.applyTournamentCommand,
+        ).toHaveBeenCalledExactlyOnceWith(1n, {
+          __kind__: "assignTable",
+          assignTable: { matchId: 1n, table: 2n },
+        } satisfies TournamentCommand),
+      );
+      await waitFor(() => expect(table).toHaveValue("2"));
+      await waitFor(() => expect(assign).toBeDisabled());
+      expect(screen.getByRole("dialog")).toBeVisible();
+      expect(within(dialog).getByLabelText("Score A")).toBeEnabled();
+    },
+  );
+
+  it.each([
+    ["phone", 390],
+    ["desktop", 1280],
+  ])(
+    "releases a playing match's table from its editor on %s",
+    async (_device, width) => {
+      vi.stubGlobal("innerWidth", width);
+      const user = userEvent.setup();
+      saveStates(readyRoom());
+      renderRoom();
+      await user.click(await screen.findByTestId("match.card.1"));
+      const dialog = screen.getByRole("dialog");
+      const table = within(dialog).getByRole("combobox", {
+        name: "Assign table",
+      });
+      const assign = within(dialog).getByRole("button", {
+        name: "Assign table",
+      });
+      await user.selectOptions(table, "");
+      expect(within(dialog).getByRole("status")).toHaveTextContent(
+        "The current match returns to ready without a table. Results and bracket progress are preserved.",
+      );
+      await user.click(assign);
+      await waitFor(() =>
+        expect(
+          state.actor.applyTournamentCommand,
+        ).toHaveBeenCalledExactlyOnceWith(1n, {
+          __kind__: "assignTable",
+          assignTable: { matchId: 1n, table: undefined },
+        } satisfies TournamentCommand),
+      );
+      await waitFor(() => expect(table).toHaveValue(""));
+      await waitFor(() => expect(assign).toBeDisabled());
+      expect(
+        within(dialog).getByRole("button", { name: "Start match" }),
+      ).toBeDisabled();
+    },
+  );
+
   it("allows a completed result to be corrected and requires confirmation for a reset", async () => {
     const user = userEvent.setup();
     state.actor.getTournamentState.mockResolvedValue(completedRoom());

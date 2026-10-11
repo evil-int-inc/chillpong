@@ -557,17 +557,12 @@ describe("tournament organizer engine", () => {
     ).toEqual({ removed: null });
   });
 
-  it("prevents table conflicts, rejects drawn scores, and frees the table after a result", async () => {
+  it("rejects drawn scores and frees the table after a result", async () => {
     const room = await createRoom([3, 3, 3, 3]);
     await applyRoom(room, { generateBracket: null });
     const [first, second] = readyMatches(room.state);
     await applyRoom(room, { assignTable: { matchId: first!.id, table: [1n] } });
     await applyRoom(room, { startMatch: first!.id });
-    await expect(
-      actor.applyTournamentCommand(room.id, {
-        assignTable: { matchId: second!.id, table: [1n] },
-      }),
-    ).rejects.toThrow(/table|occupied|playing/i);
     await expect(
       actor.applyTournamentCommand(room.id, {
         recordResult: { matchId: first!.id, scoreA: 7n, scoreB: 7n },
@@ -583,6 +578,168 @@ describe("tournament organizer engine", () => {
     expect(
       room.state.tables.find((table) => table.number === 1n)?.matchId,
     ).toEqual([second!.id]);
+  });
+
+  it.each([false, true])(
+    "atomically exchanges occupied tables without changing match progress (playing=$playing)",
+    async (playing) => {
+      const room = await createRoom([2, 2, 2, 2]);
+      await applyRoom(room, { generateBracket: null });
+      const [first, second] = readyMatches(room.state);
+      await applyRoom(room, {
+        assignTable: { matchId: first!.id, table: [1n] },
+      });
+      await applyRoom(room, {
+        assignTable: { matchId: second!.id, table: [2n] },
+      });
+      if (playing) {
+        await applyRoom(room, { startMatch: first!.id });
+        await applyRoom(room, { startMatch: second!.id });
+      }
+      const before = room.state;
+      await applyRoom(room, {
+        assignTable: { matchId: second!.id, table: [1n] },
+      });
+      expect(
+        room.state.matches.find((match) => match.id === first!.id),
+      ).toEqual({
+        ...before.matches.find((match) => match.id === first!.id),
+        table: [2n],
+        manualOverride: true,
+      });
+      expect(
+        room.state.matches.find((match) => match.id === second!.id),
+      ).toEqual({
+        ...before.matches.find((match) => match.id === second!.id),
+        table: [1n],
+        manualOverride: true,
+      });
+      expect(room.state.tables.map((table) => table.matchId)).toEqual([
+        [second!.id],
+        [first!.id],
+      ]);
+      expect(room.state.history).toHaveLength(before.history.length + 1);
+      expect(room.state.history.at(-1)?.caption).toBe("Swap table assignments");
+      await applyRoom(room, { undo: null });
+      expect(room.state.matches).toEqual(before.matches);
+      expect(room.state.tables).toEqual(before.tables);
+      expect(room.state.history).toEqual(before.history);
+    },
+  );
+
+  it("replaces a running table's match without resetting the bracket or scored history", async () => {
+    const room = await createRoom([2, 2, 2, 2, 2, 2, 2, 2]);
+    await applyRoom(room, { generateBracket: null });
+    const [finished, first, second] = readyMatches(room.state);
+    await playResult(room, finished!.id);
+    await applyRoom(room, {
+      assignTable: { matchId: first!.id, table: [1n] },
+    });
+    await applyRoom(room, { startMatch: first!.id });
+    const before = room.state;
+    await applyRoom(room, {
+      assignTable: { matchId: second!.id, table: [1n] },
+    });
+    expect(room.state.matches.find((match) => match.id === first!.id)).toEqual({
+      ...before.matches.find((match) => match.id === first!.id),
+      table: [],
+      status: { ready: null },
+      manualOverride: true,
+    });
+    expect(room.state.matches.find((match) => match.id === second!.id)).toEqual(
+      {
+        ...before.matches.find((match) => match.id === second!.id),
+        table: [1n],
+        manualOverride: true,
+      },
+    );
+    expect(
+      room.state.matches.filter(
+        (match) => match.id !== first!.id && match.id !== second!.id,
+      ),
+    ).toEqual(
+      before.matches.filter(
+        (match) => match.id !== first!.id && match.id !== second!.id,
+      ),
+    );
+    expect(room.state.history.at(-1)?.caption).toBe("Replace table match");
+    expect(room.state.tables[0]?.matchId).toEqual([second!.id]);
+    expect(
+      room.state.players.filter((player) => "playing" in player.status),
+    ).toEqual([]);
+    await applyRoom(room, { undo: null });
+    expect(room.state.matches).toEqual(before.matches);
+    expect(room.state.players).toEqual(before.players);
+    expect(room.state.tables).toEqual(before.tables);
+    expect(room.state.history).toEqual(before.history);
+  });
+
+  it("moves a playing match to an available table and can release it without a reset", async () => {
+    const room = await createRoom([2, 2, 2, 2]);
+    await applyRoom(room, { generateBracket: null });
+    const first = readyMatches(room.state)[0]!;
+    await applyRoom(room, {
+      assignTable: { matchId: first.id, table: [1n] },
+    });
+    await applyRoom(room, { startMatch: first.id });
+    const active = room.state.matches.find((match) => match.id === first.id)!;
+    await applyRoom(room, {
+      assignTable: { matchId: first.id, table: [2n] },
+    });
+    expect(room.state.matches.find((match) => match.id === first.id)).toEqual({
+      ...active,
+      table: [2n],
+      manualOverride: true,
+    });
+    const beforeRelease = room.state;
+    await applyRoom(room, {
+      assignTable: { matchId: first.id, table: [] },
+    });
+    expect(room.state.matches.find((match) => match.id === first.id)).toEqual({
+      ...active,
+      table: [],
+      status: { ready: null },
+      manualOverride: true,
+    });
+    expect(
+      room.state.tables.every((table) => "available" in table.status),
+    ).toBe(true);
+    await applyRoom(room, { undo: null });
+    expect(room.state.matches).toEqual(beforeRelease.matches);
+    expect(room.state.tables).toEqual(beforeRelease.tables);
+  });
+
+  it("rejects invalid reassignment targets without changing the table or history", async () => {
+    const room = await createRoom([2, 2, 2, 2]);
+    await applyRoom(room, { generateBracket: null });
+    const [first, second] = readyMatches(room.state);
+    const blocked = room.state.matches.find(
+      (match) => "blocked" in match.status,
+    )!;
+    await playResult(room, first!.id);
+    await applyRoom(room, {
+      assignTable: { matchId: second!.id, table: [2n] },
+    });
+    const before = room.state;
+    for (const command of [
+      { assignTable: { matchId: second!.id, table: [0n] } },
+      { assignTable: { matchId: second!.id, table: [3n] } },
+      { assignTable: { matchId: blocked.id, table: [2n] } },
+      { assignTable: { matchId: first!.id, table: [2n] } },
+    ] satisfies TournamentCommand[]) {
+      await expect(
+        actor.applyTournamentCommand(room.id, command),
+      ).rejects.toThrow(/table|ready|playing/i);
+      expect(await actor.getTournamentState(room.id)).toEqual([before]);
+    }
+    actor.setPrincipal(member);
+    await expect(
+      actor.applyTournamentCommand(room.id, {
+        assignTable: { matchId: second!.id, table: [1n] },
+      }),
+    ).rejects.toThrow(/Unauthorized/);
+    actor.setPrincipal(owner);
+    expect(await actor.getTournamentState(room.id)).toEqual([before]);
   });
 
   it("changes an unplayed draw's format without changing registrations and protects occupied tables", async () => {

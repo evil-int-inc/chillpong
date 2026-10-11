@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/Button";
 import { useI18n } from "@/i18n";
 import { countLabel } from "@/i18n/plurals";
 import {
@@ -8,15 +7,16 @@ import {
   registrationLabel,
   tbilisiTime,
 } from "@/types/tournament-manager";
-import { ArrowRight, Clock3, Table2, Users } from "lucide-react";
+import { Clock3, Table2, Users } from "lucide-react";
 import { MatchCard } from "./MatchCard";
+import { TableAssignment } from "./TableAssignment";
 
 interface StandardViewProps {
   view: TournamentManagerView;
   isAdmin: boolean;
   pending: boolean;
   onSelect: (match: TournamentMatchView) => void;
-  onAssign: (matchId: bigint, table: number) => void;
+  onAssign: (matchId: bigint, table?: number) => void;
 }
 
 export function StandardView({
@@ -34,7 +34,6 @@ export function StandardView({
   const queue = view.waitingQueue
     .map((id) => playerById(view.players, id))
     .filter((player) => player !== undefined);
-  const nextUnassigned = next.find((match) => match.table === undefined);
   return (
     <div className="space-y-10">
       <section aria-labelledby="floor-title">
@@ -57,8 +56,6 @@ export function StandardView({
             const match = view.matches.find(
               (item) => item.id === table.matchId,
             );
-            const available =
-              table.status === "available" || table.status === "finished";
             return (
               <article
                 key={table.number}
@@ -102,21 +99,13 @@ export function StandardView({
                     </p>
                   </div>
                 )}
-                {isAdmin && available && nextUnassigned ? (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="mt-3 w-full"
-                    loading={pending}
-                    onClick={() => onAssign(nextUnassigned.id, table.number)}
-                  >
-                    {t("Assign next match")}{" "}
-                    <ArrowRight className="size-3.5" aria-hidden="true" />
-                    <span className="sr-only">
-                      {" "}
-                      {t("to table")} {table.number}
-                    </span>
-                  </Button>
+                {isAdmin ? (
+                  <TableAssignment
+                    view={view}
+                    table={table}
+                    pending={pending}
+                    onAssign={onAssign}
+                  />
                 ) : null}
               </article>
             );

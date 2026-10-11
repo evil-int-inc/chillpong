@@ -4,22 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="feature/full-bracket-full-view-and-zooming">
-      <change beforePath="$PROJECT_DIR$/.idea/swift-toolchain.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/swift-toolchain.xml" afterDir="false" />
+    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="feature/add-editing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/dist/backend.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/dist/backend.wasm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/lib/tournament-organizer.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/lib/tournament-organizer.mo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/TournamentDetailPage.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/TournamentDetailPage.test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/MatchCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/MatchCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/MobileOrganizer.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/MobileOrganizer.test.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/PlayersPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/PlayersPanel.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/StandardView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/StandardView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/ka.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/ka.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/ru.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/ru.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pocketic/backend.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/pocketic/backend.test.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +82,7 @@
       <updated>1791106089226</updated>
       <workItem from="1791106090300" duration="3731000" />
       <workItem from="1791550280580" duration="971000" />
-      <workItem from="1791718725569" duration="759000" />
+      <workItem from="1791718725569" duration="2249000" />
     </task>
     <task id="LOCAL-00001" summary="feature/redesign">
       <option name="closed" value="true" />
@@ -160,7 +156,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791643290648</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="feature/add-editing">
+      <option name="closed" value="true" />
+      <created>1791720105516</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1791720105516</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TerminalProjectNonSharedOptionsProvider">
@@ -172,6 +176,17 @@
       <list>
         <option value="$PROJECT_DIR$/src/frontend/src/backend.d.ts" />
       </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
@@ -186,6 +201,7 @@
     <MESSAGE value="feature/full-bracket-scrolling-by-dragging" />
     <MESSAGE value="refactor/update-idea-settings" />
     <MESSAGE value="feature/full-bracket-full-view-and-zooming" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature/full-bracket-full-view-and-zooming" />
+    <MESSAGE value="feature/add-editing" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature/add-editing" />
   </component>
 </project>

@@ -81,6 +81,23 @@ export const ru = {
   "Assign manual bye": "Назначить проход без игры вручную",
   "Assign next match": "Назначить следующий матч",
   "Assign table": "Назначить стол",
+  "Match for table {v1}": "Матч для стола {v1}",
+  "No match / clear table": "Без матча / освободить стол",
+  "Apply assignment": "Применить назначение",
+  "Apply assignment to table {v1}": "Применить назначение для стола {v1}",
+  "Choose any ready or playing match. Assigning a ready match does not start it.":
+    "Выберите готовый или идущий матч. Назначение готового матча не запускает его.",
+  "Table assignments will be exchanged with table {v1}.":
+    "Матчи поменяются столами со столом {v1}.",
+  "The current match returns to ready without a table. Results and bracket progress are preserved.":
+    "Текущий матч вернётся в статус готового без стола. Результаты и турнирная сетка сохранятся.",
+  "The match currently on table {v1} returns to ready without a table.":
+    "Матч, который сейчас назначен на стол {v1}, вернётся в статус готового без стола.",
+  "Moving this match frees table {v1}.":
+    "Перенос этого матча освободит стол {v1}.",
+  "Replace table match": "Заменить матч на столе",
+  "Swap table assignments": "Поменять матчи столами",
+  "Release table": "Освободить стол",
   "At least 2 active players are required": "Нужно минимум 2 активных игрока",
   "At most 4096 active players are supported":
     "Поддерживается не более 4096 активных игроков",

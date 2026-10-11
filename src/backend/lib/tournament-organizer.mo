@@ -233,8 +233,34 @@ module {
       case (#assignTable(input)) {
         let item = B.matchById(state, input.matchId);
         if (item.status != #ready and item.status != #playing) { Runtime.trap("Only a ready or playing match can be assigned a table") };
-        switch (input.table) { case (?number) { ensureFreeTable(state, item.id, number) }; case null { if (item.status == #playing) { Runtime.trap("Reset a playing match before releasing its table") } } };
-        (replaceMatch(state, { item with table = input.table; manualOverride = true }), "Assign table");
+        switch (input.table) {
+          case (?number) {
+            if (number < 1 or number > state.tableCount) { Runtime.trap("Table must be between 1 and the configured table count") };
+            let occupied = state.matches.find(func other = other.id != item.id and other.table == ?number and (other.status == #ready or other.status == #playing));
+            var changed = state;
+            switch (occupied) {
+              case (?other) {
+                // One command exchanges both assignments. A match displaced
+                // without a replacement table is paused rather than reset;
+                // its bracket sources, participants and history stay intact.
+                changed := replaceMatch(changed, {
+                  other with table = item.table;
+                  status = if (item.table == null) { #ready } else { other.status };
+                  manualOverride = true;
+                });
+              };
+              case null {};
+            };
+            let caption = switch (occupied) {
+              case (?_) { if (item.table == null) { "Replace table match" } else { "Swap table assignments" } };
+              case null { "Assign table" };
+            };
+            (replaceMatch(changed, { item with table = ?number; manualOverride = true }), caption);
+          };
+          case null {
+            (replaceMatch(state, { item with table = null; status = #ready; manualOverride = true }), "Release table");
+          };
+        };
       };
       case (#startMatch(id)) {
         let item = B.matchById(state, id);

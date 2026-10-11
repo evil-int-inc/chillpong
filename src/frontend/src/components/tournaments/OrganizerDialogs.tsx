@@ -265,6 +265,35 @@ function MatchEditor({
   const [otherMatch, setOtherMatch] = useState("");
   const [otherSlot, setOtherSlot] = useState<"a" | "b">("b");
   const [validation, setValidation] = useState<string | null>(null);
+  const canAssignTable = match.status === "ready" || match.status === "playing";
+  const tableChanged = table !== (match.table?.toString() ?? "");
+  const tableOccupant = table
+    ? view.matches.find(
+        (other) =>
+          other.id !== match.id &&
+          other.table === Number(table) &&
+          (other.status === "ready" || other.status === "playing"),
+      )
+    : undefined;
+  const assignmentHint =
+    !canAssignTable || !tableChanged
+      ? null
+      : !table
+        ? t(
+            "The current match returns to ready without a table. Results and bracket progress are preserved.",
+          )
+        : tableOccupant
+          ? match.table !== undefined
+            ? t("Table assignments will be exchanged with table {v1}.", {
+                v1: Number(table),
+              })
+            : t(
+                "The match currently on table {v1} returns to ready without a table.",
+                { v1: Number(table) },
+              )
+          : match.table !== undefined
+            ? t("Moving this match frees table {v1}.", { v1: match.table })
+            : null;
   const playersChanged =
     playerA !== (match.playerAId?.toString() ?? "") ||
     playerB !== (match.playerBId?.toString() ?? "");
@@ -712,25 +741,12 @@ function MatchEditor({
                 aria-label={t("Assign table")}
                 className="select w-full rounded-none"
                 value={table}
-                disabled={
-                  pending ||
-                  match.status === "completed" ||
-                  match.status === "bye" ||
-                  match.status === "void"
-                }
+                disabled={pending || !canAssignTable}
                 onChange={(event) => setTable(event.target.value)}
               >
                 <option value="">{t("Unassigned")}</option>
                 {view.tables.map((item) => (
-                  <option
-                    key={item.number}
-                    value={item.number}
-                    disabled={
-                      item.matchId !== undefined &&
-                      item.matchId !== match.id &&
-                      (item.status === "playing" || item.status === "waiting")
-                    }
-                  >
+                  <option key={item.number} value={item.number}>
                     {t("Table")} {item.number} / {t(item.status)}
                   </option>
                 ))}
@@ -739,12 +755,7 @@ function MatchEditor({
             <Button
               variant="outline"
               className="sm:self-end"
-              disabled={
-                pending ||
-                match.status === "completed" ||
-                match.status === "bye" ||
-                match.status === "void"
-              }
+              disabled={pending || !canAssignTable || !tableChanged}
               onClick={() =>
                 onAction(
                   {
@@ -777,6 +788,11 @@ function MatchEditor({
               {t("Start match")}
             </Button>
           </div>
+          {assignmentHint ? (
+            <output className="block text-xs leading-relaxed text-secondary">
+              {assignmentHint}
+            </output>
+          ) : null}
           <div className="flex flex-wrap gap-2">
             <Button
               variant="outline"

@@ -82,6 +82,23 @@ export const ka = {
   "Assign manual bye": "თამაშის გარეშე გასვლის ხელით მინიჭება",
   "Assign next match": "შემდეგი მატჩის დანიშვნა",
   "Assign table": "მაგიდის დანიშვნა",
+  "Match for table {v1}": "მატჩი მაგიდისთვის {v1}",
+  "No match / clear table": "მატჩის გარეშე / მაგიდის გათავისუფლება",
+  "Apply assignment": "დანიშვნის დადასტურება",
+  "Apply assignment to table {v1}": "მაგიდა {v1}-ის დანიშვნის დადასტურება",
+  "Choose any ready or playing match. Assigning a ready match does not start it.":
+    "აირჩიეთ მზადყოფნაში მყოფი ან მიმდინარე მატჩი. მზადყოფნაში მყოფი მატჩის დანიშვნა მას არ იწყებს.",
+  "Table assignments will be exchanged with table {v1}.":
+    "მატჩები მაგიდა {v1}-თან გაცვლიან მაგიდებს.",
+  "The current match returns to ready without a table. Results and bracket progress are preserved.":
+    "მიმდინარე მატჩი დაუბრუნდება მზადყოფნის სტატუსს მაგიდის გარეშე. შედეგები და სატურნირო ბადე შენარჩუნდება.",
+  "The match currently on table {v1} returns to ready without a table.":
+    "მაგიდა {v1}-ზე დანიშნული მატჩი დაუბრუნდება მზადყოფნის სტატუსს მაგიდის გარეშე.",
+  "Moving this match frees table {v1}.":
+    "ამ მატჩის გადატანა გაათავისუფლებს მაგიდა {v1}-ს.",
+  "Replace table match": "მაგიდაზე მატჩის ჩანაცვლება",
+  "Swap table assignments": "მაგიდების გაცვლა",
+  "Release table": "მაგიდის გათავისუფლება",
   "At least 2 active players are required":
     "საჭიროა სულ მცირე 2 აქტიური მოთამაშე",
   "At most 4096 active players are supported":
