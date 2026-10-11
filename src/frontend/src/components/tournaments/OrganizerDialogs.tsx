@@ -17,17 +17,18 @@ import { AlertTriangle, Flag, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export type OrganizerModal =
-  | { kind: "player"; player?: TournamentPlayerView }
+  | { kind: "player"; player?: TournamentPlayerView; returnToMatch?: bigint }
   | { kind: "remove"; player: TournamentPlayerView }
   | { kind: "move"; player: TournamentPlayerView }
   | { kind: "match"; matchId: bigint }
-  | { kind: "reset"; matchId: bigint }
+  | { kind: "reset"; matchId: bigint; returnToMatch?: bigint }
   | { kind: "generate" }
   | { kind: "undo" };
 
 export interface ActionOptions {
   close?: boolean;
   placeNewPlayer?: boolean;
+  returnToMatch?: bigint;
 }
 
 interface DialogProps {
@@ -44,11 +45,13 @@ interface DialogProps {
 function PlayerForm({
   view,
   player,
+  returnToMatch,
   pending,
   onAction,
 }: {
   view: TournamentManagerView;
   player?: TournamentPlayerView;
+  returnToMatch?: bigint;
   pending: boolean;
   onAction: DialogProps["onAction"];
 }) {
@@ -62,7 +65,7 @@ function PlayerForm({
       player
         ? { kind: "editPlayer", playerId: player.id, name: name.trim(), skill }
         : { kind: "addPlayer", name: name.trim(), skill },
-      { placeNewPlayer },
+      { placeNewPlayer, returnToMatch },
     );
   }
   return (
@@ -262,14 +265,30 @@ function MatchEditor({
   const [otherMatch, setOtherMatch] = useState("");
   const [otherSlot, setOtherSlot] = useState<"a" | "b">("b");
   const [validation, setValidation] = useState<string | null>(null);
+  const playersChanged =
+    playerA !== (match.playerAId?.toString() ?? "") ||
+    playerB !== (match.playerBId?.toString() ?? "");
   const editableOpening =
     match.bracket === "winners" &&
     match.round === 1 &&
     match.status !== "playing" &&
     match.status !== "completed";
-  const activePlayers = view.players.filter(
-    (player) => player.status !== "removed" && player.status !== "eliminated",
-  );
+  const activePlayers = view.players.filter((player) => {
+    if (player.id === match.playerAId || player.id === match.playerBId)
+      return true;
+    return (
+      player.status !== "removed" &&
+      player.status !== "eliminated" &&
+      !view.matches.some(
+        (other) =>
+          other.id !== match.id &&
+          ((other.sourceA.kind === "player" &&
+            other.sourceA.id === player.id) ||
+            (other.sourceB.kind === "player" &&
+              other.sourceB.id === player.id)),
+      )
+    );
+  });
   const canSwapBracket =
     match.bracket === "winners" || match.bracket === "losers";
   const swapMatches = view.matches.filter(
@@ -315,7 +334,7 @@ function MatchEditor({
               key={side.slot}
               className="flex items-center justify-between gap-4 py-4"
             >
-              <div>
+              <div className="min-w-0 break-words">
                 <p
                   className={`font-display text-2xl font-bold ${side.id !== undefined && side.id === match.winnerId ? "text-primary" : ""}`}
                 >
@@ -327,8 +346,28 @@ function MatchEditor({
                     {registrationLabel(player.registrationNumber)}
                   </p>
                 ) : null}
+                {isAdmin && player ? (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-3"
+                    aria-label={t("Edit {v1}", { v1: player.name })}
+                    disabled={pending}
+                    onClick={() =>
+                      onOpen({
+                        kind: "player",
+                        player,
+                        returnToMatch: match.id,
+                      })
+                    }
+                  >
+                    {t("Edit player.")}
+                  </Button>
+                ) : null}
               </div>
-              <span className="font-mono text-3xl">{side.score ?? "—"}</span>
+              <span className="shrink-0 font-mono text-3xl">
+                {side.score ?? "—"}
+              </span>
             </div>
           );
         })}
@@ -351,6 +390,319 @@ function MatchEditor({
       </div>
       {isAdmin ? (
         <>
+          {(match.status === "ready" ||
+            match.status === "playing" ||
+            match.status === "completed") &&
+          match.playerAId !== undefined &&
+          match.playerBId !== undefined ? (
+            <form
+              className="space-y-4 border border-base-300 p-4"
+              onSubmit={(event) => {
+                event.preventDefault();
+                setValidation(null);
+                const a = Number(scoreA);
+                const b = Number(scoreB);
+                if (
+                  !scoreA ||
+                  !scoreB ||
+                  !Number.isSafeInteger(a) ||
+                  !Number.isSafeInteger(b) ||
+                  a < 0 ||
+                  b < 0
+                ) {
+                  setValidation(
+                    "Enter a non-negative whole-number score for both players.",
+                  );
+                  return;
+                }
+                if (a === b) {
+                  setValidation(
+                    "A knockout match needs a winner. Scores cannot be tied.",
+                  );
+                  return;
+                }
+                if (a > 999 || b > 999) {
+                  setValidation("Scores must be at most 999.");
+                  return;
+                }
+                onAction({
+                  kind: "recordResult",
+                  matchId: match.id,
+                  scoreA: a,
+                  scoreB: b,
+                });
+              }}
+            >
+              <p className="technical-label text-primary">
+                {match.status === "completed"
+                  ? t("Correct the result")
+                  : t("Save the result")}
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <label>
+                  <span className="technical-label mb-2 block text-[10px]">
+                    {t("Score A")}
+                  </span>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    data-ocid="tournament.score_a_input"
+                    className="input w-full rounded-none font-mono text-xl"
+                    min={0}
+                    max={999}
+                    step={1}
+                    required
+                    value={scoreA}
+                    disabled={pending}
+                    onChange={(event) => setScoreA(event.target.value)}
+                  />
+                </label>
+                <label>
+                  <span className="technical-label mb-2 block text-[10px]">
+                    {t("Score B")}
+                  </span>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    data-ocid="tournament.score_b_input"
+                    className="input w-full rounded-none font-mono text-xl"
+                    min={0}
+                    max={999}
+                    step={1}
+                    required
+                    value={scoreB}
+                    disabled={pending}
+                    onChange={(event) => setScoreB(event.target.value)}
+                  />
+                </label>
+              </div>
+              {validation ? (
+                <p role="alert" className="text-xs text-error">
+                  {t(validation)}
+                </p>
+              ) : null}
+              <p className="text-xs leading-relaxed text-base-content/45">
+                {t(
+                  "Winners advance and the table is freed automatically. Changing a winner after downstream games requires a confirmed reset.",
+                )}
+              </p>
+              <Button
+                type="submit"
+                data-ocid="tournament.save_result_button"
+                className="w-full sm:w-auto"
+                loading={pending}
+              >
+                {match.status !== "completed"
+                  ? t("Save result & finish match")
+                  : t("Save result")}
+              </Button>
+            </form>
+          ) : null}
+          <section
+            className="space-y-4 border border-base-300 p-4"
+            aria-labelledby="match-players-title"
+          >
+            <h3
+              id="match-players-title"
+              className="technical-label text-primary"
+            >
+              {t("Edit match players")}
+            </h3>
+            <p className="text-xs leading-relaxed text-base-content/45">
+              {!canSwapBracket
+                ? t(
+                    "Finalist positions stay fixed because they determine whether a double elimination reset final is required.",
+                  )
+                : match.status === "playing" || match.status === "completed"
+                  ? t("Reset this match before changing its participants.")
+                  : t(
+                      "Replace participants in an unplayed opening match, or swap players between ready matches in the same round.",
+                    )}
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {[
+                {
+                  label: "Player A slot",
+                  value: playerA,
+                  setter: setPlayerA,
+                },
+                {
+                  label: "Player B slot",
+                  value: playerB,
+                  setter: setPlayerB,
+                },
+              ].map((side) => (
+                <label key={side.label}>
+                  <span className="technical-label mb-2 block text-[10px]">
+                    {t(side.label)}
+                  </span>
+                  <select
+                    className="select w-full rounded-none"
+                    value={side.value}
+                    disabled={pending || !editableOpening}
+                    onChange={(event) => side.setter(event.target.value)}
+                  >
+                    <option value="">{t("BYE / empty slot")}</option>
+                    {activePlayers.map((player) => (
+                      <option
+                        key={player.id.toString()}
+                        value={player.id.toString()}
+                        disabled={
+                          player.status === "removed" ||
+                          player.id.toString() ===
+                            (side.label === "Player A slot"
+                              ? playerB
+                              : playerA) ||
+                          view.matches.some(
+                            (other) =>
+                              other.id !== match.id &&
+                              ((other.sourceA.kind === "player" &&
+                                other.sourceA.id === player.id) ||
+                                (other.sourceB.kind === "player" &&
+                                  other.sourceB.id === player.id)),
+                          )
+                        }
+                      >
+                        {registrationLabel(player.registrationNumber)}{" "}
+                        {player.name} {t("/ L")}
+                        {player.skill}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={
+                pending ||
+                !editableOpening ||
+                !playersChanged ||
+                (!!playerA && playerA === playerB)
+              }
+              onClick={() =>
+                onAction(
+                  {
+                    kind: "setMatchPlayers",
+                    matchId: match.id,
+                    playerA: playerA ? BigInt(playerA) : undefined,
+                    playerB: playerB ? BigInt(playerB) : undefined,
+                  },
+                  { close: false },
+                )
+              }
+            >
+              {t("Change matchup")}
+            </Button>
+            {canSwapBracket ? (
+              <div className="space-y-3 border-t border-base-300 pt-4">
+                <p className="technical-label text-[10px]">
+                  {t("Swap players between ready matches")}
+                </p>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <label>
+                    <span className="technical-label mb-2 block text-[9px]">
+                      {t("This match slot")}
+                    </span>
+                    <select
+                      className="select w-full rounded-none"
+                      value={firstSlot}
+                      disabled={pending}
+                      onChange={(event) =>
+                        setFirstSlot(event.target.value as "a" | "b")
+                      }
+                    >
+                      <option value="a">{t("Player A")}</option>
+                      <option value="b">{t("Player B")}</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span className="technical-label mb-2 block text-[9px]">
+                      {t("Other match")}
+                    </span>
+                    <select
+                      className="select w-full rounded-none"
+                      value={otherMatch}
+                      disabled={pending}
+                      onChange={(event) => setOtherMatch(event.target.value)}
+                    >
+                      <option value="">{t("Choose match")}</option>
+                      {swapMatches.map((item) => (
+                        <option
+                          key={item.id.toString()}
+                          value={item.id.toString()}
+                        >
+                          {matchLabel(item)} /{" "}
+                          {playerById(view.players, item.playerAId)?.name ??
+                            sourceLabel(item.sourceA, view.matches)}{" "}
+                          {t("vs")}{" "}
+                          {playerById(view.players, item.playerBId)?.name ??
+                            sourceLabel(item.sourceB, view.matches)}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    <span className="technical-label mb-2 block text-[9px]">
+                      {t("Other match slot")}
+                    </span>
+                    <select
+                      className="select w-full rounded-none"
+                      value={otherSlot}
+                      disabled={pending}
+                      onChange={(event) =>
+                        setOtherSlot(event.target.value as "a" | "b")
+                      }
+                    >
+                      <option value="a">{t("Player A")}</option>
+                      <option value="b">{t("Player B")}</option>
+                    </select>
+                  </label>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={
+                    pending ||
+                    !otherMatch ||
+                    (match.status !== "ready" && !editableOpening)
+                  }
+                  onClick={() =>
+                    onAction(
+                      {
+                        kind: "swapPlayers",
+                        firstMatchId: match.id,
+                        firstSlot,
+                        secondMatchId: BigInt(otherMatch),
+                        secondSlot: otherSlot,
+                      },
+                      { close: false },
+                    )
+                  }
+                >
+                  {t("Swap players")}
+                </Button>
+              </div>
+            ) : null}
+            {canSwapBracket &&
+            (match.status === "playing" || match.status === "completed") ? (
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto"
+                disabled={pending}
+                onClick={() =>
+                  onOpen({
+                    kind: "reset",
+                    matchId: match.id,
+                    returnToMatch: match.id,
+                  })
+                }
+              >
+                {t("Reset match to edit players")}
+              </Button>
+            ) : null}
+          </section>
           <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto]">
             <label>
               <span className="technical-label mb-2 block text-[10px]">
@@ -425,97 +777,6 @@ function MatchEditor({
               {t("Start match")}
             </Button>
           </div>
-          {match.status === "playing" || match.status === "completed" ? (
-            <form
-              className="space-y-4 border border-base-300 p-4"
-              onSubmit={(event) => {
-                event.preventDefault();
-                setValidation(null);
-                const a = Number(scoreA);
-                const b = Number(scoreB);
-                if (
-                  !scoreA ||
-                  !scoreB ||
-                  !Number.isSafeInteger(a) ||
-                  !Number.isSafeInteger(b) ||
-                  a < 0 ||
-                  b < 0
-                ) {
-                  setValidation(
-                    "Enter a non-negative whole-number score for both players.",
-                  );
-                  return;
-                }
-                if (a === b) {
-                  setValidation(
-                    "A knockout match needs a winner. Scores cannot be tied.",
-                  );
-                  return;
-                }
-                onAction({
-                  kind: "recordResult",
-                  matchId: match.id,
-                  scoreA: a,
-                  scoreB: b,
-                });
-              }}
-            >
-              <p className="technical-label text-primary">
-                {match.status === "completed"
-                  ? t("Correct the result")
-                  : t("Save the result")}
-              </p>
-              <div className="grid grid-cols-2 gap-4">
-                <label>
-                  <span className="technical-label mb-2 block text-[10px]">
-                    {t("Score A")}
-                  </span>
-                  <input
-                    type="number"
-                    className="input w-full rounded-none font-mono text-xl"
-                    min={0}
-                    step={1}
-                    required
-                    value={scoreA}
-                    disabled={pending}
-                    onChange={(event) => setScoreA(event.target.value)}
-                  />
-                </label>
-                <label>
-                  <span className="technical-label mb-2 block text-[10px]">
-                    {t("Score B")}
-                  </span>
-                  <input
-                    type="number"
-                    className="input w-full rounded-none font-mono text-xl"
-                    min={0}
-                    step={1}
-                    required
-                    value={scoreB}
-                    disabled={pending}
-                    onChange={(event) => setScoreB(event.target.value)}
-                  />
-                </label>
-              </div>
-              {validation ? (
-                <p role="alert" className="text-xs text-error">
-                  {t(validation)}
-                </p>
-              ) : null}
-              <p className="text-xs leading-relaxed text-base-content/45">
-                {t(
-                  "Winners advance and the table is freed automatically. Changing a winner after downstream games requires a confirmed reset.",
-                )}
-              </p>
-              <Button
-                type="submit"
-                data-ocid="tournament.save_result_button"
-                loading={pending}
-              >
-                {t("Save result")}
-              </Button>
-            </form>
-          ) : null}
           <div className="flex flex-wrap gap-2">
             <Button
               variant="outline"
@@ -555,66 +816,6 @@ function MatchEditor({
                     "Opening slots can be replaced. Later ready matches can swap opponents within the same bracket and round. Registration numbers never change.",
                   )}
                 </p>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {[
-                    {
-                      label: "Player A slot",
-                      value: playerA,
-                      setter: setPlayerA,
-                    },
-                    {
-                      label: "Player B slot",
-                      value: playerB,
-                      setter: setPlayerB,
-                    },
-                  ].map((side) => (
-                    <label key={side.label}>
-                      <span className="technical-label mb-2 block text-[10px]">
-                        {t(side.label)}
-                      </span>
-                      <select
-                        className="select w-full rounded-none"
-                        value={side.value}
-                        disabled={pending || !editableOpening}
-                        onChange={(event) => side.setter(event.target.value)}
-                      >
-                        <option value="">{t("BYE / empty slot")}</option>
-                        {activePlayers.map((player) => (
-                          <option
-                            key={player.id.toString()}
-                            value={player.id.toString()}
-                          >
-                            {registrationLabel(player.registrationNumber)}{" "}
-                            {player.name} {t("/ L")}
-                            {player.skill}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  ))}
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={
-                    pending ||
-                    !editableOpening ||
-                    (!!playerA && playerA === playerB)
-                  }
-                  onClick={() =>
-                    onAction(
-                      {
-                        kind: "setMatchPlayers",
-                        matchId: match.id,
-                        playerA: playerA ? BigInt(playerA) : undefined,
-                        playerB: playerB ? BigInt(playerB) : undefined,
-                      },
-                      { close: false },
-                    )
-                  }
-                >
-                  {t("Change matchup")}
-                </Button>
                 <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
                   <label>
                     <span className="technical-label mb-2 block text-[10px]">
@@ -647,89 +848,6 @@ function MatchEditor({
                     {t("Assign BYE")}
                   </Button>
                 </div>
-                <div className="space-y-3 border-t border-base-300 pt-4">
-                  <p className="technical-label text-[10px]">
-                    {t("Swap players between ready matches")}
-                  </p>
-                  <div className="grid gap-3 sm:grid-cols-3">
-                    <label>
-                      <span className="technical-label mb-2 block text-[9px]">
-                        {t("This match slot")}
-                      </span>
-                      <select
-                        className="select w-full rounded-none"
-                        value={firstSlot}
-                        disabled={pending}
-                        onChange={(event) =>
-                          setFirstSlot(event.target.value as "a" | "b")
-                        }
-                      >
-                        <option value="a">{t("Player A")}</option>
-                        <option value="b">{t("Player B")}</option>
-                      </select>
-                    </label>
-                    <label>
-                      <span className="technical-label mb-2 block text-[9px]">
-                        {t("Other match")}
-                      </span>
-                      <select
-                        className="select w-full rounded-none"
-                        value={otherMatch}
-                        disabled={pending}
-                        onChange={(event) => setOtherMatch(event.target.value)}
-                      >
-                        <option value="">{t("Choose match")}</option>
-                        {swapMatches.map((item) => (
-                          <option
-                            key={item.id.toString()}
-                            value={item.id.toString()}
-                          >
-                            {matchLabel(item)}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    <label>
-                      <span className="technical-label mb-2 block text-[9px]">
-                        {t("Other match slot")}
-                      </span>
-                      <select
-                        className="select w-full rounded-none"
-                        value={otherSlot}
-                        disabled={pending}
-                        onChange={(event) =>
-                          setOtherSlot(event.target.value as "a" | "b")
-                        }
-                      >
-                        <option value="a">{t("Player A")}</option>
-                        <option value="b">{t("Player B")}</option>
-                      </select>
-                    </label>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={
-                      pending ||
-                      !otherMatch ||
-                      (match.status !== "ready" && !editableOpening)
-                    }
-                    onClick={() =>
-                      onAction(
-                        {
-                          kind: "swapPlayers",
-                          firstMatchId: match.id,
-                          firstSlot,
-                          secondMatchId: BigInt(otherMatch),
-                          secondSlot: otherSlot,
-                        },
-                        { close: false },
-                      )
-                    }
-                  >
-                    {t("Swap players")}
-                  </Button>
-                </div>
               </div>
             </details>
           ) : (
@@ -753,10 +871,12 @@ function MatchEditor({
 
 function ResetForm({
   match,
+  returnToMatch,
   pending,
   onAction,
 }: {
   match: TournamentMatchView;
+  returnToMatch?: bigint;
   pending: boolean;
   onAction: DialogProps["onAction"];
 }) {
@@ -800,7 +920,10 @@ function ResetForm({
         data-ocid="tournament.confirm_reset_button"
         loading={pending}
         onClick={() =>
-          onAction({ kind: "resetMatch", matchId: match.id, cascade })
+          onAction(
+            { kind: "resetMatch", matchId: match.id, cascade },
+            { returnToMatch },
+          )
         }
       >
         {t("Confirm reset")}
@@ -827,17 +950,14 @@ export function OrganizerDialogs({
     if (!dialog) return;
     if (allowed && modal) {
       if (!dialog.open) dialog.showModal();
-      dialog
-        .querySelector<HTMLElement>(
-          "input:not([disabled]), select:not([disabled])",
-        )
-        ?.focus();
     } else if (dialog.open) dialog.close();
   }, [allowed, modal]);
   const match =
     modal && (modal.kind === "match" || modal.kind === "reset")
       ? view.matches.find((item) => item.id === modal.matchId)
-      : undefined;
+      : modal?.kind === "player" && modal.returnToMatch !== undefined
+        ? view.matches.find((item) => item.id === modal.returnToMatch)
+        : undefined;
   const lastAction = [...view.history].sort((a, b) =>
     a.id > b.id ? -1 : 1,
   )[0];
@@ -885,9 +1005,9 @@ export function OrganizerDialogs({
       }}
     >
       {allowed && modal ? (
-        <div className="modal-box max-w-2xl rounded-none border border-base-300 bg-base-200 p-6 sm:p-8">
-          <header className="mb-7 flex items-start justify-between gap-4">
-            <div>
+        <div className="modal-box flex max-h-[calc(100dvh-2rem)] w-[calc(100%-1rem)] max-w-2xl flex-col overflow-hidden rounded-none border border-base-300 bg-base-200 p-4 sm:p-8">
+          <header className="mb-5 flex shrink-0 items-start justify-between gap-4">
+            <div className="min-w-0 break-words">
               <p className="section-kicker mb-2">
                 {t("CHILLPONG /")}{" "}
                 {modal.kind === "match" ? t("MATCH FILE") : t("ORGANIZER DESK")}
@@ -902,169 +1022,186 @@ export function OrganizerDialogs({
             <button
               type="button"
               aria-label={t("Close tournament controls")}
-              className="btn btn-ghost btn-square btn-sm"
+              className="btn btn-ghost btn-square btn-sm shrink-0"
               disabled={pending}
               onClick={onClose}
             >
               <X className="size-5" aria-hidden="true" />
             </button>
           </header>
-          {modal.kind === "player" ? (
-            <PlayerForm
-              key={modal.player?.id.toString() ?? "new"}
-              view={view}
-              player={modal.player}
-              pending={pending}
-              onAction={onAction}
-            />
-          ) : null}
-          {modal.kind === "move" ? (
-            <MovePlayerForm
-              key={modal.player.id.toString()}
-              view={view}
-              player={modal.player}
-              pending={pending}
-              onAction={onAction}
-            />
-          ) : null}
-          {modal.kind === "match" && match ? (
-            <MatchEditor
-              key={match.id.toString()}
-              view={view}
-              match={match}
-              isAdmin={isAdmin}
-              pending={pending}
-              onAction={onAction}
-              onOpen={onOpen}
-            />
-          ) : null}
-          {modal.kind === "reset" && match ? (
-            <ResetForm
-              key={match.id.toString()}
-              match={match}
-              pending={pending}
-              onAction={onAction}
-            />
-          ) : null}
-          {modal.kind === "remove" ? (
-            <div className="space-y-5">
-              <p className="font-display text-xl font-bold">
-                {modal.player.name}{" "}
-                <span className="font-mono text-xs font-normal text-primary">
-                  {registrationLabel(modal.player.registrationNumber)}
-                </span>
-              </p>
-              <div className="flex gap-3 border border-secondary/30 bg-secondary/5 p-4">
-                <AlertTriangle
-                  className="mt-0.5 size-5 shrink-0 text-secondary"
-                  aria-hidden="true"
+          <div className="min-h-0 overflow-y-auto overscroll-contain pr-1">
+            {modal.kind === "player" ? (
+              <PlayerForm
+                key={modal.player?.id.toString() ?? "new"}
+                view={view}
+                player={modal.player}
+                returnToMatch={modal.returnToMatch}
+                pending={pending}
+                onAction={onAction}
+              />
+            ) : null}
+            {modal.kind === "move" ? (
+              <MovePlayerForm
+                key={modal.player.id.toString()}
+                view={view}
+                player={modal.player}
+                pending={pending}
+                onAction={onAction}
+              />
+            ) : null}
+            {match &&
+            (modal.kind === "match" ||
+              ((modal.kind === "player" || modal.kind === "reset") &&
+                modal.returnToMatch !== undefined)) ? (
+              <div hidden={modal.kind !== "match"}>
+                <MatchEditor
+                  key={match.id.toString()}
+                  view={view}
+                  match={match}
+                  isAdmin={isAdmin}
+                  pending={pending}
+                  onAction={onAction}
+                  onOpen={onOpen}
                 />
-                <p className="text-sm leading-relaxed text-base-content/65">
-                  {modal.player.status === "playing"
-                    ? t(
-                        "This player is currently playing. Their opponent may advance by forfeit when they are removed.",
-                      )
-                    : t(
-                        "The player leaves the waiting queue and unplayed bracket slots.",
-                      )}
-                  {t(
-                    "Completed results remain in history. Pending dependencies are updated where safe; active downstream matches can block removal.",
-                  )}
-                </p>
               </div>
-              <p className="text-xs text-base-content/45">
-                {t(
-                  "Their permanent registration number is retained and will not be reused.",
-                )}
-              </p>
-              <Button
-                variant="danger"
-                data-ocid="tournament.confirm_remove_button"
-                loading={pending}
-                onClick={() =>
-                  onAction({ kind: "removePlayer", playerId: modal.player.id })
-                }
-              >
-                {t("Remove player")}
-              </Button>
-            </div>
-          ) : null}
-          {modal.kind === "generate" ? (
-            <div className="space-y-5">
-              <p className="font-display text-2xl font-bold">
-                {countLabel(playerCount, "player")} /{" "}
-                {countLabel(bracketSize, "slot")}
-              </p>
-              <p className="font-mono text-xs text-primary">
-                {bracketSize - playerCount} {t("BYEs /")}{" "}
-                {view.elimination === "double"
-                  ? t("Double elimination")
-                  : t("Single elimination")}
-              </p>
-              <p className="text-sm leading-relaxed text-base-content/60">
-                {t(
-                  "The draw pairs compatible skill levels first, then uses permanent registration order to settle equal choices. Winners advance automatically;",
-                )}{" "}
-                {view.elimination === "double"
-                  ? t("players leave after their second loss.")
-                  : t("one loss eliminates a player.")}
-              </p>
-              {view.generated ? (
-                <p className="border border-secondary/30 p-3 text-xs text-secondary/90">
+            ) : null}
+            {modal.kind === "reset" && match ? (
+              <ResetForm
+                key={match.id.toString()}
+                match={match}
+                returnToMatch={modal.returnToMatch}
+                pending={pending}
+                onAction={onAction}
+              />
+            ) : null}
+            {modal.kind === "remove" ? (
+              <div className="space-y-5">
+                <p className="font-display text-xl font-bold">
+                  {modal.player.name}{" "}
+                  <span className="font-mono text-xs font-normal text-primary">
+                    {registrationLabel(modal.player.registrationNumber)}
+                  </span>
+                </p>
+                <div className="flex gap-3 border border-secondary/30 bg-secondary/5 p-4">
+                  <AlertTriangle
+                    className="mt-0.5 size-5 shrink-0 text-secondary"
+                    aria-hidden="true"
+                  />
+                  <p className="text-sm leading-relaxed text-base-content/65">
+                    {modal.player.status === "playing"
+                      ? t(
+                          "This player is currently playing. Their opponent may advance by forfeit when they are removed.",
+                        )
+                      : t(
+                          "The player leaves the waiting queue and unplayed bracket slots.",
+                        )}
+                    {t(
+                      "Completed results remain in history. Pending dependencies are updated where safe; active downstream matches can block removal.",
+                    )}
+                  </p>
+                </div>
+                <p className="text-xs text-base-content/45">
                   {t(
-                    "This regenerates the unplayed bracket and replaces manual opening assignments. Registered players stay intact.",
+                    "Their permanent registration number is retained and will not be reused.",
                   )}
                 </p>
-              ) : null}
-              <Button
-                data-ocid="tournament.confirm_generate_button"
-                loading={pending}
-                disabled={playerCount < 2 || !view.canChangeFormat}
-                onClick={() => onAction({ kind: "generateBracket" })}
+                <Button
+                  variant="danger"
+                  data-ocid="tournament.confirm_remove_button"
+                  loading={pending}
+                  onClick={() =>
+                    onAction({
+                      kind: "removePlayer",
+                      playerId: modal.player.id,
+                    })
+                  }
+                >
+                  {t("Remove player")}
+                </Button>
+              </div>
+            ) : null}
+            {modal.kind === "generate" ? (
+              <div className="space-y-5">
+                <p className="font-display text-2xl font-bold">
+                  {countLabel(playerCount, "player")} /{" "}
+                  {countLabel(bracketSize, "slot")}
+                </p>
+                <p className="font-mono text-xs text-primary">
+                  {bracketSize - playerCount} {t("BYEs /")}{" "}
+                  {view.elimination === "double"
+                    ? t("Double elimination")
+                    : t("Single elimination")}
+                </p>
+                <p className="text-sm leading-relaxed text-base-content/60">
+                  {t(
+                    "The draw pairs compatible skill levels first, then uses permanent registration order to settle equal choices. Winners advance automatically;",
+                  )}{" "}
+                  {view.elimination === "double"
+                    ? t("players leave after their second loss.")
+                    : t("one loss eliminates a player.")}
+                </p>
+                {view.generated ? (
+                  <p className="border border-secondary/30 p-3 text-xs text-secondary/90">
+                    {t(
+                      "This regenerates the unplayed bracket and replaces manual opening assignments. Registered players stay intact.",
+                    )}
+                  </p>
+                ) : null}
+                <Button
+                  data-ocid="tournament.confirm_generate_button"
+                  loading={pending}
+                  disabled={playerCount < 2 || !view.canChangeFormat}
+                  onClick={() => onAction({ kind: "generateBracket" })}
+                >
+                  {t("Generate bracket")}
+                </Button>
+              </div>
+            ) : null}
+            {modal.kind === "undo" ? (
+              <div className="space-y-5">
+                <p className="text-sm text-base-content/60">
+                  {t(
+                    "Restore the tournament state immediately before the most recent organizer action.",
+                  )}
+                </p>
+                <p className="border border-base-300 p-4 font-mono text-xs">
+                  {lastAction
+                    ? translateHistory(lastAction.label)
+                    : t("Most recent action")}
+                </p>
+                <p className="text-xs leading-relaxed text-base-content/45">
+                  {t(
+                    "Player registration counters continue forward so registration numbers remain permanent. Restored results, assignments and queue positions are saved automatically.",
+                  )}
+                </p>
+                <Button
+                  data-ocid="tournament.confirm_undo_button"
+                  loading={pending}
+                  disabled={!view.canUndo}
+                  onClick={() => onAction({ kind: "undo" })}
+                >
+                  {t("Confirm undo")}
+                </Button>
+              </div>
+            ) : null}
+            {error ? (
+              <p
+                data-ocid="tournament.action_error"
+                role="alert"
+                className="mt-5 border border-error/35 px-4 py-3 text-sm text-error"
               >
-                {t("Generate bracket")}
-              </Button>
-            </div>
-          ) : null}
-          {modal.kind === "undo" ? (
-            <div className="space-y-5">
-              <p className="text-sm text-base-content/60">
-                {t(
-                  "Restore the tournament state immediately before the most recent organizer action.",
-                )}
+                {translateError(error)}
               </p>
-              <p className="border border-base-300 p-4 font-mono text-xs">
-                {lastAction
-                  ? translateHistory(lastAction.label)
-                  : t("Most recent action")}
-              </p>
-              <p className="text-xs leading-relaxed text-base-content/45">
-                {t(
-                  "Player registration counters continue forward so registration numbers remain permanent. Restored results, assignments and queue positions are saved automatically.",
-                )}
-              </p>
-              <Button
-                data-ocid="tournament.confirm_undo_button"
-                loading={pending}
-                disabled={!view.canUndo}
-                onClick={() => onAction({ kind: "undo" })}
-              >
-                {t("Confirm undo")}
-              </Button>
-            </div>
-          ) : null}
-          {error ? (
-            <p
-              data-ocid="tournament.action_error"
-              role="alert"
-              className="mt-5 border border-error/35 px-4 py-3 text-sm text-error"
-            >
-              {translateError(error)}
-            </p>
-          ) : null}
-          <footer className="mt-6 flex justify-end border-t border-base-300 pt-4">
+            ) : null}
+          </div>
+          <footer className="mt-4 flex shrink-0 justify-end border-t border-base-300 pt-4">
             <Button variant="ghost" disabled={pending} onClick={onClose}>
-              {modal.kind === "match" ? t("Close") : t("Cancel")}
+              {(modal.kind === "player" || modal.kind === "reset") &&
+              modal.returnToMatch !== undefined
+                ? t("Back to match")
+                : modal.kind === "match"
+                  ? t("Close")
+                  : t("Cancel")}
             </Button>
           </footer>
         </div>

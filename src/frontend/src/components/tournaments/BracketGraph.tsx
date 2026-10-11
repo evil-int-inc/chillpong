@@ -25,6 +25,7 @@ interface BracketGraphProps {
   players: TournamentPlayerView[];
   onSelect: (match: TournamentMatchView) => void;
   fullscreen?: boolean;
+  isAdmin?: boolean;
 }
 
 export function BracketGraph({
@@ -32,6 +33,7 @@ export function BracketGraph({
   players,
   onSelect,
   fullscreen = false,
+  isAdmin = false,
 }: BracketGraphProps) {
   const { t } = useI18n();
   const {
@@ -343,6 +345,7 @@ export function BracketGraph({
                   players={players}
                   matches={matches}
                   onSelect={onSelect}
+                  isAdmin={isAdmin}
                   compact
                 />
               </div>

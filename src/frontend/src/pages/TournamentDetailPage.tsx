@@ -266,6 +266,8 @@ export function TournamentDetailPage({
           a.registrationNumber > b.registrationNumber ? -1 : 1,
         )[0];
         if (newPlayer) setModal({ kind: "move", player: newPlayer });
+      } else if (variables.options?.returnToMatch !== undefined) {
+        setModal({ kind: "match", matchId: variables.options.returnToMatch });
       } else if (variables.options?.close !== false) setModal(null);
     },
   });
@@ -376,7 +378,14 @@ export function TournamentDetailPage({
       pending={actionMutation.isPending}
       error={actionError}
       onClose={() => {
-        if (!actionMutation.isPending) setModal(null);
+        if (actionMutation.isPending) return;
+        actionMutation.reset();
+        if (
+          (modal?.kind === "player" || modal?.kind === "reset") &&
+          modal.returnToMatch !== undefined
+        ) {
+          setModal({ kind: "match", matchId: modal.returnToMatch });
+        } else setModal(null);
       }}
       onOpen={openModal}
       onAction={applyAction}
@@ -387,6 +396,7 @@ export function TournamentDetailPage({
       <>
         <BracketGraph
           fullscreen
+          isAdmin={isAdmin}
           matches={view.matches}
           players={view.players}
           onSelect={(match) => openModal({ kind: "match", matchId: match.id })}
@@ -568,6 +578,7 @@ export function TournamentDetailPage({
         />
       ) : (
         <BracketGraph
+          isAdmin={isAdmin}
           matches={view.matches}
           players={view.players}
           onSelect={(match) => openModal({ kind: "match", matchId: match.id })}

@@ -598,7 +598,7 @@ export function TournamentsPage() {
                     {countLabel(tournament.capacity, "expectedPlayer")}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 sm:flex-col sm:items-end">
+                <div className="flex min-w-0 flex-wrap items-center gap-2 sm:flex-col sm:items-end">
                   <a
                     href={`/tournaments/${tournament.id.toString()}`}
                     className="btn btn-primary btn-sm"
@@ -630,7 +630,7 @@ export function TournamentsPage() {
                     <button
                       type="button"
                       data-ocid={`tournaments.edit_button.${index + 1}`}
-                      className="flex items-center gap-1.5 px-2 py-2 font-mono text-[11px] uppercase tracking-wider text-base-content/50 hover:text-primary"
+                      className="flex min-h-11 items-center gap-1.5 px-2 py-2 font-mono text-[11px] uppercase tracking-wider text-base-content/50 hover:text-primary sm:min-h-0"
                       onClick={() => openEditor(tournament)}
                     >
                       <Pencil className="size-3" aria-hidden="true" />{" "}

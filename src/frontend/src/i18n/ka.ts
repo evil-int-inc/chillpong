@@ -161,6 +161,17 @@ export const ka = {
   "Copy member ID": "წევრის ID-ის კოპირება",
   "Copy member ID {v1}": "წევრის ID-ის კოპირება: {v1}",
   "Correct the result": "შედეგის შესწორება",
+  "Edit match players": "მატჩის მონაწილეების რედაქტირება",
+  "Back to match": "მატჩზე დაბრუნება",
+  "Reset this match before changing its participants.":
+    "მონაწილეების შეცვლამდე გაანულეთ მატჩი.",
+  "Reset match to edit players": "მატჩის განულება და მონაწილეების შეცვლა",
+  "Replace participants in an unplayed opening match, or swap players between ready matches in the same round.":
+    "შეცვალეთ მონაწილეები ჯერ არჩატარებულ პირველი რაუნდის მატჩში, ან გაცვალეთ მოთამაშეები იმავე რაუნდის მზადყოფნაში მყოფ მატჩებს შორის.",
+  "Scores must be at most 999.": "ანგარიში არ უნდა აღემატებოდეს 999-ს.",
+  "Enter score": "ანგარიშის შეყვანა",
+  "Manage match": "მატჩის მართვა",
+  "Save result & finish match": "შედეგის შენახვა და მატჩის დასრულება",
   "Couldn't copy the member ID. You can select and copy it below.":
     "ID ვერ დაკოპირდა. მონიშნეთ და დააკოპირეთ ქვემოთ.",
   "Couldn't load accounts": "ანგარიშები ვერ ჩაიტვირთა",

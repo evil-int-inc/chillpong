@@ -159,6 +159,17 @@ export const ru = {
   "Copy member ID": "Скопировать ID участника",
   "Copy member ID {v1}": "Скопировать ID участника {v1}",
   "Correct the result": "Исправить результат",
+  "Edit match players": "Редактировать участников матча",
+  "Back to match": "Вернуться к матчу",
+  "Reset this match before changing its participants.":
+    "Сбросьте матч перед изменением его участников.",
+  "Reset match to edit players": "Сбросить матч и изменить участников",
+  "Replace participants in an unplayed opening match, or swap players between ready matches in the same round.":
+    "Замените участников несыгранного матча первого раунда или поменяйте игроков между готовыми матчами одного раунда.",
+  "Scores must be at most 999.": "Счёт не должен превышать 999.",
+  "Enter score": "Ввести счёт",
+  "Manage match": "Управление матчем",
+  "Save result & finish match": "Сохранить счёт и завершить матч",
   "Couldn't copy the member ID. You can select and copy it below.":
     "Не удалось скопировать ID. Выделите и скопируйте его ниже.",
   "Couldn't load accounts": "Не удалось загрузить аккаунты",

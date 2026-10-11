@@ -195,7 +195,9 @@ describe("live tournament room", () => {
       within(dialog).getByText(/Results and assignments are managed/),
     ).toBeVisible();
     expect(
-      within(dialog).queryByRole("button", { name: "Save result" }),
+      within(dialog).queryByRole("button", {
+        name: "Save result & finish match",
+      }),
     ).toBeNull();
     expect(within(dialog).queryByLabelText("Score A")).toBeNull();
     await user.click(within(dialog).getByRole("button", { name: "Close" }));
@@ -504,7 +506,9 @@ describe("live tournament room", () => {
     await user.type(within(dialog).getByLabelText("Score A"), "7");
     await user.type(within(dialog).getByLabelText("Score B"), "7");
     await user.click(
-      within(dialog).getByRole("button", { name: "Save result" }),
+      within(dialog).getByRole("button", {
+        name: "Save result & finish match",
+      }),
     );
     expect(within(dialog).getByRole("alert")).toHaveTextContent(
       "Scores cannot be tied",
@@ -513,7 +517,9 @@ describe("live tournament room", () => {
     await user.clear(within(dialog).getByLabelText("Score A"));
     await user.type(within(dialog).getByLabelText("Score A"), "11");
     await user.click(
-      within(dialog).getByRole("button", { name: "Save result" }),
+      within(dialog).getByRole("button", {
+        name: "Save result & finish match",
+      }),
     );
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(state.actor.applyTournamentCommand).toHaveBeenCalledWith(1n, {

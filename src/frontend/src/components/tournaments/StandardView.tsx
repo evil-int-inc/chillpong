@@ -84,6 +84,7 @@ export function StandardView({
                     players={view.players}
                     matches={view.matches}
                     onSelect={onSelect}
+                    isAdmin={isAdmin}
                   />
                 ) : (
                   <div className="flex min-h-40 flex-col items-center justify-center border border-dashed border-base-300 text-center">
@@ -158,6 +159,7 @@ export function StandardView({
                   players={view.players}
                   matches={view.matches}
                   onSelect={onSelect}
+                  isAdmin={isAdmin}
                 />
               </div>
             ))}

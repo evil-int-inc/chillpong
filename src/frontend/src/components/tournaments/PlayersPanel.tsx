@@ -270,12 +270,12 @@ export function PlayersPanel({
         ) : null}
       </div>
       {players.length ? (
-        <div className="overflow-x-auto border-y border-base-300">
+        <div className="lg:overflow-x-auto lg:border-y lg:border-base-300">
           <table
             data-ocid="tournament.players_table"
-            className="w-full min-w-[760px] text-left"
+            className="block w-full text-left lg:table lg:min-w-[760px]"
           >
-            <thead>
+            <thead className="hidden lg:table-header-group">
               <tr className="border-b border-base-300">
                 <th
                   scope="col"
@@ -317,7 +317,7 @@ export function PlayersPanel({
                 ) : null}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="grid gap-4 sm:grid-cols-2 lg:table-row-group">
               {players.map((player) => {
                 const match = currentPlayerMatch(view, player);
                 const canPrioritize =
@@ -327,9 +327,15 @@ export function PlayersPanel({
                 return (
                   <tr
                     key={player.id.toString()}
-                    className={`player-row border-b border-base-300/70 last:border-b-0 ${player.status === "removed" ? "opacity-40" : ""}`}
+                    className={`player-row grid min-w-0 grid-cols-2 gap-x-4 gap-y-5 border border-base-300 bg-base-200/30 p-4 lg:table-row lg:border-x-0 lg:border-t-0 lg:border-b-base-300/70 lg:bg-transparent lg:p-0 lg:last:border-b-0 ${player.status === "removed" ? "opacity-40" : ""}`}
                   >
-                    <td className="px-3 py-4">
+                    <td className="block min-w-0 lg:table-cell lg:px-3 lg:py-4">
+                      <p
+                        className="technical-label mb-2 text-[9px] text-base-content/35 lg:hidden"
+                        aria-hidden="true"
+                      >
+                        {t("Reg / time")}
+                      </p>
                       <p className="font-mono text-xs text-primary">
                         {registrationLabel(player.registrationNumber)}
                       </p>
@@ -339,17 +345,29 @@ export function PlayersPanel({
                     </td>
                     <th
                       scope="row"
-                      className="max-w-64 break-words px-3 py-4 font-display text-sm font-bold"
+                      className="order-first col-span-2 block min-w-0 break-words font-display text-xl font-bold lg:table-cell lg:max-w-64 lg:px-3 lg:py-4 lg:text-sm"
                     >
                       {player.name}
                     </th>
-                    <td className="px-3 py-4">
+                    <td className="block min-w-0 lg:table-cell lg:px-3 lg:py-4">
+                      <p
+                        className="technical-label mb-2 text-[9px] text-base-content/35 lg:hidden"
+                        aria-hidden="true"
+                      >
+                        {t("Skill")}
+                      </p>
                       <p className="font-mono text-xs">L{player.skill}</p>
                       <p className="mt-1 text-[10px] text-base-content/40">
                         {t(SKILL_LEVELS[player.skill - 1])}
                       </p>
                     </td>
-                    <td className="px-3 py-4">
+                    <td className="block min-w-0 lg:table-cell lg:px-3 lg:py-4">
+                      <p
+                        className="technical-label mb-2 text-[9px] text-base-content/35 lg:hidden"
+                        aria-hidden="true"
+                      >
+                        {t("Status / losses")}
+                      </p>
                       <p
                         className={`technical-label text-[9px] ${player.status === "champion" ? "text-primary" : player.status === "playing" ? "text-secondary" : "text-base-content/60"}`}
                       >
@@ -359,7 +377,13 @@ export function PlayersPanel({
                         {countLabel(player.losses, "loss")}
                       </p>
                     </td>
-                    <td className="px-3 py-4 font-mono text-[10px] text-base-content/45">
+                    <td className="block min-w-0 font-mono text-[10px] text-base-content/45 lg:table-cell lg:px-3 lg:py-4">
+                      <p
+                        className="technical-label mb-2 text-[9px] text-base-content/35 lg:hidden"
+                        aria-hidden="true"
+                      >
+                        {t("Match / table / seed")}
+                      </p>
                       {match ? matchLabel(match) : "—"} /{" "}
                       {match?.table ? `T${match.table}` : "—"}
                       {player.seed !== undefined ? (
@@ -369,21 +393,33 @@ export function PlayersPanel({
                       ) : null}
                     </td>
                     {isAdmin ? (
-                      <td className="px-3 py-4">
-                        <div className="flex items-center gap-1">
+                      <td className="col-span-2 block min-w-0 border-t border-base-300 pt-3 lg:table-cell lg:border-t-0 lg:px-3 lg:py-4">
+                        <p
+                          className="technical-label mb-2 text-[9px] text-base-content/35 lg:hidden"
+                          aria-hidden="true"
+                        >
+                          {t("Organizer controls")}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:gap-1">
                           <button
                             type="button"
-                            className="btn btn-ghost btn-square btn-xs"
+                            className="btn btn-ghost min-h-11 min-w-11 px-3 lg:btn-square lg:btn-xs lg:min-h-0 lg:min-w-0 lg:px-0"
                             aria-label={t("Edit {v1}", { v1: player.name })}
                             disabled={pending || player.status === "removed"}
                             onClick={() => onEdit(player)}
                           >
                             <Pencil className="size-3.5" aria-hidden="true" />
+                            <span className="lg:hidden" aria-hidden="true">
+                              {t("Edit")}
+                            </span>
                           </button>
                           <button
                             type="button"
-                            className="btn btn-ghost btn-square btn-xs"
+                            className="btn btn-ghost btn-square min-h-11 min-w-11 lg:btn-xs lg:min-h-0 lg:min-w-0"
                             aria-label={t("Prioritize {v1} in queue", {
+                              v1: player.name,
+                            })}
+                            title={t("Prioritize {v1} in queue", {
                               v1: player.name,
                             })}
                             disabled={pending || !canPrioritize}
@@ -393,7 +429,7 @@ export function PlayersPanel({
                           </button>
                           <button
                             type="button"
-                            className="btn btn-ghost btn-xs font-mono text-[9px]"
+                            className="btn btn-ghost min-h-11 min-w-11 font-mono lg:btn-xs lg:min-h-0 lg:min-w-0 lg:text-[9px]"
                             disabled={
                               pending ||
                               !view.generated ||
@@ -406,8 +442,9 @@ export function PlayersPanel({
                           </button>
                           <button
                             type="button"
-                            className="btn btn-ghost btn-square btn-xs text-secondary"
+                            className="btn btn-ghost btn-square min-h-11 min-w-11 text-secondary lg:btn-xs lg:min-h-0 lg:min-w-0"
                             aria-label={t("Remove {v1}", { v1: player.name })}
+                            title={t("Remove {v1}", { v1: player.name })}
                             disabled={pending || player.status === "removed"}
                             onClick={() => onRemove(player)}
                           >

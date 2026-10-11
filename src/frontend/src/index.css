@@ -216,6 +216,19 @@
   background-color: #000c;
   backdrop-filter: blur(4px);
 }
+@media (max-width: 640px), (pointer: coarse) {
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+@media (max-width: 640px) {
+  .input,
+  .select,
+  .textarea {
+    font-size: 16px;
+  }
+}
 .btn {
   text-transform: uppercase;
   font-family: var(--font-mono);

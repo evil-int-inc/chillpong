@@ -16,6 +16,7 @@ interface MatchCardProps {
   matches: TournamentMatchView[];
   onSelect: (match: TournamentMatchView) => void;
   compact?: boolean;
+  isAdmin?: boolean;
 }
 
 export function MatchCard({
@@ -24,8 +25,15 @@ export function MatchCard({
   matches,
   onSelect,
   compact = false,
+  isAdmin = false,
 }: MatchCardProps) {
   const { t } = useI18n();
+  const actionLabel =
+    match.status === "playing"
+      ? t("Enter score")
+      : match.status === "completed"
+        ? t("Correct the result")
+        : t("Manage match");
   const sides = [
     {
       id: match.playerAId,
@@ -120,10 +128,18 @@ export function MatchCard({
           );
         })}
       </div>
+      {compact && isAdmin ? (
+        <p className="mt-2 flex items-center justify-between font-mono text-[9px] uppercase text-primary">
+          {actionLabel}
+          <ArrowUpRight className="size-3" aria-hidden="true" />
+        </p>
+      ) : null}
       {!compact ? (
         <div className="mt-4 flex items-center justify-between border-t border-base-300 pt-3">
           <span className="technical-label text-[9px] text-base-content/40">
-            {matchLabel(match)} / {t(match.status)}
+            {isAdmin
+              ? actionLabel
+              : `${matchLabel(match)} / ${t(match.status)}`}
           </span>
           {match.manualOverride || match.prioritized ? (
             <span className="technical-label flex items-center gap-1 text-[8px] text-secondary">
