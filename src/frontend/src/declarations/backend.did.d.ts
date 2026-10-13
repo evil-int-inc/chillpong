@@ -11,6 +11,7 @@ import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
 export interface Cell { 'value' : Value, 'name' : string }
+export interface Config { 'clientId' : [] | [string] }
 export type Error = { 'FrontendOriginsNotConfigured' : null } |
   {
     'MixedSsoSources' : {
@@ -27,10 +28,35 @@ export type Error = { 'FrontendOriginsNotConfigured' : null } |
   { 'MissingField' : string } |
   { 'FrontendOriginMismatch' : { 'got' : string, 'expected' : Array<string> } };
 export type ExternalBlob = Uint8Array;
+export interface GlobalPlayer {
+  'id' : bigint,
+  'userId' : [] | [UserId],
+  'name' : string,
+  'createdAt' : Timestamp,
+  'updatedAt' : Timestamp,
+  'skillLevel' : bigint,
+}
+export interface HttpHeader { 'value' : string, 'name' : string }
+export interface HttpRequestResult {
+  'status' : bigint,
+  'body' : Uint8Array,
+  'headers' : Array<HttpHeader>,
+}
+export interface Link {
+  'linkedAt' : bigint,
+  'username' : string,
+  'subject' : string,
+}
+export interface LinkRequest {
+  'clientId' : string,
+  'expiresAt' : bigint,
+  'nonce' : string,
+}
 export type MatchSource = { 'bye' : null } |
   { 'player' : bigint } |
   { 'winner' : bigint } |
   { 'loser' : bigint };
+export interface PlayerInput { 'name' : string, 'skillLevel' : bigint }
 export interface ProfileInput { 'username' : string, 'displayName' : string }
 export interface Result { 'hasMore' : boolean, 'rows' : Array<Array<Cell>> }
 export type Result__1 = { 'ok' : null } |
@@ -58,7 +84,10 @@ export type TournamentBracket = { 'losers' : null } |
   { 'grandFinal' : null } |
   { 'resetFinal' : null } |
   { 'winners' : null };
-export type TournamentCommand = { 'prioritizeMatch' : bigint } |
+export type TournamentCommand = {
+    'addExistingPlayer' : { 'globalPlayerId' : bigint }
+  } |
+  { 'prioritizeMatch' : bigint } |
   { 'startMatch' : bigint } |
   {
     'setMatchPlayers' : {
@@ -162,6 +191,7 @@ export interface TournamentPlayer {
   'seed' : [] | [bigint],
   'losses' : bigint,
   'registrationNumber' : bigint,
+  'globalPlayerId' : [] | [bigint],
   'currentMatchId' : [] | [bigint],
   'skillLevel' : bigint,
   'registeredAt' : Timestamp,
@@ -271,13 +301,17 @@ export interface _SERVICE {
   >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'bootstrapOwner' : ActorMethod<[], undefined>,
+  'completeTelegramLink' : ActorMethod<[string], User>,
+  'createPlayer' : ActorMethod<[PlayerInput], GlobalPlayer>,
   'createTournament' : ActorMethod<[TournamentInput], Tournament>,
   'createUser' : ActorMethod<[UserId, UserInput], User>,
   'execute' : ActorMethod<[string], Result>,
   'getApiDoc' : ActorMethod<[], string>,
   'getCallerProfile' : ActorMethod<[], [] | [User]>,
+  'getCallerTelegramLink' : ActorMethod<[], [] | [Link]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getMyRole' : ActorMethod<[], [] | [Role]>,
+  'getTelegramLinkConfig' : ActorMethod<[], Config>,
   'getTournament' : ActorMethod<[bigint], [] | [Tournament]>,
   'getTournamentState' : ActorMethod<[bigint], [] | [TournamentState]>,
   'getTournaments' : ActorMethod<[], Array<Tournament>>,
@@ -285,11 +319,22 @@ export interface _SERVICE {
   'getUserByUsername' : ActorMethod<[string], [] | [User]>,
   'grantAdminRole' : ActorMethod<[UserId], UserRoleView>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'linkPlayerToUser' : ActorMethod<[bigint, UserId], GlobalPlayer>,
+  'listPlayers' : ActorMethod<[], Array<GlobalPlayer>>,
   'listUsers' : ActorMethod<[], Array<User>>,
   'listUsersWithRoles' : ActorMethod<[], Array<UserRoleView>>,
   'revokeAdminRole' : ActorMethod<[UserId], UserRoleView>,
   'saveCallerProfile' : ActorMethod<[ProfileInput], User>,
   'schema' : ActorMethod<[], string>,
+  'setTelegramLinkConfig' : ActorMethod<[[] | [string]], undefined>,
+  'startTelegramLink' : ActorMethod<[], LinkRequest>,
+  'telegramKeysTransform' : ActorMethod<
+    [{ 'context' : Uint8Array, 'response' : HttpRequestResult }],
+    HttpRequestResult
+  >,
+  'unlinkPlayerFromUser' : ActorMethod<[bigint], GlobalPlayer>,
+  'unlinkTelegram' : ActorMethod<[], User>,
+  'updatePlayer' : ActorMethod<[bigint, PlayerInput], GlobalPlayer>,
   'updateTournament' : ActorMethod<[bigint, TournamentInput], Tournament>,
   'updateUser' : ActorMethod<[UserId, UserInput], User>,
 }

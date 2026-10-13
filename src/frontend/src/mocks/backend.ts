@@ -1,6 +1,7 @@
 import { Principal } from "@icp-sdk/core/principal";
 import {
   Role,
+  type GlobalPlayer,
   type Tournament,
   TournamentElimination,
   TournamentFormat,
@@ -97,6 +98,12 @@ let tournaments: Tournament[] = [
   },
 ];
 let nextTournamentId = 4n;
+let globalPlayers: GlobalPlayer[] = [
+  { id: 1n, name: "Nika Beridze", skillLevel: 3n, createdAt: fixtureTime, updatedAt: fixtureTime },
+  { id: 2n, name: "Mariam Japaridze", skillLevel: 2n, createdAt: fixtureTime, updatedAt: fixtureTime },
+];
+let nextPlayerId = 3n;
+let telegramClientId: string | null = null;
 
 function findUser(id: Principal): User | undefined {
   return users.find((user) => user.id.toString() === id.toString());
@@ -118,6 +125,41 @@ function roleView(user: User): UserRoleView {
 }
 
 export const mockBackend: backendInterface = {
+  getTelegramLinkConfig: async () => ({ clientId: telegramClientId ?? undefined }),
+  setTelegramLinkConfig: async (clientId) => { telegramClientId = clientId; },
+  getCallerTelegramLink: async () => null,
+  telegramKeysTransform: async ({ response }) => ({ ...response, headers: [] }),
+  startTelegramLink: async () => { throw new Error("Telegram linking requires the real backend."); },
+  completeTelegramLink: async () => { throw new Error("Telegram linking requires the real backend."); },
+  unlinkTelegram: async () => ({ ...requireUser(OWNER) }),
+  listPlayers: async () => globalPlayers.map((player) => ({ ...player })),
+  createPlayer: async (input) => {
+    const player = { ...input, id: nextPlayerId++, createdAt: now(), updatedAt: now() };
+    globalPlayers.push(player);
+    return { ...player };
+  },
+  updatePlayer: async (id, input) => {
+    const player = globalPlayers.find((item) => item.id === id);
+    if (!player) throw new Error("Player not found");
+    Object.assign(player, input, { updatedAt: now() });
+    if (player.userId) requireUser(player.userId).displayName = player.name;
+    return { ...player };
+  },
+  linkPlayerToUser: async (id, userId) => {
+    const player = globalPlayers.find((item) => item.id === id);
+    if (!player) throw new Error("Player not found");
+    if (player.userId && player.userId.toString() !== userId.toString()) throw new Error("Player is already linked to another member");
+    if (globalPlayers.some((item) => item.id !== id && item.userId?.toString() === userId.toString())) throw new Error("Member is already linked to another player");
+    requireUser(userId).displayName = player.name;
+    player.userId = userId;
+    return { ...player };
+  },
+  unlinkPlayerFromUser: async (id) => {
+    const player = globalPlayers.find((item) => item.id === id);
+    if (!player) throw new Error("Player not found");
+    player.userId = undefined;
+    return { ...player };
+  },
   _immutableObjectStorageBlobsAreLive: async (hashes) =>
     hashes.map(() => false),
   _immutableObjectStorageBlobsToDelete: async () => [],

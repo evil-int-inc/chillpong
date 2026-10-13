@@ -13,8 +13,12 @@ import MixinObjectStorage "mo:caffeineai-object-storage/Mixin";
 import Common "types/common";
 import Users "types/users";
 import Tournaments "types/tournaments";
+import Players "types/players";
+import Telegram "types/telegram";
 import UsersApi "mixins/users-api";
 import TournamentsApi "mixins/tournaments-api";
+import PlayersApi "mixins/players-api";
+import TelegramApi "mixins/telegram-api";
 import RolesApi "mixins/roles-api";
 import TournamentsLib "lib/tournaments";
 import RolesLib "lib/roles";
@@ -30,13 +34,21 @@ actor {
   let usernames : Map.Map<Text, Common.UserId>;
   let tournaments : Map.Map<Nat, Tournaments.Tournament>;
   let tournamentStates : Map.Map<Nat, Tournaments.TournamentStateData>;
+  let players : Map.Map<Nat, Players.GlobalPlayer>;
   let counters : Common.Counters;
   let owner : Common.OwnerState;
+  let telegramConfig : Telegram.ConfigState;
+  let telegramLinks : Map.Map<Principal, Telegram.Link>;
+  let telegramOwners : Map.Map<Text, Principal>;
+  let telegramChallenges : Map.Map<Principal, Telegram.Challenge>;
+  let telegramCache : Telegram.CacheState;
 
   include MixinAuthorization(accessControlState, null);
   include MixinObjectStorage();
   include UsersApi(accessControlState, users, usernames, owner);
-  include TournamentsApi(accessControlState, tournaments, tournamentStates, counters);
+  include TournamentsApi(accessControlState, tournaments, tournamentStates, counters, players);
+  include PlayersApi(accessControlState, users, usernames, owner, players, counters);
+  include TelegramApi(accessControlState, users, usernames, owner, telegramConfig, telegramLinks, telegramOwners, telegramChallenges, telegramCache);
   include RolesApi(accessControlState, users, owner);
   include ApiDocMixin();
 

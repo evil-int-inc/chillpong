@@ -1,6 +1,8 @@
+import { createActor } from "@/backend";
 import { Button } from "@/components/ui/Button";
 import { translateError, translateHistory, useI18n } from "@/i18n";
 import { countLabel } from "@/i18n/plurals";
+import { PLAYERS_QUERY_KEY, playerService } from "@/services/players";
 import type { OrganizerAction } from "@/services/tournament-manager";
 import {
   SKILL_LEVELS,
@@ -13,6 +15,8 @@ import {
   registrationLabel,
   sourceLabel,
 } from "@/types/tournament-manager";
+import { useActor } from "@caffeineai/core-infrastructure";
+import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Flag, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -56,15 +60,52 @@ function PlayerForm({
   onAction: DialogProps["onAction"];
 }) {
   const { t } = useI18n();
+  const { actor, isFetching } = useActor(createActor);
+  const directory = useQuery({
+    queryKey: PLAYERS_QUERY_KEY,
+    queryFn: () => {
+      if (!actor) throw new Error("The player directory is still connecting.");
+      return playerService.list(actor);
+    },
+    enabled: !player && !!actor && !isFetching,
+    retry: false,
+  });
+  const [mode, setMode] = useState<"new" | "existing">("new");
+  const [search, setSearch] = useState("");
+  const [existingId, setExistingId] = useState("");
   const [name, setName] = useState(player?.name ?? "");
   const [skill, setSkill] = useState(player?.skill ?? 1);
-  const valid = name.trim().length > 0 && name.trim().length <= 80;
+  const registeredIds = new Set(
+    view.players.flatMap((entry) =>
+      entry.globalPlayerId === undefined ? [] : [entry.globalPlayerId],
+    ),
+  );
+  const available = (directory.data ?? []).filter(
+    (entry) => !registeredIds.has(entry.id),
+  );
+  const visible = available.filter((entry) =>
+    entry.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()),
+  );
+  const existing = available.find(
+    (entry) => entry.id.toString() === existingId,
+  );
+  const usingExisting = !player && mode === "existing";
+  const valid = usingExisting
+    ? !!existing
+    : name.trim().length > 0 && name.trim().length <= 80;
   function save(placeNewPlayer = false) {
     if (!valid) return;
     onAction(
-      player
-        ? { kind: "editPlayer", playerId: player.id, name: name.trim(), skill }
-        : { kind: "addPlayer", name: name.trim(), skill },
+      usingExisting && existing
+        ? { kind: "addExistingPlayer", globalPlayerId: existing.id }
+        : player
+          ? {
+              kind: "editPlayer",
+              playerId: player.id,
+              name: name.trim(),
+              skill,
+            }
+          : { kind: "addPlayer", name: name.trim(), skill },
       { placeNewPlayer, returnToMatch },
     );
   }
@@ -73,38 +114,137 @@ function PlayerForm({
       className="space-y-5"
       onSubmit={(event) => {
         event.preventDefault();
-        save();
+        save(!player && view.generated);
       }}
     >
-      <label className="block">
-        <span className="technical-label mb-2 block">{t("Player name")}</span>
-        <input
-          data-ocid="tournament.player_name_input"
-          className="input w-full rounded-none"
-          required
-          maxLength={80}
-          value={name}
-          disabled={pending}
-          onChange={(event) => setName(event.target.value)}
-          placeholder={t("Name on the table")}
-        />
-      </label>
-      <label className="block">
-        <span className="technical-label mb-2 block">{t("Skill level")}</span>
-        <select
-          data-ocid="tournament.player_skill_select"
-          className="select w-full rounded-none"
-          value={skill}
-          disabled={pending}
-          onChange={(event) => setSkill(Number(event.target.value))}
+      {!player ? (
+        <fieldset
+          className="grid grid-cols-2 gap-2"
+          aria-label={t("Player source")}
         >
-          {SKILL_LEVELS.map((level, index) => (
-            <option key={level} value={index + 1}>
-              L{index + 1} — {t(level)}
-            </option>
-          ))}
-        </select>
-      </label>
+          <Button
+            className="h-auto min-h-11 whitespace-normal px-3 py-3 leading-tight"
+            variant={mode === "existing" ? "primary" : "outline"}
+            disabled={pending}
+            aria-pressed={mode === "existing"}
+            onClick={() => setMode("existing")}
+          >
+            {t("Choose existing player")}
+          </Button>
+          <Button
+            className="h-auto min-h-11 whitespace-normal px-3 py-3 leading-tight"
+            variant={mode === "new" ? "primary" : "outline"}
+            disabled={pending}
+            aria-pressed={mode === "new"}
+            onClick={() => setMode("new")}
+          >
+            {t("Create new player")}
+          </Button>
+        </fieldset>
+      ) : null}
+      {usingExisting ? (
+        <div className="space-y-4">
+          <label className="block">
+            <span className="technical-label mb-2 block">
+              {t("Search shared players")}
+            </span>
+            <input
+              type="search"
+              className="input w-full rounded-none"
+              disabled={pending}
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+          </label>
+          {directory.isLoading ? (
+            <output>{t("Loading players…")}</output>
+          ) : directory.isError ? (
+            <div role="alert" className="space-y-3 text-sm text-error">
+              <p>{t("Couldn't load the player directory.")}</p>
+              <Button
+                variant="outline"
+                disabled={pending}
+                onClick={() => void directory.refetch()}
+              >
+                {t("Try again")}
+              </Button>
+            </div>
+          ) : (
+            <label className="block">
+              <span className="technical-label mb-2 block">
+                {t("Existing player")}
+              </span>
+              <select
+                className="select w-full rounded-none"
+                value={existingId}
+                disabled={pending}
+                onChange={(event) => setExistingId(event.target.value)}
+              >
+                <option value="">{t("Choose a player")}</option>
+                {visible.map((entry) => (
+                  <option key={entry.id.toString()} value={entry.id.toString()}>
+                    {entry.name} / L{entry.skillLevel.toString()}
+                  </option>
+                ))}
+                {existing &&
+                !visible.some((entry) => entry.id === existing.id) ? (
+                  <option value={existing.id.toString()}>
+                    {existing.name} / L{existing.skillLevel.toString()}
+                  </option>
+                ) : null}
+              </select>
+            </label>
+          )}
+          {!directory.isLoading && !directory.isError && !visible.length ? (
+            <p className="text-sm text-base-content/50">
+              {t(
+                "No available players match. Create a new player or change the search.",
+              )}
+            </p>
+          ) : null}
+          <p className="text-xs leading-relaxed text-base-content/45">
+            {t(
+              "Players already registered in this tournament are excluded. This registration gets its own number and queue position.",
+            )}
+          </p>
+        </div>
+      ) : (
+        <>
+          <label className="block">
+            <span className="technical-label mb-2 block">
+              {t("Player name")}
+            </span>
+            <input
+              data-ocid="tournament.player_name_input"
+              className="input w-full rounded-none"
+              required
+              maxLength={80}
+              value={name}
+              disabled={pending}
+              onChange={(event) => setName(event.target.value)}
+              placeholder={t("Name on the table")}
+            />
+          </label>
+          <label className="block">
+            <span className="technical-label mb-2 block">
+              {t("Skill level")}
+            </span>
+            <select
+              data-ocid="tournament.player_skill_select"
+              className="select w-full rounded-none"
+              value={skill}
+              disabled={pending}
+              onChange={(event) => setSkill(Number(event.target.value))}
+            >
+              {SKILL_LEVELS.map((level, index) => (
+                <option key={level} value={index + 1}>
+                  L{index + 1} — {t(level)}
+                </option>
+              ))}
+            </select>
+          </label>
+        </>
+      )}
       <p className="text-xs leading-relaxed text-base-content/45">
         {player
           ? t(
@@ -115,14 +255,21 @@ function PlayerForm({
               "A new permanent registration number and timestamp are saved automatically. The player joins after earlier registrations.",
             )}
       </p>
+      {!player && view.generated ? (
+        <p className="text-xs leading-relaxed text-secondary">
+          {t(
+            "Next, choose a bracket slot for this player. An occupied slot creates a qualifier and keeps both entrants in the tournament.",
+          )}
+        </p>
+      ) : null}
       <div className="flex flex-wrap justify-end gap-3 border-t border-base-300 pt-5">
         {!player && view.generated ? (
           <Button
             variant="outline"
             disabled={!valid || pending}
-            onClick={() => save(true)}
+            onClick={() => save(false)}
           >
-            {t("Register & place manually")}
+            {t("Add to waiting queue")}
           </Button>
         ) : null}
         <Button
@@ -131,7 +278,11 @@ function PlayerForm({
           loading={pending}
           disabled={!valid}
         >
-          {player ? t("Save player") : t("Add to waiting queue")}
+          {player
+            ? t("Save player")
+            : view.generated
+              ? t("Register & place manually")
+              : t("Add to waiting queue")}
         </Button>
       </div>
     </form>

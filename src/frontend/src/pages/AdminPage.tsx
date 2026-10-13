@@ -1,4 +1,6 @@
 import { Role, createActor } from "@/backend";
+import { LinkPlayerDialog } from "@/components/players/LinkPlayerDialog";
+import { TelegramSettings } from "@/components/profile/TelegramSettings";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -8,6 +10,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { type LocalizedMessage, translateError, useI18n } from "@/i18n";
 import { countLabel } from "@/i18n/plurals";
+import { PLAYERS_QUERY_KEY, playerService } from "@/services/players";
 import type { UserRoleView } from "@/types";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -63,6 +66,15 @@ export function AdminPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [copyError, setCopyError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [linkingUser, setLinkingUser] = useState<UserRoleView | null>(null);
+  const directory = useQuery({
+    queryKey: PLAYERS_QUERY_KEY,
+    queryFn: () => {
+      if (!actor) throw new Error("The player directory is still connecting.");
+      return playerService.list(actor);
+    },
+    enabled: !!actor && !isFetching && isAdmin,
+  });
 
   const usersQuery = useQuery<UserRoleView[]>({
     queryKey: [...USERS_QUERY_KEY, principal],
@@ -206,7 +218,7 @@ export function AdminPage() {
             </span>
           </div>
         </header>
-
+        {actor ? <TelegramSettings actor={actor} /> : null}
         <div className="space-y-2">
           <Input
             type="search"
@@ -288,6 +300,9 @@ export function AdminPage() {
               const isSelf =
                 principal !== null && user.id.toString() === principal;
               const isPending = pendingId === user.id.toString();
+              const linkedPlayer = directory.data?.find(
+                (player) => player.userId?.toString() === user.id.toString(),
+              );
               return (
                 <li
                   key={user.id.toString()}
@@ -334,6 +349,11 @@ export function AdminPage() {
                         ? `@${user.username}`
                         : t("Username not set")}
                     </p>
+                    {linkedPlayer ? (
+                      <p className="text-xs text-primary">
+                        {t("Linked player: {v1}", { v1: linkedPlayer.name })}
+                      </p>
+                    ) : null}
                     <div className="space-y-1">
                       <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                         {t("Member ID / Principal ID")}
@@ -364,6 +384,21 @@ export function AdminPage() {
                     </div>
                   </div>
                   <div className="col-start-2 flex flex-wrap items-center gap-3 md:col-start-3 md:row-start-1 md:justify-end">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      aria-label={t("Link player for member {v1}", {
+                        v1: user.id.toString(),
+                      })}
+                      onClick={() => {
+                        setNotice(null);
+                        setLinkingUser(user);
+                      }}
+                    >
+                      {linkedPlayer
+                        ? t("Manage player link")
+                        : t("Link player")}
+                    </Button>
                     <span
                       data-ocid={`admin_user.role.${index + 1}`}
                       className={
@@ -417,6 +452,20 @@ export function AdminPage() {
             })}
           </ul>
         )}
+        <LinkPlayerDialog
+          key={linkingUser?.id.toString() ?? "none"}
+          user={linkingUser}
+          isAdmin={isAdmin}
+          onClose={() => setLinkingUser(null)}
+          onLinked={(player, unlinked) =>
+            setNotice({
+              message: unlinked
+                ? "Player unlinked. The member's name is unchanged."
+                : "Player linked. The member's name is now {v1}.",
+              params: { v1: player.name },
+            })
+          }
+        />
       </div>
     </div>
   );

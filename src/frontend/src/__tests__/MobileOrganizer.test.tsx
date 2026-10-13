@@ -250,6 +250,159 @@ afterEach(() => {
 });
 
 describe("mobile organizer match workflow", () => {
+  it.each([
+    ["phone", 390],
+    ["desktop", 1280],
+  ])(
+    "shows the automatically assigned next match on the floor and restores assignments with undo on %s",
+    async (_device, width) => {
+      vi.stubGlobal("innerWidth", width);
+      const user = userEvent.setup();
+      const original = room({
+        players: [
+          player(1n, "Nino"),
+          player(2n, "Giorgi"),
+          ...[player(3n, "Ana"), player(4n, "Davit")].map((item) => ({
+            ...item,
+            status: TournamentPlayerStatus.playing,
+            table: 2n,
+          })),
+          ...[player(5n, "Tako"), player(6n, "Luka")].map((item) => ({
+            ...item,
+            currentMatchId: 3n,
+          })),
+        ],
+        matches: [
+          match(1n, { status: TournamentMatchStatus.playing, table: 1n }),
+          match(2n, { status: TournamentMatchStatus.playing, table: 2n }),
+          match(3n),
+        ],
+        tables: [1n, 2n].map((number) => ({
+          number,
+          status: TournamentTableStatus.playing,
+          matchId: number,
+        })),
+        nextMatches: [3n],
+        waitingQueue: [5n, 6n],
+      });
+      const completed = {
+        ...original,
+        matches: original.matches.map((item) =>
+          item.id === 1n
+            ? {
+                ...item,
+                status: TournamentMatchStatus.completed,
+                scoreA: 11n,
+                scoreB: 7n,
+                winnerId: 1n,
+                loserId: 2n,
+              }
+            : item.id === 3n
+              ? { ...item, table: 1n }
+              : item,
+        ),
+        players: original.players.map((item) =>
+          item.id <= 2n
+            ? {
+                ...item,
+                status:
+                  item.id === 1n
+                    ? TournamentPlayerStatus.advanced
+                    : TournamentPlayerStatus.eliminated,
+                losses: item.id === 1n ? 0n : 1n,
+                currentMatchId: undefined,
+                table: undefined,
+              }
+            : item.id >= 5n
+              ? { ...item, table: 1n }
+              : item,
+        ),
+        tables: [
+          { number: 1n, status: TournamentTableStatus.waiting, matchId: 3n },
+          original.tables[1]!,
+        ],
+        waitingQueue: [],
+        history: [
+          { id: 1n, caption: "Saved result 11–7", createdAt: registeredAt },
+        ],
+        canUndo: true,
+      };
+      state.actor.getTournamentState.mockResolvedValue(original);
+      saveStates(completed, original);
+      renderRoom();
+      const initialCard = await screen.findByTestId("match.card.1");
+      await user.click(initialCard);
+      let dialog = screen.getByRole("dialog");
+      await user.type(within(dialog).getByLabelText("Score A"), "11");
+      await user.type(within(dialog).getByLabelText("Score B"), "7");
+      await user.click(
+        within(dialog).getByRole("button", {
+          name: "Save result & finish match",
+        }),
+      );
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+      expect(
+        state.actor.applyTournamentCommand,
+      ).toHaveBeenCalledExactlyOnceWith(1n, {
+        __kind__: "recordResult",
+        recordResult: { matchId: 1n, scoreA: 11n, scoreB: 7n },
+      } satisfies TournamentCommand);
+      const floor = screen.getByTestId("tournament.tables");
+      expect(within(floor).queryByTestId("match.card.1")).toBeNull();
+      const nextCard = within(floor).getByTestId("match.card.3");
+      expect(nextCard).toHaveTextContent("Tako");
+      expect(nextCard).toHaveTextContent("Luka");
+      expect(nextCard).toHaveTextContent("T1 / ready");
+      expect(
+        within(nextCard.closest("article")!).getByText("waiting"),
+      ).toBeVisible();
+      expect(screen.getByLabelText("Match for table 1")).toHaveValue("3");
+      expect(within(floor).getByTestId("match.card.2")).toHaveTextContent(
+        "T2 / playing",
+      );
+      expect(screen.getByLabelText("Match for table 2")).toHaveValue("2");
+      expect(screen.queryByTestId("tournament.waiting_queue")).toBeNull();
+      await user.click(nextCard);
+      dialog = screen.getByRole("dialog");
+      expect(
+        within(dialog).getByRole("button", { name: "Start match" }),
+      ).toBeEnabled();
+      expect(within(dialog).getByLabelText("Score A")).toBeEnabled();
+      await user.click(within(dialog).getByRole("button", { name: "Close" }));
+      expect(state.actor.applyTournamentCommand).toHaveBeenCalledTimes(1);
+      await user.click(screen.getByRole("button", { name: "Extended view" }));
+      expect(screen.getByTestId("match.card.1")).toHaveTextContent("11");
+      expect(screen.getByTestId("match.card.1")).toHaveTextContent("7");
+      await user.click(screen.getByRole("button", { name: "Standard view" }));
+      await user.click(
+        screen.getByRole("button", { name: "Undo last action" }),
+      );
+      dialog = screen.getByRole("dialog");
+      await user.click(
+        within(dialog).getByRole("button", { name: "Confirm undo" }),
+      );
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+      expect(state.actor.applyTournamentCommand).toHaveBeenLastCalledWith(1n, {
+        __kind__: "undo",
+        undo: null,
+      });
+      const restoredFloor = screen.getByTestId("tournament.tables");
+      expect(
+        within(restoredFloor).getByTestId("match.card.1"),
+      ).toHaveTextContent("T1 / playing");
+      expect(within(restoredFloor).queryByTestId("match.card.3")).toBeNull();
+      expect(
+        within(restoredFloor).getByTestId("match.card.2"),
+      ).toHaveTextContent("T2 / playing");
+      expect(screen.getByLabelText("Match for table 1")).toHaveValue("1");
+      expect(
+        within(screen.getByTestId("tournament.waiting_queue")).getByText(
+          "Tako",
+        ),
+      ).toBeVisible();
+    },
+  );
+
   it("makes score entry discoverable on a playing table and saves a finished result", async () => {
     const user = userEvent.setup();
     saveStates(completedRoom());

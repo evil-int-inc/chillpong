@@ -272,6 +272,36 @@ module {
     };
   };
 
+  // Share queue ordering between the public view and automatic table handoff.
+  public func readyMatches(state : T.TournamentStateData) : [T.TournamentMatch] {
+    let playerIndex = Map.empty<Nat, T.TournamentPlayerData>();
+    for (item in state.players.values()) { playerIndex.add(item.id, item) };
+    state.matches.filter(func item = item.status == #ready).sort(func(a, b) {
+      let a1 = playerIndex.get(a.playerA ?? 0) ?? Runtime.trap("Match participant missing");
+      let a2 = playerIndex.get(a.playerB ?? 0) ?? Runtime.trap("Match participant missing");
+      let b1 = playerIndex.get(b.playerA ?? 0) ?? Runtime.trap("Match participant missing");
+      let b2 = playerIndex.get(b.playerB ?? 0) ?? Runtime.trap("Match participant missing");
+      let priorityA = Int.min(a.priority, Int.min(a1.queuePriority, a2.queuePriority));
+      let priorityB = Int.min(b.priority, Int.min(b1.queuePriority, b2.queuePriority));
+      switch (Int.compare(priorityA, priorityB)) {
+        case (#equal) {
+          let gapA = Int.abs((a1.skillLevel : Int) - a2.skillLevel);
+          let gapB = Int.abs((b1.skillLevel : Int) - b2.skillLevel);
+          switch (Nat.compare(gapA, gapB)) {
+            case (#equal) {
+              switch (Nat.compare(Nat.min(a1.registrationNumber, a2.registrationNumber), Nat.min(b1.registrationNumber, b2.registrationNumber))) {
+                case (#equal) { Nat.compare(a.id, b.id) };
+                case value { value };
+              };
+            };
+            case value { value };
+          };
+        };
+        case value { value };
+      };
+    });
+  };
+
   public func view(tournamentId : Nat, original : T.TournamentStateData) : T.TournamentState {
     let state = refresh(original);
     let winner = champion(state);
@@ -319,37 +349,14 @@ module {
         };
       };
       {
-        id = item.id; name = item.name; skillLevel = item.skillLevel;
+        id = item.id; globalPlayerId = item.globalPlayerId; name = item.name; skillLevel = item.skillLevel;
         registrationNumber = item.registrationNumber; registeredAt = item.registeredAt;
         seed = seeds.get(item.id); status; losses = count;
         currentMatchId = switch (activeMatch) { case (?matchItem) { ?matchItem.id }; case null { null } };
         table = switch (activeMatch) { case (?matchItem) { matchItem.table }; case null { null } };
       };
     });
-    let eligible = state.matches.filter(func item = item.status == #ready).sort(func(a, b) {
-      let a1 = playerIndex.get(a.playerA ?? 0) ?? Runtime.trap("Match participant missing");
-      let a2 = playerIndex.get(a.playerB ?? 0) ?? Runtime.trap("Match participant missing");
-      let b1 = playerIndex.get(b.playerA ?? 0) ?? Runtime.trap("Match participant missing");
-      let b2 = playerIndex.get(b.playerB ?? 0) ?? Runtime.trap("Match participant missing");
-      let priorityA = Int.min(a.priority, Int.min(a1.queuePriority, a2.queuePriority));
-      let priorityB = Int.min(b.priority, Int.min(b1.queuePriority, b2.queuePriority));
-      switch (Int.compare(priorityA, priorityB)) {
-        case (#equal) {
-          let gapA = Int.abs((a1.skillLevel : Int) - a2.skillLevel);
-          let gapB = Int.abs((b1.skillLevel : Int) - b2.skillLevel);
-          switch (Nat.compare(gapA, gapB)) {
-            case (#equal) {
-              switch (Nat.compare(Nat.min(a1.registrationNumber, a2.registrationNumber), Nat.min(b1.registrationNumber, b2.registrationNumber))) {
-                case (#equal) { Nat.compare(a.id, b.id) };
-                case value { value };
-              };
-            };
-            case value { value };
-          };
-        };
-        case value { value };
-      };
-    });
+    let eligible = readyMatches(state);
     let waiting = publicPlayers.filter(func item = (item.status == #waiting or item.status == #ready or item.status == #advanced) and item.table == null).sort(func(a, b) {
       let rawA = playerIndex.get(a.id) ?? Runtime.trap("Player missing");
       let rawB = playerIndex.get(b.id) ?? Runtime.trap("Player missing");

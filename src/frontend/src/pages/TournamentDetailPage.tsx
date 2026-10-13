@@ -2,6 +2,7 @@ import { createActor } from "@/backend";
 import { BracketGraph } from "@/components/tournaments/BracketGraph";
 import { CopyBracketLink } from "@/components/tournaments/CopyBracketLink";
 import { FullscreenBracketFrame } from "@/components/tournaments/FullscreenBracketFrame";
+import { MatchesPanel } from "@/components/tournaments/MatchesPanel";
 import {
   type ActionOptions,
   OrganizerDialogs,
@@ -201,6 +202,14 @@ export function TournamentDetailPage({
   const queryClient = useQueryClient();
   const queryKey = ["tournamentState", tournamentId.toString()] as const;
   const [display, setDisplay] = useState<"standard" | "extended">("standard");
+  const [bracketFocus, setBracketFocus] = useState<{
+    tournamentId: bigint;
+    matchId: bigint;
+  }>();
+  const focusMatchId =
+    bracketFocus?.tournamentId === tournamentId
+      ? bracketFocus.matchId
+      : undefined;
   const changeFullscreen = useCallback(
     (next: boolean) => {
       setDisplay("extended");
@@ -255,11 +264,33 @@ export function TournamentDetailPage({
       queryClient.setQueryData(queryKey, updated);
       void queryClient.invalidateQueries({ queryKey });
       void queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+      void queryClient.invalidateQueries({ queryKey: ["players"] });
+      const action = variables.action;
       setNotice(
-        "Saved to the tournament. The floor, draw and queue are up to date.",
+        (action.kind === "addPlayer" || action.kind === "addExistingPlayer") &&
+          !variables.options?.placeNewPlayer &&
+          updated.generated
+          ? "Registered in the waiting queue. Use Place in bracket to add them to the draw."
+          : "Saved to the tournament. The floor, draw and queue are up to date.",
       );
+      if (action.kind === "placePlayer") {
+        const placedMatch = updated.matches.find(
+          (match) =>
+            (match.sourceA.kind === "player" &&
+              match.sourceA.id === action.playerId) ||
+            (match.sourceB.kind === "player" &&
+              match.sourceB.id === action.playerId),
+        );
+        setBracketFocus({
+          tournamentId,
+          matchId: placedMatch?.id ?? action.matchId,
+        });
+        setDisplay("extended");
+        setNotice("Player added to the bracket. Their match is now in view.");
+      }
       if (
-        variables.action.kind === "addPlayer" &&
+        (variables.action.kind === "addPlayer" ||
+          variables.action.kind === "addExistingPlayer") &&
         variables.options?.placeNewPlayer
       ) {
         const newPlayer = [...updated.players].sort((a, b) =>
@@ -397,6 +428,7 @@ export function TournamentDetailPage({
         <BracketGraph
           fullscreen
           isAdmin={isAdmin}
+          focusMatchId={focusMatchId}
           matches={view.matches}
           players={view.players}
           onSelect={(match) => openModal({ kind: "match", matchId: match.id })}
@@ -579,11 +611,17 @@ export function TournamentDetailPage({
       ) : (
         <BracketGraph
           isAdmin={isAdmin}
+          focusMatchId={focusMatchId}
           matches={view.matches}
           players={view.players}
           onSelect={(match) => openModal({ kind: "match", matchId: match.id })}
         />
       )}
+      <MatchesPanel
+        key={tournamentId.toString()}
+        view={view}
+        onSelect={(match) => openModal({ kind: "match", matchId: match.id })}
+      />
       <PlayersPanel
         view={view}
         isAdmin={isAdmin}

@@ -97,6 +97,55 @@ module {
     users.get(id);
   };
 
+  // An admin linking a club player owns only the name change. All account
+  // metadata and the member's existing username remain intact.
+  public func setLinkedPlayerName(
+    users : Map.Map<Common.UserId, Users.User>,
+    usernames : Map.Map<Text, Common.UserId>,
+    id : Common.UserId,
+    name : Text,
+    role : ?Users.Role,
+  ) : Users.User {
+    switch (users.get(id)) {
+      case (?existing) {
+        let updated = { existing with displayName = name };
+        users.add(id, updated);
+        updated;
+      };
+      case null { createUser(users, usernames, id, { displayName = name; username = ""; bio = null }, role) };
+    };
+  };
+
+  // Called only after Telegram identity verification. Telegram permits a
+  // 32-character handle, while manually entered app handles remain 3–30.
+  public func setVerifiedTelegramUsername(
+    users : Map.Map<Common.UserId, Users.User>,
+    usernames : Map.Map<Text, Common.UserId>,
+    id : Common.UserId,
+    telegramUsername : ?Text,
+    role : ?Users.Role,
+  ) : Users.User {
+    let username = canonicalUsername(telegramUsername ?? "");
+    if (username != "") {
+      if (username.size() < 5 or username.size() > 32) { Runtime.trap("Telegram username must be between 5 and 32 characters") };
+      for (character in username.toIter()) {
+        if (not ((character >= 'a' and character <= 'z') or (character >= '0' and character <= '9') or character == '_')) {
+          Runtime.trap("Telegram username is invalid");
+        };
+      };
+    };
+    assertUsernameAvailable(users, username, ?id);
+    let existing = switch (users.get(id)) {
+      case (?user) { user };
+      case null { createUser(users, usernames, id, { displayName = ""; username = ""; bio = null }, role) };
+    };
+    if (existing.username != "") { usernames.remove(existing.username) };
+    if (username != "") { usernames.add(username, id) };
+    let updated = { existing with username };
+    users.add(id, updated);
+    updated;
+  };
+
   public func getByUsername(
     usernames : Map.Map<Text, Common.UserId>,
     users : Map.Map<Common.UserId, Users.User>,

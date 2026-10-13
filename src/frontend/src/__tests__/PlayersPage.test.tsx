@@ -1,4 +1,9 @@
-import { type Tournament, TournamentFormat, TournamentStatus } from "@/backend";
+import {
+  type GlobalPlayer,
+  type Tournament,
+  TournamentFormat,
+  TournamentStatus,
+} from "@/backend";
 import { PlayersPage } from "@/pages/PlayersPage";
 import type {
   TournamentManagerView,
@@ -12,7 +17,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const state = vi.hoisted(() => ({
   auth: { isAdmin: false },
-  actor: { getTournaments: vi.fn() },
+  actor: {
+    getTournaments: vi.fn(),
+    listPlayers: vi.fn(),
+    createPlayer: vi.fn(),
+    updatePlayer: vi.fn(),
+  },
   manager: { get: vi.fn(), apply: vi.fn() },
 }));
 vi.mock("@caffeineai/core-infrastructure", () => ({
@@ -131,6 +141,22 @@ function renderPage() {
     </QueryClientProvider>,
   );
 }
+async function selectTournament(
+  user: ReturnType<typeof userEvent.setup>,
+  id = "2",
+) {
+  await screen.findByRole("option", { name: "Night Rally / live" });
+  await user.selectOptions(screen.getByLabelText("Tournament"), id);
+}
+function sharedPlayer(id: bigint, name: string, skill: number): GlobalPlayer {
+  return {
+    id,
+    name,
+    skillLevel: BigInt(skill),
+    createdAt: registeredAt,
+    updatedAt: registeredAt,
+  };
+}
 function names() {
   return within(screen.getByRole("table"))
     .getAllByRole("rowheader")
@@ -146,10 +172,14 @@ beforeEach(() => {
   state.manager.get.mockImplementation(async (_actor, id: bigint) =>
     lineup(id),
   );
+  state.actor.listPlayers.mockResolvedValue([
+    sharedPlayer(20n, "Shared Nino", 3),
+    sharedPlayer(21n, "Shared Beka", 1),
+  ]);
 });
 
 describe("Players page", () => {
-  it("opens the live tournament, shows its entrants in registration order and switches lineups", async () => {
+  it("selects a tournament, shows its entrants in registration order and switches lineups", async () => {
     const user = userEvent.setup();
     state.manager.get.mockImplementation(async (_actor, id: bigint) =>
       id === 2n
@@ -161,6 +191,7 @@ describe("Players page", () => {
           },
     );
     renderPage();
+    await selectTournament(user);
     await screen.findByRole("rowheader", { name: "Zara" });
     expect(screen.getByLabelText("Tournament")).toHaveValue("2");
     expect(names()).toEqual(["Zara", "Alex", "Nino", "Ana", "Beka"]);
@@ -176,6 +207,7 @@ describe("Players page", () => {
   it("combines name, skill, status, table and bracket-specific round filters and resets them", async () => {
     const user = userEvent.setup();
     renderPage();
+    await selectTournament(user);
     await screen.findByRole("rowheader", { name: "Zara" });
     await user.type(screen.getByRole("searchbox"), "zAr");
     await user.selectOptions(screen.getByLabelText("Skill level"), "2");
@@ -212,6 +244,7 @@ describe("Players page", () => {
     const before = view.players.map((player) => ({ ...player }));
     state.manager.get.mockResolvedValue(view);
     renderPage();
+    await selectTournament(user);
     await screen.findByRole("rowheader", { name: "Zara" });
     await user.selectOptions(screen.getByLabelText("Sort by"), "name");
     expect(names()).toEqual(["Alex", "Ana", "Beka", "Nino", "Zara"]);
@@ -236,6 +269,7 @@ describe("Players page", () => {
       expect(id).toBe(2n);
       view = {
         ...view,
+        waitingQueue: [...view.waitingQueue, 7n],
         players: [
           ...view.players,
           player(7n, action.name, action.skill, "waiting"),
@@ -244,6 +278,7 @@ describe("Players page", () => {
       return view;
     });
     renderPage();
+    await selectTournament(user);
     await user.click(await screen.findByRole("button", { name: "Add player" }));
     const dialog = within(screen.getByRole("dialog"));
     await user.type(dialog.getByLabelText("Player name"), "Tako");
@@ -259,21 +294,140 @@ describe("Players page", () => {
       view.tournament,
     );
     expect(
-      screen.getByText("Player changes saved to the tournament."),
+      screen.getByText(
+        "Registered in the waiting queue. Use Place in bracket to add them to the draw.",
+      ),
     ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Place in bracket Tako" }),
+    ).toBeEnabled();
   });
 
-  it("shows separate empty and retryable error states", async () => {
+  it("keeps the shared directory available without any tournaments and supports name and skill filtering", async () => {
     const user = userEvent.setup();
-    state.actor.getTournaments
+    state.actor.getTournaments.mockResolvedValue([]);
+    renderPage();
+    expect(await screen.findByText("Shared Nino")).toBeVisible();
+    expect(screen.getByLabelText("Tournament")).toHaveValue("");
+    expect(state.manager.get).not.toHaveBeenCalled();
+    await user.selectOptions(screen.getByLabelText("Skill level"), "1");
+    expect(screen.queryByText("Shared Nino")).toBeNull();
+    expect(screen.getByText("Shared Beka")).toBeVisible();
+    await user.type(
+      screen.getByRole("searchbox", { name: "Search shared players" }),
+      "missing",
+    );
+    expect(screen.getByText("No matching players.")).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Create player" })).toBeNull();
+  });
+
+  it("creates and edits shared players independently of tournament registration", async () => {
+    const user = userEvent.setup();
+    state.auth.isAdmin = true;
+    state.actor.getTournaments.mockResolvedValue([]);
+    let directory = [sharedPlayer(20n, "Shared Nino", 3)];
+    state.actor.listPlayers.mockImplementation(async () => [...directory]);
+    state.actor.createPlayer.mockImplementation(async (input) => {
+      const created = {
+        ...sharedPlayer(22n, input.name, Number(input.skillLevel)),
+      };
+      directory.push(created);
+      return created;
+    });
+    state.actor.updatePlayer.mockImplementation(async (id, input) => {
+      directory = directory.map((player) =>
+        player.id === id ? { ...player, ...input } : player,
+      );
+      return directory.find((player) => player.id === id);
+    });
+    renderPage();
+    await user.click(
+      await screen.findByRole("button", { name: "Create player" }),
+    );
+    let dialog = within(screen.getByRole("dialog"));
+    await user.type(dialog.getByLabelText("Player name"), "Tako");
+    await user.selectOptions(dialog.getByLabelText("Skill level"), "4");
+    await user.click(dialog.getByRole("button", { name: "Create player" }));
+    expect(await screen.findByText("Tako")).toBeVisible();
+    expect(state.actor.createPlayer).toHaveBeenCalledWith({
+      name: "Tako",
+      skillLevel: 4n,
+    });
+    expect(state.manager.apply).not.toHaveBeenCalled();
+    await user.click(
+      screen.getByRole("button", { name: "Edit shared player Tako" }),
+    );
+    dialog = within(screen.getByRole("dialog"));
+    await user.clear(dialog.getByLabelText("Player name"));
+    await user.type(dialog.getByLabelText("Player name"), "Tako Updated");
+    await user.click(dialog.getByRole("button", { name: "Save player" }));
+    expect(await screen.findByText("Tako Updated")).toBeVisible();
+    expect(state.actor.updatePlayer).toHaveBeenCalledWith(22n, {
+      name: "Tako Updated",
+      skillLevel: 4n,
+    });
+  });
+
+  it("registers an existing shared player and opens the late entrant placement flow", async () => {
+    const user = userEvent.setup();
+    state.auth.isAdmin = true;
+    let view = lineup();
+    view.players[0].globalPlayerId = 20n;
+    state.manager.get.mockImplementation(async () => view);
+    state.manager.apply.mockImplementation(async (_actor, _id, action) => {
+      expect(action).toEqual({
+        kind: "addExistingPlayer",
+        globalPlayerId: 21n,
+      });
+      view = {
+        ...view,
+        waitingQueue: [...view.waitingQueue, 7n],
+        players: [
+          ...view.players,
+          player(7n, "Shared Beka", 1, "waiting", { globalPlayerId: 21n }),
+        ],
+      };
+      return view;
+    });
+    renderPage();
+    await selectTournament(user);
+    await user.click(await screen.findByRole("button", { name: "Add player" }));
+    let dialog = within(screen.getByRole("dialog"));
+    await user.click(
+      dialog.getByRole("button", { name: "Choose existing player" }),
+    );
+    expect(
+      await dialog.findByRole("option", { name: "Shared Beka / L1" }),
+    ).toBeEnabled();
+    expect(
+      dialog.queryByRole("option", { name: "Shared Nino / L3" }),
+    ).toBeNull();
+    await user.selectOptions(dialog.getByLabelText("Existing player"), "21");
+    expect(dialog.queryByLabelText("Player name")).toBeNull();
+    expect(dialog.queryByLabelText("Skill level")).toBeNull();
+    await user.click(
+      dialog.getByRole("button", { name: "Register & place manually" }),
+    );
+    dialog = within(screen.getByRole("dialog"));
+    expect(
+      await dialog.findByRole("heading", { name: "Move / place player." }),
+    ).toBeVisible();
+    expect(dialog.getByRole("button", { name: "Place player" })).toBeEnabled();
+    expect(state.actor.createPlayer).not.toHaveBeenCalled();
+  });
+
+  it("shows a retryable directory error independently of the tournament board", async () => {
+    const user = userEvent.setup();
+    state.actor.getTournaments.mockRejectedValue(new Error("Offline"));
+    state.actor.listPlayers
       .mockRejectedValueOnce(new Error("Offline"))
-      .mockResolvedValue([]);
+      .mockResolvedValueOnce([]);
     renderPage();
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "The lineup is offline.",
+      "Couldn't load the player directory.",
     );
     await user.click(screen.getByRole("button", { name: "Try again" }));
-    await screen.findByText("The lineup starts with a tournament.");
+    expect(await screen.findByText("The shared lineup is open.")).toBeVisible();
     await waitFor(() => expect(screen.queryByRole("alert")).toBeNull());
   });
 });

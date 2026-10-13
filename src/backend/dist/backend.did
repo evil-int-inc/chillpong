@@ -103,6 +103,7 @@ type TournamentPlayerStatus =
 type TournamentPlayer = 
  record {
    currentMatchId: opt nat;
+   globalPlayerId: opt nat;
    id: nat;
    losses: nat;
    name: text;
@@ -163,6 +164,7 @@ type TournamentElimination =
  };
 type TournamentCommand = 
  variant {
+   addExistingPlayer: record {globalPlayerId: nat;};
    addPlayer: record {
                 name: text;
                 skillLevel: nat;
@@ -268,12 +270,49 @@ type ProfileInput =
    displayName: text;
    username: text;
  };
+type PlayerInput = 
+ record {
+   name: text;
+   skillLevel: nat;
+ };
 type MatchSource = 
  variant {
    bye;
    loser: nat;
    player: nat;
    winner: nat;
+ };
+type LinkRequest = 
+ record {
+   clientId: text;
+   expiresAt: int;
+   nonce: text;
+ };
+type Link = 
+ record {
+   linkedAt: int;
+   subject: text;
+   username: text;
+ };
+type HttpRequestResult = 
+ record {
+   body: blob;
+   headers: vec HttpHeader;
+   status: nat;
+ };
+type HttpHeader = 
+ record {
+   name: text;
+   value: text;
+ };
+type GlobalPlayer = 
+ record {
+   createdAt: Timestamp;
+   id: nat;
+   name: text;
+   skillLevel: nat;
+   updatedAt: Timestamp;
+   userId: opt UserId;
  };
 type ExternalBlob = blob;
 type Error = 
@@ -298,6 +337,7 @@ type Error =
    UnknownNonce;
    UntrustedSsoSource: record {domain: text;};
  };
+type Config = record {clientId: opt text;};
 type Cell = 
  record {
    name: text;
@@ -320,13 +360,17 @@ service : {
    (TournamentState);
   assignCallerUserRole: (user: principal, role: UserRole) -> ();
   bootstrapOwner: () -> ();
+  completeTelegramLink: (idToken: text) -> (User);
+  createPlayer: (input: PlayerInput) -> (GlobalPlayer);
   createTournament: (input: TournamentInput) -> (Tournament);
   createUser: (userId: UserId, input: UserInput) -> (User);
   execute: (qJson: text) -> (Result) query;
   getApiDoc: () -> (text) query;
   getCallerProfile: () -> (opt User) query;
+  getCallerTelegramLink: () -> (opt Link) query;
   getCallerUserRole: () -> (UserRole) query;
   getMyRole: () -> (opt Role) query;
+  getTelegramLinkConfig: () -> (Config) query;
   getTournament: (id: nat) -> (opt Tournament) query;
   getTournamentState: (id: nat) -> (opt TournamentState) query;
   getTournaments: () -> (vec Tournament) query;
@@ -334,11 +378,23 @@ service : {
   getUserByUsername: (username: text) -> (opt User) query;
   grantAdminRole: (target: UserId) -> (UserRoleView);
   isCallerAdmin: () -> (bool) query;
+  linkPlayerToUser: (playerId: nat, userId: UserId) -> (GlobalPlayer);
+  listPlayers: () -> (vec GlobalPlayer) query;
   listUsers: () -> (vec User) query;
   listUsersWithRoles: () -> (vec UserRoleView) query;
   revokeAdminRole: (target: UserId) -> (UserRoleView);
   saveCallerProfile: (input: ProfileInput) -> (User);
   schema: () -> (text) query;
+  setTelegramLinkConfig: (clientId: opt text) -> ();
+  startTelegramLink: () -> (LinkRequest);
+  telegramKeysTransform: (args:
+   record {
+     context: blob;
+     response: HttpRequestResult;
+   }) -> (HttpRequestResult) query;
+  unlinkPlayerFromUser: (playerId: nat) -> (GlobalPlayer);
+  unlinkTelegram: () -> (User);
+  updatePlayer: (playerId: nat, input: PlayerInput) -> (GlobalPlayer);
   updateTournament: (id: nat, input: TournamentInput) -> (Tournament);
   updateUser: (userId: UserId, input: UserInput) -> (User);
 }

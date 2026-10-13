@@ -1,12 +1,14 @@
-import { useI18n } from "@/i18n";
+import { type LocalizedMessage, useI18n } from "@/i18n";
 import {
   BRACKET_LABELS,
   type BracketLane,
   type TournamentMatchView,
   type TournamentPlayerView,
+  matchLabel,
+  registrationLabel,
 } from "@/types/tournament-manager";
-import { Maximize2, Minus, Plus, RotateCcw } from "lucide-react";
-import { useMemo } from "react";
+import { Maximize2, Minus, Plus, RotateCcw, Search } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MatchCard } from "./MatchCard";
 import {
   MAX_BRACKET_ZOOM,
@@ -20,12 +22,52 @@ const COLUMN_WIDTH = 316;
 const ROW_HEIGHT = 184;
 const LANES: BracketLane[] = ["winners", "losers", "grandFinal", "resetFinal"];
 
+function nextPlayerMatch(
+  matches: TournamentMatchView[],
+  player: TournamentPlayerView,
+) {
+  if (["removed", "eliminated", "champion"].includes(player.status)) return;
+  const candidates = matches.filter(
+    (match) => match.playerAId === player.id || match.playerBId === player.id,
+  );
+  for (const status of ["playing", "ready", "pending"] as const) {
+    const eligible = candidates.filter((match) => match.status === status);
+    const next =
+      eligible.find((match) => match.id === player.currentMatchId) ??
+      eligible[0];
+    if (next) return next;
+  }
+}
+
+function centerMatch(
+  viewport: HTMLDivElement,
+  layout: { width: number; height: number },
+  node: { x: number; y: number },
+  zoom: number,
+) {
+  viewport.scrollLeft = Math.max(
+    0,
+    Math.min(
+      layout.width * zoom - viewport.clientWidth,
+      (node.x + CARD_WIDTH / 2) * zoom - viewport.clientWidth / 2,
+    ),
+  );
+  viewport.scrollTop = Math.max(
+    0,
+    Math.min(
+      layout.height * zoom - viewport.clientHeight,
+      (node.y + CARD_HEIGHT / 2) * zoom - viewport.clientHeight / 2,
+    ),
+  );
+}
+
 interface BracketGraphProps {
   matches: TournamentMatchView[];
   players: TournamentPlayerView[];
   onSelect: (match: TournamentMatchView) => void;
   fullscreen?: boolean;
   isAdmin?: boolean;
+  focusMatchId?: bigint;
 }
 
 export function BracketGraph({
@@ -34,8 +76,19 @@ export function BracketGraph({
   onSelect,
   fullscreen = false,
   isAdmin = false,
+  focusMatchId,
 }: BracketGraphProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const [playerSearch, setPlayerSearch] = useState("");
+  const [choices, setChoices] = useState<bigint[]>([]);
+  const [feedback, setFeedback] = useState<LocalizedMessage | null>(null);
+  const [searchFocus, setSearchFocus] = useState<{ matchId: bigint }>();
+  const handledSearchRef = useRef<typeof searchFocus>(undefined);
+  const searchZoomRef = useRef<{
+    request: { matchId: bigint };
+    zoom: number;
+  } | null>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const {
     viewportRef,
     zoom,
@@ -144,6 +197,122 @@ export function BracketGraph({
   const byId = new Map(
     layout.nodes.map((node) => [node.match.id.toString(), node]),
   );
+  const focusedMatchRef = useRef<bigint | undefined>(undefined);
+  useEffect(() => {
+    if (focusMatchId === undefined) {
+      focusedMatchRef.current = undefined;
+      return;
+    }
+    if (focusedMatchRef.current === focusMatchId) return;
+    const node = layout.nodes.find((item) => item.match.id === focusMatchId);
+    const viewport = viewportRef.current;
+    if (!node || !viewport?.clientWidth || !viewport.clientHeight) return;
+    // A manual placement can add columns outside the current viewport. Reveal
+    // its new match once, then let subsequent pan/zoom gestures keep their view.
+    centerMatch(viewport, layout, node, zoom);
+    focusedMatchRef.current = focusMatchId;
+  }, [focusMatchId, layout, viewportRef, zoom]);
+
+  useEffect(() => {
+    if (!searchFocus || handledSearchRef.current === searchFocus) return;
+    const node = layout.nodes.find(
+      (item) => item.match.id === searchFocus.matchId,
+    );
+    const viewport = viewportRef.current;
+    if (!node || !viewport) return;
+    let observer: ResizeObserver | undefined;
+    const reveal = () => {
+      if (handledSearchRef.current === searchFocus) return;
+      if (!viewport.clientWidth || !viewport.clientHeight) return;
+      // Choose the scale once per search. Growing the canvas can add a
+      // scrollbar and change clientWidth; recomputing can oscillate forever.
+      if (searchZoomRef.current?.request !== searchFocus) {
+        searchZoomRef.current = {
+          request: searchFocus,
+          zoom: Math.max(
+            MIN_BRACKET_ZOOM,
+            Math.min(
+              1.4,
+              (viewport.clientWidth - 48) / CARD_WIDTH,
+              (viewport.clientHeight - 48) / CARD_HEIGHT,
+            ),
+          ),
+        };
+      }
+      const targetZoom = searchZoomRef.current.zoom;
+      if (zoom !== targetZoom) {
+        // Navigation commits the new canvas size before this effect centers
+        // the card. Scrolling first would clamp against the old small canvas.
+        zoomTo(targetZoom);
+        return;
+      }
+      centerMatch(viewport, layout, node, zoom);
+      handledSearchRef.current = searchFocus;
+      observer?.disconnect();
+    };
+    reveal();
+    if (
+      handledSearchRef.current !== searchFocus &&
+      typeof ResizeObserver !== "undefined"
+    ) {
+      observer = new ResizeObserver(reveal);
+      observer.observe(viewport);
+    }
+    return () => observer?.disconnect();
+  }, [searchFocus, layout, viewportRef, zoom, zoomTo]);
+
+  function findNextMatch(playerId: bigint) {
+    const player = players.find((item) => item.id === playerId);
+    if (!player) {
+      setChoices([]);
+      setSearchFocus(undefined);
+      setFeedback({ message: "No player matches this name.", params: {} });
+      return;
+    }
+    setChoices([]);
+    const match = nextPlayerMatch(matches, player);
+    if (!match) {
+      setSearchFocus(undefined);
+      setFeedback({
+        message: "No upcoming match for {name}.",
+        params: { name: player.name },
+      });
+      return;
+    }
+    searchInputRef.current?.blur();
+    // A fresh request also refocuses the same player after manual pan/zoom.
+    setSearchFocus({ matchId: match.id });
+    setFeedback({
+      message: "Showing match {match} for {name}.",
+      params: {
+        match: `${matchLabel(match)} / M${match.id}`,
+        name: player.name,
+      },
+    });
+  }
+
+  function searchPlayer() {
+    const normalize = (name: string) =>
+      name.trim().normalize("NFKC").toLocaleLowerCase(locale);
+    const search = normalize(playerSearch);
+    if (!search) return;
+    const exact = players.filter((player) => normalize(player.name) === search);
+    const found = exact.length
+      ? exact
+      : players.filter((player) => normalize(player.name).includes(search));
+    if (found.length === 1) {
+      findNextMatch(found[0].id);
+    } else {
+      setSearchFocus(undefined);
+      setChoices(found.map((player) => player.id));
+      setFeedback({
+        message: found.length
+          ? "Several players match. Choose a player below."
+          : "No player matches this name.",
+        params: {},
+      });
+    }
+  }
 
   if (!matches.length) {
     return (
@@ -165,6 +334,77 @@ export function BracketGraph({
       aria-label={t("Complete tournament bracket")}
       className={fullscreen ? "flex min-h-0 flex-1 flex-col" : undefined}
     >
+      <form
+        data-ocid="tournament.bracket_player_search"
+        className="mb-4 shrink-0"
+        onSubmit={(event) => {
+          event.preventDefault();
+          searchPlayer();
+        }}
+      >
+        <div className="flex flex-wrap gap-2">
+          <label className="club-search flex min-w-0 flex-1 basis-48 items-center gap-3 border border-base-300 px-3">
+            <Search
+              className="size-4 shrink-0 text-base-content/40"
+              aria-hidden="true"
+            />
+            <input
+              ref={searchInputRef}
+              type="search"
+              aria-label={t("Find a player in the bracket")}
+              placeholder={t("PLAYER NAME")}
+              className="min-w-0 flex-1 bg-transparent py-3 font-mono text-xs outline-none placeholder:text-base-content/35"
+              value={playerSearch}
+              onChange={(event) => {
+                setPlayerSearch(event.target.value);
+                setChoices([]);
+                setFeedback(null);
+              }}
+            />
+          </label>
+          <button
+            type="submit"
+            className="btn min-h-11 rounded-none border-primary/40 bg-primary/10 text-primary hover:bg-primary/20"
+            disabled={!playerSearch.trim()}
+          >
+            <Search className="size-4" aria-hidden="true" />{" "}
+            {t("Find next match")}
+          </button>
+        </div>
+        {feedback ? (
+          <output className="mt-2 block text-xs text-base-content/60">
+            {t(feedback)}
+          </output>
+        ) : null}
+        {choices.length ? (
+          <div className="mt-3 grid max-h-32 gap-2 overflow-auto sm:grid-cols-2">
+            {choices.flatMap((id) => {
+              const player = players.find((item) => item.id === id);
+              if (!player) return [];
+              const registration = registrationLabel(player.registrationNumber);
+              return [
+                <button
+                  key={id.toString()}
+                  type="button"
+                  aria-label={t("Find next match for {name} / {registration}", {
+                    name: player.name,
+                    registration,
+                  })}
+                  className="flex min-h-11 items-center justify-between gap-3 border border-base-300 px-3 py-2 text-left hover:border-primary/60"
+                  onClick={() => findNextMatch(id)}
+                >
+                  <span className="min-w-0 break-words font-display text-sm font-bold">
+                    {player.name}
+                  </span>
+                  <span className="shrink-0 font-mono text-[9px] text-base-content/45">
+                    {registration} / {t(player.status)}
+                  </span>
+                </button>,
+              ];
+            })}
+          </div>
+        ) : null}
+      </form>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-wider text-base-content/45">
           <span className="flex items-center gap-2">
@@ -332,7 +572,10 @@ export function BracketGraph({
             {layout.nodes.map((node) => (
               <div
                 key={node.match.id.toString()}
-                className="absolute"
+                data-focused-match={
+                  searchFocus?.matchId === node.match.id || undefined
+                }
+                className={`absolute ${searchFocus?.matchId === node.match.id ? "ring-2 ring-primary ring-offset-4 ring-offset-base-100" : ""}`}
                 style={{
                   left: node.x,
                   top: node.y,

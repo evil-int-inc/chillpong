@@ -320,6 +320,7 @@ export function PlayersPanel({
             <tbody className="grid gap-4 sm:grid-cols-2 lg:table-row-group">
               {players.map((player) => {
                 const match = currentPlayerMatch(view, player);
+                const movement = playerMovement(view, player);
                 const canPrioritize =
                   player.status === "waiting" ||
                   player.status === "ready" ||
@@ -433,11 +434,13 @@ export function PlayersPanel({
                             disabled={
                               pending ||
                               !view.generated ||
-                              !playerMovement(view, player).targets.length
+                              !movement.targets.length
                             }
                             onClick={() => onMove(player)}
                           >
-                            {t("Move")}
+                            {movement.entrant
+                              ? t("Place in bracket")
+                              : t("Move")}
                             <span className="sr-only"> {player.name}</span>
                           </button>
                           <button

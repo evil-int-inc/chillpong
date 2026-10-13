@@ -14,6 +14,7 @@ module {
 
   public type TournamentPlayerData = {
     id : Nat;
+    globalPlayerId : ?Nat;
     name : Text;
     skillLevel : Nat;
     registrationNumber : Nat;
@@ -24,6 +25,7 @@ module {
 
   public type TournamentPlayer = {
     id : Nat;
+    globalPlayerId : ?Nat;
     name : Text;
     skillLevel : Nat;
     registrationNumber : Nat;
@@ -111,6 +113,7 @@ module {
   public type TournamentCommand = {
     #configure : { elimination : TournamentElimination; tableCount : Nat };
     #addPlayer : { name : Text; skillLevel : Nat };
+    #addExistingPlayer : { globalPlayerId : Nat };
     #editPlayer : { playerId : Nat; name : Text; skillLevel : Nat };
     #removePlayer : { playerId : Nat; confirmed : Bool };
     #generateBracket;

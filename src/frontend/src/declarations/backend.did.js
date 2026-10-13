@@ -47,6 +47,7 @@ export const TournamentElimination = IDL.Variant({
   'doubleElimination' : IDL.Null,
 });
 export const TournamentCommand = IDL.Variant({
+  'addExistingPlayer' : IDL.Record({ 'globalPlayerId' : IDL.Nat }),
   'prioritizeMatch' : IDL.Nat,
   'startMatch' : IDL.Nat,
   'setMatchPlayers' : IDL.Record({
@@ -168,6 +169,7 @@ export const TournamentPlayer = IDL.Record({
   'seed' : IDL.Opt(IDL.Nat),
   'losses' : IDL.Nat,
   'registrationNumber' : IDL.Nat,
+  'globalPlayerId' : IDL.Opt(IDL.Nat),
   'currentMatchId' : IDL.Opt(IDL.Nat),
   'skillLevel' : IDL.Nat,
   'registeredAt' : Timestamp,
@@ -191,6 +193,30 @@ export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
   'guest' : IDL.Null,
+});
+export const UserId = IDL.Principal;
+export const Role = IDL.Variant({ 'admin' : IDL.Null });
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
+export const User = IDL.Record({
+  'id' : UserId,
+  'bio' : IDL.Opt(IDL.Text),
+  'username' : IDL.Text,
+  'displayName' : IDL.Text,
+  'createdAt' : Timestamp,
+  'role' : IDL.Opt(Role),
+  'avatar' : IDL.Opt(ExternalBlob),
+});
+export const PlayerInput = IDL.Record({
+  'name' : IDL.Text,
+  'skillLevel' : IDL.Nat,
+});
+export const GlobalPlayer = IDL.Record({
+  'id' : IDL.Nat,
+  'userId' : IDL.Opt(UserId),
+  'name' : IDL.Text,
+  'createdAt' : Timestamp,
+  'updatedAt' : Timestamp,
+  'skillLevel' : IDL.Nat,
 });
 export const TournamentStatus = IDL.Variant({
   'upcoming' : IDL.Null,
@@ -222,22 +248,10 @@ export const Tournament = IDL.Record({
   'capacity' : IDL.Nat,
   'format' : TournamentFormat,
 });
-export const UserId = IDL.Principal;
 export const UserInput = IDL.Record({
   'bio' : IDL.Opt(IDL.Text),
   'username' : IDL.Text,
   'displayName' : IDL.Text,
-});
-export const Role = IDL.Variant({ 'admin' : IDL.Null });
-export const ExternalBlob = IDL.Vec(IDL.Nat8);
-export const User = IDL.Record({
-  'id' : UserId,
-  'bio' : IDL.Opt(IDL.Text),
-  'username' : IDL.Text,
-  'displayName' : IDL.Text,
-  'createdAt' : Timestamp,
-  'role' : IDL.Opt(Role),
-  'avatar' : IDL.Opt(ExternalBlob),
 });
 export const Value = IDL.Variant({
   'int' : IDL.Int,
@@ -252,6 +266,12 @@ export const Result = IDL.Record({
   'hasMore' : IDL.Bool,
   'rows' : IDL.Vec(IDL.Vec(Cell)),
 });
+export const Link = IDL.Record({
+  'linkedAt' : IDL.Int,
+  'username' : IDL.Text,
+  'subject' : IDL.Text,
+});
+export const Config = IDL.Record({ 'clientId' : IDL.Opt(IDL.Text) });
 export const UserRoleView = IDL.Record({
   'id' : UserId,
   'username' : IDL.Text,
@@ -261,6 +281,17 @@ export const UserRoleView = IDL.Record({
 export const ProfileInput = IDL.Record({
   'username' : IDL.Text,
   'displayName' : IDL.Text,
+});
+export const LinkRequest = IDL.Record({
+  'clientId' : IDL.Text,
+  'expiresAt' : IDL.Int,
+  'nonce' : IDL.Text,
+});
+export const HttpHeader = IDL.Record({ 'value' : IDL.Text, 'name' : IDL.Text });
+export const HttpRequestResult = IDL.Record({
+  'status' : IDL.Nat,
+  'body' : IDL.Vec(IDL.Nat8),
+  'headers' : IDL.Vec(HttpHeader),
 });
 
 export const idlService = IDL.Service({
@@ -300,13 +331,17 @@ export const idlService = IDL.Service({
     ),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'bootstrapOwner' : IDL.Func([], [], []),
+  'completeTelegramLink' : IDL.Func([IDL.Text], [User], []),
+  'createPlayer' : IDL.Func([PlayerInput], [GlobalPlayer], []),
   'createTournament' : IDL.Func([TournamentInput], [Tournament], []),
   'createUser' : IDL.Func([UserId, UserInput], [User], []),
   'execute' : IDL.Func([IDL.Text], [Result], ['query']),
   'getApiDoc' : IDL.Func([], [IDL.Text], ['query']),
   'getCallerProfile' : IDL.Func([], [IDL.Opt(User)], ['query']),
+  'getCallerTelegramLink' : IDL.Func([], [IDL.Opt(Link)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getMyRole' : IDL.Func([], [IDL.Opt(Role)], ['query']),
+  'getTelegramLinkConfig' : IDL.Func([], [Config], ['query']),
   'getTournament' : IDL.Func([IDL.Nat], [IDL.Opt(Tournament)], ['query']),
   'getTournamentState' : IDL.Func(
       [IDL.Nat],
@@ -318,11 +353,28 @@ export const idlService = IDL.Service({
   'getUserByUsername' : IDL.Func([IDL.Text], [IDL.Opt(User)], ['query']),
   'grantAdminRole' : IDL.Func([UserId], [UserRoleView], []),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'linkPlayerToUser' : IDL.Func([IDL.Nat, UserId], [GlobalPlayer], []),
+  'listPlayers' : IDL.Func([], [IDL.Vec(GlobalPlayer)], ['query']),
   'listUsers' : IDL.Func([], [IDL.Vec(User)], ['query']),
   'listUsersWithRoles' : IDL.Func([], [IDL.Vec(UserRoleView)], ['query']),
   'revokeAdminRole' : IDL.Func([UserId], [UserRoleView], []),
   'saveCallerProfile' : IDL.Func([ProfileInput], [User], []),
   'schema' : IDL.Func([], [IDL.Text], ['query']),
+  'setTelegramLinkConfig' : IDL.Func([IDL.Opt(IDL.Text)], [], []),
+  'startTelegramLink' : IDL.Func([], [LinkRequest], []),
+  'telegramKeysTransform' : IDL.Func(
+      [
+        IDL.Record({
+          'context' : IDL.Vec(IDL.Nat8),
+          'response' : HttpRequestResult,
+        }),
+      ],
+      [HttpRequestResult],
+      ['query'],
+    ),
+  'unlinkPlayerFromUser' : IDL.Func([IDL.Nat], [GlobalPlayer], []),
+  'unlinkTelegram' : IDL.Func([], [User], []),
+  'updatePlayer' : IDL.Func([IDL.Nat, PlayerInput], [GlobalPlayer], []),
   'updateTournament' : IDL.Func([IDL.Nat, TournamentInput], [Tournament], []),
   'updateUser' : IDL.Func([UserId, UserInput], [User], []),
 });
@@ -369,6 +421,7 @@ export const idlFactory = ({ IDL }) => {
     'doubleElimination' : IDL.Null,
   });
   const TournamentCommand = IDL.Variant({
+    'addExistingPlayer' : IDL.Record({ 'globalPlayerId' : IDL.Nat }),
     'prioritizeMatch' : IDL.Nat,
     'startMatch' : IDL.Nat,
     'setMatchPlayers' : IDL.Record({
@@ -493,6 +546,7 @@ export const idlFactory = ({ IDL }) => {
     'seed' : IDL.Opt(IDL.Nat),
     'losses' : IDL.Nat,
     'registrationNumber' : IDL.Nat,
+    'globalPlayerId' : IDL.Opt(IDL.Nat),
     'currentMatchId' : IDL.Opt(IDL.Nat),
     'skillLevel' : IDL.Nat,
     'registeredAt' : Timestamp,
@@ -516,6 +570,27 @@ export const idlFactory = ({ IDL }) => {
     'admin' : IDL.Null,
     'user' : IDL.Null,
     'guest' : IDL.Null,
+  });
+  const UserId = IDL.Principal;
+  const Role = IDL.Variant({ 'admin' : IDL.Null });
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
+  const User = IDL.Record({
+    'id' : UserId,
+    'bio' : IDL.Opt(IDL.Text),
+    'username' : IDL.Text,
+    'displayName' : IDL.Text,
+    'createdAt' : Timestamp,
+    'role' : IDL.Opt(Role),
+    'avatar' : IDL.Opt(ExternalBlob),
+  });
+  const PlayerInput = IDL.Record({ 'name' : IDL.Text, 'skillLevel' : IDL.Nat });
+  const GlobalPlayer = IDL.Record({
+    'id' : IDL.Nat,
+    'userId' : IDL.Opt(UserId),
+    'name' : IDL.Text,
+    'createdAt' : Timestamp,
+    'updatedAt' : Timestamp,
+    'skillLevel' : IDL.Nat,
   });
   const TournamentStatus = IDL.Variant({
     'upcoming' : IDL.Null,
@@ -547,22 +622,10 @@ export const idlFactory = ({ IDL }) => {
     'capacity' : IDL.Nat,
     'format' : TournamentFormat,
   });
-  const UserId = IDL.Principal;
   const UserInput = IDL.Record({
     'bio' : IDL.Opt(IDL.Text),
     'username' : IDL.Text,
     'displayName' : IDL.Text,
-  });
-  const Role = IDL.Variant({ 'admin' : IDL.Null });
-  const ExternalBlob = IDL.Vec(IDL.Nat8);
-  const User = IDL.Record({
-    'id' : UserId,
-    'bio' : IDL.Opt(IDL.Text),
-    'username' : IDL.Text,
-    'displayName' : IDL.Text,
-    'createdAt' : Timestamp,
-    'role' : IDL.Opt(Role),
-    'avatar' : IDL.Opt(ExternalBlob),
   });
   const Value = IDL.Variant({
     'int' : IDL.Int,
@@ -577,6 +640,12 @@ export const idlFactory = ({ IDL }) => {
     'hasMore' : IDL.Bool,
     'rows' : IDL.Vec(IDL.Vec(Cell)),
   });
+  const Link = IDL.Record({
+    'linkedAt' : IDL.Int,
+    'username' : IDL.Text,
+    'subject' : IDL.Text,
+  });
+  const Config = IDL.Record({ 'clientId' : IDL.Opt(IDL.Text) });
   const UserRoleView = IDL.Record({
     'id' : UserId,
     'username' : IDL.Text,
@@ -586,6 +655,17 @@ export const idlFactory = ({ IDL }) => {
   const ProfileInput = IDL.Record({
     'username' : IDL.Text,
     'displayName' : IDL.Text,
+  });
+  const LinkRequest = IDL.Record({
+    'clientId' : IDL.Text,
+    'expiresAt' : IDL.Int,
+    'nonce' : IDL.Text,
+  });
+  const HttpHeader = IDL.Record({ 'value' : IDL.Text, 'name' : IDL.Text });
+  const HttpRequestResult = IDL.Record({
+    'status' : IDL.Nat,
+    'body' : IDL.Vec(IDL.Nat8),
+    'headers' : IDL.Vec(HttpHeader),
   });
   
   return IDL.Service({
@@ -625,13 +705,17 @@ export const idlFactory = ({ IDL }) => {
       ),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'bootstrapOwner' : IDL.Func([], [], []),
+    'completeTelegramLink' : IDL.Func([IDL.Text], [User], []),
+    'createPlayer' : IDL.Func([PlayerInput], [GlobalPlayer], []),
     'createTournament' : IDL.Func([TournamentInput], [Tournament], []),
     'createUser' : IDL.Func([UserId, UserInput], [User], []),
     'execute' : IDL.Func([IDL.Text], [Result], ['query']),
     'getApiDoc' : IDL.Func([], [IDL.Text], ['query']),
     'getCallerProfile' : IDL.Func([], [IDL.Opt(User)], ['query']),
+    'getCallerTelegramLink' : IDL.Func([], [IDL.Opt(Link)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getMyRole' : IDL.Func([], [IDL.Opt(Role)], ['query']),
+    'getTelegramLinkConfig' : IDL.Func([], [Config], ['query']),
     'getTournament' : IDL.Func([IDL.Nat], [IDL.Opt(Tournament)], ['query']),
     'getTournamentState' : IDL.Func(
         [IDL.Nat],
@@ -643,11 +727,28 @@ export const idlFactory = ({ IDL }) => {
     'getUserByUsername' : IDL.Func([IDL.Text], [IDL.Opt(User)], ['query']),
     'grantAdminRole' : IDL.Func([UserId], [UserRoleView], []),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'linkPlayerToUser' : IDL.Func([IDL.Nat, UserId], [GlobalPlayer], []),
+    'listPlayers' : IDL.Func([], [IDL.Vec(GlobalPlayer)], ['query']),
     'listUsers' : IDL.Func([], [IDL.Vec(User)], ['query']),
     'listUsersWithRoles' : IDL.Func([], [IDL.Vec(UserRoleView)], ['query']),
     'revokeAdminRole' : IDL.Func([UserId], [UserRoleView], []),
     'saveCallerProfile' : IDL.Func([ProfileInput], [User], []),
     'schema' : IDL.Func([], [IDL.Text], ['query']),
+    'setTelegramLinkConfig' : IDL.Func([IDL.Opt(IDL.Text)], [], []),
+    'startTelegramLink' : IDL.Func([], [LinkRequest], []),
+    'telegramKeysTransform' : IDL.Func(
+        [
+          IDL.Record({
+            'context' : IDL.Vec(IDL.Nat8),
+            'response' : HttpRequestResult,
+          }),
+        ],
+        [HttpRequestResult],
+        ['query'],
+      ),
+    'unlinkPlayerFromUser' : IDL.Func([IDL.Nat], [GlobalPlayer], []),
+    'unlinkTelegram' : IDL.Func([], [User], []),
+    'updatePlayer' : IDL.Func([IDL.Nat, PlayerInput], [GlobalPlayer], []),
     'updateTournament' : IDL.Func([IDL.Nat, TournamentInput], [Tournament], []),
     'updateUser' : IDL.Func([UserId, UserInput], [User], []),
   });

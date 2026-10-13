@@ -13,6 +13,9 @@ export interface Cell {
     value: Value;
     name: string;
 }
+export interface Config {
+    clientId?: string;
+}
 export type Error_ = {
     __kind__: "FrontendOriginsNotConfigured";
     FrontendOriginsNotConfigured: null;
@@ -57,6 +60,33 @@ export type Error_ = {
         expected: Array<string>;
     };
 };
+export interface GlobalPlayer {
+    id: bigint;
+    userId?: UserId;
+    name: string;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
+    skillLevel: bigint;
+}
+export interface HttpHeader {
+    value: string;
+    name: string;
+}
+export interface HttpRequestResult {
+    status: bigint;
+    body: Uint8Array;
+    headers: Array<HttpHeader>;
+}
+export interface Link {
+    linkedAt: bigint;
+    username: string;
+    subject: string;
+}
+export interface LinkRequest {
+    clientId: string;
+    expiresAt: bigint;
+    nonce: string;
+}
 export type MatchSource = {
     __kind__: "bye";
     bye: null;
@@ -70,6 +100,10 @@ export type MatchSource = {
     __kind__: "loser";
     loser: bigint;
 };
+export interface PlayerInput {
+    name: string;
+    skillLevel: bigint;
+}
 export interface ProfileInput {
     username: string;
     displayName: string;
@@ -104,6 +138,11 @@ export interface TournamentAction {
     caption: string;
 }
 export type TournamentCommand = {
+    __kind__: "addExistingPlayer";
+    addExistingPlayer: {
+        globalPlayerId: bigint;
+    };
+} | {
     __kind__: "prioritizeMatch";
     prioritizeMatch: bigint;
 } | {
@@ -233,6 +272,7 @@ export interface TournamentPlayer {
     seed?: bigint;
     losses: bigint;
     registrationNumber: bigint;
+    globalPlayerId?: bigint;
     currentMatchId?: bigint;
     skillLevel: bigint;
     registeredAt: Timestamp;
@@ -355,13 +395,17 @@ export interface backendInterface {
     applyTournamentCommand(id: bigint, command: TournamentCommand): Promise<TournamentState>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     bootstrapOwner(): Promise<void>;
+    completeTelegramLink(idToken: string): Promise<User>;
+    createPlayer(input: PlayerInput): Promise<GlobalPlayer>;
     createTournament(input: TournamentInput): Promise<Tournament>;
     createUser(userId: UserId, input: UserInput): Promise<User>;
     execute(qJson: string): Promise<Result>;
     getApiDoc(): Promise<string>;
     getCallerProfile(): Promise<User | null>;
+    getCallerTelegramLink(): Promise<Link | null>;
     getCallerUserRole(): Promise<UserRole>;
     getMyRole(): Promise<Role | null>;
+    getTelegramLinkConfig(): Promise<Config>;
     getTournament(id: bigint): Promise<Tournament | null>;
     getTournamentState(id: bigint): Promise<TournamentState | null>;
     getTournaments(): Promise<Array<Tournament>>;
@@ -369,11 +413,22 @@ export interface backendInterface {
     getUserByUsername(username: string): Promise<User | null>;
     grantAdminRole(target: UserId): Promise<UserRoleView>;
     isCallerAdmin(): Promise<boolean>;
+    linkPlayerToUser(playerId: bigint, userId: UserId): Promise<GlobalPlayer>;
+    listPlayers(): Promise<Array<GlobalPlayer>>;
     listUsers(): Promise<Array<User>>;
     listUsersWithRoles(): Promise<Array<UserRoleView>>;
     revokeAdminRole(target: UserId): Promise<UserRoleView>;
     saveCallerProfile(input: ProfileInput): Promise<User>;
     schema(): Promise<string>;
+    setTelegramLinkConfig(clientId: string | null): Promise<void>;
+    startTelegramLink(): Promise<LinkRequest>;
+    telegramKeysTransform(args: {
+        context: Uint8Array;
+        response: HttpRequestResult;
+    }): Promise<HttpRequestResult>;
+    unlinkPlayerFromUser(playerId: bigint): Promise<GlobalPlayer>;
+    unlinkTelegram(): Promise<User>;
+    updatePlayer(playerId: bigint, input: PlayerInput): Promise<GlobalPlayer>;
     updateTournament(id: bigint, input: TournamentInput): Promise<Tournament>;
     updateUser(userId: UserId, input: UserInput): Promise<User>;
 }

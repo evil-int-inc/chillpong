@@ -527,6 +527,233 @@ describe("tournament organizer engine", () => {
     30_000,
   );
 
+  it.each([false, true])(
+    "fills a bye with a late entrant without regenerating the bracket (double=%s)",
+    async (double) => {
+      const room = await createRoom([2, 2, 2], double);
+      await applyRoom(room, { generateBracket: null });
+      const target = room.state.matches.find(
+        (match) => "winners" in match.bracket && "bye" in match.status,
+      )!;
+      const originalIds = room.state.matches.map((match) => match.id);
+      await applyRoom(room, {
+        addPlayer: { name: "Bye Arrival", skillLevel: 3n },
+      });
+      const late = room.state.players.at(-1)!;
+      const beforePlacement = room.state;
+      const slot = "bye" in target.sourceA ? { a: null } : { b: null };
+      await applyRoom(room, {
+        placePlayer: { playerId: late.id, matchId: target.id, slot },
+      });
+      const filled = room.state.matches.find(
+        (match) => match.id === target.id,
+      )!;
+      expect(filled.status).toEqual({ ready: null });
+      expect(
+        matchPlayers(room.state, filled).map((player) => player.id),
+      ).toContain(late.id);
+      expect(room.state.matches.map((match) => match.id)).toEqual(originalIds);
+      expect(
+        room.state.players.find((player) => player.id === late.id)
+          ?.currentMatchId,
+      ).toEqual([target.id]);
+      await applyRoom(room, { undo: null });
+      expect(room.state.matches).toEqual(beforePlacement.matches);
+      await applyRoom(room, {
+        placePlayer: { playerId: late.id, matchId: target.id, slot },
+      });
+      await finishRoom(room);
+      for (const player of room.state.players.filter(
+        (item) => item.id !== room.state.championId[0],
+      )) {
+        expect(player.losses).toBe(double ? 2n : 1n);
+      }
+    },
+    30_000,
+  );
+
+  it.each([false, true])(
+    "keeps repeated late entrants connected to the same opening slot (double=%s)",
+    async (double) => {
+      const room = await createRoom([2, 2, 2, 2], double);
+      await applyRoom(room, { generateBracket: null });
+      const target = readyMatches(room.state)[0]!;
+      const originalMatches = room.state.matches.length;
+      const qualifiers: bigint[] = [];
+      const lateIds: bigint[] = [];
+      for (const name of ["First Arrival", "Second Arrival"]) {
+        await applyRoom(room, { addPlayer: { name, skillLevel: 2n } });
+        const late = room.state.players.at(-1)!;
+        lateIds.push(late.id);
+        await applyRoom(room, {
+          placePlayer: {
+            playerId: late.id,
+            matchId: target.id,
+            slot: { a: null },
+          },
+        });
+        const qualifier = room.state.matches.find(
+          (match) =>
+            "winners" in match.bracket &&
+            "player" in match.sourceB &&
+            match.sourceB.player === late.id,
+        )!;
+        expect(qualifier.round).toBe(0n);
+        expect(
+          room.state.matches.find((match) => match.id === target.id)?.sourceA,
+        ).toEqual({ winner: qualifier.id });
+        qualifiers.push(qualifier.id);
+      }
+      const first = room.state.matches.find(
+        (match) => match.id === qualifiers[0],
+      )!;
+      const second = room.state.matches.find(
+        (match) => match.id === qualifiers[1],
+      )!;
+      expect(first.status).toEqual({ ready: null });
+      expect(second.sourceA).toEqual({ winner: first.id });
+      expect(second.status).toEqual({ blocked: null });
+      expect(room.state.matches.length).toBe(
+        originalMatches + (double ? 4 : 2),
+      );
+      const beforeDuplicate = room.state;
+      await expect(
+        actor.applyTournamentCommand(room.id, {
+          placePlayer: {
+            playerId: lateIds[0]!,
+            matchId: target.id,
+            slot: { b: null },
+          },
+        }),
+      ).rejects.toThrow(/already in the bracket/i);
+      expect((await actor.getTournamentState(room.id))[0]).toEqual(
+        beforeDuplicate,
+      );
+      await playResult(room, first.id, lateIds[0]);
+      expect(
+        room.state.matches.find((match) => match.id === second.id)?.playerA,
+      ).toEqual([lateIds[0]]);
+      await playResult(room, second.id, lateIds[1]);
+      expect(
+        room.state.matches.find((match) => match.id === target.id)?.playerA,
+      ).toEqual([lateIds[1]]);
+      await finishRoom(room);
+      for (const player of room.state.players.filter(
+        (item) => item.id !== room.state.championId[0],
+      )) {
+        expect(player.losses).toBe(double ? 2n : 1n);
+      }
+    },
+    30_000,
+  );
+
+  it.each([false, true])(
+    "qualifies a late entrant into a later pending round while preserving completed games (double=%s)",
+    async (double) => {
+      const room = await createRoom(Array(8).fill(2), double);
+      await applyRoom(room, { generateBracket: null });
+      const opening = room.state.matches.filter(
+        (match) => "winners" in match.bracket && match.round === 1n,
+      );
+      await playResult(room, opening[0]!.id);
+      await playResult(room, opening[1]!.id);
+      const completed = room.state.matches.filter(
+        (match) => "completed" in match.status,
+      );
+      const target = readyMatches(room.state).find(
+        (match) => "winners" in match.bracket && match.round === 2n,
+      )!;
+      expect(target).toBeDefined();
+      const incoming = target.sourceA;
+      const incomingPlayer = target.playerA[0]!;
+      await applyRoom(room, {
+        addPlayer: { name: "Round Two Arrival", skillLevel: 2n },
+      });
+      const late = room.state.players.at(-1)!;
+      await applyRoom(room, {
+        placePlayer: {
+          playerId: late.id,
+          matchId: target.id,
+          slot: { a: null },
+        },
+      });
+      const qualifier = room.state.matches.find(
+        (match) =>
+          "winners" in match.bracket &&
+          "player" in match.sourceB &&
+          match.sourceB.player === late.id,
+      )!;
+      expect(qualifier.round).toBe(1n);
+      expect(qualifier.sourceA).toEqual(incoming);
+      expect(
+        new Set(matchPlayers(room.state, qualifier).map((player) => player.id)),
+      ).toEqual(new Set([late.id, incomingPlayer]));
+      expect(
+        room.state.matches.filter((match) => "completed" in match.status),
+      ).toEqual(completed);
+      await playResult(room, qualifier.id, late.id);
+      expect(
+        room.state.matches.find((match) => match.id === target.id)?.playerA,
+      ).toEqual([late.id]);
+      await finishRoom(room);
+      for (const player of room.state.players.filter(
+        (item) => item.id !== room.state.championId[0],
+      )) {
+        expect(player.losses).toBe(double ? 2n : 1n);
+      }
+    },
+    30_000,
+  );
+
+  it.each([false, true])(
+    "never promotes a nested opening qualifier to the tournament final (double=%s)",
+    async (double) => {
+      const room = await createRoom([2, 2], double);
+      await applyRoom(room, { generateBracket: null });
+      const final = readyMatches(room.state)[0]!;
+      await applyRoom(room, {
+        addPlayer: { name: "First Qualifier Arrival", skillLevel: 2n },
+      });
+      const firstLate = room.state.players.at(-1)!;
+      await applyRoom(room, {
+        placePlayer: {
+          playerId: firstLate.id,
+          matchId: final.id,
+          slot: { a: null },
+        },
+      });
+      const firstQualifier = readyMatches(room.state)[0]!;
+      await applyRoom(room, {
+        addPlayer: { name: "Nested Qualifier Arrival", skillLevel: 2n },
+      });
+      const nestedLate = room.state.players.at(-1)!;
+      await applyRoom(room, {
+        placePlayer: {
+          playerId: nestedLate.id,
+          matchId: firstQualifier.id,
+          slot: { b: null },
+        },
+      });
+      const nestedQualifier = readyMatches(room.state)[0]!;
+      expect(nestedQualifier.round).toBe(0n);
+      await playResult(room, nestedQualifier.id, nestedLate.id);
+      expect(room.state.championId).toEqual([]);
+      expect(
+        room.state.matches.find((match) => match.id === final.id)?.status,
+      ).toEqual({ blocked: null });
+      await finishRoom(room);
+      expect(
+        room.state.matches.find((match) => match.id === final.id)?.status,
+      ).toEqual({ completed: null });
+      for (const player of room.state.players.filter(
+        (item) => item.id !== room.state.championId[0],
+      )) {
+        expect(player.losses).toBe(double ? 2n : 1n);
+      }
+    },
+    30_000,
+  );
+
   it("requires withdrawal confirmation and never rewrites a completed result", async () => {
     const room = await createRoom([3, 3, 3, 3]);
     await applyRoom(room, { generateBracket: null });
@@ -557,28 +784,336 @@ describe("tournament organizer engine", () => {
     ).toEqual({ removed: null });
   });
 
-  it("rejects drawn scores and frees the table after a result", async () => {
-    const room = await createRoom([3, 3, 3, 3]);
+  it.each([false, true])(
+    "rejects draws and hands the same table to a ready match in one undoable result (playing=%s)",
+    async (playing) => {
+      const room = await createRoom([3, 3, 3, 3]);
+      await applyRoom(room, { generateBracket: null });
+      const [first, second] = readyMatches(room.state);
+      await applyRoom(room, {
+        assignTable: { matchId: first!.id, table: [2n] },
+      });
+      if (playing) await applyRoom(room, { startMatch: first!.id });
+      const before = room.state;
+      await expect(
+        actor.applyTournamentCommand(room.id, {
+          recordResult: { matchId: first!.id, scoreA: 7n, scoreB: 7n },
+        }),
+      ).rejects.toThrow(/tie|draw|winner|different/i);
+      expect(await actor.getTournamentState(room.id)).toEqual([before]);
+      await applyRoom(room, {
+        recordResult: { matchId: first!.id, scoreA: 11n, scoreB: 7n },
+      });
+      expect(
+        room.state.matches.find((match) => match.id === first!.id),
+      ).toMatchObject({
+        status: { completed: null },
+        scoreA: [11n],
+        scoreB: [7n],
+        table: [2n],
+      });
+      expect(
+        room.state.matches.find((match) => match.id === second!.id),
+      ).toEqual({
+        ...second,
+        table: [2n],
+      });
+      expect(room.state.tables).toEqual([
+        before.tables[0],
+        { number: 2n, status: { waiting: null }, matchId: [second!.id] },
+      ]);
+      expect(
+        room.state.players.some((player) => "playing" in player.status),
+      ).toBe(false);
+      expect(room.state.history).toHaveLength(before.history.length + 1);
+      expect(room.state.history.at(-1)?.caption).toBe("Record match result");
+      await applyRoom(room, { undo: null });
+      expect(room.state.matches).toEqual(before.matches);
+      expect(room.state.players).toEqual(before.players);
+      expect(room.state.tables).toEqual(before.tables);
+      expect(room.state.nextMatches).toEqual(before.nextMatches);
+      expect(room.state.waitingQueue).toEqual(before.waitingQueue);
+      expect(room.state.history).toEqual(before.history);
+    },
+  );
+
+  it.each([false, true])(
+    "skips a match already assigned to another table and preserves that table (playing=%s)",
+    async (playing) => {
+      const room = await createRoom(Array.from({ length: 8 }, () => 2));
+      await applyRoom(room, { generateBracket: null });
+      const [first, occupied, next] = readyMatches(room.state);
+      await applyRoom(room, {
+        assignTable: { matchId: first!.id, table: [1n] },
+      });
+      await applyRoom(room, {
+        assignTable: { matchId: occupied!.id, table: [2n] },
+      });
+      if (playing) await applyRoom(room, { startMatch: occupied!.id });
+      const before = room.state;
+      await applyRoom(room, {
+        recordResult: { matchId: first!.id, scoreA: 11n, scoreB: 7n },
+      });
+      expect(room.state.tables[0]).toEqual({
+        number: 1n,
+        status: { waiting: null },
+        matchId: [next!.id],
+      });
+      expect(room.state.tables[1]).toEqual(before.tables[1]);
+      expect(
+        room.state.matches.find((match) => match.id === occupied!.id),
+      ).toEqual(before.matches.find((match) => match.id === occupied!.id));
+      expect(room.state.matches.find((match) => match.id === next!.id)).toEqual(
+        {
+          ...next,
+          table: [1n],
+        },
+      );
+    },
+  );
+
+  it.each(["match", "player"] as const)(
+    "respects an organizer's %s priority when handing off a table",
+    async (priority) => {
+      const room = await createRoom(Array.from({ length: 8 }, () => 2));
+      await applyRoom(room, { generateBracket: null });
+      const [first, older, , preferred] = readyMatches(room.state);
+      expect(room.state.nextMatches.indexOf(older!.id)).toBeLessThan(
+        room.state.nextMatches.indexOf(preferred!.id),
+      );
+      await applyRoom(room, {
+        assignTable: { matchId: first!.id, table: [1n] },
+      });
+      await applyRoom(
+        room,
+        priority === "match"
+          ? { prioritizeMatch: preferred!.id }
+          : { prioritizePlayer: preferred!.playerA[0]! },
+      );
+      expect(room.state.nextMatches[0]).toBe(preferred!.id);
+      await applyRoom(room, {
+        recordResult: { matchId: first!.id, scoreA: 11n, scoreB: 7n },
+      });
+      expect(room.state.tables[0]?.matchId).toEqual([preferred!.id]);
+      expect(
+        room.state.matches.find((match) => match.id === older!.id)?.table,
+      ).toEqual([]);
+      expect(
+        room.state.matches.find((match) => match.id === preferred!.id)?.status,
+      ).toEqual({ ready: null });
+    },
+  );
+
+  it("chooses the closest skill matchup before FIFO and uses FIFO for equal gaps", async () => {
+    const room = await createRoom(Array.from({ length: 8 }, () => 2));
+    await applyRoom(room, { generateBracket: null });
+    const [first, occupied, older, younger] = readyMatches(room.state);
+    await applyRoom(room, { assignTable: { matchId: first!.id, table: [1n] } });
+    await applyRoom(room, {
+      assignTable: { matchId: occupied!.id, table: [2n] },
+    });
+    const olderPlayer = room.state.players.find(
+      (player) => player.id === older!.playerA[0],
+    )!;
+    await applyRoom(room, {
+      editPlayer: {
+        playerId: olderPlayer.id,
+        name: olderPlayer.name,
+        skillLevel: 5n,
+      },
+    });
+    const before = room.state;
+    await applyRoom(room, {
+      recordResult: { matchId: first!.id, scoreA: 11n, scoreB: 7n },
+    });
+    expect(room.state.tables[0]?.matchId).toEqual([younger!.id]);
+    await applyRoom(room, { undo: null });
+    expect(room.state.matches).toEqual(before.matches);
+    await applyRoom(room, {
+      editPlayer: {
+        playerId: olderPlayer.id,
+        name: olderPlayer.name,
+        skillLevel: 2n,
+      },
+    });
+    await applyRoom(room, {
+      recordResult: { matchId: first!.id, scoreA: 11n, scoreB: 7n },
+    });
+    expect(room.state.tables[0]?.matchId).toEqual([older!.id]);
+    expect(room.state.tables[1]?.matchId).toEqual([occupied!.id]);
+  });
+
+  it("hands off to a final unlocked by the result and leaves the table finished after the champion is decided", async () => {
+    const room = await createRoom([2, 2, 2, 2]);
+    await applyRoom(room, { generateBracket: null });
+    const [first, second] = readyMatches(room.state);
+    await applyRoom(room, { assignTable: { matchId: first!.id, table: [2n] } });
+    await applyRoom(room, {
+      recordResult: { matchId: first!.id, scoreA: 11n, scoreB: 7n },
+    });
+    await applyRoom(room, {
+      recordResult: { matchId: second!.id, scoreA: 11n, scoreB: 7n },
+    });
+    const final = readyMatches(room.state)[0]!;
+    expect(final.round).toBe(2n);
+    expect(final.table).toEqual([2n]);
+    expect(final.playerA).toEqual([first!.playerA[0]!]);
+    expect(final.playerB).toEqual([second!.playerA[0]!]);
+    expect(room.state.tables[1]).toEqual({
+      number: 2n,
+      status: { waiting: null },
+      matchId: [final.id],
+    });
+    await applyRoom(room, {
+      recordResult: { matchId: final.id, scoreA: 11n, scoreB: 7n },
+    });
+    expect(room.state.championId).toEqual(final.playerA);
+    expect(readyMatches(room.state)).toEqual([]);
+    expect(room.state.tables[1]).toEqual({
+      number: 2n,
+      status: { finished: null },
+      matchId: [final.id],
+    });
+    expect(room.state.matches.every((match) => match.table[0] === 2n)).toBe(
+      true,
+    );
+  });
+
+  it("hands the grand final's table to the newly required double-elimination reset final", async () => {
+    const room = await createRoom([3, 3], true);
+    await applyRoom(room, { generateBracket: null });
+    const opening = readyMatches(room.state)[0]!;
+    await applyRoom(room, {
+      assignTable: { matchId: opening.id, table: [2n] },
+    });
+    await applyRoom(room, {
+      recordResult: { matchId: opening.id, scoreA: 11n, scoreB: 7n },
+    });
+    const grand = readyMatches(room.state)[0]!;
+    expect(grand.bracket).toEqual({ grandFinal: null });
+    expect(grand.table).toEqual([2n]);
+    expect(
+      room.state.matches.find((match) => "resetFinal" in match.bracket)?.status,
+    ).toEqual({ blocked: null });
+    await applyRoom(room, {
+      recordResult: { matchId: grand.id, scoreA: 7n, scoreB: 11n },
+    });
+    const reset = readyMatches(room.state)[0]!;
+    expect(reset.bracket).toEqual({ resetFinal: null });
+    expect(reset.table).toEqual([2n]);
+    expect(reset.playerA).toEqual(grand.playerA);
+    expect(reset.playerB).toEqual(grand.playerB);
+    expect(room.state.championId).toEqual([]);
+    expect(room.state.tables[1]).toEqual({
+      number: 2n,
+      status: { waiting: null },
+      matchId: [reset.id],
+    });
+    expect(
+      room.state.matches.find((match) => match.id === grand.id)?.table,
+    ).toEqual([2n]);
+    await applyRoom(room, {
+      recordResult: { matchId: reset.id, scoreA: 11n, scoreB: 7n },
+    });
+    expect(room.state.tables[1]).toEqual({
+      number: 2n,
+      status: { finished: null },
+      matchId: [reset.id],
+    });
+    expect(room.state.championId).toEqual(reset.playerA);
+  });
+
+  it("leaves the completed table finished when all other ready matches already have tables", async () => {
+    const room = await createRoom([2, 2, 2, 2]);
     await applyRoom(room, { generateBracket: null });
     const [first, second] = readyMatches(room.state);
     await applyRoom(room, { assignTable: { matchId: first!.id, table: [1n] } });
-    await applyRoom(room, { startMatch: first!.id });
-    await expect(
-      actor.applyTournamentCommand(room.id, {
-        recordResult: { matchId: first!.id, scoreA: 7n, scoreB: 7n },
-      }),
-    ).rejects.toThrow(/tie|draw|winner|different/i);
-    await playResult(room, first!.id);
-    expect(
-      room.state.tables.find((table) => table.number === 1n)?.status,
-    ).toEqual({ finished: null });
     await applyRoom(room, {
-      assignTable: { matchId: second!.id, table: [1n] },
+      assignTable: { matchId: second!.id, table: [2n] },
     });
-    expect(
-      room.state.tables.find((table) => table.number === 1n)?.matchId,
-    ).toEqual([second!.id]);
+    const before = room.state;
+    await applyRoom(room, {
+      recordResult: { matchId: first!.id, scoreA: 11n, scoreB: 7n },
+    });
+    expect(room.state.tables[0]).toEqual({
+      number: 1n,
+      status: { finished: null },
+      matchId: [first!.id],
+    });
+    expect(room.state.tables[1]).toEqual(before.tables[1]);
+    expect(room.state.matches.find((match) => match.id === second!.id)).toEqual(
+      before.matches.find((match) => match.id === second!.id),
+    );
+    expect(readyMatches(room.state).map((match) => match.id)).toEqual([
+      second!.id,
+    ]);
   });
+
+  it("does not hand off any table when scoring an unassigned ready match", async () => {
+    const room = await createRoom(Array.from({ length: 8 }, () => 2));
+    await applyRoom(room, { generateBracket: null });
+    const [first, second] = readyMatches(room.state);
+    await applyRoom(room, {
+      assignTable: { matchId: second!.id, table: [2n] },
+    });
+    const before = room.state;
+    await applyRoom(room, {
+      recordResult: { matchId: first!.id, scoreA: 11n, scoreB: 7n },
+    });
+    expect(room.state.tables).toEqual(before.tables);
+    expect(
+      room.state.matches.find((match) => match.id === first!.id)?.table,
+    ).toEqual([]);
+    expect(
+      readyMatches(room.state)
+        .filter((match) => match.table.length > 0)
+        .map((match) => match.id),
+    ).toEqual([second!.id]);
+    expect(
+      readyMatches(room.state).some((match) => match.table.length === 0),
+    ).toBe(true);
+  });
+
+  it.each([false, true])(
+    "does not hand off the historical table again when correcting a completed result (change winner=%s)",
+    async (changeWinner) => {
+      const room = await createRoom(Array.from({ length: 8 }, () => 2));
+      await applyRoom(room, { generateBracket: null });
+      const [first, next] = readyMatches(room.state);
+      await applyRoom(room, {
+        assignTable: { matchId: first!.id, table: [1n] },
+      });
+      await applyRoom(room, {
+        recordResult: { matchId: first!.id, scoreA: 11n, scoreB: 7n },
+      });
+      expect(room.state.tables[0]?.matchId).toEqual([next!.id]);
+      await applyRoom(room, { assignTable: { matchId: next!.id, table: [] } });
+      const before = room.state;
+      await applyRoom(room, {
+        recordResult: {
+          matchId: first!.id,
+          scoreA: changeWinner ? 7n : 11n,
+          scoreB: changeWinner ? 11n : 8n,
+        },
+      });
+      expect(room.state.tables).toEqual(before.tables);
+      expect(room.state.tables[0]).toEqual({
+        number: 1n,
+        status: { finished: null },
+        matchId: [first!.id],
+      });
+      expect(
+        readyMatches(room.state).every((match) => match.table.length === 0),
+      ).toBe(true);
+      expect(
+        room.state.matches.find((match) => match.id === first!.id),
+      ).toMatchObject({
+        table: [1n],
+        status: { completed: null },
+        winnerId: changeWinner ? first!.playerB : first!.playerA,
+      });
+    },
+  );
 
   it.each([false, true])(
     "atomically exchanges occupied tables without changing match progress (playing=$playing)",
@@ -778,6 +1313,18 @@ describe("tournament organizer engine", () => {
       }),
     ).rejects.toThrow(/occupied|tables/i);
     await playResult(room, matchId);
+    const handedOff = room.state.matches.find(
+      (match) => match.table[0] === 2n && "ready" in match.status,
+    )!;
+    expect(handedOff).toBeDefined();
+    await expect(
+      actor.applyTournamentCommand(room.id, {
+        configure: { elimination: { doubleElimination: null }, tableCount: 1n },
+      }),
+    ).rejects.toThrow(/occupied|tables/i);
+    await applyRoom(room, {
+      assignTable: { matchId: handedOff.id, table: [] },
+    });
     await applyRoom(room, {
       configure: { elimination: { doubleElimination: null }, tableCount: 1n },
     });

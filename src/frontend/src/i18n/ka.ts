@@ -1,6 +1,45 @@
 import type { Message } from "./messages";
 
 export const ka = {
+  "Find a player in the bracket": "მოთამაშის პოვნა ტურნირის ბადეში",
+  "PLAYER NAME": "მოთამაშის სახელი",
+  "Find next match": "შემდეგი მატჩის პოვნა",
+  "No player matches this name.": "ამ სახელით მოთამაშე ვერ მოიძებნა.",
+  "No upcoming match for {name}.": "მოთამაშეს {name} მომავალი მატჩი არ აქვს.",
+  "Several players match. Choose a player below.":
+    "რამდენიმე მოთამაშე მოიძებნა. აირჩიეთ მოთამაშე ქვემოთ.",
+  "Find next match for {name} / {registration}":
+    "მოთამაშის {name} / {registration} შემდეგი მატჩის პოვნა",
+  "Showing match {match} for {name}.":
+    "ნაჩვენებია მოთამაშის {name} მატჩი {match}.",
+  Matches: "მატჩები",
+  "THE MATCHES / ALL ROUNDS": "მატჩები / ყველა რაუნდი",
+  "Search tournament matches": "ტურნირის მატჩების ძებნა",
+  "PLAYER NAME / MATCH ID": "მოთამაშის სახელი / მატჩის ID",
+  Bracket: "ბადე",
+  "All brackets": "ყველა ბადე",
+  "Match status": "მატჩის სტატუსი",
+  "Match round": "მატჩის რაუნდი",
+  "Match table": "მატჩის მაგიდა",
+  "Match sort order": "მატჩების დალაგების წესი",
+  "Bracket order": "ბადის რიგითობა",
+  "Players / matchup": "მოთამაშეები / წყვილი",
+  Score: "ანგარიში",
+  "Open match {match}: {playerA} vs {playerB}":
+    "მატჩის გახსნა {match}: {playerA} — {playerB}",
+  "{shown} of {total} matches": "მატჩები: {shown}, სულ: {total}",
+  "No matching matches.": "მატჩები ვერ მოიძებნა.",
+  "Try another player or adjust the status, bracket, round or table filters.":
+    "მოძებნეთ სხვა მოთამაშე ან შეცვალეთ სტატუსის, ბადის, რაუნდის ან მაგიდის ფილტრები.",
+  "No matches yet.": "მატჩები ჯერ არ არის.",
+  "Generate the bracket to see tournament matches here.":
+    "შექმენით ბადე, რომ აქ ტურნირის მატჩები გამოჩნდეს.",
+  "Page {page} of {pages}": "გვერდი {page}, სულ: {pages}",
+  "Previous matches page": "მატჩების წინა გვერდი",
+  "Next matches page": "მატჩების შემდეგი გვერდი",
+  Previous: "წინა",
+  Match: "მატჩი",
+  Round: "რაუნდი",
   "Clear search": "ძებნის გასუფთავება",
   "Match started at table {table}": "მატჩი დაიწყო მაგიდასთან {table}",
   "Bracket generated": "ბადე შექმნილია",
@@ -436,6 +475,13 @@ export const ka = {
   "Reg / time": "რეგ / დრო",
   "Regenerate bracket": "ბადის ხელახლა შექმნა",
   "Register & place manually": "რეგისტრაცია და ხელით განთავსება",
+  "Next, choose a bracket slot for this player. An occupied slot creates a qualifier and keeps both entrants in the tournament.":
+    "შემდეგ აირჩიეთ ადგილი ბადეში ამ მოთამაშისთვის. თუ ადგილი დაკავებულია, შეიქმნება საკვალიფიკაციო მატჩი და ორივე მოთამაშე დარჩება ტურნირში.",
+  "Registered in the waiting queue. Use Place in bracket to add them to the draw.":
+    "მოთამაშე დარეგისტრირებულია რიგში. ბადეში დასამატებლად გამოიყენეთ «ბადეში განთავსება».",
+  "Place in bracket": "ბადეში განთავსება",
+  "Player added to the bracket. Their match is now in view.":
+    "მოთამაშე დაემატა ბადეს. მისი მატჩი ახლა ჩანს.",
   "Register {name}": "რეგისტრაცია: {name}",
   Registered: "რეგისტრირებულია",
   "Registration open": "რეგისტრაცია ღიაა",
@@ -766,4 +812,163 @@ export const ka = {
   "Could not copy the link. Copy it below.":
     "ბმული ვერ დაკოპირდა. დააკოპირეთ ქვემოთ.",
   "Full bracket URL": "სრული ბადის ბმული",
+  "All players": "ყველა მოთამაშე",
+  "Already linked": "უკვე დაკავშირებულია",
+  "Choose a player": "აირჩიეთ მოთამაშე",
+  "Choose existing player": "არსებული მოთამაშის არჩევა",
+  "Couldn't load the player directory.":
+    "მოთამაშეთა სიის ჩატვირთვა ვერ მოხერხდა.",
+  "Create a player here or add one in a tournament. They will be available across the app.":
+    "შექმენით მოთამაშე აქ ან დაამატეთ ტურნირში. ის ხელმისაწვდომი იქნება მთელ აპლიკაციაში.",
+  "Create new player": "ახალი მოთამაშის შექმნა",
+  "Create player": "მოთამაშის შექმნა",
+  "Edit shared player": "საერთო სიის მოთამაშის რედაქტირება",
+  "Edit shared player {v1}": "საერთო სიის მოთამაშის {v1} რედაქტირება",
+  "Existing player": "არსებული მოთამაშე",
+  "Link player": "მოთამაშის დაკავშირება",
+  "Link player for member {v1}": "მოთამაშის დაკავშირება წევრთან {v1}",
+  "Link player to member": "მოთამაშის წევრთან დაკავშირება",
+  "Linked player: {v1}": "დაკავშირებული მოთამაშე: {v1}",
+  "Linked to a member": "დაკავშირებულია წევრთან",
+  "Linking replaces this member's name with the player's name, even if they already set a name. Each member and player can have one link.":
+    "მოთამაშის სახელი ჩაანაცვლებს წევრის სახელს, მაშინაც კი, თუ ის უკვე მითითებულია. თითოეულ წევრსა და მოთამაშეს მხოლოდ ერთი კავშირი შეიძლება ჰქონდეს.",
+  "Manage player link": "მოთამაშის კავშირის მართვა",
+  "NAME / PLAYER NUMBER": "სახელი / მოთამაშის ნომერი",
+  "No available players match. Create a new player or change the search.":
+    "შესაფერისი ხელმისაწვდომი მოთამაშე ვერ მოიძებნა. შექმენით ახალი მოთამაშე ან შეცვალეთ ძებნა.",
+  "One shared directory for every tournament. Choose a tournament above to see its registration order, status, tables and rounds.":
+    "მოთამაშეთა ერთი საერთო სია ყველა ტურნირისთვის. ზემოთ აირჩიეთ ტურნირი რეგისტრაციის რიგის, სტატუსების, მაგიდებისა და რაუნდების სანახავად.",
+  "Player linked. The member's name is now {v1}.":
+    "მოთამაშე დაკავშირებულია. წევრის სახელია {v1}.",
+  "Player source": "მოთამაშის დამატების წყარო",
+  "Player to link": "დასაკავშირებელი მოთამაშე",
+  "Player unlinked. The member's name is unchanged.":
+    "მოთამაშის კავშირი გაუქმებულია. წევრის სახელი უცვლელია.",
+  "Players already registered in this tournament are excluded. This registration gets its own number and queue position.":
+    "ამ ტურნირში უკვე რეგისტრირებული მოთამაშეები გამორიცხულია. ახალ რეგისტრაციას საკუთარი ნომერი და რიგში ადგილი ენიჭება.",
+  "Saving this player also updates their linked account's name.":
+    "მოთამაშის შენახვა დაკავშირებული ანგარიშის სახელსაც განაახლებს.",
+  "Search shared players": "საერთო სიაში მოთამაშეების ძებნა",
+  "Shared player details apply to future registrations. Existing tournament names, scores and registration order stay unchanged.":
+    "საერთო სიის მოთამაშის მონაცემები მომავალ რეგისტრაციებზე ვრცელდება. არსებულ ტურნირებში სახელები, ანგარიშები და რეგისტრაციის რიგი უცვლელია.",
+  "Shared player saved. Available for every tournament.":
+    "მოთამაშე შენახულია საერთო სიაში და ხელმისაწვდომია ყველა ტურნირისთვის.",
+  "The player directory is still connecting.":
+    "მიმდინარეობს მოთამაშეთა სიასთან დაკავშირება.",
+  "The shared lineup is open.": "მოთამაშეთა საერთო სია ღიაა.",
+  "Try another name or adjust the skill filter.":
+    "სცადეთ სხვა სახელი ან შეცვალეთ თამაშის დონის ფილტრი.",
+  "Unlink player": "მოთამაშის კავშირის გაუქმება",
+  "Unlink this player before selecting another. The account keeps its current name.":
+    "სხვა მოთამაშის არჩევამდე გააუქმეთ ამ მოთამაშის კავშირი. ანგარიშის არსებული სახელი შენარჩუნდება.",
+  "Member is already linked to another player; unlink it first":
+    "წევრი უკვე დაკავშირებულია სხვა მოთამაშესთან; ჯერ გააუქმეთ ეს კავშირი",
+  "Member must be an authenticated account": "წევრი ჯერ ანგარიშში უნდა შევიდეს",
+  "Player is already linked to another member; unlink it first":
+    "მოთამაშე უკვე დაკავშირებულია სხვა წევრთან; ჯერ გააუქმეთ ეს კავშირი",
+  "Player is already registered in this tournament":
+    "მოთამაშე უკვე რეგისტრირებულია ამ ტურნირში",
+  Telegram: "Telegram",
+  "Link Telegram": "Telegram-ის დაკავშირება",
+  "Link Telegram to your existing member account. Linking replaces your current username with your Telegram username.":
+    "დააკავშირეთ Telegram თქვენს არსებულ ანგარიშთან. თქვენი მომხმარებლის სახელი ჩაანაცვლდება Telegram-ის მომხმარებლის სახელით.",
+  "Linked Telegram account": "დაკავშირებული Telegram-ის ანგარიში",
+  "Sync Telegram username": "Telegram-ის მომხმარებლის სახელის განახლება",
+  "Telegram linking is not configured yet. Ask an admin to set the public Login Client ID.":
+    "Telegram-ის დაკავშირება ჯერ არ არის გამართული. სთხოვეთ ადმინისტრატორს მიუთითოს საჯარო შესვლის კლიენტის ID.",
+  "Unlink Telegram": "Telegram-ის კავშირის გაუქმება",
+  "Couldn't load Telegram. Check your connection and try again.":
+    "Telegram-ის ჩატვირთვა ვერ მოხერხდა. შეამოწმეთ ინტერნეტკავშირი და სცადეთ ხელახლა.",
+  "Couldn't prepare Telegram linking. Try again.":
+    "Telegram-ის დაკავშირებისთვის მომზადება ვერ მოხერხდა. სცადეთ ხელახლა.",
+  "Telegram linked. Your username now matches Telegram.":
+    "Telegram დაკავშირებულია. თქვენი მომხმარებლის სახელი ახლა Telegram-ის სახელს ემთხვევა.",
+  "Telegram unlinked. Your username is unchanged.":
+    "Telegram-ის კავშირი გაუქმებულია. თქვენი მომხმარებლის სახელი უცვლელია.",
+  "The Telegram link request expired. Refresh it and try again.":
+    "Telegram-ის დაკავშირების მოთხოვნას ვადა გაუვიდა. განაახლეთ ის და სცადეთ ხელახლა.",
+  "Telegram didn't finish linking. Allow popups or retry in your browser.":
+    "Telegram-ის დაკავშირება ვერ დასრულდა. დაუშვით ამომხტარი ფანჯრები ან სცადეთ ხელახლა ბრაუზერში.",
+  "Telegram linking was cancelled or could not be completed. Try again.":
+    "Telegram-ის დაკავშირება გაუქმდა ან ვერ დასრულდა. სცადეთ ხელახლა.",
+  "Telegram linking settings": "Telegram-ის დაკავშირების პარამეტრები",
+  "Use the public Login Client ID from BotFather. Leave blank to disable linking. Bot tokens and client secrets are not needed here.":
+    "მიუთითეთ საჯარო შესვლის კლიენტის ID BotFather-იდან. დაკავშირების გასათიშად დატოვეთ ცარიელი. ბოტის ტოკენები და კლიენტის საიდუმლო გასაღებები აქ საჭირო არ არის.",
+  "Couldn't load Telegram settings.":
+    "Telegram-ის პარამეტრების ჩატვირთვა ვერ მოხერხდა.",
+  "Enter a valid numeric Telegram Login Client ID.":
+    "მიუთითეთ Telegram-ის შესვლის კლიენტის სწორი რიცხვითი ID.",
+  "Telegram Login Client ID": "Telegram-ის შესვლის კლიენტის ID",
+  "Couldn't save Telegram settings.":
+    "Telegram-ის პარამეტრების შენახვა ვერ მოხერხდა.",
+  "Telegram settings saved.": "Telegram-ის პარამეტრები შენახულია.",
+  "Save Telegram settings": "Telegram-ის პარამეტრების შენახვა",
+  "Ambiguous Telegram verification key":
+    "Telegram-ის შემოწმების გასაღები არაერთმნიშვნელოვანია",
+  "Duplicate Telegram token JSON key":
+    "Telegram-ის ტოკენის JSON-ში გასაღები მეორდება",
+  "Invalid Telegram Login client ID":
+    "Telegram-ის შესვლის კლიენტის ID არასწორია",
+  "Invalid Telegram account ID": "Telegram-ის ანგარიშის ID არასწორია",
+  "Invalid Telegram key ID": "Telegram-ის გასაღების ID არასწორია",
+  "Invalid Telegram signature encoding":
+    "Telegram-ის ხელმოწერის კოდირება არასწორია",
+  "Invalid Telegram token": "Telegram-ის ტოკენი არასწორია",
+  "Invalid Telegram token JSON": "Telegram-ის ტოკენის JSON არასწორია",
+  "Invalid Telegram token encoding": "Telegram-ის ტოკენის კოდირება არასწორია",
+  "Invalid Telegram token issuer": "Telegram-ის ტოკენის გამომცემი არასწორია",
+  "Invalid Telegram token signature": "Telegram-ის ტოკენის ხელმოწერა არასწორია",
+  "Invalid Telegram token timestamp": "Telegram-ის ტოკენში დრო არასწორია",
+  "Invalid Telegram verification keys":
+    "Telegram-ის შემოწმების გასაღებები არასწორია",
+  "Set a Telegram username before linking.":
+    "დაკავშირებამდე მიუთითეთ მომხმარებლის სახელი Telegram-ში.",
+  "Set a valid Telegram username before linking.":
+    "დაკავშირებამდე მიუთითეთ მომხმარებლის სწორი სახელი Telegram-ში.",
+  "Start Telegram linking before submitting a token":
+    "ტოკენის გაგზავნამდე დაიწყეთ Telegram-ის დაკავშირება",
+  "Telegram Login must use the RS256 signing algorithm":
+    "Telegram-ში შესვლისთვის საჭიროა ხელმოწერის RS256 ალგორითმი",
+  "Telegram RS256 verification key is unavailable":
+    "Telegram-ის RS256 შემოწმების გასაღები მიუწვდომელია",
+  "Telegram configuration changed. Try linking again.":
+    "Telegram-ის პარამეტრები შეიცვალა. სცადეთ დაკავშირება ხელახლა.",
+  "Telegram link expired. Try linking again.":
+    "Telegram-ის დაკავშირების მოთხოვნას ვადა გაუვიდა. სცადეთ ხელახლა.",
+  "Telegram link verification did not match. Try linking again.":
+    "Telegram-ის დაკავშირების მოთხოვნა ვერ დადასტურდა. სცადეთ ხელახლა.",
+  "Telegram linking is not configured yet":
+    "Telegram-ის დაკავშირება ჯერ არ არის გამართული",
+  "Telegram token JSON is too deeply nested":
+    "Telegram-ის ტოკენის JSON-ში ჩადგმის სიღრმე ზედმეტად დიდია",
+  "Telegram token expired or has an invalid timestamp":
+    "Telegram-ის ტოკენს ვადა გაუვიდა ან არასწორ დროს შეიცავს",
+  "Telegram token has no account ID":
+    "Telegram-ის ტოკენში ანგარიშის ID არ არის",
+  "Telegram token has no expiration time":
+    "Telegram-ის ტოკენში ვადის გასვლის დრო არ არის",
+  "Telegram token has no issue time": "Telegram-ის ტოკენში გაცემის დრო არ არის",
+  "Telegram token has no key ID": "Telegram-ის ტოკენში გასაღების ID არ არის",
+  "Telegram token is not valid yet":
+    "Telegram-ის ტოკენის მოქმედების ვადა ჯერ არ დაწყებულა",
+  "Telegram token is too large": "Telegram-ის ტოკენი ზედმეტად დიდია",
+  "Telegram token was issued for another app":
+    "Telegram-ის ტოკენი სხვა აპლიკაციისთვის არის გაცემული",
+  "Telegram username is invalid": "Telegram-ის მომხმარებლის სახელი არასწორია",
+  "Telegram username must be between 5 and 32 characters":
+    "Telegram-ის მომხმარებლის სახელი უნდა შეიცავდეს 5–32 სიმბოლოს",
+  "Telegram verification is temporarily unavailable. Try again.":
+    "Telegram-ის შემოწმება დროებით მიუწვდომელია. სცადეთ ხელახლა.",
+  "Telegram verification key has changed. Try linking again.":
+    "Telegram-ის შემოწმების გასაღები შეიცვალა. სცადეთ დაკავშირება ხელახლა.",
+  "Telegram verification keys are too large":
+    "Telegram-ის შემოწმების გასაღებები ზედმეტად დიდია",
+  "This Telegram account is already linked to another member":
+    "Telegram-ის ეს ანგარიში უკვე დაკავშირებულია სხვა წევრთან",
+  "Unauthorized: Sign in to link Telegram":
+    "წვდომა შეზღუდულია: Telegram-ის დასაკავშირებლად შედით ანგარიშში",
+  "Unsupported Telegram token header":
+    "Telegram-ის ტოკენის სათაური არ არის მხარდაჭერილი",
+  "Wait a few seconds before trying Telegram again":
+    "Telegram-ის დაკავშირების ხელახლა ცდამდე დაელოდეთ რამდენიმე წამს",
 } satisfies Record<Message, string>;

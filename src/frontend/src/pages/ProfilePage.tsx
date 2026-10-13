@@ -4,6 +4,7 @@ import {
   type User,
   createActor,
 } from "@/backend";
+import { TelegramLink } from "@/components/profile/TelegramLink";
 import { Button } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { Input } from "@/components/ui/Input";
@@ -13,7 +14,7 @@ import { authService } from "@/services/auth";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Loader2, Save, UserRound } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function ProfileEditor({
   actor,
@@ -29,6 +30,10 @@ function ProfileEditor({
   const [name, setName] = useState(profile?.displayName ?? "");
   const [username, setUsername] = useState(profile?.username ?? "");
   const [formError, setFormError] = useState<string | null>(null);
+  const previousSaved = useRef({
+    name: profile?.displayName ?? "",
+    username: profile?.username ?? "",
+  });
   const keepsExistingUsername =
     !!profile && username.trim() === profile.username.trim();
 
@@ -43,6 +48,26 @@ function ProfileEditor({
       setUsername(saved.username);
     },
   });
+  useEffect(() => {
+    const next = {
+      name: profile?.displayName ?? "",
+      username: profile?.username ?? "",
+    };
+    const nameChanged = previousSaved.current.name !== next.name;
+    const usernameChanged = previousSaved.current.username !== next.username;
+    if (nameChanged) setName(next.name);
+    if (usernameChanged) setUsername(next.username);
+    if (nameChanged || usernameChanged) {
+      setFormError(null);
+      if (saveMutation.isError) saveMutation.reset();
+    }
+    previousSaved.current = next;
+  }, [
+    profile?.displayName,
+    profile?.username,
+    saveMutation.isError,
+    saveMutation.reset,
+  ]);
 
   function saveProfile() {
     setFormError(null);
@@ -200,12 +225,19 @@ export function ProfilePage() {
             {t("Loading your profile")}
           </output>
         ) : (
-          <ProfileEditor
-            key={principal}
-            actor={actor}
-            principal={principal}
-            profile={profileQuery.data ?? null}
-          />
+          <>
+            <ProfileEditor
+              key={principal}
+              actor={actor}
+              principal={principal}
+              profile={profileQuery.data ?? null}
+            />
+            <TelegramLink
+              key={`telegram-${principal}`}
+              actor={actor}
+              principal={principal}
+            />
+          </>
         )}
       </div>
     </div>

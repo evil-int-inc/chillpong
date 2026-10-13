@@ -1,6 +1,44 @@
 import type { Message } from "./messages";
 
 export const ru = {
+  "Find a player in the bracket": "Найти игрока в турнирной сетке",
+  "PLAYER NAME": "ИМЯ ИГРОКА",
+  "Find next match": "Найти следующий матч",
+  "No player matches this name.": "Игрок с таким именем не найден.",
+  "No upcoming match for {name}.": "У игрока {name} нет предстоящего матча.",
+  "Several players match. Choose a player below.":
+    "Найдено несколько игроков. Выберите игрока ниже.",
+  "Find next match for {name} / {registration}":
+    "Найти следующий матч игрока {name} / {registration}",
+  "Showing match {match} for {name}.": "Показан матч {match} игрока {name}.",
+  Matches: "Матчи",
+  "THE MATCHES / ALL ROUNDS": "МАТЧИ / ВСЕ РАУНДЫ",
+  "Search tournament matches": "Поиск матчей турнира",
+  "PLAYER NAME / MATCH ID": "ИМЯ ИГРОКА / ID МАТЧА",
+  Bracket: "Сетка",
+  "All brackets": "Все сетки",
+  "Match status": "Статус матча",
+  "Match round": "Раунд матча",
+  "Match table": "Стол матча",
+  "Match sort order": "Порядок сортировки матчей",
+  "Bracket order": "Порядок сетки",
+  "Players / matchup": "Игроки / пара",
+  Score: "Счёт",
+  "Open match {match}: {playerA} vs {playerB}":
+    "Открыть матч {match}: {playerA} против {playerB}",
+  "{shown} of {total} matches": "Матчи: {shown} из {total}",
+  "No matching matches.": "Матчи не найдены.",
+  "Try another player or adjust the status, bracket, round or table filters.":
+    "Найдите другого игрока или измените фильтры статуса, сетки, раунда или стола.",
+  "No matches yet.": "Пока нет матчей.",
+  "Generate the bracket to see tournament matches here.":
+    "Создайте сетку, чтобы здесь появились матчи турнира.",
+  "Page {page} of {pages}": "Страница {page} из {pages}",
+  "Previous matches page": "Предыдущая страница матчей",
+  "Next matches page": "Следующая страница матчей",
+  Previous: "Предыдущий",
+  Match: "Матч",
+  Round: "Раунд",
   "Clear search": "Очистить поиск",
   "Match started at table {table}": "Матч начат за столом {table}",
   "Bracket generated": "Сетка создана",
@@ -434,6 +472,13 @@ export const ru = {
   "Reg / time": "Рег / время",
   "Regenerate bracket": "Пересоздать сетку",
   "Register & place manually": "Зарегистрировать и разместить",
+  "Next, choose a bracket slot for this player. An occupied slot creates a qualifier and keeps both entrants in the tournament.":
+    "Затем выберите место в сетке для этого игрока. Если место занято, будет создан отборочный матч, и оба игрока останутся в турнире.",
+  "Registered in the waiting queue. Use Place in bracket to add them to the draw.":
+    "Игрок зарегистрирован в очереди. Используйте «Добавить в сетку», чтобы включить его в турнирную сетку.",
+  "Place in bracket": "Добавить в сетку",
+  "Player added to the bracket. Their match is now in view.":
+    "Игрок добавлен в сетку. Его матч теперь виден.",
   "Register {name}": "Зарегистрировать: {name}",
   Registered: "Зарегистрирован",
   "Registration open": "Регистрация открыта",
@@ -766,4 +811,160 @@ export const ru = {
   "Could not copy the link. Copy it below.":
     "Не удалось скопировать ссылку. Скопируйте её ниже.",
   "Full bracket URL": "Ссылка на полную сетку",
+  "All players": "Все игроки",
+  "Already linked": "Уже связан",
+  "Choose a player": "Выберите игрока",
+  "Choose existing player": "Выбрать существующего игрока",
+  "Couldn't load the player directory.": "Не удалось загрузить список игроков.",
+  "Create a player here or add one in a tournament. They will be available across the app.":
+    "Создайте игрока здесь или добавьте его в турнире. Он будет доступен во всём приложении.",
+  "Create new player": "Создать нового игрока",
+  "Create player": "Создать игрока",
+  "Edit shared player": "Редактировать игрока в общем списке",
+  "Edit shared player {v1}": "Редактировать игрока {v1} в общем списке",
+  "Existing player": "Существующий игрок",
+  "Link player": "Связать игрока",
+  "Link player for member {v1}": "Связать игрока с участником {v1}",
+  "Link player to member": "Связать игрока с участником",
+  "Linked player: {v1}": "Связанный игрок: {v1}",
+  "Linked to a member": "Связан с участником",
+  "Linking replaces this member's name with the player's name, even if they already set a name. Each member and player can have one link.":
+    "Имя игрока заменит имя участника, даже если оно уже задано. У каждого участника и игрока может быть только одна связь.",
+  "Manage player link": "Управление связью с игроком",
+  "NAME / PLAYER NUMBER": "ИМЯ / НОМЕР ИГРОКА",
+  "No available players match. Create a new player or change the search.":
+    "Подходящих доступных игроков нет. Создайте нового игрока или измените поиск.",
+  "One shared directory for every tournament. Choose a tournament above to see its registration order, status, tables and rounds.":
+    "Общий список игроков для всех турниров. Выберите турнир выше, чтобы увидеть порядок регистрации, статусы, столы и раунды.",
+  "Player linked. The member's name is now {v1}.":
+    "Игрок связан. Имя участника теперь — {v1}.",
+  "Player source": "Откуда добавить игрока",
+  "Player to link": "Игрок для связи",
+  "Player unlinked. The member's name is unchanged.":
+    "Связь с игроком удалена. Имя участника сохранено.",
+  "Players already registered in this tournament are excluded. This registration gets its own number and queue position.":
+    "Уже зарегистрированные в этом турнире игроки исключены. Новая регистрация получит свой номер и место в очереди.",
+  "Saving this player also updates their linked account's name.":
+    "Сохранение игрока также обновит имя связанного аккаунта.",
+  "Search shared players": "Поиск в общем списке игроков",
+  "Shared player details apply to future registrations. Existing tournament names, scores and registration order stay unchanged.":
+    "Данные общего списка используются при будущих регистрациях. Имена игроков, счёт и порядок регистрации в существующих турнирах не меняются.",
+  "Shared player saved. Available for every tournament.":
+    "Игрок сохранён в общем списке и доступен для всех турниров.",
+  "The player directory is still connecting.": "Подключаемся к списку игроков.",
+  "The shared lineup is open.": "Общий список игроков открыт.",
+  "Try another name or adjust the skill filter.":
+    "Попробуйте другое имя или измените фильтр уровня игры.",
+  "Unlink player": "Удалить связь с игроком",
+  "Unlink this player before selecting another. The account keeps its current name.":
+    "Удалите связь с этим игроком перед выбором другого. Текущее имя аккаунта сохранится.",
+  "Member is already linked to another player; unlink it first":
+    "Участник уже связан с другим игроком; сначала удалите эту связь",
+  "Member must be an authenticated account":
+    "Участник должен сначала войти в аккаунт",
+  "Player is already linked to another member; unlink it first":
+    "Игрок уже связан с другим участником; сначала удалите эту связь",
+  "Player is already registered in this tournament":
+    "Игрок уже зарегистрирован в этом турнире",
+  Telegram: "Telegram",
+  "Link Telegram": "Связать Telegram",
+  "Link Telegram to your existing member account. Linking replaces your current username with your Telegram username.":
+    "Свяжите Telegram со своим аккаунтом. Ваш текущий никнейм будет заменён никнеймом из Telegram.",
+  "Linked Telegram account": "Связанный аккаунт Telegram",
+  "Sync Telegram username": "Обновить никнейм из Telegram",
+  "Telegram linking is not configured yet. Ask an admin to set the public Login Client ID.":
+    "Связь с Telegram ещё не настроена. Попросите администратора указать публичный Login Client ID.",
+  "Unlink Telegram": "Удалить связь с Telegram",
+  "Couldn't load Telegram. Check your connection and try again.":
+    "Не удалось загрузить Telegram. Проверьте подключение и попробуйте снова.",
+  "Couldn't prepare Telegram linking. Try again.":
+    "Не удалось подготовить связь с Telegram. Попробуйте снова.",
+  "Telegram linked. Your username now matches Telegram.":
+    "Telegram связан. Ваш никнейм теперь совпадает с никнеймом в Telegram.",
+  "Telegram unlinked. Your username is unchanged.":
+    "Связь с Telegram удалена. Ваш никнейм сохранён.",
+  "The Telegram link request expired. Refresh it and try again.":
+    "Запрос на связь с Telegram истёк. Обновите его и попробуйте снова.",
+  "Telegram didn't finish linking. Allow popups or retry in your browser.":
+    "Связь с Telegram не завершена. Разрешите всплывающие окна или повторите попытку в браузере.",
+  "Telegram linking was cancelled or could not be completed. Try again.":
+    "Связь с Telegram отменена или не завершена. Попробуйте снова.",
+  "Telegram linking settings": "Настройки связи с Telegram",
+  "Use the public Login Client ID from BotFather. Leave blank to disable linking. Bot tokens and client secrets are not needed here.":
+    "Укажите публичный Login Client ID из BotFather. Оставьте поле пустым, чтобы отключить связь. Токены бота и секреты клиента здесь не нужны.",
+  "Couldn't load Telegram settings.":
+    "Не удалось загрузить настройки Telegram.",
+  "Enter a valid numeric Telegram Login Client ID.":
+    "Введите корректный числовой Login Client ID для Telegram.",
+  "Telegram Login Client ID": "Login Client ID для Telegram",
+  "Couldn't save Telegram settings.":
+    "Не удалось сохранить настройки Telegram.",
+  "Telegram settings saved.": "Настройки Telegram сохранены.",
+  "Save Telegram settings": "Сохранить настройки Telegram",
+  "Ambiguous Telegram verification key": "Неоднозначный ключ проверки Telegram",
+  "Duplicate Telegram token JSON key":
+    "Повторяющийся ключ JSON в токене Telegram",
+  "Invalid Telegram Login client ID":
+    "Некорректный Login Client ID для Telegram",
+  "Invalid Telegram account ID": "Некорректный ID аккаунта Telegram",
+  "Invalid Telegram key ID": "Некорректный ID ключа Telegram",
+  "Invalid Telegram signature encoding":
+    "Некорректная кодировка подписи Telegram",
+  "Invalid Telegram token": "Некорректный токен Telegram",
+  "Invalid Telegram token JSON": "Некорректный JSON токена Telegram",
+  "Invalid Telegram token encoding": "Некорректная кодировка токена Telegram",
+  "Invalid Telegram token issuer": "Некорректный издатель токена Telegram",
+  "Invalid Telegram token signature": "Некорректная подпись токена Telegram",
+  "Invalid Telegram token timestamp": "Некорректное время в токене Telegram",
+  "Invalid Telegram verification keys": "Некорректные ключи проверки Telegram",
+  "Set a Telegram username before linking.":
+    "Задайте никнейм в Telegram перед связыванием.",
+  "Set a valid Telegram username before linking.":
+    "Задайте корректный никнейм в Telegram перед связыванием.",
+  "Start Telegram linking before submitting a token":
+    "Начните связывание Telegram перед отправкой токена",
+  "Telegram Login must use the RS256 signing algorithm":
+    "Для входа через Telegram требуется алгоритм подписи RS256",
+  "Telegram RS256 verification key is unavailable":
+    "Ключ проверки RS256 для Telegram недоступен",
+  "Telegram configuration changed. Try linking again.":
+    "Настройки Telegram изменились. Попробуйте связать аккаунт снова.",
+  "Telegram link expired. Try linking again.":
+    "Запрос связи с Telegram истёк. Попробуйте снова.",
+  "Telegram link verification did not match. Try linking again.":
+    "Не удалось подтвердить запрос связи с Telegram. Попробуйте снова.",
+  "Telegram linking is not configured yet": "Связь с Telegram ещё не настроена",
+  "Telegram token JSON is too deeply nested":
+    "Превышена допустимая вложенность JSON токена Telegram",
+  "Telegram token expired or has an invalid timestamp":
+    "Токен Telegram истёк или содержит некорректное время",
+  "Telegram token has no account ID":
+    "В токене Telegram отсутствует ID аккаунта",
+  "Telegram token has no expiration time":
+    "В токене Telegram отсутствует срок действия",
+  "Telegram token has no issue time":
+    "В токене Telegram отсутствует время выдачи",
+  "Telegram token has no key ID": "В токене Telegram отсутствует ID ключа",
+  "Telegram token is not valid yet":
+    "Срок действия токена Telegram ещё не начался",
+  "Telegram token is too large": "Токен Telegram слишком большой",
+  "Telegram token was issued for another app":
+    "Токен Telegram выдан для другого приложения",
+  "Telegram username is invalid": "Некорректный никнейм Telegram",
+  "Telegram username must be between 5 and 32 characters":
+    "Никнейм Telegram должен содержать от 5 до 32 символов",
+  "Telegram verification is temporarily unavailable. Try again.":
+    "Проверка Telegram временно недоступна. Попробуйте снова.",
+  "Telegram verification key has changed. Try linking again.":
+    "Ключ проверки Telegram изменился. Попробуйте связать аккаунт снова.",
+  "Telegram verification keys are too large":
+    "Ключи проверки Telegram слишком большие",
+  "This Telegram account is already linked to another member":
+    "Этот аккаунт Telegram уже связан с другим участником",
+  "Unauthorized: Sign in to link Telegram":
+    "Нет доступа: войдите, чтобы связать Telegram",
+  "Unsupported Telegram token header":
+    "Неподдерживаемый заголовок токена Telegram",
+  "Wait a few seconds before trying Telegram again":
+    "Подождите несколько секунд перед следующей попыткой связи с Telegram",
 } satisfies Record<Message, string>;

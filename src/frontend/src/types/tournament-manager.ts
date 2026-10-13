@@ -21,6 +21,7 @@ export type MatchStatus =
 
 export interface TournamentPlayerView {
   id: bigint;
+  globalPlayerId?: bigint;
   name: string;
   skill: number;
   registrationNumber: bigint;

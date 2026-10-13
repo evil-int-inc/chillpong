@@ -5,6 +5,8 @@ import Time "mo:core/Time";
 import AccessControl "mo:caffeineai-authorization/access-control";
 import Common "../types/common";
 import Tournaments "../types/tournaments";
+import Players "../types/players";
+import PlayersLib "../lib/players";
 import TournamentsLib "../lib/tournaments";
 import RolesLib "../lib/roles";
 import Bracket "../lib/tournament-bracket";
@@ -15,6 +17,7 @@ mixin (
   tournaments : Map.Map<Nat, Tournaments.Tournament>,
   tournamentStates : Map.Map<Nat, Tournaments.TournamentStateData>,
   counters : Common.Counters,
+  players : Map.Map<Nat, Players.GlobalPlayer>,
 ) {
   public query func getTournaments() : async [Tournaments.Tournament] {
     TournamentsLib.listTournaments(tournaments);
@@ -52,7 +55,23 @@ mixin (
     RolesLib.requireAdmin(accessControlState, caller);
     let tournament = tournaments.get(id) ?? Runtime.trap("Tournament not found");
     let now = Time.now();
-    let state = Organizer.apply(tournamentStates.get(id) ?? Bracket.initial(tournament.createdAt), command, now);
+    let original = tournamentStates.get(id) ?? Bracket.initial(tournament.createdAt);
+    // Register global identity separately from the tournament's permanent FIFO
+    // ID. All validation and both writes occur in this single update message.
+    let state = switch (command) {
+      case (#addPlayer(input)) {
+        let registered = Organizer.apply(original, command, now);
+        let created = PlayersLib.create(players, counters, input, now);
+        { registered with players = registered.players.map(func player = if (player.id == original.nextRegistrationNumber) { { player with globalPlayerId = ?created.id } } else { player }) };
+      };
+      case (#addExistingPlayer(input)) {
+        let existing = PlayersLib.get(players, input.globalPlayerId);
+        if (original.players.any(func player = player.globalPlayerId == ?existing.id)) { Runtime.trap("Player is already registered in this tournament") };
+        let registered = Organizer.apply(original, #addPlayer({ name = existing.name; skillLevel = existing.skillLevel }), now);
+        { registered with players = registered.players.map(func player = if (player.id == original.nextRegistrationNumber) { { player with globalPlayerId = ?existing.id } } else { player }) };
+      };
+      case _ { Organizer.apply(original, command, now) };
+    };
     tournamentStates.add(id, state);
     let status : Tournaments.TournamentStatus = if (not state.started) { #upcoming } else if (Bracket.champion(state) == null) { #live } else { #completed };
     tournaments.add(id, { tournament with status; updatedAt = now });

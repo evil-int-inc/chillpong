@@ -16,6 +16,7 @@ import type {
 export type OrganizerAction =
   | { kind: "configure"; elimination: Elimination; tableCount: number }
   | { kind: "addPlayer"; name: string; skill: number }
+  | { kind: "addExistingPlayer"; globalPlayerId: bigint }
   | { kind: "editPlayer"; playerId: bigint; name: string; skill: number }
   | { kind: "removePlayer"; playerId: bigint }
   | { kind: "generateBracket" }
@@ -95,6 +96,7 @@ export function normalizeTournamentState(
     })),
     players: state.players.map((player) => ({
       id: player.id,
+      globalPlayerId: player.globalPlayerId,
       name: player.name,
       skill: Number(player.skillLevel),
       registrationNumber: player.registrationNumber,
@@ -163,6 +165,11 @@ function toCommand(action: OrganizerAction): TournamentCommand {
           name: action.name,
           skillLevel: BigInt(action.skill),
         },
+      };
+    case "addExistingPlayer":
+      return {
+        __kind__: "addExistingPlayer",
+        addExistingPlayer: { globalPlayerId: action.globalPlayerId },
       };
     case "removePlayer":
       return {

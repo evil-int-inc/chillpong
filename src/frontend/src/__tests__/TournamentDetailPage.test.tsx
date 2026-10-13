@@ -173,6 +173,117 @@ beforeEach(() => {
 });
 
 describe("live tournament room", () => {
+  it.each([
+    { width: 390, isAdmin: false },
+    { width: 1440, isAdmin: false },
+    { width: 390, isAdmin: true },
+    { width: 1440, isAdmin: true },
+  ])(
+    "opens the usual match modal from the match list at $width px with admin=$isAdmin",
+    async ({ width, isAdmin }) => {
+      const user = userEvent.setup();
+      const originalWidth = window.innerWidth;
+      Object.defineProperty(window, "innerWidth", {
+        configurable: true,
+        value: width,
+      });
+      state.auth.isAdmin = isAdmin;
+      const before = room();
+      saveStates(
+        room({
+          matches: before.matches.map((item) =>
+            item.id === 1n
+              ? {
+                  ...item,
+                  status: TournamentMatchStatus.completed,
+                  scoreA: 0n,
+                  scoreB: 11n,
+                  winnerId: 2n,
+                  loserId: 1n,
+                }
+              : item,
+          ),
+        }),
+      );
+      try {
+        renderRoom();
+        const section = await screen.findByTestId("tournament.matches_section");
+        const players = screen
+          .getByTestId("tournament.players_table")
+          .closest("section")!;
+        expect(
+          section.compareDocumentPosition(players) &
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        ).toBeTruthy();
+        expect(within(section).getAllByTestId(/^match\.row\./)).toHaveLength(3);
+        const row = within(section).getByTestId("match.row.1");
+        if (width < 1024) {
+          await user.click(within(row).getByText("Alex"));
+        } else {
+          const open = within(row).getByRole("button", {
+            name: "Open match W1.1 / M1: Alex vs John",
+          });
+          open.focus();
+          await user.keyboard("{Enter}");
+        }
+        let dialog = within(screen.getByRole("dialog"));
+        expect(dialog.getByText("Alex")).toBeVisible();
+        expect(dialog.getByText("John")).toBeVisible();
+        if (isAdmin) {
+          expect(
+            dialog.getByRole("heading", { name: "Edit match players" }),
+          ).toBeVisible();
+          expect(
+            dialog.getByRole("button", { name: "Edit Alex" }),
+          ).toBeEnabled();
+          await user.type(dialog.getByLabelText("Score A"), "0");
+          await user.type(dialog.getByLabelText("Score B"), "11");
+          await user.click(
+            dialog.getByRole("button", { name: "Save result & finish match" }),
+          );
+          await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+          expect(state.actor.applyTournamentCommand).toHaveBeenCalledWith(1n, {
+            __kind__: "recordResult",
+            recordResult: { matchId: 1n, scoreA: 0n, scoreB: 11n },
+          } satisfies TournamentCommand);
+          expect(screen.getByTestId("match.row.1")).toHaveTextContent(
+            /0\s*:\s*11/,
+          );
+        } else {
+          expect(
+            dialog.getByText(/Results and assignments are managed/),
+          ).toBeVisible();
+          expect(dialog.queryByLabelText("Score A")).toBeNull();
+          expect(
+            dialog.queryByRole("button", { name: "Edit Alex" }),
+          ).toBeNull();
+          expect(
+            dialog.queryByRole("button", {
+              name: "Save result & finish match",
+            }),
+          ).toBeNull();
+          await user.click(dialog.getByRole("button", { name: "Close" }));
+          expect(state.actor.applyTournamentCommand).not.toHaveBeenCalled();
+        }
+        await user.click(screen.getByRole("button", { name: "Extended view" }));
+        expect(screen.getByTestId("tournament.matches_section")).toBeVisible();
+        expect(
+          screen.getByRole("region", { name: "Complete tournament bracket" }),
+        ).toBeVisible();
+        await user.click(screen.getByTestId("match.row.3"));
+        dialog = within(screen.getByRole("dialog"));
+        expect(dialog.getByText("Winner / W1.1")).toBeVisible();
+        expect(dialog.getByText("Winner / W1.2")).toBeVisible();
+        expect(dialog.queryByLabelText("Score A")).toBeNull();
+      } finally {
+        Object.defineProperty(window, "innerWidth", {
+          configurable: true,
+          value: originalWidth,
+        });
+      }
+    },
+  );
+
   it("lets spectators inspect the floor and complete bracket without organizer controls", async () => {
     const user = userEvent.setup();
     renderRoom();
@@ -282,6 +393,298 @@ describe("live tournament room", () => {
     expect(playerRow("Late Arrival").querySelector("td")!.textContent).toBe(
       registration,
     );
+  });
+
+  it("lets a queue-only registration join the bracket later using Place in bracket", async () => {
+    const user = userEvent.setup();
+    state.auth.isAdmin = true;
+    const before = room();
+    const late = {
+      ...player(5n, "Late Queue Entrant"),
+      status: TournamentPlayerStatus.waiting,
+      currentMatchId: undefined,
+    };
+    const registered = room({
+      players: [...before.players, late],
+      waitingQueue: [3n, 4n, 5n],
+    });
+    saveStates(registered, {
+      ...registered,
+      players: registered.players.map((item) =>
+        [4n, 5n].includes(item.id)
+          ? {
+              ...item,
+              status: TournamentPlayerStatus.ready,
+              currentMatchId: 4n,
+            }
+          : item,
+      ),
+      matches: [
+        ...before.matches.map((item) =>
+          item.id === 2n
+            ? {
+                ...item,
+                sourceB: { __kind__: "winner" as const, winner: 4n },
+                playerB: undefined,
+                status: TournamentMatchStatus.blocked,
+                manualOverride: true,
+              }
+            : item,
+        ),
+        match(4n, {
+          round: 0n,
+          position: 2n,
+          sourceA: { __kind__: "player", player: 4n },
+          sourceB: { __kind__: "player", player: 5n },
+          playerA: 4n,
+          playerB: 5n,
+          manualOverride: true,
+        }),
+      ],
+      nextMatches: [4n],
+    });
+    renderRoom();
+    await user.click(
+      (await screen.findAllByRole("button", { name: "Add player" }))[0]!,
+    );
+    let dialog = screen.getByRole("dialog");
+    await user.type(
+      within(dialog).getByLabelText("Player name"),
+      "Late Queue Entrant",
+    );
+    await user.click(
+      within(dialog).getByRole("button", { name: "Add to waiting queue" }),
+    );
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(state.actor.applyTournamentCommand).toHaveBeenCalledTimes(1);
+    expect(
+      screen.getByRole("button", { name: "Standard view" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(
+      within(screen.getByTestId("tournament.waiting_queue")).getByText(
+        "Late Queue Entrant",
+      ),
+    ).toBeVisible();
+    await user.click(
+      screen.getByRole("button", {
+        name: "Place in bracket Late Queue Entrant",
+      }),
+    );
+    dialog = screen.getByRole("dialog");
+    await user.selectOptions(
+      within(dialog).getByLabelText("Destination match"),
+      "2",
+    );
+    await user.selectOptions(
+      within(dialog).getByLabelText("Destination slot"),
+      "b",
+    );
+    await user.click(
+      within(dialog).getByRole("button", { name: "Place player" }),
+    );
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(state.actor.applyTournamentCommand).toHaveBeenLastCalledWith(1n, {
+      __kind__: "placePlayer",
+      placePlayer: { playerId: 5n, matchId: 2n, slot: TournamentSlot.b },
+    } satisfies TournamentCommand);
+    expect(screen.getByTestId("match.card.4")).toHaveTextContent(
+      "Late Queue Entrant",
+    );
+    expect(screen.getByTestId("match.card.4")).toHaveTextContent("Peter");
+    expect(screen.getByTestId("match.card.2")).toHaveTextContent("Mike");
+    expect(playerRow("Late Queue Entrant")).toHaveTextContent("#005");
+  });
+
+  it("registers and places a late entrant in a qualifier, then reveals the updated full bracket", async () => {
+    const user = userEvent.setup();
+    state.auth.isAdmin = true;
+    const before = room();
+    const late = {
+      ...player(5n, "Late Nino"),
+      status: TournamentPlayerStatus.waiting,
+      currentMatchId: undefined,
+    };
+    const registered = room({
+      players: [...before.players, late],
+      waitingQueue: [3n, 4n, 5n],
+    });
+    const qualifier = match(4n, {
+      round: 0n,
+      position: 2n,
+      sourceA: { __kind__: "player", player: 3n },
+      sourceB: { __kind__: "player", player: 5n },
+      playerA: 3n,
+      playerB: 5n,
+      manualOverride: true,
+    });
+    const placed = {
+      ...registered,
+      players: registered.players.map((item) =>
+        [3n, 5n].includes(item.id)
+          ? {
+              ...item,
+              status: TournamentPlayerStatus.ready,
+              currentMatchId: 4n,
+            }
+          : item,
+      ),
+      matches: [
+        ...before.matches.map((item) =>
+          item.id === 2n
+            ? {
+                ...item,
+                sourceA: { __kind__: "winner" as const, winner: 4n },
+                playerA: undefined,
+                status: TournamentMatchStatus.blocked,
+                manualOverride: true,
+              }
+            : item,
+        ),
+        qualifier,
+      ],
+      nextMatches: [4n],
+    };
+    saveStates(registered, placed);
+    renderRoom();
+    await user.click(
+      (await screen.findAllByRole("button", { name: "Add player" }))[0]!,
+    );
+    let dialog = screen.getByRole("dialog");
+    await user.type(within(dialog).getByLabelText("Player name"), "Late Nino");
+    await user.click(
+      within(dialog).getByRole("button", { name: "Register & place manually" }),
+    );
+    await waitFor(() =>
+      expect(state.actor.applyTournamentCommand).toHaveBeenCalledWith(1n, {
+        __kind__: "addPlayer",
+        addPlayer: { name: "Late Nino", skillLevel: 1n },
+      } satisfies TournamentCommand),
+    );
+    dialog = screen.getByRole("dialog");
+    expect(
+      await within(dialog).findByLabelText("Destination match"),
+    ).toHaveValue("2");
+    expect(within(dialog).getByText("Late Nino")).toBeVisible();
+    await user.click(
+      within(dialog).getByRole("button", { name: "Place player" }),
+    );
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(state.actor.applyTournamentCommand).toHaveBeenLastCalledWith(1n, {
+      __kind__: "placePlayer",
+      placePlayer: { playerId: 5n, matchId: 2n, slot: TournamentSlot.a },
+    } satisfies TournamentCommand);
+    expect(
+      screen.getByRole("button", { name: "Extended view" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    const bracket = screen.getByRole("region", {
+      name: "Complete tournament bracket",
+    });
+    expect(within(bracket).getByTestId("match.card.4")).toHaveTextContent(
+      "Late Nino",
+    );
+    expect(within(bracket).getByTestId("match.card.4")).toHaveTextContent(
+      "Mike",
+    );
+    expect(within(bracket).getByTestId("match.card.2")).toHaveTextContent(
+      "Winner / W0.2",
+    );
+    expect(within(bracket).getByTestId("match.card.2")).toHaveTextContent(
+      "Peter",
+    );
+    expect(within(bracket).getByTestId("match.card.1")).toHaveTextContent(
+      "Alex",
+    );
+    expect(within(bracket).getByTestId("match.card.1")).toHaveTextContent(
+      "John",
+    );
+    expect(playerRow("Late Nino")).toHaveTextContent("#005");
+    await waitFor(() =>
+      expect(state.actor.getTournamentState.mock.calls.length).toBeGreaterThan(
+        1,
+      ),
+    );
+  });
+
+  it("shows a late entrant beside an unresolved winner when placed into a later pending round", async () => {
+    const user = userEvent.setup();
+    state.auth.isAdmin = true;
+    const before = room();
+    const late = {
+      ...player(5n, "Late Luka"),
+      status: TournamentPlayerStatus.waiting,
+      currentMatchId: undefined,
+    };
+    const registered = room({
+      players: [...before.players, late],
+      waitingQueue: [3n, 4n, 5n],
+    });
+    const qualifier = match(4n, {
+      round: 1n,
+      position: 1n,
+      sourceA: { __kind__: "winner", winner: 2n },
+      sourceB: { __kind__: "player", player: 5n },
+      playerA: undefined,
+      playerB: 5n,
+      status: TournamentMatchStatus.blocked,
+      manualOverride: true,
+    });
+    saveStates(registered, {
+      ...registered,
+      matches: [
+        ...before.matches.map((item) =>
+          item.id === 3n
+            ? {
+                ...item,
+                sourceB: { __kind__: "winner" as const, winner: 4n },
+                manualOverride: true,
+              }
+            : item,
+        ),
+        qualifier,
+      ],
+      players: registered.players.map((item) =>
+        item.id === 5n ? { ...item, currentMatchId: 4n } : item,
+      ),
+    });
+    renderRoom();
+    await user.click(
+      (await screen.findAllByRole("button", { name: "Add player" }))[0]!,
+    );
+    let dialog = screen.getByRole("dialog");
+    await user.type(within(dialog).getByLabelText("Player name"), "Late Luka");
+    await user.click(
+      within(dialog).getByRole("button", { name: "Register & place manually" }),
+    );
+    dialog = screen.getByRole("dialog");
+    const destination =
+      await within(dialog).findByLabelText("Destination match");
+    await user.selectOptions(destination, "3");
+    await user.selectOptions(
+      within(dialog).getByLabelText("Destination slot"),
+      "b",
+    );
+    await user.click(
+      within(dialog).getByRole("button", { name: "Place player" }),
+    );
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(state.actor.applyTournamentCommand).toHaveBeenLastCalledWith(1n, {
+      __kind__: "placePlayer",
+      placePlayer: { playerId: 5n, matchId: 3n, slot: TournamentSlot.b },
+    } satisfies TournamentCommand);
+    const bracket = screen.getByRole("region", {
+      name: "Complete tournament bracket",
+    });
+    expect(within(bracket).getByTestId("match.card.4")).toHaveTextContent(
+      "Late Luka",
+    );
+    expect(within(bracket).getByTestId("match.card.4")).toHaveTextContent(
+      "Winner / W1.2",
+    );
+    expect(within(bracket).getByTestId("match.card.3")).toHaveTextContent(
+      "Winner / W1.1",
+    );
+    expect(within(bracket).getAllByTestId(/^match\.card\./)).toHaveLength(4);
+    expect(playerRow("Late Luka")).toHaveTextContent("#005");
   });
 
   it("moves an advanced winner through their pending round instead of their scored opening match", async () => {

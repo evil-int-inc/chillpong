@@ -59,6 +59,50 @@ An unchanged legacy handle remains valid on update even if it predates the new
 handle format. If two older handles already differ only by case, exact spelling
 selects the exact record; principal reads always identify accounts unambiguously.
 
+## Telegram profile linking
+
+- getTelegramLinkConfig() : { clientId : ?Text } — public Login client ID.
+- setTelegramLinkConfig(?Text) : () — admin-only public client ID configuration.
+- getCallerTelegramLink() : ?TelegramLink — authenticated caller's link.
+- startTelegramLink() : { clientId, nonce, expiresAt } — authenticated caller.
+- completeTelegramLink(idToken : Text) : User — authenticated caller.
+- unlinkTelegram() : User — authenticated caller.
+
+Linking retains the Internet Identity principal, member account and roles.
+The backend verifies Telegram's signed ID token against Telegram's public keys,
+including issuer, audience, expiration and the caller's short-lived nonce. A
+Telegram account may belong to only one member. An absent Telegram username or
+a username reserved by another member rejects atomically. A successful link
+replaces the member's username, including an existing manually entered value,
+and preserves all other profile metadata. Verified Telegram handles may contain
+up to 32 characters. Unlinking removes the Telegram association and retains the
+profile username. TelegramLink contains subject, username and linkedAt.
+Configuration stores only a public client ID; the bot token is never stored.
+
+## Shared players
+
+- listPlayers() : [GlobalPlayer] — public club directory, creation order.
+- createPlayer({ name, skillLevel }) : GlobalPlayer — admin-only.
+- updatePlayer(id, { name, skillLevel }) : GlobalPlayer — admin-only.
+- linkPlayerToUser(playerId, principal) : GlobalPlayer — admin-only.
+- unlinkPlayerFromUser(playerId) : GlobalPlayer — admin-only.
+
+GlobalPlayer contains id, name, skillLevel, userId : ?Principal, createdAt and
+updatedAt. Players are available for registration in every tournament. A member
+and player may each have only one active link. Linking requires a principal that
+has authenticated, creates a missing optional member profile, and replaces its
+displayName with the player's name while preserving username, bio, avatar, role
+and creation time. Conflicting links reject; unlink before reassignment.
+Unlinking retains the profile name. Updating a linked club player's name also
+updates the member's name. Directory edits affect future registrations; names
+and skills stored in existing tournaments and undo snapshots stay unchanged.
+
+Legacy tournament entrants migrate into separate global records without merging
+matching names. Tournament-local IDs, registrations, matches and scores remain
+unchanged. Every local entrant and its historical snapshots retain the same
+optional globalPlayerId. Removing or undoing a registration does not delete the
+club identity.
+
 ## Tournaments
 
 - getTournaments() : [Tournament] — public, start time ascending, then id.
@@ -79,7 +123,7 @@ Updating preserves id and createdAt. Creates allocate durable sequential ids.
 - getTournamentState(id) : ?TournamentState — public persistent room state.
 - applyTournamentCommand(id, command) : TournamentState — admin-only.
 
-The command variants configure, addPlayer, editPlayer, removePlayer,
+The command variants configure, addPlayer, addExistingPlayer, editPlayer, removePlayer,
 generateBracket, placePlayer, movePlayer, swapPlayers, setMatchPlayers,
 assignBye, assignTable, startMatch, recordResult, resetMatch, prioritizeMatch,
 prioritizePlayer, and undo control the organizer. Configure chooses
@@ -92,6 +136,13 @@ registration times. Names contain 1–80 trimmed characters and skill levels are
 registration order, then unmatched players with the closest higher skill.
 Power-of-two bracket padding awards one-player opening byes to weaker skills,
 then earlier registration. Byes advance without counting as a played loss.
+
+addPlayer creates a club identity and tournament registration atomically.
+addExistingPlayer({ globalPlayerId }) registers a directory player with a new
+tournament-local FIFO ID, snapshotting its current name and skill. A global
+player cannot be registered twice in the same tournament, including withdrawn
+entries. Registration after undo allocates a fresh local ID. editPlayer remains
+a tournament-local, undoable change and does not edit the club directory.
 
 Double elimination has winners and losers brackets, a grand final, and a reset
 final when the losers-bracket champion wins the first grand final. Scores cannot

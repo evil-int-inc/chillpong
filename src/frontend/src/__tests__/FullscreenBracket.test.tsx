@@ -157,7 +157,14 @@ describe("full-page tournament bracket routing", () => {
     expect(
       screen.getByRole("button", { name: "Copy bracket link" }),
     ).toBeVisible();
+    expect(
+      screen.getByRole("searchbox", { name: "Find a player in the bracket" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Find next match" }),
+    ).toBeDisabled();
     expect(screen.queryByTestId("tournament.players_table")).toBeNull();
+    expect(screen.queryByTestId("tournament.matches_section")).toBeNull();
     expect(router.state.location.search).toEqual({ view: "bracket" });
     expect(state.actor.getTournament).toHaveBeenCalledWith(0n);
     expect(state.actor.applyTournamentCommand).not.toHaveBeenCalled();
@@ -183,6 +190,9 @@ describe("full-page tournament bracket routing", () => {
     ).toHaveAttribute("aria-pressed", "true");
     expect(
       screen.getByRole("region", { name: "Complete tournament bracket" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("searchbox", { name: "Find a player in the bracket" }),
     ).toBeVisible();
 
     await act(async () => {

@@ -1,4 +1,5 @@
 import { createActor } from "@/backend";
+import { SharedPlayersDirectory } from "@/components/players/SharedPlayersDirectory";
 import {
   type ActionOptions,
   OrganizerDialogs,
@@ -56,17 +57,16 @@ export function PlayersPage() {
         ? -1
         : 1;
   });
-  const preferredId = tournaments[0]?.id.toString() ?? "";
   const selectionExists = tournaments.some(
     (tournament) => tournament.id.toString() === selected,
   );
   useEffect(() => {
-    if (!selectionExists) {
-      setSelected(preferredId);
+    if (selected && !selectionExists && !tournamentsQuery.isLoading) {
+      setSelected("");
       setModal(null);
       setNotice(null);
     }
-  }, [selectionExists, preferredId]);
+  }, [selectionExists, selected, tournamentsQuery.isLoading]);
   const tournament = tournaments.find(
     (item) => item.id.toString() === selected,
   );
@@ -102,9 +102,18 @@ export function PlayersPage() {
       queryClient.setQueryData(queryKey, updated);
       void queryClient.invalidateQueries({ queryKey });
       void queryClient.invalidateQueries({ queryKey: ["tournaments"] });
-      setNotice("Player changes saved to the tournament.");
+      void queryClient.invalidateQueries({ queryKey: ["players"] });
+      setNotice(
+        (variables.action.kind === "addPlayer" ||
+          variables.action.kind === "addExistingPlayer") &&
+          !variables.options?.placeNewPlayer &&
+          updated.generated
+          ? "Registered in the waiting queue. Use Place in bracket to add them to the draw."
+          : "Player changes saved to the tournament.",
+      );
       if (
-        variables.action.kind === "addPlayer" &&
+        (variables.action.kind === "addPlayer" ||
+          variables.action.kind === "addExistingPlayer") &&
         variables.options?.placeNewPlayer
       ) {
         const added = [...updated.players].sort((a, b) =>
@@ -124,8 +133,6 @@ export function PlayersPage() {
     setNotice(null);
     mutation.mutate({ action, options });
   }
-  const loading =
-    tournamentsQuery.isLoading || (isFetching && !tournamentsQuery.data);
   const error = mutation.isError
     ? mutation.error instanceof Error
       ? mutation.error.message
@@ -144,163 +151,121 @@ export function PlayersPage() {
           )}
         </p>
       </header>
-      {loading ? (
-        <div className="club-state" aria-busy="true" aria-live="polite">
-          {t("Loading players…")}
-        </div>
-      ) : tournamentsQuery.isError ? (
-        <div className="club-state" role="alert">
-          <AlertTriangle
-            className="mb-4 size-7 text-secondary"
-            aria-hidden="true"
-          />
-          <h2 className="font-display text-2xl font-bold uppercase">
-            {t("The lineup is offline.")}
-          </h2>
-          <p className="mt-3 text-sm text-base-content/50">
-            {t("We couldn't load the tournament board.")}
-          </p>
-          <Button
-            className="mt-6"
-            onClick={() => void tournamentsQuery.refetch()}
-          >
-            {t("Try again")}
-          </Button>
-        </div>
-      ) : !tournaments.length ? (
-        <div className="club-state">
-          <Users className="mb-4 size-8 text-primary" aria-hidden="true" />
-          <h2 className="font-display text-2xl font-bold uppercase">
-            {t("The lineup starts with a tournament.")}
-          </h2>
-          <p className="mt-3 text-sm text-base-content/50">
-            {t("Players appear here when they register for a tournament.")}
-          </p>
-          <a href="/tournaments" className="btn btn-outline mt-6">
-            {t("Tournament board")}
-          </a>
-        </div>
-      ) : (
-        <>
-          <div className="flex flex-wrap items-end justify-between gap-4 border-y border-base-300 py-5">
-            <label className="w-full sm:max-w-xs">
-              <span className="technical-label mb-2 block text-base-content/50">
-                {t("Tournament")}
-              </span>
-              <select
-                className="select w-full rounded-none"
-                value={selected}
-                disabled={mutation.isPending}
-                onChange={(event) => {
-                  setSelected(event.target.value);
-                  setModal(null);
-                  setNotice(null);
-                  mutation.reset();
-                }}
-              >
-                {tournaments.map((item) => (
-                  <option key={item.id.toString()} value={item.id.toString()}>
-                    {item.title} / {t(item.status)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {tournament ? (
-              <a
-                href={`/tournaments/${tournament.id}`}
-                className="btn btn-outline btn-sm"
-              >
-                {t("Open tournament room")}{" "}
-                <ArrowUpRight className="size-3.5" aria-hidden="true" />
-              </a>
-            ) : null}
-          </div>
+      <>
+        <div className="flex flex-wrap items-end justify-between gap-4 border-y border-base-300 py-5">
+          <label className="w-full sm:max-w-xs">
+            <span className="technical-label mb-2 block text-base-content/50">
+              {t("Tournament")}
+            </span>
+            <select
+              className="select w-full rounded-none"
+              value={selected}
+              disabled={mutation.isPending}
+              onChange={(event) => {
+                setSelected(event.target.value);
+                setModal(null);
+                setNotice(null);
+                mutation.reset();
+              }}
+            >
+              <option value="">{t("All players")}</option>
+              {tournaments.map((item) => (
+                <option key={item.id.toString()} value={item.id.toString()}>
+                  {item.title} / {t(item.status)}
+                </option>
+              ))}
+            </select>
+          </label>
           {tournament ? (
-            <p className="mt-4 text-xs text-base-content/45">
-              {tournament.venue}{" "}
-              {t("· Registration order belongs to this tournament.")}
-            </p>
-          ) : null}
-          {notice ? (
-            <output className="mt-6 flex items-center gap-2 border border-primary/25 bg-primary/5 px-4 py-3 text-sm">
-              <Check className="size-4 text-primary" aria-hidden="true" />
-              {t(notice)}
-            </output>
-          ) : null}
-          {stateQuery.isLoading || !tournament ? (
-            <div
-              className="club-state mt-8"
-              aria-busy="true"
-              aria-live="polite"
+            <a
+              href={`/tournaments/${tournament.id}`}
+              className="btn btn-outline btn-sm"
             >
-              {t("Loading the selected lineup…")}
-            </div>
-          ) : stateQuery.isError ? (
-            <div className="club-state mt-8" role="alert">
-              <h2 className="font-display text-2xl font-bold uppercase">
-                {t("Players unavailable.")}
-              </h2>
-              <p className="mt-3 text-sm text-base-content/50">
-                {t("We couldn't load this tournament's players.")}
-              </p>
-              <Button
-                className="mt-6"
-                onClick={() => void stateQuery.refetch()}
-              >
-                <RefreshCw className="size-4" aria-hidden="true" />
-                {t("Try again")}
-              </Button>
-            </div>
-          ) : !view ? (
-            <div className="club-state mt-8">
-              <p>{t("This tournament is no longer available.")}</p>
-              <Button
-                className="mt-4"
-                onClick={() => void tournamentsQuery.refetch()}
-              >
-                {t("Refresh tournaments")}
-              </Button>
-            </div>
-          ) : (
-            <>
-              <PlayersPanel
-                standalone
-                key={selected}
-                view={view}
-                isAdmin={isAdmin}
-                pending={mutation.isPending}
-                onAdd={() => openModal({ kind: "player" })}
-                onEdit={(player) => openModal({ kind: "player", player })}
-                onRemove={(player) => openModal({ kind: "remove", player })}
-                onPrioritize={(player) =>
-                  applyAction({ kind: "prioritizePlayer", playerId: player.id })
-                }
-                onMove={(player) => openModal({ kind: "move", player })}
-              />
-              <OrganizerDialogs
-                view={view}
-                modal={modal}
-                isAdmin={isAdmin}
-                pending={mutation.isPending}
-                error={error}
-                onClose={() => {
-                  if (!mutation.isPending) setModal(null);
-                }}
-                onOpen={openModal}
-                onAction={applyAction}
-              />
-            </>
-          )}
-          {error && !modal ? (
-            <p
-              role="alert"
-              className="mt-5 border border-error/40 p-4 text-sm text-error"
-            >
-              {translateError(error)}
-            </p>
+              {t("Open tournament room")}{" "}
+              <ArrowUpRight className="size-3.5" aria-hidden="true" />
+            </a>
           ) : null}
-        </>
-      )}
+        </div>
+        {tournament ? (
+          <p className="mt-4 text-xs text-base-content/45">
+            {tournament.venue}{" "}
+            {t("· Registration order belongs to this tournament.")}
+          </p>
+        ) : null}
+        {notice ? (
+          <output className="mt-6 flex items-center gap-2 border border-primary/25 bg-primary/5 px-4 py-3 text-sm">
+            <Check className="size-4 text-primary" aria-hidden="true" />
+            {t(notice)}
+          </output>
+        ) : null}
+        {!selected ? (
+          <SharedPlayersDirectory isAdmin={isAdmin} />
+        ) : stateQuery.isLoading ? (
+          <div className="club-state mt-8" aria-busy="true" aria-live="polite">
+            {t("Loading the selected lineup…")}
+          </div>
+        ) : stateQuery.isError || tournamentsQuery.isError ? (
+          <div className="club-state mt-8" role="alert">
+            <h2 className="font-display text-2xl font-bold uppercase">
+              {t("Players unavailable.")}
+            </h2>
+            <p className="mt-3 text-sm text-base-content/50">
+              {t("We couldn't load this tournament's players.")}
+            </p>
+            <Button className="mt-6" onClick={() => void stateQuery.refetch()}>
+              <RefreshCw className="size-4" aria-hidden="true" />
+              {t("Try again")}
+            </Button>
+          </div>
+        ) : !view ? (
+          <div className="club-state mt-8">
+            <p>{t("This tournament is no longer available.")}</p>
+            <Button
+              className="mt-4"
+              onClick={() => void tournamentsQuery.refetch()}
+            >
+              {t("Refresh tournaments")}
+            </Button>
+          </div>
+        ) : (
+          <>
+            <PlayersPanel
+              standalone
+              key={selected}
+              view={view}
+              isAdmin={isAdmin}
+              pending={mutation.isPending}
+              onAdd={() => openModal({ kind: "player" })}
+              onEdit={(player) => openModal({ kind: "player", player })}
+              onRemove={(player) => openModal({ kind: "remove", player })}
+              onPrioritize={(player) =>
+                applyAction({ kind: "prioritizePlayer", playerId: player.id })
+              }
+              onMove={(player) => openModal({ kind: "move", player })}
+            />
+            <OrganizerDialogs
+              view={view}
+              modal={modal}
+              isAdmin={isAdmin}
+              pending={mutation.isPending}
+              error={error}
+              onClose={() => {
+                if (!mutation.isPending) setModal(null);
+              }}
+              onOpen={openModal}
+              onAction={applyAction}
+            />
+          </>
+        )}
+        {error && !modal ? (
+          <p
+            role="alert"
+            className="mt-5 border border-error/40 p-4 text-sm text-error"
+          >
+            {translateError(error)}
+          </p>
+        ) : null}
+      </>
     </div>
   );
 }

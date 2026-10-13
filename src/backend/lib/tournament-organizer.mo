@@ -1,6 +1,5 @@
 import Array "mo:core/Array";
 import Char "mo:core/Char";
-import Int "mo:core/Int";
 import List "mo:core/List";
 import Nat "mo:core/Nat";
 import Runtime "mo:core/Runtime";
@@ -124,7 +123,10 @@ module {
     // keep their IDs, scores, table assignment, and topology.
     let qualifierId = state.nextMatchId;
     let loserQualifierId = qualifierId + 1;
-    let wb = { qualifier(qualifierId, #winners, current.position, oldSource, #player(playerId)) with round = Int.abs((current.round : Int) - 1) };
+    // Qualifiers before the opening round stay at round zero, including
+    // repeated insertions. Reflecting a negative round back to one could
+    // incorrectly make a qualifier look like the tournament final.
+    let wb = { qualifier(qualifierId, #winners, current.position, oldSource, #player(playerId)) with round = if (current.round == 0) { 0 } else { Nat.sub(current.round, 1) } };
     let lb = qualifier(loserQualifierId, #losers, current.position, #loser(qualifierId), #loser(matchId));
     let ordered = List.empty<T.TournamentMatch>();
     func replaceLoser(source : T.MatchSource) : T.MatchSource {
@@ -174,8 +176,11 @@ module {
         let name = nameAndSkill(input.name, input.skillLevel);
         if (state.players.filter(func item = not item.removed).size() >= 4096) { Runtime.trap("At most 4096 active players are supported") };
         let registrationNumber = state.nextRegistrationNumber;
-        let item : T.TournamentPlayerData = { id = registrationNumber; name; skillLevel = input.skillLevel; registrationNumber; registeredAt = now; removed = false; queuePriority = 0 };
+        let item : T.TournamentPlayerData = { id = registrationNumber; globalPlayerId = null; name; skillLevel = input.skillLevel; registrationNumber; registeredAt = now; removed = false; queuePriority = 0 };
         ({ state with players = state.players.concat([item]); nextRegistrationNumber = registrationNumber + 1 }, "Register " # name);
+      };
+      case (#addExistingPlayer(_)) {
+        Runtime.trap("Existing players must be registered through the tournament API");
       };
       case (#editPlayer(input)) {
         ignore B.player(state, input.playerId);
@@ -280,6 +285,7 @@ module {
       };
       case (#recordResult(input)) {
         var item = B.matchById(state, input.matchId);
+        let wasCompleted = item.status == #completed;
         if (item.status != #ready and item.status != #playing and item.status != #completed) { Runtime.trap("Only a ready, playing, or completed match accepts a score") };
         if (input.scoreA == input.scoreB) { Runtime.trap("A match cannot finish with a tied score") };
         if (input.scoreA > 999 or input.scoreB > 999) { Runtime.trap("Scores must be at most 999") };
@@ -296,7 +302,26 @@ module {
           changed := { state with matches = state.matches.map(func dependent = if (dependent.id != item.id and ids.contains(dependent.id)) { clear(dependent) } else { dependent }) };
         };
         item := { item with status = #completed; scoreA = ?input.scoreA; scoreB = ?input.scoreB; winnerId = ?winnerId; loserId = ?loserId; manualOverride = item.manualOverride or item.status == #completed };
-        (replaceMatch(changed, item), "Record match result");
+        changed := replaceMatch(changed, item);
+        if (not wasCompleted) {
+          switch (item.table) {
+            case (?number) {
+              // Advance sources before choosing the next match. The handoff
+              // shares the result's snapshot, so one Undo restores both.
+              changed := B.refresh(changed);
+              let next = B.readyMatches(changed).find(func candidate = candidate.table == null and not changed.matches.any(func active =
+                (active.status == #playing or (active.status == #ready and active.table != null)) and
+                (active.playerA == candidate.playerA or active.playerB == candidate.playerA or active.playerA == candidate.playerB or active.playerB == candidate.playerB)
+              ));
+              switch (next) {
+                case (?candidate) { changed := replaceMatch(changed, { candidate with table = ?number }) };
+                case null {};
+              };
+            };
+            case null {};
+          };
+        };
+        (changed, "Record match result");
       };
       case (#resetMatch(input)) {
         ignore B.matchById(state, input.matchId);
