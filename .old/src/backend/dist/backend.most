@@ -4,6 +4,9 @@ type AccessControlState__201339279 =
     var adminAssigned : Bool;
     userRoles : Map__230067015<Principal, UserRole__91647283>
   };
+type CachedKeys__408913751 = {body : Text; expiresAt : Int};
+type Challenge__865311509 =
+  {clientId : Text; createdAt : Int; expiresAt : Int; nonce : Text};
 type Counters__1003182404 =
   {
     var nextNotificationId : Nat;
@@ -23,6 +26,8 @@ type Counters__485904279 =
     var nextUploadSessionId : Nat;
     var nextVideoId : Nat
   };
+type Counters__592162840 =
+  {var nextPlayerId : Nat; var nextTournamentId : Nat};
 type Counters__776219605 =
   {
     var nextNotificationId : Nat;
@@ -33,12 +38,31 @@ type Counters__776219605 =
 type Data__44217153<K, V> = {var count : Nat__227979830; kvs : [var ?(K, V)]};
 type Data__846125122<T> = {var count : Nat__227979830; elements : [var ?T]};
 type ExternalBlob__220559234 = Blob;
+type GlobalPlayer__1039836348 =
+  {
+    createdAt : Timestamp__489896911;
+    id : Nat;
+    name : Text;
+    skillLevel : Nat;
+    updatedAt : Timestamp__489896911;
+    userId : ?UserId__359307712
+  };
+type GlobalPlayer__433234045 =
+  {
+    createdAt : Timestamp__301639476;
+    id : Nat;
+    name : Text;
+    skillLevel : Nat;
+    updatedAt : Timestamp__301639476;
+    userId : ?UserId__158757552
+  };
 type Internal__23036296<T> =
   {children : [var ?Node__620761243<T>]; data : Data__846125122<T>};
 type Internal__283199666<K, V> =
   {children : [var ?Node__204828119<K, V>]; data : Data__44217153<K, V>};
 type Leaf__598469445<K, V> = {data : Data__44217153<K, V>};
 type Leaf__948582970<T> = {data : Data__846125122<T>};
+type Link__822551193 = {linkedAt : Int; subject : Text; username : Text};
 type List__355132335<T> =
   {
     var blockIndex : Nat__227979830;
@@ -51,6 +75,8 @@ type Map__405889023<K, V> = Map__603270868<K, V>;
 type Map__603270868<K, V> =
   {var root : Node__204828119<K, V>; var size : Nat__227979830};
 type MatchSource__173584773 =
+  {#bye; #loser : Nat; #player : Nat; #winner : Nat};
+type MatchSource__836927700 =
   {#bye; #loser : Nat; #player : Nat; #winner : Nat};
 type MatchSource__885781153 =
   {#bye; #loser : Nat; #player : Nat; #winner : Nat};
@@ -119,6 +145,23 @@ type NewActor__37944555 =
     usernames : Map__230067015<Text, UserId__717334016>;
     users : Map__230067015<UserId__717334016, NewUser__736721639>;
     videos : Map__230067015<Nat, Video__47199758>
+  };
+type NewActor__756050636 =
+  {
+    accessControlState : AccessControlState__201339279;
+    counters : Counters__592162840;
+    owner : OwnerState__868291661;
+    players : Map__230067015<Nat, GlobalPlayer__1039836348>;
+    telegramCache : TelegramCacheState__758443797;
+    telegramChallenges :
+      Map__230067015<Principal, TelegramChallenge__796257689>;
+    telegramConfig : TelegramConfigState__881765373;
+    telegramLinks : Map__230067015<Principal, TelegramLink__119324554>;
+    telegramOwners : Map__230067015<Text, Principal>;
+    tournamentStates : Map__230067015<Nat, TournamentStateData__849744412>;
+    tournaments : Map__230067015<Nat, Tournament__1015679667>;
+    usernames : Map__230067015<Text, UserId__359307712>;
+    users : Map__230067015<UserId__359307712, User__877428867>
   };
 type NewActor__816907118 =
   {
@@ -312,6 +355,16 @@ type OldActor__1059771209 =
     users : Map__230067015<UserId__627489109, User__392640650>;
     videos : Map__230067015<Nat, Video__223929970>
   };
+type OldActor__281766694 =
+  {
+    accessControlState : AccessControlState__201339279;
+    counters : OldCounters__392037715;
+    owner : OwnerState__868291661;
+    tournamentStates : Map__230067015<Nat, OldState__1056713329>;
+    tournaments : Map__230067015<Nat, Tournament__1015679667>;
+    usernames : Map__230067015<Text, UserId__359307712>;
+    users : Map__230067015<UserId__359307712, User__877428867>
+  };
 type OldActor__73935259 =
   {
     accessControlState : AccessControlState__201339279;
@@ -390,12 +443,46 @@ type OldCounters__241796366 =
     var nextUploadSessionId : Nat;
     var nextVideoId : Nat
   };
+type OldCounters__392037715 = {var nextTournamentId : Nat};
 type OldCounters__637956642 =
   {
     var nextNotificationId : Nat;
     var nextPlaylistId : Nat;
     var nextUploadSessionId : Nat;
     var nextVideoId : Nat
+  };
+type OldHistory__618920228 =
+  {action : TournamentAction__652054679; snapshot : OldSnapshot__699050040};
+type OldPlayer__634441436 =
+  {
+    id : Nat;
+    name : Text;
+    queuePriority : Int;
+    registeredAt : Int;
+    registrationNumber : Nat;
+    removed : Bool;
+    skillLevel : Nat
+  };
+type OldSnapshot__699050040 =
+  {
+    elimination : TournamentElimination__491545262;
+    matches : [TournamentMatch__200222966];
+    players : [OldPlayer__634441436];
+    started : Bool;
+    tableCount : Nat
+  };
+type OldState__1056713329 =
+  {
+    elimination : TournamentElimination__491545262;
+    history : [OldHistory__618920228];
+    matches : [TournamentMatch__200222966];
+    nextActionId : Nat;
+    nextMatchId : Nat;
+    nextRegistrationNumber : Nat;
+    players : [OldPlayer__634441436];
+    started : Bool;
+    tableCount : Nat;
+    updatedAt : Int
   };
 type OldUser__541675245 =
   {
@@ -449,6 +536,8 @@ type OwnerState__672420373 =
   {var ownerApplied : Bool; var ownerPrincipal : ?Principal};
 type OwnerState__737824329 =
   {var ownerApplied : Bool; var ownerPrincipal : ?Principal};
+type OwnerState__868291661 =
+  {var ownerApplied : Bool; var ownerPrincipal : ?Principal};
 type Playlist__1015849449 =
   {
     createdAt : Timestamp__553296630;
@@ -479,6 +568,7 @@ type Playlist__5791582 =
     updatedAt : Timestamp__448015156;
     videoIds : [Nat]
   };
+type Role__243528967 = {#admin};
 type Role__349349103 = {#admin};
 type Role__394731314 = {#admin};
 type Role__717780527 = {#admin};
@@ -491,10 +581,19 @@ type StorageState__332683869 = {var providers : [Text]};
 type StorageState__582478514 = {var providers : [Text]};
 type StorageState__789856954 = {var providers : [Text]};
 type StorageState__902502466 = {var providers : [Text]};
+type TelegramCacheState__758443797 =
+  {var keys : ?TelegramCachedKeys__1017184802};
+type TelegramCachedKeys__1017184802 = {body : Text; expiresAt : Int};
+type TelegramChallenge__796257689 =
+  {clientId : Text; createdAt : Int; expiresAt : Int; nonce : Text};
+type TelegramConfigState__881765373 = {var clientId : ?Text};
+type TelegramLink__119324554 =
+  {linkedAt : Int; subject : Text; username : Text};
 type Timestamp__163841900 = Int;
 type Timestamp__233582861 = Int;
 type Timestamp__301639476 = Int;
 type Timestamp__448015156 = Int;
+type Timestamp__489896911 = Int;
 type Timestamp__553296630 = Int;
 type Timestamp__782546889 = Int;
 type Timestamp__821732354 = Int;
@@ -502,20 +601,32 @@ type TournamentAction__1015781336 =
   {caption : Text; createdAt : Timestamp__301639476; id : Nat};
 type TournamentAction__481048844 =
   {caption : Text; createdAt : Timestamp__553296630; id : Nat};
+type TournamentAction__652054679 =
+  {caption : Text; createdAt : Timestamp__489896911; id : Nat};
 type TournamentBracket__357837475 =
   {#grandFinal; #losers; #resetFinal; #winners};
 type TournamentBracket__631698015 =
   {#grandFinal; #losers; #resetFinal; #winners};
+type TournamentBracket__763145018 =
+  {#grandFinal; #losers; #resetFinal; #winners};
+type TournamentElimination__491545262 =
+  {#doubleElimination; #singleElimination};
 type TournamentElimination__528582440 =
   {#doubleElimination; #singleElimination};
 type TournamentElimination__977315717 =
   {#doubleElimination; #singleElimination};
 type TournamentFormat__190292373 = {#doubles; #singles};
 type TournamentFormat__509402924 = {#doubles; #singles};
+type TournamentFormat__720572682 = {#doubles; #singles};
 type TournamentHistoryEntry__1003246225 =
   {
     action : TournamentAction__1015781336;
     snapshot : TournamentSnapshot__630781586
+  };
+type TournamentHistoryEntry__363860423 =
+  {
+    action : TournamentAction__652054679;
+    snapshot : TournamentSnapshot__1182325
   };
 type TournamentHistoryEntry__708206741 =
   {
@@ -524,8 +635,29 @@ type TournamentHistoryEntry__708206741 =
   };
 type TournamentMatchStatus__114053792 =
   {#blocked; #bye; #cancelled; #completed; #playing; #ready};
+type TournamentMatchStatus__901365494 =
+  {#blocked; #bye; #cancelled; #completed; #playing; #ready};
 type TournamentMatchStatus__984372147 =
   {#blocked; #bye; #cancelled; #completed; #playing; #ready};
+type TournamentMatch__200222966 =
+  {
+    bracket : TournamentBracket__763145018;
+    id : Nat;
+    loserId : ?Nat;
+    manualOverride : Bool;
+    playerA : ?Nat;
+    playerB : ?Nat;
+    position : Nat;
+    priority : Int;
+    round : Nat;
+    scoreA : ?Nat;
+    scoreB : ?Nat;
+    sourceA : MatchSource__836927700;
+    sourceB : MatchSource__836927700;
+    status : TournamentMatchStatus__901365494;
+    table : ?Nat;
+    winnerId : ?Nat
+  };
 type TournamentMatch__289593269 =
   {
     bracket : TournamentBracket__631698015;
@@ -564,8 +696,20 @@ type TournamentMatch__336709022 =
     table : ?Nat;
     winnerId : ?Nat
   };
+type TournamentPlayerData__148205111 =
+  {
+    globalPlayerId : ?Nat;
+    id : Nat;
+    name : Text;
+    queuePriority : Int;
+    registeredAt : Timestamp__489896911;
+    registrationNumber : Nat;
+    removed : Bool;
+    skillLevel : Nat
+  };
 type TournamentPlayerData__554997312 =
   {
+    globalPlayerId : ?Nat;
     id : Nat;
     name : Text;
     queuePriority : Int;
@@ -583,6 +727,14 @@ type TournamentPlayerData__842661514 =
     registrationNumber : Nat;
     removed : Bool;
     skillLevel : Nat
+  };
+type TournamentSnapshot__1182325 =
+  {
+    elimination : TournamentElimination__491545262;
+    matches : [TournamentMatch__200222966];
+    players : [TournamentPlayerData__148205111];
+    started : Bool;
+    tableCount : Nat
   };
 type TournamentSnapshot__630781586 =
   {
@@ -626,8 +778,35 @@ type TournamentStateData__294373932 =
     tableCount : Nat;
     updatedAt : Timestamp__301639476
   };
+type TournamentStateData__849744412 =
+  {
+    elimination : TournamentElimination__491545262;
+    history : [TournamentHistoryEntry__363860423];
+    matches : [TournamentMatch__200222966];
+    nextActionId : Nat;
+    nextMatchId : Nat;
+    nextRegistrationNumber : Nat;
+    players : [TournamentPlayerData__148205111];
+    started : Bool;
+    tableCount : Nat;
+    updatedAt : Timestamp__489896911
+  };
+type TournamentStatus__1039157151 = {#completed; #live; #upcoming};
 type TournamentStatus__365499588 = {#completed; #live; #upcoming};
 type TournamentStatus__831356115 = {#completed; #live; #upcoming};
+type Tournament__1015679667 =
+  {
+    capacity : Nat;
+    createdAt : Timestamp__489896911;
+    description : Text;
+    format : TournamentFormat__720572682;
+    id : Nat;
+    startsAt : Timestamp__489896911;
+    status : TournamentStatus__1039157151;
+    title : Text;
+    updatedAt : Timestamp__489896911;
+    venue : Text
+  };
 type Tournament__116332582 =
   {
     capacity : Nat;
@@ -747,6 +926,7 @@ type UploadStatus__699537399 = {#active; #cancelled; #completed; #finalized};
 type UserId__102032063 = Principal;
 type UserId__158757552 = Principal;
 type UserId__233300904 = Principal;
+type UserId__359307712 = Principal;
 type UserId__492452412 = Principal;
 type UserId__627489109 = Principal;
 type UserId__6567742 = Principal;
@@ -787,6 +967,16 @@ type User__739211136 =
     displayName : Text;
     id : UserId__233300904;
     role : ?Role__394731314;
+    username : Text
+  };
+type User__877428867 =
+  {
+    avatar : ?Blob;
+    bio : ?Text;
+    createdAt : Timestamp__489896911;
+    displayName : Text;
+    id : UserId__359307712;
+    role : ?Role__243528967;
     username : Text
   };
 type User__98118558 =
@@ -880,7 +1070,8 @@ type Video__47199758 =
     (old : OldActor__1059771209) -> NewActor__311564264;
   "20261004_000000_AddUserRoles" :
     (old : OldActor__916917201) -> NewActor__37944555;
-  "20261004_095123" : (old : OldActor__970163513) -> NewActor__1040413914
+  "20261004_095123" : (old : OldActor__970163513) -> NewActor__1040413914;
+  "20261012_000000" : (old : OldActor__281766694) -> NewActor__756050636
 }
 actor  {
   stable accessControlState :
@@ -888,8 +1079,27 @@ actor  {
       var adminAssigned : Bool;
       userRoles : Map__230067015<Principal, UserRole__91647283>
     };
-  stable counters : {var nextTournamentId : Nat};
+  stable counters : {var nextPlayerId : Nat; var nextTournamentId : Nat};
   stable owner : {var ownerApplied : Bool; var ownerPrincipal : ?Principal};
+  stable players :
+    {
+      var root : Node__204828119<Nat, GlobalPlayer__433234045>;
+      var size : Nat__227979830
+    };
+  stable telegramCache : {var keys : ?CachedKeys__408913751};
+  stable telegramChallenges :
+    {
+      var root : Node__204828119<Principal, Challenge__865311509>;
+      var size : Nat__227979830
+    };
+  stable telegramConfig : {var clientId : ?Text};
+  stable telegramLinks :
+    {
+      var root : Node__204828119<Principal, Link__822551193>;
+      var size : Nat__227979830
+    };
+  stable telegramOwners :
+    {var root : Node__204828119<Text, Principal>; var size : Nat__227979830};
   stable tournamentStates :
     {
       var root : Node__204828119<Nat, TournamentStateData__294373932>;

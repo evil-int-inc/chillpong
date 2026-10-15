@@ -33230,9 +33230,86 @@ const errorMessages = [
   "User not found",
   "Username already taken",
   "Username may only contain letters, numbers, underscores, and hyphens",
-  "Username must be between 3 and 30 characters"
+  "Username must be between 3 and 30 characters",
+  "Telegram link verification did not match. Try linking again.",
+  "Telegram verification is temporarily unavailable. Try again.",
+  "Player is already linked to another member; unlink it first",
+  "Member is already linked to another player; unlink it first",
+  "Telegram verification key has changed. Try linking again.",
+  "This Telegram account is already linked to another member",
+  "Telegram username must be between 5 and 32 characters",
+  "Telegram Login must use the RS256 signing algorithm",
+  "Telegram token expired or has an invalid timestamp",
+  "Telegram configuration changed. Try linking again.",
+  "Start Telegram linking before submitting a token",
+  "Player is already registered in this tournament",
+  "Wait a few seconds before trying Telegram again",
+  "Telegram RS256 verification key is unavailable",
+  "Set a valid Telegram username before linking.",
+  "Telegram link expired. Try linking again.",
+  "Telegram token was issued for another app",
+  "Telegram token JSON is too deeply nested",
+  "Telegram verification keys are too large",
+  "Set a Telegram username before linking.",
+  "Member must be an authenticated account",
+  "Unauthorized: Sign in to link Telegram",
+  "Telegram linking is not configured yet",
+  "Telegram token has no expiration time",
+  "Invalid Telegram signature encoding",
+  "Ambiguous Telegram verification key",
+  "Invalid Telegram verification keys",
+  "Duplicate Telegram token JSON key",
+  "Unsupported Telegram token header",
+  "Telegram token has no account ID",
+  "Telegram token has no issue time",
+  "Invalid Telegram token timestamp",
+  "Invalid Telegram token signature",
+  "Invalid Telegram Login client ID",
+  "Invalid Telegram token encoding",
+  "Telegram token is not valid yet",
+  "Invalid Telegram token issuer",
+  "Telegram username is invalid",
+  "Telegram token has no key ID",
+  "Invalid Telegram token JSON",
+  "Telegram token is too large",
+  "Invalid Telegram account ID",
+  "Invalid Telegram key ID",
+  "Invalid Telegram token"
 ];
 const ka = {
+  "Find a player in the bracket": "მოთამაშის პოვნა ტურნირის ბადეში",
+  "PLAYER NAME": "მოთამაშის სახელი",
+  "Find next match": "შემდეგი მატჩის პოვნა",
+  "No player matches this name.": "ამ სახელით მოთამაშე ვერ მოიძებნა.",
+  "No upcoming match for {name}.": "მოთამაშეს {name} მომავალი მატჩი არ აქვს.",
+  "Several players match. Choose a player below.": "რამდენიმე მოთამაშე მოიძებნა. აირჩიეთ მოთამაშე ქვემოთ.",
+  "Find next match for {name} / {registration}": "მოთამაშის {name} / {registration} შემდეგი მატჩის პოვნა",
+  "Showing match {match} for {name}.": "ნაჩვენებია მოთამაშის {name} მატჩი {match}.",
+  Matches: "მატჩები",
+  "THE MATCHES / ALL ROUNDS": "მატჩები / ყველა რაუნდი",
+  "Search tournament matches": "ტურნირის მატჩების ძებნა",
+  "PLAYER NAME / MATCH ID": "მოთამაშის სახელი / მატჩის ID",
+  Bracket: "ბადე",
+  "All brackets": "ყველა ბადე",
+  "Match status": "მატჩის სტატუსი",
+  "Match round": "მატჩის რაუნდი",
+  "Match table": "მატჩის მაგიდა",
+  "Match sort order": "მატჩების დალაგების წესი",
+  "Bracket order": "ბადის რიგითობა",
+  "Players / matchup": "მოთამაშეები / წყვილი",
+  Score: "ანგარიში",
+  "Open match {match}: {playerA} vs {playerB}": "მატჩის გახსნა {match}: {playerA} — {playerB}",
+  "{shown} of {total} matches": "მატჩები: {shown}, სულ: {total}",
+  "No matching matches.": "მატჩები ვერ მოიძებნა.",
+  "Try another player or adjust the status, bracket, round or table filters.": "მოძებნეთ სხვა მოთამაშე ან შეცვალეთ სტატუსის, ბადის, რაუნდის ან მაგიდის ფილტრები.",
+  "No matches yet.": "მატჩები ჯერ არ არის.",
+  "Generate the bracket to see tournament matches here.": "შექმენით ბადე, რომ აქ ტურნირის მატჩები გამოჩნდეს.",
+  "Page {page} of {pages}": "გვერდი {page}, სულ: {pages}",
+  "Previous matches page": "მატჩების წინა გვერდი",
+  "Next matches page": "მატჩების შემდეგი გვერდი",
+  Previous: "წინა",
+  Match: "მატჩი",
+  Round: "რაუნდი",
   "Clear search": "ძებნის გასუფთავება",
   "Match started at table {table}": "მატჩი დაიწყო მაგიდასთან {table}",
   "Bracket generated": "ბადე შექმნილია",
@@ -33583,6 +33660,10 @@ const ka = {
   "Reg / time": "რეგ / დრო",
   "Regenerate bracket": "ბადის ხელახლა შექმნა",
   "Register & place manually": "რეგისტრაცია და ხელით განთავსება",
+  "Next, choose a bracket slot for this player. An occupied slot creates a qualifier and keeps both entrants in the tournament.": "შემდეგ აირჩიეთ ადგილი ბადეში ამ მოთამაშისთვის. თუ ადგილი დაკავებულია, შეიქმნება საკვალიფიკაციო მატჩი და ორივე მოთამაშე დარჩება ტურნირში.",
+  "Registered in the waiting queue. Use Place in bracket to add them to the draw.": "მოთამაშე დარეგისტრირებულია რიგში. ბადეში დასამატებლად გამოიყენეთ «ბადეში განთავსება».",
+  "Place in bracket": "ბადეში განთავსება",
+  "Player added to the bracket. Their match is now in view.": "მოთამაშე დაემატა ბადეს. მისი მატჩი ახლა ჩანს.",
   "Register {name}": "რეგისტრაცია: {name}",
   Registered: "რეგისტრირებულია",
   "Registration open": "რეგისტრაცია ღიაა",
@@ -33844,9 +33925,143 @@ const ka = {
   "Copy bracket link": "ბადის ბმულის კოპირება",
   "Bracket link copied": "ბადის ბმული დაკოპირებულია",
   "Could not copy the link. Copy it below.": "ბმული ვერ დაკოპირდა. დააკოპირეთ ქვემოთ.",
-  "Full bracket URL": "სრული ბადის ბმული"
+  "Full bracket URL": "სრული ბადის ბმული",
+  "All players": "ყველა მოთამაშე",
+  "Already linked": "უკვე დაკავშირებულია",
+  "Choose a player": "აირჩიეთ მოთამაშე",
+  "Choose existing player": "არსებული მოთამაშის არჩევა",
+  "Couldn't load the player directory.": "მოთამაშეთა სიის ჩატვირთვა ვერ მოხერხდა.",
+  "Create a player here or add one in a tournament. They will be available across the app.": "შექმენით მოთამაშე აქ ან დაამატეთ ტურნირში. ის ხელმისაწვდომი იქნება მთელ აპლიკაციაში.",
+  "Create new player": "ახალი მოთამაშის შექმნა",
+  "Create player": "მოთამაშის შექმნა",
+  "Edit shared player": "საერთო სიის მოთამაშის რედაქტირება",
+  "Edit shared player {v1}": "საერთო სიის მოთამაშის {v1} რედაქტირება",
+  "Existing player": "არსებული მოთამაშე",
+  "Link player": "მოთამაშის დაკავშირება",
+  "Link player for member {v1}": "მოთამაშის დაკავშირება წევრთან {v1}",
+  "Link player to member": "მოთამაშის წევრთან დაკავშირება",
+  "Linked player: {v1}": "დაკავშირებული მოთამაშე: {v1}",
+  "Linked to a member": "დაკავშირებულია წევრთან",
+  "Linking replaces this member's name with the player's name, even if they already set a name. Each member and player can have one link.": "მოთამაშის სახელი ჩაანაცვლებს წევრის სახელს, მაშინაც კი, თუ ის უკვე მითითებულია. თითოეულ წევრსა და მოთამაშეს მხოლოდ ერთი კავშირი შეიძლება ჰქონდეს.",
+  "Manage player link": "მოთამაშის კავშირის მართვა",
+  "NAME / PLAYER NUMBER": "სახელი / მოთამაშის ნომერი",
+  "No available players match. Create a new player or change the search.": "შესაფერისი ხელმისაწვდომი მოთამაშე ვერ მოიძებნა. შექმენით ახალი მოთამაშე ან შეცვალეთ ძებნა.",
+  "One shared directory for every tournament. Choose a tournament above to see its registration order, status, tables and rounds.": "მოთამაშეთა ერთი საერთო სია ყველა ტურნირისთვის. ზემოთ აირჩიეთ ტურნირი რეგისტრაციის რიგის, სტატუსების, მაგიდებისა და რაუნდების სანახავად.",
+  "Player linked. The member's name is now {v1}.": "მოთამაშე დაკავშირებულია. წევრის სახელია {v1}.",
+  "Player source": "მოთამაშის დამატების წყარო",
+  "Player to link": "დასაკავშირებელი მოთამაშე",
+  "Player unlinked. The member's name is unchanged.": "მოთამაშის კავშირი გაუქმებულია. წევრის სახელი უცვლელია.",
+  "Players already registered in this tournament are excluded. This registration gets its own number and queue position.": "ამ ტურნირში უკვე რეგისტრირებული მოთამაშეები გამორიცხულია. ახალ რეგისტრაციას საკუთარი ნომერი და რიგში ადგილი ენიჭება.",
+  "Saving this player also updates their linked account's name.": "მოთამაშის შენახვა დაკავშირებული ანგარიშის სახელსაც განაახლებს.",
+  "Search shared players": "საერთო სიაში მოთამაშეების ძებნა",
+  "Shared player details apply to future registrations. Existing tournament names, scores and registration order stay unchanged.": "საერთო სიის მოთამაშის მონაცემები მომავალ რეგისტრაციებზე ვრცელდება. არსებულ ტურნირებში სახელები, ანგარიშები და რეგისტრაციის რიგი უცვლელია.",
+  "Shared player saved. Available for every tournament.": "მოთამაშე შენახულია საერთო სიაში და ხელმისაწვდომია ყველა ტურნირისთვის.",
+  "The player directory is still connecting.": "მიმდინარეობს მოთამაშეთა სიასთან დაკავშირება.",
+  "The shared lineup is open.": "მოთამაშეთა საერთო სია ღიაა.",
+  "Try another name or adjust the skill filter.": "სცადეთ სხვა სახელი ან შეცვალეთ თამაშის დონის ფილტრი.",
+  "Unlink player": "მოთამაშის კავშირის გაუქმება",
+  "Unlink this player before selecting another. The account keeps its current name.": "სხვა მოთამაშის არჩევამდე გააუქმეთ ამ მოთამაშის კავშირი. ანგარიშის არსებული სახელი შენარჩუნდება.",
+  "Member is already linked to another player; unlink it first": "წევრი უკვე დაკავშირებულია სხვა მოთამაშესთან; ჯერ გააუქმეთ ეს კავშირი",
+  "Member must be an authenticated account": "წევრი ჯერ ანგარიშში უნდა შევიდეს",
+  "Player is already linked to another member; unlink it first": "მოთამაშე უკვე დაკავშირებულია სხვა წევრთან; ჯერ გააუქმეთ ეს კავშირი",
+  "Player is already registered in this tournament": "მოთამაშე უკვე რეგისტრირებულია ამ ტურნირში",
+  Telegram: "Telegram",
+  "Link Telegram": "Telegram-ის დაკავშირება",
+  "Link Telegram to your existing member account. Linking replaces your current username with your Telegram username.": "დააკავშირეთ Telegram თქვენს არსებულ ანგარიშთან. თქვენი მომხმარებლის სახელი ჩაანაცვლდება Telegram-ის მომხმარებლის სახელით.",
+  "Linked Telegram account": "დაკავშირებული Telegram-ის ანგარიში",
+  "Sync Telegram username": "Telegram-ის მომხმარებლის სახელის განახლება",
+  "Telegram linking is not configured yet. Ask an admin to set the public Login Client ID.": "Telegram-ის დაკავშირება ჯერ არ არის გამართული. სთხოვეთ ადმინისტრატორს მიუთითოს საჯარო შესვლის კლიენტის ID.",
+  "Unlink Telegram": "Telegram-ის კავშირის გაუქმება",
+  "Couldn't load Telegram. Check your connection and try again.": "Telegram-ის ჩატვირთვა ვერ მოხერხდა. შეამოწმეთ ინტერნეტკავშირი და სცადეთ ხელახლა.",
+  "Couldn't prepare Telegram linking. Try again.": "Telegram-ის დაკავშირებისთვის მომზადება ვერ მოხერხდა. სცადეთ ხელახლა.",
+  "Telegram linked. Your username now matches Telegram.": "Telegram დაკავშირებულია. თქვენი მომხმარებლის სახელი ახლა Telegram-ის სახელს ემთხვევა.",
+  "Telegram unlinked. Your username is unchanged.": "Telegram-ის კავშირი გაუქმებულია. თქვენი მომხმარებლის სახელი უცვლელია.",
+  "The Telegram link request expired. Refresh it and try again.": "Telegram-ის დაკავშირების მოთხოვნას ვადა გაუვიდა. განაახლეთ ის და სცადეთ ხელახლა.",
+  "Telegram didn't finish linking. Allow popups or retry in your browser.": "Telegram-ის დაკავშირება ვერ დასრულდა. დაუშვით ამომხტარი ფანჯრები ან სცადეთ ხელახლა ბრაუზერში.",
+  "Telegram linking was cancelled or could not be completed. Try again.": "Telegram-ის დაკავშირება გაუქმდა ან ვერ დასრულდა. სცადეთ ხელახლა.",
+  "Telegram linking settings": "Telegram-ის დაკავშირების პარამეტრები",
+  "Use the public Login Client ID from BotFather. Leave blank to disable linking. Bot tokens and client secrets are not needed here.": "მიუთითეთ საჯარო შესვლის კლიენტის ID BotFather-იდან. დაკავშირების გასათიშად დატოვეთ ცარიელი. ბოტის ტოკენები და კლიენტის საიდუმლო გასაღებები აქ საჭირო არ არის.",
+  "Couldn't load Telegram settings.": "Telegram-ის პარამეტრების ჩატვირთვა ვერ მოხერხდა.",
+  "Enter a valid numeric Telegram Login Client ID.": "მიუთითეთ Telegram-ის შესვლის კლიენტის სწორი რიცხვითი ID.",
+  "Telegram Login Client ID": "Telegram-ის შესვლის კლიენტის ID",
+  "Couldn't save Telegram settings.": "Telegram-ის პარამეტრების შენახვა ვერ მოხერხდა.",
+  "Telegram settings saved.": "Telegram-ის პარამეტრები შენახულია.",
+  "Save Telegram settings": "Telegram-ის პარამეტრების შენახვა",
+  "Ambiguous Telegram verification key": "Telegram-ის შემოწმების გასაღები არაერთმნიშვნელოვანია",
+  "Duplicate Telegram token JSON key": "Telegram-ის ტოკენის JSON-ში გასაღები მეორდება",
+  "Invalid Telegram Login client ID": "Telegram-ის შესვლის კლიენტის ID არასწორია",
+  "Invalid Telegram account ID": "Telegram-ის ანგარიშის ID არასწორია",
+  "Invalid Telegram key ID": "Telegram-ის გასაღების ID არასწორია",
+  "Invalid Telegram signature encoding": "Telegram-ის ხელმოწერის კოდირება არასწორია",
+  "Invalid Telegram token": "Telegram-ის ტოკენი არასწორია",
+  "Invalid Telegram token JSON": "Telegram-ის ტოკენის JSON არასწორია",
+  "Invalid Telegram token encoding": "Telegram-ის ტოკენის კოდირება არასწორია",
+  "Invalid Telegram token issuer": "Telegram-ის ტოკენის გამომცემი არასწორია",
+  "Invalid Telegram token signature": "Telegram-ის ტოკენის ხელმოწერა არასწორია",
+  "Invalid Telegram token timestamp": "Telegram-ის ტოკენში დრო არასწორია",
+  "Invalid Telegram verification keys": "Telegram-ის შემოწმების გასაღებები არასწორია",
+  "Set a Telegram username before linking.": "დაკავშირებამდე მიუთითეთ მომხმარებლის სახელი Telegram-ში.",
+  "Set a valid Telegram username before linking.": "დაკავშირებამდე მიუთითეთ მომხმარებლის სწორი სახელი Telegram-ში.",
+  "Start Telegram linking before submitting a token": "ტოკენის გაგზავნამდე დაიწყეთ Telegram-ის დაკავშირება",
+  "Telegram Login must use the RS256 signing algorithm": "Telegram-ში შესვლისთვის საჭიროა ხელმოწერის RS256 ალგორითმი",
+  "Telegram RS256 verification key is unavailable": "Telegram-ის RS256 შემოწმების გასაღები მიუწვდომელია",
+  "Telegram configuration changed. Try linking again.": "Telegram-ის პარამეტრები შეიცვალა. სცადეთ დაკავშირება ხელახლა.",
+  "Telegram link expired. Try linking again.": "Telegram-ის დაკავშირების მოთხოვნას ვადა გაუვიდა. სცადეთ ხელახლა.",
+  "Telegram link verification did not match. Try linking again.": "Telegram-ის დაკავშირების მოთხოვნა ვერ დადასტურდა. სცადეთ ხელახლა.",
+  "Telegram linking is not configured yet": "Telegram-ის დაკავშირება ჯერ არ არის გამართული",
+  "Telegram token JSON is too deeply nested": "Telegram-ის ტოკენის JSON-ში ჩადგმის სიღრმე ზედმეტად დიდია",
+  "Telegram token expired or has an invalid timestamp": "Telegram-ის ტოკენს ვადა გაუვიდა ან არასწორ დროს შეიცავს",
+  "Telegram token has no account ID": "Telegram-ის ტოკენში ანგარიშის ID არ არის",
+  "Telegram token has no expiration time": "Telegram-ის ტოკენში ვადის გასვლის დრო არ არის",
+  "Telegram token has no issue time": "Telegram-ის ტოკენში გაცემის დრო არ არის",
+  "Telegram token has no key ID": "Telegram-ის ტოკენში გასაღების ID არ არის",
+  "Telegram token is not valid yet": "Telegram-ის ტოკენის მოქმედების ვადა ჯერ არ დაწყებულა",
+  "Telegram token is too large": "Telegram-ის ტოკენი ზედმეტად დიდია",
+  "Telegram token was issued for another app": "Telegram-ის ტოკენი სხვა აპლიკაციისთვის არის გაცემული",
+  "Telegram username is invalid": "Telegram-ის მომხმარებლის სახელი არასწორია",
+  "Telegram username must be between 5 and 32 characters": "Telegram-ის მომხმარებლის სახელი უნდა შეიცავდეს 5–32 სიმბოლოს",
+  "Telegram verification is temporarily unavailable. Try again.": "Telegram-ის შემოწმება დროებით მიუწვდომელია. სცადეთ ხელახლა.",
+  "Telegram verification key has changed. Try linking again.": "Telegram-ის შემოწმების გასაღები შეიცვალა. სცადეთ დაკავშირება ხელახლა.",
+  "Telegram verification keys are too large": "Telegram-ის შემოწმების გასაღებები ზედმეტად დიდია",
+  "This Telegram account is already linked to another member": "Telegram-ის ეს ანგარიში უკვე დაკავშირებულია სხვა წევრთან",
+  "Unauthorized: Sign in to link Telegram": "წვდომა შეზღუდულია: Telegram-ის დასაკავშირებლად შედით ანგარიშში",
+  "Unsupported Telegram token header": "Telegram-ის ტოკენის სათაური არ არის მხარდაჭერილი",
+  "Wait a few seconds before trying Telegram again": "Telegram-ის დაკავშირების ხელახლა ცდამდე დაელოდეთ რამდენიმე წამს"
 };
 const ru = {
+  "Find a player in the bracket": "Найти игрока в турнирной сетке",
+  "PLAYER NAME": "ИМЯ ИГРОКА",
+  "Find next match": "Найти следующий матч",
+  "No player matches this name.": "Игрок с таким именем не найден.",
+  "No upcoming match for {name}.": "У игрока {name} нет предстоящего матча.",
+  "Several players match. Choose a player below.": "Найдено несколько игроков. Выберите игрока ниже.",
+  "Find next match for {name} / {registration}": "Найти следующий матч игрока {name} / {registration}",
+  "Showing match {match} for {name}.": "Показан матч {match} игрока {name}.",
+  Matches: "Матчи",
+  "THE MATCHES / ALL ROUNDS": "МАТЧИ / ВСЕ РАУНДЫ",
+  "Search tournament matches": "Поиск матчей турнира",
+  "PLAYER NAME / MATCH ID": "ИМЯ ИГРОКА / ID МАТЧА",
+  Bracket: "Сетка",
+  "All brackets": "Все сетки",
+  "Match status": "Статус матча",
+  "Match round": "Раунд матча",
+  "Match table": "Стол матча",
+  "Match sort order": "Порядок сортировки матчей",
+  "Bracket order": "Порядок сетки",
+  "Players / matchup": "Игроки / пара",
+  Score: "Счёт",
+  "Open match {match}: {playerA} vs {playerB}": "Открыть матч {match}: {playerA} против {playerB}",
+  "{shown} of {total} matches": "Матчи: {shown} из {total}",
+  "No matching matches.": "Матчи не найдены.",
+  "Try another player or adjust the status, bracket, round or table filters.": "Найдите другого игрока или измените фильтры статуса, сетки, раунда или стола.",
+  "No matches yet.": "Пока нет матчей.",
+  "Generate the bracket to see tournament matches here.": "Создайте сетку, чтобы здесь появились матчи турнира.",
+  "Page {page} of {pages}": "Страница {page} из {pages}",
+  "Previous matches page": "Предыдущая страница матчей",
+  "Next matches page": "Следующая страница матчей",
+  Previous: "Предыдущий",
+  Match: "Матч",
+  Round: "Раунд",
   "Clear search": "Очистить поиск",
   "Match started at table {table}": "Матч начат за столом {table}",
   "Bracket generated": "Сетка создана",
@@ -34197,6 +34412,10 @@ const ru = {
   "Reg / time": "Рег / время",
   "Regenerate bracket": "Пересоздать сетку",
   "Register & place manually": "Зарегистрировать и разместить",
+  "Next, choose a bracket slot for this player. An occupied slot creates a qualifier and keeps both entrants in the tournament.": "Затем выберите место в сетке для этого игрока. Если место занято, будет создан отборочный матч, и оба игрока останутся в турнире.",
+  "Registered in the waiting queue. Use Place in bracket to add them to the draw.": "Игрок зарегистрирован в очереди. Используйте «Добавить в сетку», чтобы включить его в турнирную сетку.",
+  "Place in bracket": "Добавить в сетку",
+  "Player added to the bracket. Their match is now in view.": "Игрок добавлен в сетку. Его матч теперь виден.",
   "Register {name}": "Зарегистрировать: {name}",
   Registered: "Зарегистрирован",
   "Registration open": "Регистрация открыта",
@@ -34458,7 +34677,108 @@ const ru = {
   "Copy bracket link": "Скопировать ссылку на сетку",
   "Bracket link copied": "Ссылка на сетку скопирована",
   "Could not copy the link. Copy it below.": "Не удалось скопировать ссылку. Скопируйте её ниже.",
-  "Full bracket URL": "Ссылка на полную сетку"
+  "Full bracket URL": "Ссылка на полную сетку",
+  "All players": "Все игроки",
+  "Already linked": "Уже связан",
+  "Choose a player": "Выберите игрока",
+  "Choose existing player": "Выбрать существующего игрока",
+  "Couldn't load the player directory.": "Не удалось загрузить список игроков.",
+  "Create a player here or add one in a tournament. They will be available across the app.": "Создайте игрока здесь или добавьте его в турнире. Он будет доступен во всём приложении.",
+  "Create new player": "Создать нового игрока",
+  "Create player": "Создать игрока",
+  "Edit shared player": "Редактировать игрока в общем списке",
+  "Edit shared player {v1}": "Редактировать игрока {v1} в общем списке",
+  "Existing player": "Существующий игрок",
+  "Link player": "Связать игрока",
+  "Link player for member {v1}": "Связать игрока с участником {v1}",
+  "Link player to member": "Связать игрока с участником",
+  "Linked player: {v1}": "Связанный игрок: {v1}",
+  "Linked to a member": "Связан с участником",
+  "Linking replaces this member's name with the player's name, even if they already set a name. Each member and player can have one link.": "Имя игрока заменит имя участника, даже если оно уже задано. У каждого участника и игрока может быть только одна связь.",
+  "Manage player link": "Управление связью с игроком",
+  "NAME / PLAYER NUMBER": "ИМЯ / НОМЕР ИГРОКА",
+  "No available players match. Create a new player or change the search.": "Подходящих доступных игроков нет. Создайте нового игрока или измените поиск.",
+  "One shared directory for every tournament. Choose a tournament above to see its registration order, status, tables and rounds.": "Общий список игроков для всех турниров. Выберите турнир выше, чтобы увидеть порядок регистрации, статусы, столы и раунды.",
+  "Player linked. The member's name is now {v1}.": "Игрок связан. Имя участника теперь — {v1}.",
+  "Player source": "Откуда добавить игрока",
+  "Player to link": "Игрок для связи",
+  "Player unlinked. The member's name is unchanged.": "Связь с игроком удалена. Имя участника сохранено.",
+  "Players already registered in this tournament are excluded. This registration gets its own number and queue position.": "Уже зарегистрированные в этом турнире игроки исключены. Новая регистрация получит свой номер и место в очереди.",
+  "Saving this player also updates their linked account's name.": "Сохранение игрока также обновит имя связанного аккаунта.",
+  "Search shared players": "Поиск в общем списке игроков",
+  "Shared player details apply to future registrations. Existing tournament names, scores and registration order stay unchanged.": "Данные общего списка используются при будущих регистрациях. Имена игроков, счёт и порядок регистрации в существующих турнирах не меняются.",
+  "Shared player saved. Available for every tournament.": "Игрок сохранён в общем списке и доступен для всех турниров.",
+  "The player directory is still connecting.": "Подключаемся к списку игроков.",
+  "The shared lineup is open.": "Общий список игроков открыт.",
+  "Try another name or adjust the skill filter.": "Попробуйте другое имя или измените фильтр уровня игры.",
+  "Unlink player": "Удалить связь с игроком",
+  "Unlink this player before selecting another. The account keeps its current name.": "Удалите связь с этим игроком перед выбором другого. Текущее имя аккаунта сохранится.",
+  "Member is already linked to another player; unlink it first": "Участник уже связан с другим игроком; сначала удалите эту связь",
+  "Member must be an authenticated account": "Участник должен сначала войти в аккаунт",
+  "Player is already linked to another member; unlink it first": "Игрок уже связан с другим участником; сначала удалите эту связь",
+  "Player is already registered in this tournament": "Игрок уже зарегистрирован в этом турнире",
+  Telegram: "Telegram",
+  "Link Telegram": "Связать Telegram",
+  "Link Telegram to your existing member account. Linking replaces your current username with your Telegram username.": "Свяжите Telegram со своим аккаунтом. Ваш текущий никнейм будет заменён никнеймом из Telegram.",
+  "Linked Telegram account": "Связанный аккаунт Telegram",
+  "Sync Telegram username": "Обновить никнейм из Telegram",
+  "Telegram linking is not configured yet. Ask an admin to set the public Login Client ID.": "Связь с Telegram ещё не настроена. Попросите администратора указать публичный Login Client ID.",
+  "Unlink Telegram": "Удалить связь с Telegram",
+  "Couldn't load Telegram. Check your connection and try again.": "Не удалось загрузить Telegram. Проверьте подключение и попробуйте снова.",
+  "Couldn't prepare Telegram linking. Try again.": "Не удалось подготовить связь с Telegram. Попробуйте снова.",
+  "Telegram linked. Your username now matches Telegram.": "Telegram связан. Ваш никнейм теперь совпадает с никнеймом в Telegram.",
+  "Telegram unlinked. Your username is unchanged.": "Связь с Telegram удалена. Ваш никнейм сохранён.",
+  "The Telegram link request expired. Refresh it and try again.": "Запрос на связь с Telegram истёк. Обновите его и попробуйте снова.",
+  "Telegram didn't finish linking. Allow popups or retry in your browser.": "Связь с Telegram не завершена. Разрешите всплывающие окна или повторите попытку в браузере.",
+  "Telegram linking was cancelled or could not be completed. Try again.": "Связь с Telegram отменена или не завершена. Попробуйте снова.",
+  "Telegram linking settings": "Настройки связи с Telegram",
+  "Use the public Login Client ID from BotFather. Leave blank to disable linking. Bot tokens and client secrets are not needed here.": "Укажите публичный Login Client ID из BotFather. Оставьте поле пустым, чтобы отключить связь. Токены бота и секреты клиента здесь не нужны.",
+  "Couldn't load Telegram settings.": "Не удалось загрузить настройки Telegram.",
+  "Enter a valid numeric Telegram Login Client ID.": "Введите корректный числовой Login Client ID для Telegram.",
+  "Telegram Login Client ID": "Login Client ID для Telegram",
+  "Couldn't save Telegram settings.": "Не удалось сохранить настройки Telegram.",
+  "Telegram settings saved.": "Настройки Telegram сохранены.",
+  "Save Telegram settings": "Сохранить настройки Telegram",
+  "Ambiguous Telegram verification key": "Неоднозначный ключ проверки Telegram",
+  "Duplicate Telegram token JSON key": "Повторяющийся ключ JSON в токене Telegram",
+  "Invalid Telegram Login client ID": "Некорректный Login Client ID для Telegram",
+  "Invalid Telegram account ID": "Некорректный ID аккаунта Telegram",
+  "Invalid Telegram key ID": "Некорректный ID ключа Telegram",
+  "Invalid Telegram signature encoding": "Некорректная кодировка подписи Telegram",
+  "Invalid Telegram token": "Некорректный токен Telegram",
+  "Invalid Telegram token JSON": "Некорректный JSON токена Telegram",
+  "Invalid Telegram token encoding": "Некорректная кодировка токена Telegram",
+  "Invalid Telegram token issuer": "Некорректный издатель токена Telegram",
+  "Invalid Telegram token signature": "Некорректная подпись токена Telegram",
+  "Invalid Telegram token timestamp": "Некорректное время в токене Telegram",
+  "Invalid Telegram verification keys": "Некорректные ключи проверки Telegram",
+  "Set a Telegram username before linking.": "Задайте никнейм в Telegram перед связыванием.",
+  "Set a valid Telegram username before linking.": "Задайте корректный никнейм в Telegram перед связыванием.",
+  "Start Telegram linking before submitting a token": "Начните связывание Telegram перед отправкой токена",
+  "Telegram Login must use the RS256 signing algorithm": "Для входа через Telegram требуется алгоритм подписи RS256",
+  "Telegram RS256 verification key is unavailable": "Ключ проверки RS256 для Telegram недоступен",
+  "Telegram configuration changed. Try linking again.": "Настройки Telegram изменились. Попробуйте связать аккаунт снова.",
+  "Telegram link expired. Try linking again.": "Запрос связи с Telegram истёк. Попробуйте снова.",
+  "Telegram link verification did not match. Try linking again.": "Не удалось подтвердить запрос связи с Telegram. Попробуйте снова.",
+  "Telegram linking is not configured yet": "Связь с Telegram ещё не настроена",
+  "Telegram token JSON is too deeply nested": "Превышена допустимая вложенность JSON токена Telegram",
+  "Telegram token expired or has an invalid timestamp": "Токен Telegram истёк или содержит некорректное время",
+  "Telegram token has no account ID": "В токене Telegram отсутствует ID аккаунта",
+  "Telegram token has no expiration time": "В токене Telegram отсутствует срок действия",
+  "Telegram token has no issue time": "В токене Telegram отсутствует время выдачи",
+  "Telegram token has no key ID": "В токене Telegram отсутствует ID ключа",
+  "Telegram token is not valid yet": "Срок действия токена Telegram ещё не начался",
+  "Telegram token is too large": "Токен Telegram слишком большой",
+  "Telegram token was issued for another app": "Токен Telegram выдан для другого приложения",
+  "Telegram username is invalid": "Некорректный никнейм Telegram",
+  "Telegram username must be between 5 and 32 characters": "Никнейм Telegram должен содержать от 5 до 32 символов",
+  "Telegram verification is temporarily unavailable. Try again.": "Проверка Telegram временно недоступна. Попробуйте снова.",
+  "Telegram verification key has changed. Try linking again.": "Ключ проверки Telegram изменился. Попробуйте связать аккаунт снова.",
+  "Telegram verification keys are too large": "Ключи проверки Telegram слишком большие",
+  "This Telegram account is already linked to another member": "Этот аккаунт Telegram уже связан с другим участником",
+  "Unauthorized: Sign in to link Telegram": "Нет доступа: войдите, чтобы связать Telegram",
+  "Unsupported Telegram token header": "Неподдерживаемый заголовок токена Telegram",
+  "Wait a few seconds before trying Telegram again": "Подождите несколько секунд перед следующей попыткой связи с Telegram"
 };
 const LANGUAGE_STORAGE_KEY = "chillpong.language";
 const LANGUAGES = [
@@ -34594,6 +34914,7 @@ const TournamentElimination$1 = Variant({
   "doubleElimination": Null
 });
 const TournamentCommand = Variant({
+  "addExistingPlayer": Record({ "globalPlayerId": Nat }),
   "prioritizeMatch": Nat,
   "startMatch": Nat,
   "setMatchPlayers": Record({
@@ -34715,6 +35036,7 @@ const TournamentPlayer = Record({
   "seed": Opt(Nat),
   "losses": Nat,
   "registrationNumber": Nat,
+  "globalPlayerId": Opt(Nat),
   "currentMatchId": Opt(Nat),
   "skillLevel": Nat,
   "registeredAt": Timestamp
@@ -34738,6 +35060,30 @@ const UserRole = Variant({
   "admin": Null,
   "user": Null,
   "guest": Null
+});
+const UserId = Principal2;
+const Role$1 = Variant({ "admin": Null });
+const ExternalBlob2 = Vec(Nat8);
+const User$1 = Record({
+  "id": UserId,
+  "bio": Opt(Text),
+  "username": Text,
+  "displayName": Text,
+  "createdAt": Timestamp,
+  "role": Opt(Role$1),
+  "avatar": Opt(ExternalBlob2)
+});
+const PlayerInput = Record({
+  "name": Text,
+  "skillLevel": Nat
+});
+const GlobalPlayer = Record({
+  "id": Nat,
+  "userId": Opt(UserId),
+  "name": Text,
+  "createdAt": Timestamp,
+  "updatedAt": Timestamp,
+  "skillLevel": Nat
 });
 const TournamentStatus$1 = Variant({
   "upcoming": Null,
@@ -34769,22 +35115,10 @@ const Tournament = Record({
   "capacity": Nat,
   "format": TournamentFormat$1
 });
-const UserId = Principal2;
 const UserInput = Record({
   "bio": Opt(Text),
   "username": Text,
   "displayName": Text
-});
-const Role$1 = Variant({ "admin": Null });
-const ExternalBlob2 = Vec(Nat8);
-const User$1 = Record({
-  "id": UserId,
-  "bio": Opt(Text),
-  "username": Text,
-  "displayName": Text,
-  "createdAt": Timestamp,
-  "role": Opt(Role$1),
-  "avatar": Opt(ExternalBlob2)
 });
 const Value = Variant({
   "int": Int,
@@ -34799,6 +35133,12 @@ const Result = Record({
   "hasMore": Bool,
   "rows": Vec(Vec(Cell))
 });
+const Link$1 = Record({
+  "linkedAt": Int,
+  "username": Text,
+  "subject": Text
+});
+const Config = Record({ "clientId": Opt(Text) });
 const UserRoleView = Record({
   "id": UserId,
   "username": Text,
@@ -34808,6 +35148,17 @@ const UserRoleView = Record({
 const ProfileInput = Record({
   "username": Text,
   "displayName": Text
+});
+const LinkRequest = Record({
+  "clientId": Text,
+  "expiresAt": Int,
+  "nonce": Text
+});
+const HttpHeader = Record({ "value": Text, "name": Text });
+const HttpRequestResult = Record({
+  "status": Nat,
+  "body": Vec(Nat8),
+  "headers": Vec(HttpHeader)
 });
 Service({
   "_immutableObjectStorageBlobsAreLive": Func(
@@ -34846,13 +35197,17 @@ Service({
   ),
   "assignCallerUserRole": Func([Principal2, UserRole], [], []),
   "bootstrapOwner": Func([], [], []),
+  "completeTelegramLink": Func([Text], [User$1], []),
+  "createPlayer": Func([PlayerInput], [GlobalPlayer], []),
   "createTournament": Func([TournamentInput], [Tournament], []),
   "createUser": Func([UserId, UserInput], [User$1], []),
   "execute": Func([Text], [Result], ["query"]),
   "getApiDoc": Func([], [Text], ["query"]),
   "getCallerProfile": Func([], [Opt(User$1)], ["query"]),
+  "getCallerTelegramLink": Func([], [Opt(Link$1)], ["query"]),
   "getCallerUserRole": Func([], [UserRole], ["query"]),
   "getMyRole": Func([], [Opt(Role$1)], ["query"]),
+  "getTelegramLinkConfig": Func([], [Config], ["query"]),
   "getTournament": Func([Nat], [Opt(Tournament)], ["query"]),
   "getTournamentState": Func(
     [Nat],
@@ -34864,11 +35219,28 @@ Service({
   "getUserByUsername": Func([Text], [Opt(User$1)], ["query"]),
   "grantAdminRole": Func([UserId], [UserRoleView], []),
   "isCallerAdmin": Func([], [Bool], ["query"]),
+  "linkPlayerToUser": Func([Nat, UserId], [GlobalPlayer], []),
+  "listPlayers": Func([], [Vec(GlobalPlayer)], ["query"]),
   "listUsers": Func([], [Vec(User$1)], ["query"]),
   "listUsersWithRoles": Func([], [Vec(UserRoleView)], ["query"]),
   "revokeAdminRole": Func([UserId], [UserRoleView], []),
   "saveCallerProfile": Func([ProfileInput], [User$1], []),
   "schema": Func([], [Text], ["query"]),
+  "setTelegramLinkConfig": Func([Opt(Text)], [], []),
+  "startTelegramLink": Func([], [LinkRequest], []),
+  "telegramKeysTransform": Func(
+    [
+      Record({
+        "context": Vec(Nat8),
+        "response": HttpRequestResult
+      })
+    ],
+    [HttpRequestResult],
+    ["query"]
+  ),
+  "unlinkPlayerFromUser": Func([Nat], [GlobalPlayer], []),
+  "unlinkTelegram": Func([], [User$1], []),
+  "updatePlayer": Func([Nat, PlayerInput], [GlobalPlayer], []),
   "updateTournament": Func([Nat, TournamentInput], [Tournament], []),
   "updateUser": Func([UserId, UserInput], [User$1], [])
 });
@@ -34912,6 +35284,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "doubleElimination": IDL2.Null
   });
   const TournamentCommand2 = IDL2.Variant({
+    "addExistingPlayer": IDL2.Record({ "globalPlayerId": IDL2.Nat }),
     "prioritizeMatch": IDL2.Nat,
     "startMatch": IDL2.Nat,
     "setMatchPlayers": IDL2.Record({
@@ -35036,6 +35409,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "seed": IDL2.Opt(IDL2.Nat),
     "losses": IDL2.Nat,
     "registrationNumber": IDL2.Nat,
+    "globalPlayerId": IDL2.Opt(IDL2.Nat),
     "currentMatchId": IDL2.Opt(IDL2.Nat),
     "skillLevel": IDL2.Nat,
     "registeredAt": Timestamp2
@@ -35059,6 +35433,27 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "admin": IDL2.Null,
     "user": IDL2.Null,
     "guest": IDL2.Null
+  });
+  const UserId2 = IDL2.Principal;
+  const Role2 = IDL2.Variant({ "admin": IDL2.Null });
+  const ExternalBlob3 = IDL2.Vec(IDL2.Nat8);
+  const User2 = IDL2.Record({
+    "id": UserId2,
+    "bio": IDL2.Opt(IDL2.Text),
+    "username": IDL2.Text,
+    "displayName": IDL2.Text,
+    "createdAt": Timestamp2,
+    "role": IDL2.Opt(Role2),
+    "avatar": IDL2.Opt(ExternalBlob3)
+  });
+  const PlayerInput2 = IDL2.Record({ "name": IDL2.Text, "skillLevel": IDL2.Nat });
+  const GlobalPlayer2 = IDL2.Record({
+    "id": IDL2.Nat,
+    "userId": IDL2.Opt(UserId2),
+    "name": IDL2.Text,
+    "createdAt": Timestamp2,
+    "updatedAt": Timestamp2,
+    "skillLevel": IDL2.Nat
   });
   const TournamentStatus2 = IDL2.Variant({
     "upcoming": IDL2.Null,
@@ -35090,22 +35485,10 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "capacity": IDL2.Nat,
     "format": TournamentFormat2
   });
-  const UserId2 = IDL2.Principal;
   const UserInput2 = IDL2.Record({
     "bio": IDL2.Opt(IDL2.Text),
     "username": IDL2.Text,
     "displayName": IDL2.Text
-  });
-  const Role2 = IDL2.Variant({ "admin": IDL2.Null });
-  const ExternalBlob3 = IDL2.Vec(IDL2.Nat8);
-  const User2 = IDL2.Record({
-    "id": UserId2,
-    "bio": IDL2.Opt(IDL2.Text),
-    "username": IDL2.Text,
-    "displayName": IDL2.Text,
-    "createdAt": Timestamp2,
-    "role": IDL2.Opt(Role2),
-    "avatar": IDL2.Opt(ExternalBlob3)
   });
   const Value2 = IDL2.Variant({
     "int": IDL2.Int,
@@ -35120,6 +35503,12 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "hasMore": IDL2.Bool,
     "rows": IDL2.Vec(IDL2.Vec(Cell2))
   });
+  const Link3 = IDL2.Record({
+    "linkedAt": IDL2.Int,
+    "username": IDL2.Text,
+    "subject": IDL2.Text
+  });
+  const Config2 = IDL2.Record({ "clientId": IDL2.Opt(IDL2.Text) });
   const UserRoleView2 = IDL2.Record({
     "id": UserId2,
     "username": IDL2.Text,
@@ -35129,6 +35518,17 @@ const idlFactory = ({ IDL: IDL2 }) => {
   const ProfileInput2 = IDL2.Record({
     "username": IDL2.Text,
     "displayName": IDL2.Text
+  });
+  const LinkRequest2 = IDL2.Record({
+    "clientId": IDL2.Text,
+    "expiresAt": IDL2.Int,
+    "nonce": IDL2.Text
+  });
+  const HttpHeader2 = IDL2.Record({ "value": IDL2.Text, "name": IDL2.Text });
+  const HttpRequestResult2 = IDL2.Record({
+    "status": IDL2.Nat,
+    "body": IDL2.Vec(IDL2.Nat8),
+    "headers": IDL2.Vec(HttpHeader2)
   });
   return IDL2.Service({
     "_immutableObjectStorageBlobsAreLive": IDL2.Func(
@@ -35167,13 +35567,17 @@ const idlFactory = ({ IDL: IDL2 }) => {
     ),
     "assignCallerUserRole": IDL2.Func([IDL2.Principal, UserRole2], [], []),
     "bootstrapOwner": IDL2.Func([], [], []),
+    "completeTelegramLink": IDL2.Func([IDL2.Text], [User2], []),
+    "createPlayer": IDL2.Func([PlayerInput2], [GlobalPlayer2], []),
     "createTournament": IDL2.Func([TournamentInput2], [Tournament2], []),
     "createUser": IDL2.Func([UserId2, UserInput2], [User2], []),
     "execute": IDL2.Func([IDL2.Text], [Result2], ["query"]),
     "getApiDoc": IDL2.Func([], [IDL2.Text], ["query"]),
     "getCallerProfile": IDL2.Func([], [IDL2.Opt(User2)], ["query"]),
+    "getCallerTelegramLink": IDL2.Func([], [IDL2.Opt(Link3)], ["query"]),
     "getCallerUserRole": IDL2.Func([], [UserRole2], ["query"]),
     "getMyRole": IDL2.Func([], [IDL2.Opt(Role2)], ["query"]),
+    "getTelegramLinkConfig": IDL2.Func([], [Config2], ["query"]),
     "getTournament": IDL2.Func([IDL2.Nat], [IDL2.Opt(Tournament2)], ["query"]),
     "getTournamentState": IDL2.Func(
       [IDL2.Nat],
@@ -35185,11 +35589,28 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "getUserByUsername": IDL2.Func([IDL2.Text], [IDL2.Opt(User2)], ["query"]),
     "grantAdminRole": IDL2.Func([UserId2], [UserRoleView2], []),
     "isCallerAdmin": IDL2.Func([], [IDL2.Bool], ["query"]),
+    "linkPlayerToUser": IDL2.Func([IDL2.Nat, UserId2], [GlobalPlayer2], []),
+    "listPlayers": IDL2.Func([], [IDL2.Vec(GlobalPlayer2)], ["query"]),
     "listUsers": IDL2.Func([], [IDL2.Vec(User2)], ["query"]),
     "listUsersWithRoles": IDL2.Func([], [IDL2.Vec(UserRoleView2)], ["query"]),
     "revokeAdminRole": IDL2.Func([UserId2], [UserRoleView2], []),
     "saveCallerProfile": IDL2.Func([ProfileInput2], [User2], []),
     "schema": IDL2.Func([], [IDL2.Text], ["query"]),
+    "setTelegramLinkConfig": IDL2.Func([IDL2.Opt(IDL2.Text)], [], []),
+    "startTelegramLink": IDL2.Func([], [LinkRequest2], []),
+    "telegramKeysTransform": IDL2.Func(
+      [
+        IDL2.Record({
+          "context": IDL2.Vec(IDL2.Nat8),
+          "response": HttpRequestResult2
+        })
+      ],
+      [HttpRequestResult2],
+      ["query"]
+    ),
+    "unlinkPlayerFromUser": IDL2.Func([IDL2.Nat], [GlobalPlayer2], []),
+    "unlinkTelegram": IDL2.Func([], [User2], []),
+    "updatePlayer": IDL2.Func([IDL2.Nat, PlayerInput2], [GlobalPlayer2], []),
     "updateTournament": IDL2.Func([IDL2.Nat, TournamentInput2], [Tournament2], []),
     "updateUser": IDL2.Func([UserId2, UserInput2], [User2], [])
   });
@@ -35405,46 +35826,74 @@ class Backend {
       return result;
     }
   }
-  async createTournament(arg0) {
+  async completeTelegramLink(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.createTournament(to_candid_TournamentInput_n49(this._uploadFile, this._downloadFile, arg0));
-        return from_candid_Tournament_n55(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.completeTelegramLink(arg0);
+        return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.createTournament(to_candid_TournamentInput_n49(this._uploadFile, this._downloadFile, arg0));
-      return from_candid_Tournament_n55(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.completeTelegramLink(arg0);
+      return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async createPlayer(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.createPlayer(arg0);
+        return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.createPlayer(arg0);
+      return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async createTournament(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.createTournament(to_candid_TournamentInput_n60(this._uploadFile, this._downloadFile, arg0));
+        return from_candid_Tournament_n66(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.createTournament(to_candid_TournamentInput_n60(this._uploadFile, this._downloadFile, arg0));
+      return from_candid_Tournament_n66(this._uploadFile, this._downloadFile, result);
     }
   }
   async createUser(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.createUser(arg0, to_candid_UserInput_n61(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.createUser(arg0, to_candid_UserInput_n72(this._uploadFile, this._downloadFile, arg1));
+        return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.createUser(arg0, to_candid_UserInput_n61(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.createUser(arg0, to_candid_UserInput_n72(this._uploadFile, this._downloadFile, arg1));
+      return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
     }
   }
   async execute(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.execute(arg0);
-        return from_candid_Result_n71(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_n74(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.execute(arg0);
-      return from_candid_Result_n71(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_n74(this._uploadFile, this._downloadFile, result);
     }
   }
   async getApiDoc() {
@@ -35465,126 +35914,154 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.getCallerProfile();
-        return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getCallerProfile();
-      return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async getCallerUserRole() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getCallerUserRole();
-        return from_candid_UserRole_n80(this._uploadFile, this._downloadFile, result);
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getCallerUserRole();
-      return from_candid_UserRole_n80(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async getMyRole() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getMyRole();
-        return from_candid_opt_n66(this._uploadFile, this._downloadFile, result);
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getMyRole();
-      return from_candid_opt_n66(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async getTournament(arg0) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getTournament(arg0);
         return from_candid_opt_n82(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.getTournament(arg0);
+      const result = await this.actor.getCallerProfile();
       return from_candid_opt_n82(this._uploadFile, this._downloadFile, result);
     }
   }
-  async getTournamentState(arg0) {
+  async getCallerTelegramLink() {
     if (this.processError) {
       try {
-        const result = await this.actor.getTournamentState(arg0);
+        const result = await this.actor.getCallerTelegramLink();
         return from_candid_opt_n83(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.getTournamentState(arg0);
+      const result = await this.actor.getCallerTelegramLink();
       return from_candid_opt_n83(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getCallerUserRole() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getCallerUserRole();
+        return from_candid_UserRole_n84(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getCallerUserRole();
+      return from_candid_UserRole_n84(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getMyRole() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getMyRole();
+        return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getMyRole();
+      return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getTelegramLinkConfig() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getTelegramLinkConfig();
+        return from_candid_Config_n86(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getTelegramLinkConfig();
+      return from_candid_Config_n86(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getTournament(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getTournament(arg0);
+        return from_candid_opt_n88(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getTournament(arg0);
+      return from_candid_opt_n88(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getTournamentState(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getTournamentState(arg0);
+        return from_candid_opt_n89(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getTournamentState(arg0);
+      return from_candid_opt_n89(this._uploadFile, this._downloadFile, result);
     }
   }
   async getTournaments() {
     if (this.processError) {
       try {
         const result = await this.actor.getTournaments();
-        return from_candid_vec_n84(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n90(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getTournaments();
-      return from_candid_vec_n84(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n90(this._uploadFile, this._downloadFile, result);
     }
   }
   async getUser(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.getUser(arg0);
-        return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n82(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getUser(arg0);
-      return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n82(this._uploadFile, this._downloadFile, result);
     }
   }
   async getUserByUsername(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.getUserByUsername(arg0);
-        return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n82(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getUserByUsername(arg0);
-      return from_candid_opt_n79(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n82(this._uploadFile, this._downloadFile, result);
     }
   }
   async grantAdminRole(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.grantAdminRole(arg0);
-        return from_candid_UserRoleView_n85(this._uploadFile, this._downloadFile, result);
+        return from_candid_UserRoleView_n91(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.grantAdminRole(arg0);
-      return from_candid_UserRoleView_n85(this._uploadFile, this._downloadFile, result);
+      return from_candid_UserRoleView_n91(this._uploadFile, this._downloadFile, result);
     }
   }
   async isCallerAdmin() {
@@ -35601,60 +36078,88 @@ class Backend {
       return result;
     }
   }
+  async linkPlayerToUser(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.linkPlayerToUser(arg0, arg1);
+        return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.linkPlayerToUser(arg0, arg1);
+      return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async listPlayers() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.listPlayers();
+        return from_candid_vec_n93(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.listPlayers();
+      return from_candid_vec_n93(this._uploadFile, this._downloadFile, result);
+    }
+  }
   async listUsers() {
     if (this.processError) {
       try {
         const result = await this.actor.listUsers();
-        return from_candid_vec_n87(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n94(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listUsers();
-      return from_candid_vec_n87(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n94(this._uploadFile, this._downloadFile, result);
     }
   }
   async listUsersWithRoles() {
     if (this.processError) {
       try {
         const result = await this.actor.listUsersWithRoles();
-        return from_candid_vec_n88(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n95(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listUsersWithRoles();
-      return from_candid_vec_n88(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n95(this._uploadFile, this._downloadFile, result);
     }
   }
   async revokeAdminRole(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.revokeAdminRole(arg0);
-        return from_candid_UserRoleView_n85(this._uploadFile, this._downloadFile, result);
+        return from_candid_UserRoleView_n91(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.revokeAdminRole(arg0);
-      return from_candid_UserRoleView_n85(this._uploadFile, this._downloadFile, result);
+      return from_candid_UserRoleView_n91(this._uploadFile, this._downloadFile, result);
     }
   }
   async saveCallerProfile(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.saveCallerProfile(arg0);
-        return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
+        return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.saveCallerProfile(arg0);
-      return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
+      return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
     }
   }
   async schema() {
@@ -35671,43 +36176,133 @@ class Backend {
       return result;
     }
   }
-  async updateTournament(arg0, arg1) {
+  async setTelegramLinkConfig(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.updateTournament(arg0, to_candid_TournamentInput_n49(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_Tournament_n55(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.setTelegramLinkConfig(to_candid_opt_n96(this._uploadFile, this._downloadFile, arg0));
+        return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.updateTournament(arg0, to_candid_TournamentInput_n49(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_Tournament_n55(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.setTelegramLinkConfig(to_candid_opt_n96(this._uploadFile, this._downloadFile, arg0));
+      return result;
+    }
+  }
+  async startTelegramLink() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.startTelegramLink();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.startTelegramLink();
+      return result;
+    }
+  }
+  async telegramKeysTransform(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.telegramKeysTransform(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.telegramKeysTransform(arg0);
+      return result;
+    }
+  }
+  async unlinkPlayerFromUser(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.unlinkPlayerFromUser(arg0);
+        return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.unlinkPlayerFromUser(arg0);
+      return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async unlinkTelegram() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.unlinkTelegram();
+        return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.unlinkTelegram();
+      return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async updatePlayer(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.updatePlayer(arg0, arg1);
+        return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.updatePlayer(arg0, arg1);
+      return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async updateTournament(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.updateTournament(arg0, to_candid_TournamentInput_n60(this._uploadFile, this._downloadFile, arg1));
+        return from_candid_Tournament_n66(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.updateTournament(arg0, to_candid_TournamentInput_n60(this._uploadFile, this._downloadFile, arg1));
+      return from_candid_Tournament_n66(this._uploadFile, this._downloadFile, result);
     }
   }
   async updateUser(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.updateUser(arg0, to_candid_UserInput_n61(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.updateUser(arg0, to_candid_UserInput_n72(this._uploadFile, this._downloadFile, arg1));
+        return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.updateUser(arg0, to_candid_UserInput_n61(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_User_n63(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.updateUser(arg0, to_candid_UserInput_n72(this._uploadFile, this._downloadFile, arg1));
+      return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
     }
   }
 }
-function from_candid_Cell_n75(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n76(_uploadFile, _downloadFile, value);
+function from_candid_Cell_n78(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n79(_uploadFile, _downloadFile, value);
+}
+function from_candid_Config_n86(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n87(_uploadFile, _downloadFile, value);
 }
 function from_candid_Error_n10(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n11(_uploadFile, _downloadFile, value);
 }
-async function from_candid_ExternalBlob_n70(_uploadFile, _downloadFile, value) {
+async function from_candid_ExternalBlob_n56(_uploadFile, _downloadFile, value) {
   return await _downloadFile(value);
+}
+function from_candid_GlobalPlayer_n57(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n58(_uploadFile, _downloadFile, value);
 }
 function from_candid_MatchSource_n40(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n41(_uploadFile, _downloadFile, value);
@@ -35715,11 +36310,11 @@ function from_candid_MatchSource_n40(_uploadFile, _downloadFile, value) {
 function from_candid_Result__1_n8(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n9(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_n71(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n72(_uploadFile, _downloadFile, value);
+function from_candid_Result_n74(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n75(_uploadFile, _downloadFile, value);
 }
-function from_candid_Role_n67(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n68(_uploadFile, _downloadFile, value);
+function from_candid_Role_n53(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n54(_uploadFile, _downloadFile, value);
 }
 function from_candid_TournamentBracket_n38(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n39(_uploadFile, _downloadFile, value);
@@ -35727,8 +36322,8 @@ function from_candid_TournamentBracket_n38(_uploadFile, _downloadFile, value) {
 function from_candid_TournamentElimination_n26(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n27(_uploadFile, _downloadFile, value);
 }
-function from_candid_TournamentFormat_n59(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n60(_uploadFile, _downloadFile, value);
+function from_candid_TournamentFormat_n70(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n71(_uploadFile, _downloadFile, value);
 }
 function from_candid_TournamentMatchStatus_n36(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n37(_uploadFile, _downloadFile, value);
@@ -35745,8 +36340,8 @@ function from_candid_TournamentPlayer_n43(_uploadFile, _downloadFile, value) {
 function from_candid_TournamentState_n24(_uploadFile, _downloadFile, value) {
   return from_candid_record_n25(_uploadFile, _downloadFile, value);
 }
-function from_candid_TournamentStatus_n57(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n58(_uploadFile, _downloadFile, value);
+function from_candid_TournamentStatus_n68(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n69(_uploadFile, _downloadFile, value);
 }
 function from_candid_TournamentTableStatus_n31(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n32(_uploadFile, _downloadFile, value);
@@ -35754,46 +36349,52 @@ function from_candid_TournamentTableStatus_n31(_uploadFile, _downloadFile, value
 function from_candid_TournamentTable_n29(_uploadFile, _downloadFile, value) {
   return from_candid_record_n30(_uploadFile, _downloadFile, value);
 }
-function from_candid_Tournament_n55(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n56(_uploadFile, _downloadFile, value);
+function from_candid_Tournament_n66(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n67(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRoleView_n85(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n86(_uploadFile, _downloadFile, value);
+function from_candid_UserRoleView_n91(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n92(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRole_n80(_uploadFile, _downloadFile, value) {
+function from_candid_UserRole_n84(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n85(_uploadFile, _downloadFile, value);
+}
+async function from_candid_User_n49(_uploadFile, _downloadFile, value) {
+  return await from_candid_record_n50(_uploadFile, _downloadFile, value);
+}
+function from_candid_Value_n80(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n81(_uploadFile, _downloadFile, value);
-}
-async function from_candid_User_n63(_uploadFile, _downloadFile, value) {
-  return await from_candid_record_n64(_uploadFile, _downloadFile, value);
-}
-function from_candid_Value_n77(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n78(_uploadFile, _downloadFile, value);
 }
 function from_candid__ImmutableObjectStorageRefillResult_n4(_uploadFile, _downloadFile, value) {
   return from_candid_record_n5(_uploadFile, _downloadFile, value);
 }
+function from_candid_opt_n51(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n52(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : from_candid_Role_n53(_uploadFile, _downloadFile, value[0]);
+}
+async function from_candid_opt_n55(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : await from_candid_ExternalBlob_n56(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n59(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
 function from_candid_opt_n6(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
-}
-function from_candid_opt_n65(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : value[0];
-}
-function from_candid_opt_n66(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : from_candid_Role_n67(_uploadFile, _downloadFile, value[0]);
-}
-async function from_candid_opt_n69(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : await from_candid_ExternalBlob_n70(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_opt_n7(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
-async function from_candid_opt_n79(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : await from_candid_User_n63(_uploadFile, _downloadFile, value[0]);
-}
-function from_candid_opt_n82(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : from_candid_Tournament_n55(_uploadFile, _downloadFile, value[0]);
+async function from_candid_opt_n82(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : await from_candid_User_n49(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_opt_n83(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n88(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : from_candid_Tournament_n66(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n89(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : from_candid_TournamentState_n24(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_record_n25(_uploadFile, _downloadFile, value) {
@@ -35849,6 +36450,7 @@ function from_candid_record_n44(_uploadFile, _downloadFile, value) {
     seed: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.seed)),
     losses: value.losses,
     registrationNumber: value.registrationNumber,
+    globalPlayerId: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.globalPlayerId)),
     currentMatchId: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.currentMatchId)),
     skillLevel: value.skillLevel,
     registeredAt: value.registeredAt
@@ -35860,10 +36462,31 @@ function from_candid_record_n5(_uploadFile, _downloadFile, value) {
     topped_up_amount: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.topped_up_amount))
   };
 }
-function from_candid_record_n56(_uploadFile, _downloadFile, value) {
+async function from_candid_record_n50(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
-    status: from_candid_TournamentStatus_n57(_uploadFile, _downloadFile, value.status),
+    bio: record_opt_to_undefined(from_candid_opt_n51(_uploadFile, _downloadFile, value.bio)),
+    username: value.username,
+    displayName: value.displayName,
+    createdAt: value.createdAt,
+    role: record_opt_to_undefined(from_candid_opt_n52(_uploadFile, _downloadFile, value.role)),
+    avatar: record_opt_to_undefined(await from_candid_opt_n55(_uploadFile, _downloadFile, value.avatar))
+  };
+}
+function from_candid_record_n58(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    userId: record_opt_to_undefined(from_candid_opt_n59(_uploadFile, _downloadFile, value.userId)),
+    name: value.name,
+    createdAt: value.createdAt,
+    updatedAt: value.updatedAt,
+    skillLevel: value.skillLevel
+  };
+}
+function from_candid_record_n67(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    status: from_candid_TournamentStatus_n68(_uploadFile, _downloadFile, value.status),
     title: value.title,
     venue: value.venue,
     startsAt: value.startsAt,
@@ -35871,38 +36494,32 @@ function from_candid_record_n56(_uploadFile, _downloadFile, value) {
     description: value.description,
     updatedAt: value.updatedAt,
     capacity: value.capacity,
-    format: from_candid_TournamentFormat_n59(_uploadFile, _downloadFile, value.format)
+    format: from_candid_TournamentFormat_n70(_uploadFile, _downloadFile, value.format)
   };
 }
-async function from_candid_record_n64(_uploadFile, _downloadFile, value) {
-  return {
-    id: value.id,
-    bio: record_opt_to_undefined(from_candid_opt_n65(_uploadFile, _downloadFile, value.bio)),
-    username: value.username,
-    displayName: value.displayName,
-    createdAt: value.createdAt,
-    role: record_opt_to_undefined(from_candid_opt_n66(_uploadFile, _downloadFile, value.role)),
-    avatar: record_opt_to_undefined(await from_candid_opt_n69(_uploadFile, _downloadFile, value.avatar))
-  };
-}
-function from_candid_record_n72(_uploadFile, _downloadFile, value) {
+function from_candid_record_n75(_uploadFile, _downloadFile, value) {
   return {
     hasMore: value.hasMore,
-    rows: from_candid_vec_n73(_uploadFile, _downloadFile, value.rows)
+    rows: from_candid_vec_n76(_uploadFile, _downloadFile, value.rows)
   };
 }
-function from_candid_record_n76(_uploadFile, _downloadFile, value) {
+function from_candid_record_n79(_uploadFile, _downloadFile, value) {
   return {
-    value: from_candid_Value_n77(_uploadFile, _downloadFile, value.value),
+    value: from_candid_Value_n80(_uploadFile, _downloadFile, value.value),
     name: value.name
   };
 }
-function from_candid_record_n86(_uploadFile, _downloadFile, value) {
+function from_candid_record_n87(_uploadFile, _downloadFile, value) {
+  return {
+    clientId: record_opt_to_undefined(from_candid_opt_n51(_uploadFile, _downloadFile, value.clientId))
+  };
+}
+function from_candid_record_n92(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
     username: value.username,
     displayName: value.displayName,
-    role: record_opt_to_undefined(from_candid_opt_n66(_uploadFile, _downloadFile, value.role))
+    role: record_opt_to_undefined(from_candid_opt_n52(_uploadFile, _downloadFile, value.role))
   };
 }
 function from_candid_variant_n11(_uploadFile, _downloadFile, value) {
@@ -35968,16 +36585,16 @@ function from_candid_variant_n41(_uploadFile, _downloadFile, value) {
 function from_candid_variant_n46(_uploadFile, _downloadFile, value) {
   return "advanced" in value ? "advanced" : "playing" in value ? "playing" : "eliminated" in value ? "eliminated" : "champion" in value ? "champion" : "waiting" in value ? "waiting" : "ready" in value ? "ready" : "removed" in value ? "removed" : value;
 }
-function from_candid_variant_n58(_uploadFile, _downloadFile, value) {
-  return "upcoming" in value ? "upcoming" : "live" in value ? "live" : "completed" in value ? "completed" : value;
-}
-function from_candid_variant_n60(_uploadFile, _downloadFile, value) {
-  return "doubles" in value ? "doubles" : "singles" in value ? "singles" : value;
-}
-function from_candid_variant_n68(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n54(_uploadFile, _downloadFile, value) {
   return "admin" in value ? "admin" : value;
 }
-function from_candid_variant_n78(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n69(_uploadFile, _downloadFile, value) {
+  return "upcoming" in value ? "upcoming" : "live" in value ? "live" : "completed" in value ? "completed" : value;
+}
+function from_candid_variant_n71(_uploadFile, _downloadFile, value) {
+  return "doubles" in value ? "doubles" : "singles" in value ? "singles" : value;
+}
+function from_candid_variant_n81(_uploadFile, _downloadFile, value) {
   return "int" in value ? {
     __kind__: "int",
     int: value.int
@@ -35998,7 +36615,7 @@ function from_candid_variant_n78(_uploadFile, _downloadFile, value) {
     text: value.text
   } : value;
 }
-function from_candid_variant_n81(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n85(_uploadFile, _downloadFile, value) {
   return "admin" in value ? "admin" : "user" in value ? "user" : "guest" in value ? "guest" : value;
 }
 function from_candid_variant_n9(_uploadFile, _downloadFile, value) {
@@ -36019,20 +36636,23 @@ function from_candid_vec_n33(_uploadFile, _downloadFile, value) {
 function from_candid_vec_n42(_uploadFile, _downloadFile, value) {
   return value.map((x2) => from_candid_TournamentPlayer_n43(_uploadFile, _downloadFile, x2));
 }
-function from_candid_vec_n73(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_vec_n74(_uploadFile, _downloadFile, x2));
+function from_candid_vec_n76(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_vec_n77(_uploadFile, _downloadFile, x2));
 }
-function from_candid_vec_n74(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_Cell_n75(_uploadFile, _downloadFile, x2));
+function from_candid_vec_n77(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_Cell_n78(_uploadFile, _downloadFile, x2));
 }
-function from_candid_vec_n84(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_Tournament_n55(_uploadFile, _downloadFile, x2));
+function from_candid_vec_n90(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_Tournament_n66(_uploadFile, _downloadFile, x2));
 }
-async function from_candid_vec_n87(_uploadFile, _downloadFile, value) {
-  return await Promise.all(value.map(async (x2) => await from_candid_User_n63(_uploadFile, _downloadFile, x2)));
+function from_candid_vec_n93(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_GlobalPlayer_n57(_uploadFile, _downloadFile, x2));
 }
-function from_candid_vec_n88(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_UserRoleView_n85(_uploadFile, _downloadFile, x2));
+async function from_candid_vec_n94(_uploadFile, _downloadFile, value) {
+  return await Promise.all(value.map(async (x2) => await from_candid_User_n49(_uploadFile, _downloadFile, x2)));
+}
+function from_candid_vec_n95(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_UserRoleView_n91(_uploadFile, _downloadFile, x2));
 }
 function to_candid_TournamentCommand_n12(_uploadFile, _downloadFile, value) {
   return to_candid_variant_n13(_uploadFile, _downloadFile, value);
@@ -36040,20 +36660,20 @@ function to_candid_TournamentCommand_n12(_uploadFile, _downloadFile, value) {
 function to_candid_TournamentElimination_n19(_uploadFile, _downloadFile, value) {
   return to_candid_variant_n20(_uploadFile, _downloadFile, value);
 }
-function to_candid_TournamentFormat_n53(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n54(_uploadFile, _downloadFile, value);
+function to_candid_TournamentFormat_n64(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n65(_uploadFile, _downloadFile, value);
 }
-function to_candid_TournamentInput_n49(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n50(_uploadFile, _downloadFile, value);
+function to_candid_TournamentInput_n60(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n61(_uploadFile, _downloadFile, value);
 }
 function to_candid_TournamentSlot_n15(_uploadFile, _downloadFile, value) {
   return to_candid_variant_n16(_uploadFile, _downloadFile, value);
 }
-function to_candid_TournamentStatus_n51(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n52(_uploadFile, _downloadFile, value);
+function to_candid_TournamentStatus_n62(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n63(_uploadFile, _downloadFile, value);
 }
-function to_candid_UserInput_n61(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n62(_uploadFile, _downloadFile, value);
+function to_candid_UserInput_n72(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n73(_uploadFile, _downloadFile, value);
 }
 function to_candid_UserRole_n47(_uploadFile, _downloadFile, value) {
   return to_candid_variant_n48(_uploadFile, _downloadFile, value);
@@ -36063,6 +36683,9 @@ function to_candid__ImmutableObjectStorageRefillInformation_n2(_uploadFile, _dow
 }
 function to_candid_opt_n1(_uploadFile, _downloadFile, value) {
   return value === null ? candid_none() : candid_some(to_candid__ImmutableObjectStorageRefillInformation_n2(_uploadFile, _downloadFile, value));
+}
+function to_candid_opt_n96(_uploadFile, _downloadFile, value) {
+  return value === null ? candid_none() : candid_some(value);
 }
 function to_candid_record_n14(_uploadFile, _downloadFile, value) {
   return {
@@ -36109,18 +36732,18 @@ function to_candid_record_n3(_uploadFile, _downloadFile, value) {
     proposed_top_up_amount: value.proposed_top_up_amount ? candid_some(value.proposed_top_up_amount) : candid_none()
   };
 }
-function to_candid_record_n50(_uploadFile, _downloadFile, value) {
+function to_candid_record_n61(_uploadFile, _downloadFile, value) {
   return {
-    status: to_candid_TournamentStatus_n51(_uploadFile, _downloadFile, value.status),
+    status: to_candid_TournamentStatus_n62(_uploadFile, _downloadFile, value.status),
     title: value.title,
     venue: value.venue,
     startsAt: value.startsAt,
     description: value.description,
     capacity: value.capacity,
-    format: to_candid_TournamentFormat_n53(_uploadFile, _downloadFile, value.format)
+    format: to_candid_TournamentFormat_n64(_uploadFile, _downloadFile, value.format)
   };
 }
-function to_candid_record_n62(_uploadFile, _downloadFile, value) {
+function to_candid_record_n73(_uploadFile, _downloadFile, value) {
   return {
     bio: value.bio ? candid_some(value.bio) : candid_none(),
     username: value.username,
@@ -36128,7 +36751,9 @@ function to_candid_record_n62(_uploadFile, _downloadFile, value) {
   };
 }
 function to_candid_variant_n13(_uploadFile, _downloadFile, value) {
-  return value.__kind__ === "prioritizeMatch" ? {
+  return value.__kind__ === "addExistingPlayer" ? {
+    addExistingPlayer: value.addExistingPlayer
+  } : value.__kind__ === "prioritizeMatch" ? {
     prioritizeMatch: value.prioritizeMatch
   } : value.__kind__ === "startMatch" ? {
     startMatch: value.startMatch
@@ -36187,7 +36812,7 @@ function to_candid_variant_n48(_uploadFile, _downloadFile, value) {
     guest: null
   } : value;
 }
-function to_candid_variant_n52(_uploadFile, _downloadFile, value) {
+function to_candid_variant_n63(_uploadFile, _downloadFile, value) {
   return value == "upcoming" ? {
     upcoming: null
   } : value == "live" ? {
@@ -36196,7 +36821,7 @@ function to_candid_variant_n52(_uploadFile, _downloadFile, value) {
     completed: null
   } : value;
 }
-function to_candid_variant_n54(_uploadFile, _downloadFile, value) {
+function to_candid_variant_n65(_uploadFile, _downloadFile, value) {
   return value == "doubles" ? {
     doubles: null
   } : value == "singles" ? {
@@ -36410,51 +37035,51 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$F = [
+const __iconNode$J = [
   ["path", { d: "M12 5v14", key: "s699le" }],
   ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$F);
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$J);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$E = [
+const __iconNode$I = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$E);
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$I);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$D = [
+const __iconNode$H = [
   ["path", { d: "M7 7h10v10", key: "1tivn9" }],
   ["path", { d: "M7 17 17 7", key: "1vkiza" }]
 ];
-const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$D);
+const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$H);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$C = [
+const __iconNode$G = [
   ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
   ["path", { d: "M12 19V5", key: "x0mq9r" }]
 ];
-const ArrowUp = createLucideIcon("arrow-up", __iconNode$C);
+const ArrowUp = createLucideIcon("arrow-up", __iconNode$G);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$B = [
+const __iconNode$F = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -36466,23 +37091,62 @@ const __iconNode$B = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M16 18h.01", key: "kzsmim" }]
 ];
-const CalendarDays = createLucideIcon("calendar-days", __iconNode$B);
+const CalendarDays = createLucideIcon("calendar-days", __iconNode$F);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$A = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$A);
+const __iconNode$E = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$E);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$z = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$z);
+const __iconNode$D = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$D);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$C = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$C);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$B = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$B);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$A = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
+  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+];
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$A);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$z = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+];
+const CircleCheck = createLucideIcon("circle-check", __iconNode$z);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36491,10 +37155,9 @@ const ChevronDown = createLucideIcon("chevron-down", __iconNode$z);
  */
 const __iconNode$y = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
-  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+  ["polyline", { points: "12 6 12 12 16.5 12", key: "1aq6pp" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$y);
+const Clock3 = createLucideIcon("clock-3", __iconNode$y);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36502,10 +37165,10 @@ const CircleAlert = createLucideIcon("circle-alert", __iconNode$y);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$x = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
+  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$x);
+const Copy = createLucideIcon("copy", __iconNode$x);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36513,28 +37176,6 @@ const CircleCheck = createLucideIcon("circle-check", __iconNode$x);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$w = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16.5 12", key: "1aq6pp" }]
-];
-const Clock3 = createLucideIcon("clock-3", __iconNode$w);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$v = [
-  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
-  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
-];
-const Copy = createLucideIcon("copy", __iconNode$v);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$u = [
   ["path", { d: "M21.54 15H17a2 2 0 0 0-2 2v4.54", key: "1djwo0" }],
   [
     "path",
@@ -36546,7 +37187,31 @@ const __iconNode$u = [
   ["path", { d: "M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05", key: "14pb5j" }],
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
 ];
-const Earth = createLucideIcon("earth", __iconNode$u);
+const Earth = createLucideIcon("earth", __iconNode$w);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$v = [
+  ["path", { d: "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z", key: "i9b6wo" }],
+  ["line", { x1: "4", x2: "4", y1: "22", y2: "15", key: "1cm3nv" }]
+];
+const Flag = createLucideIcon("flag", __iconNode$v);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$u = [
+  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
+  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
+  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
+  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
+];
+const GitBranch = createLucideIcon("git-branch", __iconNode$u);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36554,30 +37219,6 @@ const Earth = createLucideIcon("earth", __iconNode$u);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$t = [
-  ["path", { d: "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z", key: "i9b6wo" }],
-  ["line", { x1: "4", x2: "4", y1: "22", y2: "15", key: "1cm3nv" }]
-];
-const Flag = createLucideIcon("flag", __iconNode$t);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$s = [
-  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
-  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
-  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
-  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
-];
-const GitBranch = createLucideIcon("git-branch", __iconNode$s);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$r = [
   ["polyline", { points: "22 12 16 12 14 15 10 15 8 12 2 12", key: "o97t9d" }],
   [
     "path",
@@ -36587,7 +37228,27 @@ const __iconNode$r = [
     }
   ]
 ];
-const Inbox = createLucideIcon("inbox", __iconNode$r);
+const Inbox = createLucideIcon("inbox", __iconNode$t);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$s = [
+  ["path", { d: "M9 17H7A5 5 0 0 1 7 7h2", key: "8i5ue5" }],
+  ["path", { d: "M15 7h2a5 5 0 1 1 0 10h-2", key: "1b9ql8" }],
+  ["line", { x1: "8", x2: "16", y1: "12", y2: "12", key: "1jonct" }]
+];
+const Link2 = createLucideIcon("link-2", __iconNode$s);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$r = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$r);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36595,19 +37256,23 @@ const Inbox = createLucideIcon("inbox", __iconNode$r);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$q = [
-  ["path", { d: "M9 17H7A5 5 0 0 1 7 7h2", key: "8i5ue5" }],
-  ["path", { d: "M15 7h2a5 5 0 1 1 0 10h-2", key: "1b9ql8" }],
-  ["line", { x1: "8", x2: "16", y1: "12", y2: "12", key: "1jonct" }]
+  ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
+  ["path", { d: "M15 12H3", key: "6jk70r" }],
+  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
 ];
-const Link2 = createLucideIcon("link-2", __iconNode$q);
+const LogIn = createLucideIcon("log-in", __iconNode$q);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$p = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$p);
+const __iconNode$p = [
+  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
+  ["path", { d: "M21 12H9", key: "dn1m92" }],
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
+];
+const LogOut = createLucideIcon("log-out", __iconNode$p);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36615,30 +37280,6 @@ const LoaderCircle = createLucideIcon("loader-circle", __iconNode$p);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$o = [
-  ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
-  ["path", { d: "M15 12H3", key: "6jk70r" }],
-  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
-];
-const LogIn = createLucideIcon("log-in", __iconNode$o);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$n = [
-  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
-  ["path", { d: "M21 12H9", key: "dn1m92" }],
-  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
-];
-const LogOut = createLucideIcon("log-out", __iconNode$n);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$m = [
   [
     "path",
     {
@@ -36648,20 +37289,40 @@ const __iconNode$m = [
   ],
   ["circle", { cx: "12", cy: "10", r: "3", key: "ilqhr7" }]
 ];
-const MapPin = createLucideIcon("map-pin", __iconNode$m);
+const MapPin = createLucideIcon("map-pin", __iconNode$o);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$l = [
+const __iconNode$n = [
   ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
   ["path", { d: "m21 3-7 7", key: "1l2asr" }],
   ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
   ["path", { d: "M9 21H3v-6", key: "wtvkvv" }]
 ];
-const Maximize2 = createLucideIcon("maximize-2", __iconNode$l);
+const Maximize2 = createLucideIcon("maximize-2", __iconNode$n);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$m = [
+  ["path", { d: "M4 12h16", key: "1lakjw" }],
+  ["path", { d: "M4 18h16", key: "19g7jn" }],
+  ["path", { d: "M4 6h16", key: "1o0s65" }]
+];
+const Menu = createLucideIcon("menu", __iconNode$m);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$l = [["path", { d: "M5 12h14", key: "1ays0h" }]];
+const Minus = createLucideIcon("minus", __iconNode$l);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36669,26 +37330,6 @@ const Maximize2 = createLucideIcon("maximize-2", __iconNode$l);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$k = [
-  ["path", { d: "M4 12h16", key: "1lakjw" }],
-  ["path", { d: "M4 18h16", key: "19g7jn" }],
-  ["path", { d: "M4 6h16", key: "1o0s65" }]
-];
-const Menu = createLucideIcon("menu", __iconNode$k);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$j = [["path", { d: "M5 12h14", key: "1ays0h" }]];
-const Minus = createLucideIcon("minus", __iconNode$j);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$i = [
   [
     "path",
     {
@@ -36698,7 +37339,31 @@ const __iconNode$i = [
   ],
   ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
 ];
-const Pencil = createLucideIcon("pencil", __iconNode$i);
+const Pencil = createLucideIcon("pencil", __iconNode$k);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$j = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "M12 5v14", key: "s699le" }]
+];
+const Plus = createLucideIcon("plus", __iconNode$j);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$i = [
+  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
+  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
+  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
+  ["path", { d: "M8 16H3v5", key: "1cv678" }]
+];
+const RefreshCw = createLucideIcon("refresh-cw", __iconNode$i);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36706,10 +37371,10 @@ const Pencil = createLucideIcon("pencil", __iconNode$i);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$h = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
+  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$h);
+const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$h);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36717,30 +37382,6 @@ const Plus = createLucideIcon("plus", __iconNode$h);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$g = [
-  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
-  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
-  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
-  ["path", { d: "M8 16H3v5", key: "1cv678" }]
-];
-const RefreshCw = createLucideIcon("refresh-cw", __iconNode$g);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$f = [
-  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
-  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
-];
-const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$f);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$e = [
   [
     "path",
     {
@@ -36751,7 +37392,35 @@ const __iconNode$e = [
   ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
   ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
 ];
-const Save = createLucideIcon("save", __iconNode$e);
+const Save = createLucideIcon("save", __iconNode$g);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$f = [
+  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
+];
+const Search = createLucideIcon("search", __iconNode$f);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$e = [
+  [
+    "path",
+    {
+      d: "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z",
+      key: "1ffxy3"
+    }
+  ],
+  ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
+];
+const Send = createLucideIcon("send", __iconNode$e);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36759,10 +37428,17 @@ const Save = createLucideIcon("save", __iconNode$e);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$d = [
-  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
-  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ],
+  ["path", { d: "M12 8v4", key: "1got3b" }],
+  ["path", { d: "M12 16h.01", key: "1drbdi" }]
 ];
-const Search = createLucideIcon("search", __iconNode$d);
+const ShieldAlert = createLucideIcon("shield-alert", __iconNode$d);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36777,10 +37453,9 @@ const __iconNode$c = [
       key: "oel41y"
     }
   ],
-  ["path", { d: "M12 8v4", key: "1got3b" }],
-  ["path", { d: "M12 16h.01", key: "1drbdi" }]
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const ShieldAlert = createLucideIcon("shield-alert", __iconNode$c);
+const ShieldCheck = createLucideIcon("shield-check", __iconNode$c);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36795,9 +37470,9 @@ const __iconNode$b = [
       key: "oel41y"
     }
   ],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+  ["path", { d: "M9 12h6", key: "1c52cq" }]
 ];
-const ShieldCheck = createLucideIcon("shield-check", __iconNode$b);
+const ShieldMinus = createLucideIcon("shield-minus", __iconNode$b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36812,9 +37487,10 @@ const __iconNode$a = [
       key: "oel41y"
     }
   ],
-  ["path", { d: "M9 12h6", key: "1c52cq" }]
+  ["path", { d: "M9 12h6", key: "1c52cq" }],
+  ["path", { d: "M12 9v6", key: "199k2o" }]
 ];
-const ShieldMinus = createLucideIcon("shield-minus", __iconNode$a);
+const ShieldPlus = createLucideIcon("shield-plus", __iconNode$a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36825,14 +37501,12 @@ const __iconNode$9 = [
   [
     "path",
     {
-      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
-      key: "oel41y"
+      d: "M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18",
+      key: "gugj83"
     }
-  ],
-  ["path", { d: "M9 12h6", key: "1c52cq" }],
-  ["path", { d: "M12 9v6", key: "199k2o" }]
+  ]
 ];
-const ShieldPlus = createLucideIcon("shield-plus", __iconNode$9);
+const Table2 = createLucideIcon("table-2", __iconNode$9);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36840,15 +37514,13 @@ const ShieldPlus = createLucideIcon("shield-plus", __iconNode$9);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$8 = [
-  [
-    "path",
-    {
-      d: "M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18",
-      key: "gugj83"
-    }
-  ]
+  ["path", { d: "M3 6h18", key: "d0wm0j" }],
+  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
+  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
+  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
+  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
 ];
-const Table2 = createLucideIcon("table-2", __iconNode$8);
+const Trash2 = createLucideIcon("trash-2", __iconNode$8);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36856,20 +37528,6 @@ const Table2 = createLucideIcon("table-2", __iconNode$8);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$7 = [
-  ["path", { d: "M3 6h18", key: "d0wm0j" }],
-  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
-  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
-  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
-  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
-];
-const Trash2 = createLucideIcon("trash-2", __iconNode$7);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$6 = [
   [
     "path",
     {
@@ -36880,14 +37538,14 @@ const __iconNode$6 = [
   ["path", { d: "M12 9v4", key: "juzpu7" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$6);
+const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$7);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$5 = [
+const __iconNode$6 = [
   ["path", { d: "M6 9H4.5a2.5 2.5 0 0 1 0-5H6", key: "17hqa7" }],
   ["path", { d: "M18 9h1.5a2.5 2.5 0 0 0 0-5H18", key: "lmptdp" }],
   ["path", { d: "M4 22h16", key: "57wxv0" }],
@@ -36895,7 +37553,18 @@ const __iconNode$5 = [
   ["path", { d: "M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22", key: "1np0yb" }],
   ["path", { d: "M18 2H6v7a6 6 0 0 0 12 0V2Z", key: "u46fv3" }]
 ];
-const Trophy = createLucideIcon("trophy", __iconNode$5);
+const Trophy = createLucideIcon("trophy", __iconNode$6);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$5 = [
+  ["path", { d: "M9 14 4 9l5-5", key: "102s5s" }],
+  ["path", { d: "M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11", key: "f3b9sd" }]
+];
+const Undo2 = createLucideIcon("undo-2", __iconNode$5);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36903,10 +37572,26 @@ const Trophy = createLucideIcon("trophy", __iconNode$5);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$4 = [
-  ["path", { d: "M9 14 4 9l5-5", key: "102s5s" }],
-  ["path", { d: "M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11", key: "f3b9sd" }]
+  [
+    "path",
+    {
+      d: "m18.84 12.25 1.72-1.71h-.02a5.004 5.004 0 0 0-.12-7.07 5.006 5.006 0 0 0-6.95 0l-1.72 1.71",
+      key: "yqzxt4"
+    }
+  ],
+  [
+    "path",
+    {
+      d: "m5.17 11.75-1.71 1.71a5.004 5.004 0 0 0 .12 7.07 5.006 5.006 0 0 0 6.95 0l1.71-1.71",
+      key: "4qinb0"
+    }
+  ],
+  ["line", { x1: "8", x2: "8", y1: "2", y2: "5", key: "1041cp" }],
+  ["line", { x1: "2", x2: "5", y1: "8", y2: "8", key: "14m1p5" }],
+  ["line", { x1: "16", x2: "16", y1: "19", y2: "22", key: "rzdirn" }],
+  ["line", { x1: "19", x2: "22", y1: "16", y2: "16", key: "ox905f" }]
 ];
-const Undo2 = createLucideIcon("undo-2", __iconNode$4);
+const Unlink = createLucideIcon("unlink", __iconNode$4);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -45261,7 +45946,7 @@ const Button = reactExports.forwardRef(
     className,
     variant = "primary",
     size = "md",
-    loading = false,
+    loading: loading2 = false,
     fullWidth = false,
     disabled,
     children,
@@ -45282,11 +45967,11 @@ const Button = reactExports.forwardRef(
           fullWidth && "btn-block",
           className
         ),
-        disabled: disabled || loading,
-        "aria-busy": loading || void 0,
+        disabled: disabled || loading2,
+        "aria-busy": loading2 || void 0,
         ...props,
         children: [
-          loading ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          loading2 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "size-4 animate-spin", "aria-hidden": "true" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Loading") })
           ] }) : null,
@@ -45297,6 +45982,387 @@ const Button = reactExports.forwardRef(
   }
 );
 Button.displayName = "Button";
+const PLAYERS_QUERY_KEY = ["players"];
+class PlayerService {
+  list(actor) {
+    return actor.listPlayers();
+  }
+  create(actor, name, skill) {
+    return actor.createPlayer({ name, skillLevel: BigInt(skill) });
+  }
+  update(actor, playerId, name, skill) {
+    return actor.updatePlayer(playerId, { name, skillLevel: BigInt(skill) });
+  }
+  link(actor, playerId, userId) {
+    return actor.linkPlayerToUser(playerId, userId);
+  }
+  unlink(actor, playerId) {
+    return actor.unlinkPlayerFromUser(playerId);
+  }
+}
+const playerService = new PlayerService();
+function LinkPlayerDialog({
+  user,
+  isAdmin,
+  onClose,
+  onLinked
+}) {
+  var _a2, _b2;
+  const { t } = useI18n();
+  const { actor, isFetching } = useActor(createActor);
+  const queryClient2 = useQueryClient();
+  const dialog = reactExports.useRef(null);
+  const [search, setSearch] = reactExports.useState("");
+  const [selectedId, setSelectedId] = reactExports.useState("");
+  const open = !!user && isAdmin;
+  const directory = useQuery({
+    queryKey: PLAYERS_QUERY_KEY,
+    queryFn: () => {
+      if (!actor) throw new Error("The player directory is still connecting.");
+      return playerService.list(actor);
+    },
+    enabled: open && !!actor && !isFetching
+  });
+  const current = (_a2 = directory.data) == null ? void 0 : _a2.find(
+    (player) => {
+      var _a3;
+      return ((_a3 = player.userId) == null ? void 0 : _a3.toString()) === (user == null ? void 0 : user.id.toString());
+    }
+  );
+  const selected = (_b2 = directory.data) == null ? void 0 : _b2.find(
+    (player) => player.id.toString() === selectedId
+  );
+  const available = !(selected == null ? void 0 : selected.userId) || selected.userId.toString() === (user == null ? void 0 : user.id.toString());
+  const mutation = useMutation({
+    mutationFn: async ({
+      playerId,
+      unlink
+    }) => {
+      if (!actor || !isAdmin || !user)
+        throw new Error("Admin access is required.");
+      return unlink ? playerService.unlink(actor, playerId) : playerService.link(actor, playerId, user.id);
+    },
+    onSuccess: (player, variables) => {
+      queryClient2.setQueryData(
+        PLAYERS_QUERY_KEY,
+        (previous) => (previous ?? []).map(
+          (entry) => entry.id === player.id ? player : entry
+        )
+      );
+      void queryClient2.invalidateQueries({ queryKey: PLAYERS_QUERY_KEY });
+      void queryClient2.invalidateQueries({ queryKey: ["adminUsers"] });
+      void queryClient2.invalidateQueries({ queryKey: ["users"] });
+      void queryClient2.invalidateQueries({ queryKey: ["profile"] });
+      onLinked(player, variables.unlink);
+      onClose();
+    }
+  });
+  reactExports.useEffect(() => {
+    var _a3, _b3, _c2;
+    if (open && !((_a3 = dialog.current) == null ? void 0 : _a3.open)) (_b3 = dialog.current) == null ? void 0 : _b3.showModal();
+    if (!open && ((_c2 = dialog.current) == null ? void 0 : _c2.open)) dialog.current.close();
+  }, [open]);
+  function close() {
+    if (!mutation.isPending) onClose();
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "dialog",
+    {
+      ref: dialog,
+      className: "modal club-modal",
+      "aria-labelledby": "link-player-title",
+      onCancel: (event) => {
+        event.preventDefault();
+        close();
+      },
+      children: open && user ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "modal-box flex max-h-[calc(100dvh-2rem)] w-[calc(100%-1rem)] max-w-xl flex-col overflow-hidden rounded-none border border-base-300 bg-base-200 p-4 sm:p-8", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex shrink-0 items-start justify-between gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "h2",
+            {
+              id: "link-player-title",
+              className: "font-display text-3xl font-bold uppercase",
+              children: t("Link player to member")
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "ghost",
+              size: "icon",
+              disabled: mutation.isPending,
+              "aria-label": t("Close"),
+              onClick: close,
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "size-5", "aria-hidden": "true" })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-0 space-y-5 overflow-y-auto overscroll-contain", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "break-all font-mono text-xs text-base-content/50", children: user.id.toString() }),
+          current ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 border border-primary/30 p-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t("Linked player: {v1}", { v1: current.name }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-base-content/50", children: t(
+              "Unlink this player before selecting another. The account keeps its current name."
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "outline",
+                className: "w-full sm:w-auto",
+                disabled: mutation.isPending,
+                loading: mutation.isPending,
+                onClick: () => mutation.mutate({ playerId: current.id, unlink: true }),
+                children: t("Unlink player")
+              }
+            )
+          ] }) : null,
+          directory.isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("output", { children: t("Loading players…") }) : directory.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { role: "alert", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t("Couldn't load the player directory.") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                className: "mt-4",
+                onClick: () => void directory.refetch(),
+                children: t("Try again")
+              }
+            )
+          ] }) : !current ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "form",
+            {
+              className: "space-y-5",
+              onSubmit: (event) => {
+                event.preventDefault();
+                if (selected && available && !mutation.isPending)
+                  mutation.mutate({ playerId: selected.id, unlink: false });
+              },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Search shared players") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "input",
+                    {
+                      type: "search",
+                      className: "input w-full rounded-none",
+                      value: search,
+                      disabled: mutation.isPending,
+                      onChange: (event) => setSearch(event.target.value)
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Player to link") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "select",
+                    {
+                      className: "select w-full rounded-none",
+                      value: selectedId,
+                      disabled: mutation.isPending,
+                      onChange: (event) => setSelectedId(event.target.value),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("Choose a player") }),
+                        (directory.data ?? []).filter(
+                          (player) => player.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()) || player.id.toString() === selectedId
+                        ).map((player) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "option",
+                          {
+                            value: player.id.toString(),
+                            disabled: !!player.userId && player.userId.toString() !== user.id.toString(),
+                            children: [
+                              player.name,
+                              " / L",
+                              player.skillLevel.toString(),
+                              player.userId ? ` / ${t("Already linked")}` : ""
+                            ]
+                          },
+                          player.id.toString()
+                        ))
+                      ]
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-secondary", children: t(
+                  "Linking replaces this member's name with the player's name, even if they already set a name. Each member and player can have one link."
+                ) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Button,
+                  {
+                    type: "submit",
+                    className: "w-full sm:w-auto",
+                    loading: mutation.isPending,
+                    disabled: !selected || !available,
+                    children: t("Link player")
+                  }
+                )
+              ]
+            }
+          ) : null,
+          mutation.isError ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { role: "alert", className: "text-sm text-error", children: translateError(
+            mutation.error instanceof Error ? mutation.error.message : "Couldn't save this change. Try again."
+          ) }) : null
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "mt-5 shrink-0 border-t border-base-300 pt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            variant: "ghost",
+            disabled: mutation.isPending,
+            onClick: close,
+            children: t("Cancel")
+          }
+        ) })
+      ] }) : null
+    }
+  );
+}
+const Input = reactExports.forwardRef(
+  ({ className, label, hint, error, rightElement, id, ...props }, ref) => {
+    const autoId = reactExports.useId();
+    const inputId = id ?? autoId;
+    const errorId = `${inputId}-error`;
+    const hintId = `${inputId}-hint`;
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full", children: [
+      label ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "label",
+        {
+          htmlFor: inputId,
+          className: "mb-1.5 block text-sm font-medium text-base-content",
+          children: label
+        }
+      ) : null,
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            ref,
+            id: inputId,
+            "data-ocid": "input",
+            "aria-invalid": error ? true : void 0,
+            "aria-describedby": error ? errorId : hint ? hintId : void 0,
+            className: cn(
+              "input input-bordered w-full bg-base-100 text-base-content transition-smooth",
+              "focus:outline-none focus:ring-2 focus:ring-primary",
+              error && "input-error",
+              rightElement && "pr-10",
+              className
+            ),
+            ...props
+          }
+        ),
+        rightElement ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "pointer-events-none absolute inset-y-0 right-3 flex items-center text-base-content/60", children: rightElement }) : null
+      ] }),
+      error ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { id: errorId, className: "mt-1.5 text-sm text-error", children: error }) : hint ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { id: hintId, className: "mt-1.5 text-sm text-base-content/60", children: hint }) : null
+    ] });
+  }
+);
+Input.displayName = "Input";
+function TelegramSettings({ actor }) {
+  var _a2, _b2;
+  const { t } = useI18n();
+  const client2 = useQueryClient();
+  const [clientId, setClientId] = reactExports.useState("");
+  const [validation, setValidation] = reactExports.useState(null);
+  const config = useQuery({
+    queryKey: ["telegramConfig"],
+    queryFn: () => actor.getTelegramLinkConfig()
+  });
+  reactExports.useEffect(
+    () => {
+      var _a3;
+      return setClientId(((_a3 = config.data) == null ? void 0 : _a3.clientId) ?? "");
+    },
+    [(_a2 = config.data) == null ? void 0 : _a2.clientId]
+  );
+  const save = useMutation({
+    mutationFn: (id) => actor.setTelegramLinkConfig(id),
+    onSuccess: (_2, id) => {
+      client2.setQueryData(["telegramConfig"], { clientId: id ?? void 0 });
+      void client2.invalidateQueries({ queryKey: ["telegramChallenge"] });
+      setClientId(id ?? "");
+    }
+  });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "section",
+    {
+      className: "space-y-4 border border-base-300 bg-base-200/30 p-4 sm:p-6",
+      "aria-labelledby": "telegram-settings-title",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "h2",
+          {
+            id: "telegram-settings-title",
+            className: "technical-label flex items-center gap-2",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "size-4 text-primary", "aria-hidden": "true" }),
+              t("Telegram linking settings")
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/55", children: t(
+          "Use the public Login Client ID from BotFather. Leave blank to disable linking. Bot tokens and client secrets are not needed here."
+        ) }),
+        config.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2 text-sm text-error", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t("Couldn't load Telegram settings.") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "ghost",
+              size: "sm",
+              onClick: () => void config.refetch(),
+              children: t("Try again")
+            }
+          )
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "form",
+          {
+            className: "space-y-3",
+            onSubmit: (event) => {
+              event.preventDefault();
+              const value = clientId.trim();
+              setValidation(null);
+              if (value && (!/^[1-9]\d*$/.test(value) || !Number.isSafeInteger(Number(value)))) {
+                setValidation("Enter a valid numeric Telegram Login Client ID.");
+                return;
+              }
+              save.mutate(value || null);
+            },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  label: t("Telegram Login Client ID"),
+                  value: clientId,
+                  inputMode: "numeric",
+                  autoComplete: "off",
+                  disabled: config.isPending || save.isPending,
+                  onChange: (event) => {
+                    setClientId(event.target.value);
+                    setValidation(null);
+                    save.reset();
+                  }
+                }
+              ),
+              validation || save.error ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { role: "alert", className: "text-sm text-error", children: validation ? t(validation) : save.error instanceof Error ? translateError(save.error.message) : t("Couldn't save Telegram settings.") }) : null,
+              save.isSuccess ? /* @__PURE__ */ jsxRuntimeExports.jsxs("output", { className: "flex items-center gap-2 text-sm text-primary", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-4", "aria-hidden": "true" }),
+                t("Telegram settings saved.")
+              ] }) : null,
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button,
+                {
+                  size: "sm",
+                  type: "submit",
+                  variant: "outline",
+                  loading: save.isPending,
+                  disabled: config.isPending || clientId.trim() === (((_b2 = config.data) == null ? void 0 : _b2.clientId) ?? ""),
+                  children: t("Save Telegram settings")
+                }
+              )
+            ]
+          }
+        )
+      ]
+    }
+  );
+}
 function EmptyState({
   icon,
   title,
@@ -45357,47 +46423,6 @@ function ErrorState({
     }
   );
 }
-const Input = reactExports.forwardRef(
-  ({ className, label, hint, error, rightElement, id, ...props }, ref) => {
-    const autoId = reactExports.useId();
-    const inputId = id ?? autoId;
-    const errorId = `${inputId}-error`;
-    const hintId = `${inputId}-hint`;
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full", children: [
-      label ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "label",
-        {
-          htmlFor: inputId,
-          className: "mb-1.5 block text-sm font-medium text-base-content",
-          children: label
-        }
-      ) : null,
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "input",
-          {
-            ref,
-            id: inputId,
-            "data-ocid": "input",
-            "aria-invalid": error ? true : void 0,
-            "aria-describedby": error ? errorId : hint ? hintId : void 0,
-            className: cn(
-              "input input-bordered w-full bg-base-100 text-base-content transition-smooth",
-              "focus:outline-none focus:ring-2 focus:ring-primary",
-              error && "input-error",
-              rightElement && "pr-10",
-              className
-            ),
-            ...props
-          }
-        ),
-        rightElement ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "pointer-events-none absolute inset-y-0 right-3 flex items-center text-base-content/60", children: rightElement }) : null
-      ] }),
-      error ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { id: errorId, className: "mt-1.5 text-sm text-error", children: error }) : hint ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { id: hintId, className: "mt-1.5 text-sm text-base-content/60", children: hint }) : null
-    ] });
-  }
-);
-Input.displayName = "Input";
 function Skeleton({
   className,
   circle = false,
@@ -45492,6 +46517,15 @@ function AdminPage() {
   const [copiedId, setCopiedId] = reactExports.useState(null);
   const [copyError, setCopyError] = reactExports.useState(null);
   const [search, setSearch] = reactExports.useState("");
+  const [linkingUser, setLinkingUser] = reactExports.useState(null);
+  const directory = useQuery({
+    queryKey: PLAYERS_QUERY_KEY,
+    queryFn: () => {
+      if (!actor) throw new Error("The player directory is still connecting.");
+      return playerService.list(actor);
+    },
+    enabled: !!actor && !isFetching && isAdmin
+  });
   const usersQuery = useQuery({
     queryKey: [...USERS_QUERY_KEY$1, principal],
     queryFn: async () => {
@@ -45610,6 +46644,7 @@ function AdminPage() {
         )
       ] })
     ] }),
+    actor ? /* @__PURE__ */ jsxRuntimeExports.jsx(TelegramSettings, { actor }) : null,
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Input,
@@ -45686,9 +46721,16 @@ function AdminPage() {
         "data-ocid": "admin_user_list",
         className: "divide-y divide-border overflow-hidden rounded-box border border-border bg-card",
         children: visibleUsers.map((user, index2) => {
+          var _a2;
           const admin = isAdminRole(user.role);
           const isSelf = principal !== null && user.id.toString() === principal;
           const isPending = pendingId === user.id.toString();
+          const linkedPlayer = (_a2 = directory.data) == null ? void 0 : _a2.find(
+            (player) => {
+              var _a3;
+              return ((_a3 = player.userId) == null ? void 0 : _a3.toString()) === user.id.toString();
+            }
+          );
           return /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "li",
             {
@@ -45711,6 +46753,7 @@ function AdminPage() {
                     isSelf ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "shrink-0 rounded-none bg-base-300 px-2 py-0.5 text-xs text-muted-foreground", children: t("You") }) : null
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "truncate text-sm text-muted-foreground", children: user.username ? `@${user.username}` : t("Username not set") }),
+                  linkedPlayer ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-primary", children: t("Linked player: {v1}", { v1: linkedPlayer.name }) }) : null,
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: t("Member ID / Principal ID") }),
                     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-2", children: [
@@ -45738,6 +46781,21 @@ function AdminPage() {
                   ] })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "col-start-2 flex flex-wrap items-center gap-3 md:col-start-3 md:row-start-1 md:justify-end", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      variant: "outline",
+                      size: "sm",
+                      "aria-label": t("Link player for member {v1}", {
+                        v1: user.id.toString()
+                      }),
+                      onClick: () => {
+                        setNotice(null);
+                        setLinkingUser(user);
+                      },
+                      children: linkedPlayer ? t("Manage player link") : t("Link player")
+                    }
+                  ),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs(
                     "span",
                     {
@@ -45779,6 +46837,19 @@ function AdminPage() {
           );
         })
       }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      LinkPlayerDialog,
+      {
+        user: linkingUser,
+        isAdmin,
+        onClose: () => setLinkingUser(null),
+        onLinked: (player, unlinked) => setNotice({
+          message: unlinked ? "Player unlinked. The member's name is unchanged." : "Player linked. The member's name is now {v1}.",
+          params: { v1: player.name }
+        })
+      },
+      (linkingUser == null ? void 0 : linkingUser.id.toString()) ?? "none"
     )
   ] }) });
 }
@@ -45858,6 +46929,320 @@ function tbilisiTime(timestamp) {
     }
   );
 }
+function SharedPlayerForm({
+  player,
+  pending,
+  onSave
+}) {
+  const { t } = useI18n();
+  const [name, setName] = reactExports.useState((player == null ? void 0 : player.name) ?? "");
+  const [skill, setSkill] = reactExports.useState(Number((player == null ? void 0 : player.skillLevel) ?? 1n));
+  const valid = name.trim().length > 0 && name.trim().length <= 80;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "form",
+    {
+      className: "space-y-5",
+      onSubmit: (event) => {
+        event.preventDefault();
+        if (valid && !pending) onSave(name.trim(), skill);
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Player name") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "input",
+            {
+              required: true,
+              maxLength: 80,
+              className: "input w-full rounded-none",
+              value: name,
+              disabled: pending,
+              onChange: (event) => setName(event.target.value)
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Skill level") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "select",
+            {
+              className: "select w-full rounded-none",
+              value: skill,
+              disabled: pending,
+              onChange: (event) => setSkill(Number(event.target.value)),
+              children: SKILL_LEVELS.map((level, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: index2 + 1, children: [
+                "L",
+                index2 + 1,
+                " / ",
+                t(level)
+              ] }, level))
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/50", children: t(
+          "Shared player details apply to future registrations. Existing tournament names, scores and registration order stay unchanged."
+        ) }),
+        (player == null ? void 0 : player.userId) ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-secondary", children: t("Saving this player also updates their linked account's name.") }) : null,
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            type: "submit",
+            loading: pending,
+            disabled: !valid,
+            className: "w-full sm:w-auto",
+            children: player ? t("Save player") : t("Create player")
+          }
+        )
+      ]
+    }
+  );
+}
+function SharedPlayersDirectory({ isAdmin }) {
+  var _a2, _b2, _c2;
+  const { t } = useI18n();
+  const { actor, isFetching } = useActor(createActor);
+  const queryClient2 = useQueryClient();
+  const [search, setSearch] = reactExports.useState("");
+  const [skill, setSkill] = reactExports.useState("all");
+  const [sort, setSort] = reactExports.useState("registration");
+  const [editing, setEditing] = reactExports.useState(null);
+  const [notice, setNotice] = reactExports.useState(null);
+  const dialog = reactExports.useRef(null);
+  const directory = useQuery({
+    queryKey: PLAYERS_QUERY_KEY,
+    queryFn: () => {
+      if (!actor) throw new Error("The player directory is still connecting.");
+      return playerService.list(actor);
+    },
+    enabled: !!actor && !isFetching,
+    refetchInterval: 3e4,
+    refetchIntervalInBackground: false
+  });
+  const save = useMutation({
+    mutationFn: async ({ name, skill: skill2 }) => {
+      if (!actor || !isAdmin || !editing)
+        throw new Error("Admin access is required.");
+      return editing === "new" ? playerService.create(actor, name, skill2) : playerService.update(actor, editing.id, name, skill2);
+    },
+    onSuccess: (saved) => {
+      queryClient2.setQueryData(
+        PLAYERS_QUERY_KEY,
+        (previous) => [
+          ...(previous ?? []).filter((player) => player.id !== saved.id),
+          saved
+        ]
+      );
+      void queryClient2.invalidateQueries({ queryKey: PLAYERS_QUERY_KEY });
+      void queryClient2.invalidateQueries({ queryKey: ["adminUsers"] });
+      void queryClient2.invalidateQueries({ queryKey: ["users"] });
+      void queryClient2.invalidateQueries({ queryKey: ["profile"] });
+      setEditing(null);
+      setNotice("Shared player saved. Available for every tournament.");
+    }
+  });
+  const open = editing !== null && isAdmin;
+  reactExports.useEffect(() => {
+    var _a3, _b3, _c3;
+    if (open && !((_a3 = dialog.current) == null ? void 0 : _a3.open)) (_b3 = dialog.current) == null ? void 0 : _b3.showModal();
+    if (!open && ((_c3 = dialog.current) == null ? void 0 : _c3.open)) dialog.current.close();
+  }, [open]);
+  const players = [...directory.data ?? []].filter((player) => {
+    const term = search.trim().toLocaleLowerCase();
+    return (player.name.toLocaleLowerCase().includes(term) || registrationLabel(player.id).includes(term)) && (skill === "all" || player.skillLevel.toString() === skill);
+  }).sort(
+    (a2, b2) => sort === "name" ? a2.name.localeCompare(b2.name) : sort === "skill" && a2.skillLevel !== b2.skillLevel ? Number(a2.skillLevel - b2.skillLevel) : a2.id < b2.id ? -1 : a2.id > b2.id ? 1 : 0
+  );
+  function edit(player) {
+    if (!isAdmin || save.isPending) return;
+    save.reset();
+    setNotice(null);
+    setEditing(player);
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mt-6", "aria-labelledby": "shared-players-title", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex flex-wrap items-center justify-between gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "h2",
+          {
+            id: "shared-players-title",
+            className: "technical-label text-base-content/60",
+            children: [
+              t("All players"),
+              " / ",
+              ((_a2 = directory.data) == null ? void 0 : _a2.length) ?? 0
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-xs leading-relaxed text-base-content/50", children: t(
+          "One shared directory for every tournament. Choose a tournament above to see its registration order, status, tables and rounds."
+        ) })
+      ] }),
+      isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { onClick: () => edit("new"), children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-4", "aria-hidden": "true" }),
+        t("Create player")
+      ] }) : null
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto_auto]", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "club-search flex items-center gap-3 border border-base-300 px-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Search,
+          {
+            className: "size-4 shrink-0 text-base-content/40",
+            "aria-hidden": "true"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            type: "search",
+            "aria-label": t("Search shared players"),
+            placeholder: t("NAME / PLAYER NUMBER"),
+            className: "min-w-0 flex-1 bg-transparent py-3 font-mono text-xs outline-none",
+            value: search,
+            onChange: (event) => setSearch(event.target.value)
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Skill level") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "select",
+          {
+            className: "select w-full rounded-none",
+            value: skill,
+            onChange: (event) => setSkill(event.target.value),
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: t("All skill levels") }),
+              SKILL_LEVELS.map((level, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: index2 + 1, children: [
+                "L",
+                index2 + 1,
+                " / ",
+                t(level)
+              ] }, level))
+            ]
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Sort by") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "select",
+          {
+            className: "select w-full rounded-none",
+            value: sort,
+            onChange: (event) => setSort(event.target.value),
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "registration", children: t("Registration order") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "name", children: t("Name / A–Z") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "skill", children: t("Skill level / L1–L5") })
+            ]
+          }
+        )
+      ] })
+    ] }),
+    notice ? /* @__PURE__ */ jsxRuntimeExports.jsx("output", { className: "mb-5 block border border-primary/25 bg-primary/5 px-4 py-3 text-sm", children: t(notice) }) : null,
+    directory.isLoading || isFetching && !directory.data ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-state", "aria-busy": "true", "aria-live": "polite", children: t("Loading players…") }) : directory.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", role: "alert", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t("Couldn't load the player directory.") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { className: "mt-4", onClick: () => void directory.refetch(), children: t("Try again") })
+    ] }) : players.length ? /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "divide-y divide-base-300 border border-base-300", children: players.map((player) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "li",
+      {
+        className: "flex flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "break-words font-display text-xl font-bold uppercase", children: player.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1 font-mono text-xs text-base-content/45", children: [
+              registrationLabel(player.id),
+              " / L",
+              player.skillLevel.toString(),
+              " /",
+              " ",
+              t(SKILL_LEVELS[Number(player.skillLevel) - 1])
+            ] }),
+            player.userId ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-xs text-primary", children: t("Linked to a member") }) : null
+          ] }),
+          isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              variant: "outline",
+              size: "sm",
+              "aria-label": t("Edit shared player {v1}", { v1: player.name }),
+              onClick: () => edit(player),
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "size-4", "aria-hidden": "true" }),
+                t("Edit")
+              ]
+            }
+          ) : null
+        ]
+      },
+      player.id.toString()
+    )) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-xl font-bold uppercase", children: ((_b2 = directory.data) == null ? void 0 : _b2.length) ? t("No matching players.") : t("The shared lineup is open.") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: ((_c2 = directory.data) == null ? void 0 : _c2.length) ? t("Try another name or adjust the skill filter.") : t(
+        "Create a player here or add one in a tournament. They will be available across the app."
+      ) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "dialog",
+      {
+        ref: dialog,
+        className: "modal club-modal",
+        "aria-labelledby": "shared-player-dialog-title",
+        onCancel: (event) => {
+          event.preventDefault();
+          if (!save.isPending) setEditing(null);
+        },
+        children: open ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "modal-box flex max-h-[calc(100dvh-2rem)] w-[calc(100%-1rem)] max-w-xl flex-col overflow-hidden rounded-none border border-base-300 bg-base-200 p-4 sm:p-8", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex shrink-0 items-start justify-between gap-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "h2",
+              {
+                id: "shared-player-dialog-title",
+                className: "font-display text-3xl font-bold uppercase",
+                children: editing === "new" ? t("Create player") : t("Edit shared player")
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "ghost",
+                size: "icon",
+                "aria-label": t("Close"),
+                disabled: save.isPending,
+                onClick: () => setEditing(null),
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "size-5", "aria-hidden": "true" })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-0 overflow-y-auto overscroll-contain", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              SharedPlayerForm,
+              {
+                player: editing === "new" ? void 0 : editing ?? void 0,
+                pending: save.isPending,
+                onSave: (name, skill2) => save.mutate({ name, skill: skill2 })
+              },
+              editing === "new" ? "new" : editing == null ? void 0 : editing.id.toString()
+            ),
+            save.isError ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { role: "alert", className: "mt-5 text-sm text-error", children: translateError(
+              save.error instanceof Error ? save.error.message : "Couldn't save this change. Try again."
+            ) }) : null
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "mt-5 shrink-0 border-t border-base-300 pt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "ghost",
+              disabled: save.isPending,
+              onClick: () => setEditing(null),
+              children: t("Cancel")
+            }
+          ) })
+        ] }) : null
+      }
+    )
+  ] });
+}
 function PlayerForm({
   view,
   player,
@@ -45866,13 +47251,46 @@ function PlayerForm({
   onAction
 }) {
   const { t } = useI18n();
+  const { actor, isFetching } = useActor(createActor);
+  const directory = useQuery({
+    queryKey: PLAYERS_QUERY_KEY,
+    queryFn: () => {
+      if (!actor) throw new Error("The player directory is still connecting.");
+      return playerService.list(actor);
+    },
+    enabled: !player && !!actor && !isFetching,
+    retry: false
+  });
+  const [mode, setMode] = reactExports.useState("new");
+  const [search, setSearch] = reactExports.useState("");
+  const [existingId, setExistingId] = reactExports.useState("");
   const [name, setName] = reactExports.useState((player == null ? void 0 : player.name) ?? "");
   const [skill, setSkill] = reactExports.useState((player == null ? void 0 : player.skill) ?? 1);
-  const valid = name.trim().length > 0 && name.trim().length <= 80;
+  const registeredIds = new Set(
+    view.players.flatMap(
+      (entry) => entry.globalPlayerId === void 0 ? [] : [entry.globalPlayerId]
+    )
+  );
+  const available = (directory.data ?? []).filter(
+    (entry) => !registeredIds.has(entry.id)
+  );
+  const visible = available.filter(
+    (entry) => entry.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())
+  );
+  const existing = available.find(
+    (entry) => entry.id.toString() === existingId
+  );
+  const usingExisting = !player && mode === "existing";
+  const valid = usingExisting ? !!existing : name.trim().length > 0 && name.trim().length <= 80;
   function save(placeNewPlayer = false) {
     if (!valid) return;
     onAction(
-      player ? { kind: "editPlayer", playerId: player.id, name: name.trim(), skill } : { kind: "addPlayer", name: name.trim(), skill },
+      usingExisting && existing ? { kind: "addExistingPlayer", globalPlayerId: existing.id } : player ? {
+        kind: "editPlayer",
+        playerId: player.id,
+        name: name.trim(),
+        skill
+      } : { kind: "addPlayer", name: name.trim(), skill },
       { placeNewPlayer, returnToMatch }
     );
   }
@@ -45882,43 +47300,132 @@ function PlayerForm({
       className: "space-y-5",
       onSubmit: (event) => {
         event.preventDefault();
-        save();
+        save(!player && view.generated);
       },
       children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Player name") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "input",
-            {
-              "data-ocid": "tournament.player_name_input",
-              className: "input w-full rounded-none",
-              required: true,
-              maxLength: 80,
-              value: name,
-              disabled: pending,
-              onChange: (event) => setName(event.target.value),
-              placeholder: t("Name on the table")
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Skill level") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "select",
-            {
-              "data-ocid": "tournament.player_skill_select",
-              className: "select w-full rounded-none",
-              value: skill,
-              disabled: pending,
-              onChange: (event) => setSkill(Number(event.target.value)),
-              children: SKILL_LEVELS.map((level, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: index2 + 1, children: [
-                "L",
-                index2 + 1,
-                " — ",
-                t(level)
-              ] }, level))
-            }
-          )
+        !player ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "fieldset",
+          {
+            className: "grid grid-cols-2 gap-2",
+            "aria-label": t("Player source"),
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button,
+                {
+                  className: "h-auto min-h-11 whitespace-normal px-3 py-3 leading-tight",
+                  variant: mode === "existing" ? "primary" : "outline",
+                  disabled: pending,
+                  "aria-pressed": mode === "existing",
+                  onClick: () => setMode("existing"),
+                  children: t("Choose existing player")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button,
+                {
+                  className: "h-auto min-h-11 whitespace-normal px-3 py-3 leading-tight",
+                  variant: mode === "new" ? "primary" : "outline",
+                  disabled: pending,
+                  "aria-pressed": mode === "new",
+                  onClick: () => setMode("new"),
+                  children: t("Create new player")
+                }
+              )
+            ]
+          }
+        ) : null,
+        usingExisting ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Search shared players") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "input",
+              {
+                type: "search",
+                className: "input w-full rounded-none",
+                disabled: pending,
+                value: search,
+                onChange: (event) => setSearch(event.target.value)
+              }
+            )
+          ] }),
+          directory.isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("output", { children: t("Loading players…") }) : directory.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { role: "alert", className: "space-y-3 text-sm text-error", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t("Couldn't load the player directory.") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "outline",
+                disabled: pending,
+                onClick: () => void directory.refetch(),
+                children: t("Try again")
+              }
+            )
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Existing player") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: existingId,
+                disabled: pending,
+                onChange: (event) => setExistingId(event.target.value),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("Choose a player") }),
+                  visible.map((entry) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: entry.id.toString(), children: [
+                    entry.name,
+                    " / L",
+                    entry.skillLevel.toString()
+                  ] }, entry.id.toString())),
+                  existing && !visible.some((entry) => entry.id === existing.id) ? /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: existing.id.toString(), children: [
+                    existing.name,
+                    " / L",
+                    existing.skillLevel.toString()
+                  ] }) : null
+                ]
+              }
+            )
+          ] }),
+          !directory.isLoading && !directory.isError && !visible.length ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-base-content/50", children: t(
+            "No available players match. Create a new player or change the search."
+          ) }) : null,
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
+            "Players already registered in this tournament are excluded. This registration gets its own number and queue position."
+          ) })
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Player name") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "input",
+              {
+                "data-ocid": "tournament.player_name_input",
+                className: "input w-full rounded-none",
+                required: true,
+                maxLength: 80,
+                value: name,
+                disabled: pending,
+                onChange: (event) => setName(event.target.value),
+                placeholder: t("Name on the table")
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block", children: t("Skill level") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "select",
+              {
+                "data-ocid": "tournament.player_skill_select",
+                className: "select w-full rounded-none",
+                value: skill,
+                disabled: pending,
+                onChange: (event) => setSkill(Number(event.target.value)),
+                children: SKILL_LEVELS.map((level, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: index2 + 1, children: [
+                  "L",
+                  index2 + 1,
+                  " — ",
+                  t(level)
+                ] }, level))
+              }
+            )
+          ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: player ? t(
           "{v1} and the original registration time remain unchanged. Skill changes apply to future matchmaking.",
@@ -45926,14 +47433,17 @@ function PlayerForm({
         ) : t(
           "A new permanent registration number and timestamp are saved automatically. The player joins after earlier registrations."
         ) }),
+        !player && view.generated ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-secondary", children: t(
+          "Next, choose a bracket slot for this player. An occupied slot creates a qualifier and keeps both entrants in the tournament."
+        ) }) : null,
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap justify-end gap-3 border-t border-base-300 pt-5", children: [
           !player && view.generated ? /* @__PURE__ */ jsxRuntimeExports.jsx(
             Button,
             {
               variant: "outline",
               disabled: !valid || pending,
-              onClick: () => save(true),
-              children: t("Register & place manually")
+              onClick: () => save(false),
+              children: t("Add to waiting queue")
             }
           ) : null,
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -45943,7 +47453,7 @@ function PlayerForm({
               "data-ocid": "tournament.save_player_button",
               loading: pending,
               disabled: !valid,
-              children: player ? t("Save player") : t("Add to waiting queue")
+              children: player ? t("Save player") : view.generated ? t("Register & place manually") : t("Add to waiting queue")
             }
           )
         ] })
@@ -47215,6 +48725,7 @@ function PlayersPanel({
               ] }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { className: "grid gap-4 sm:grid-cols-2 lg:table-row-group", children: players.map((player) => {
                 const match = currentPlayerMatch(view, player);
+                const movement = playerMovement(view, player);
                 const canPrioritize = player.status === "waiting" || player.status === "ready" || player.status === "advanced";
                 return /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "tr",
@@ -47338,10 +48849,10 @@ function PlayersPanel({
                             {
                               type: "button",
                               className: "btn btn-ghost min-h-11 min-w-11 font-mono lg:btn-xs lg:min-h-0 lg:min-w-0 lg:text-[9px]",
-                              disabled: pending || !view.generated || !playerMovement(view, player).targets.length,
+                              disabled: pending || !view.generated || !movement.targets.length,
                               onClick: () => onMove(player),
                               children: [
-                                t("Move"),
+                                movement.entrant ? t("Place in bracket") : t("Move"),
                                 /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "sr-only", children: [
                                   " ",
                                   player.name
@@ -47422,6 +48933,7 @@ function normalizeTournamentState(state, tournament) {
     })),
     players: state.players.map((player) => ({
       id: player.id,
+      globalPlayerId: player.globalPlayerId,
       name: player.name,
       skill: Number(player.skillLevel),
       registrationNumber: player.registrationNumber,
@@ -47478,6 +48990,11 @@ function toCommand(action) {
           name: action.name,
           skillLevel: BigInt(action.skill)
         }
+      };
+    case "addExistingPlayer":
+      return {
+        __kind__: "addExistingPlayer",
+        addExistingPlayer: { globalPlayerId: action.globalPlayerId }
       };
     case "removePlayer":
       return {
@@ -47593,7 +49110,6 @@ class TournamentService {
 }
 const tournamentService = new TournamentService();
 function PlayersPage() {
-  var _a2;
   const { t } = useI18n();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
@@ -47619,17 +49135,16 @@ function PlayersPage() {
       return a2.id < b2.id ? -1 : a2.id > b2.id ? 1 : 0;
     return a2.status === "upcoming" ? a2.startsAt < b2.startsAt ? -1 : 1 : a2.startsAt > b2.startsAt ? -1 : 1;
   });
-  const preferredId = ((_a2 = tournaments[0]) == null ? void 0 : _a2.id.toString()) ?? "";
   const selectionExists = tournaments.some(
     (tournament2) => tournament2.id.toString() === selected
   );
   reactExports.useEffect(() => {
-    if (!selectionExists) {
-      setSelected(preferredId);
+    if (selected && !selectionExists && !tournamentsQuery.isLoading) {
+      setSelected("");
       setModal(null);
       setNotice(null);
     }
-  }, [selectionExists, preferredId]);
+  }, [selectionExists, selected, tournamentsQuery.isLoading]);
   const tournament = tournaments.find(
     (item) => item.id.toString() === selected
   );
@@ -47662,17 +49177,20 @@ function PlayersPage() {
       );
     },
     onSuccess: (updated, variables) => {
-      var _a3, _b2;
+      var _a2, _b2, _c2;
       queryClient2.setQueryData(queryKey, updated);
       void queryClient2.invalidateQueries({ queryKey });
       void queryClient2.invalidateQueries({ queryKey: ["tournaments"] });
-      setNotice("Player changes saved to the tournament.");
-      if (variables.action.kind === "addPlayer" && ((_a3 = variables.options) == null ? void 0 : _a3.placeNewPlayer)) {
+      void queryClient2.invalidateQueries({ queryKey: ["players"] });
+      setNotice(
+        (variables.action.kind === "addPlayer" || variables.action.kind === "addExistingPlayer") && !((_a2 = variables.options) == null ? void 0 : _a2.placeNewPlayer) && updated.generated ? "Registered in the waiting queue. Use Place in bracket to add them to the draw." : "Player changes saved to the tournament."
+      );
+      if ((variables.action.kind === "addPlayer" || variables.action.kind === "addExistingPlayer") && ((_b2 = variables.options) == null ? void 0 : _b2.placeNewPlayer)) {
         const added = [...updated.players].sort(
           (a2, b2) => a2.registrationNumber > b2.registrationNumber ? -1 : 1
         )[0];
         if (added) setModal({ kind: "move", player: added });
-      } else if (((_b2 = variables.options) == null ? void 0 : _b2.close) !== false) setModal(null);
+      } else if (((_c2 = variables.options) == null ? void 0 : _c2.close) !== false) setModal(null);
     }
   });
   function openModal(next) {
@@ -47685,7 +49203,6 @@ function PlayersPage() {
     setNotice(null);
     mutation.mutate({ action, options });
   }
-  const loading = tournamentsQuery.isLoading || isFetching && !tournamentsQuery.data;
   const error = mutation.isError ? mutation.error instanceof Error ? mutation.error.message : "Couldn't save this change. Try again." : null;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "players_page", className: "club-page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-8", children: [
@@ -47699,34 +49216,11 @@ function PlayersPage() {
         "Find your next opponent. Follow the lineup by skill, status, table and round."
       ) })
     ] }),
-    loading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-state", "aria-busy": "true", "aria-live": "polite", children: t("Loading players…") }) : tournamentsQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", role: "alert", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        TriangleAlert,
-        {
-          className: "mb-4 size-7 text-secondary",
-          "aria-hidden": "true"
-        }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: t("The lineup is offline.") }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t("We couldn't load the tournament board.") }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Button,
-        {
-          className: "mt-6",
-          onClick: () => void tournamentsQuery.refetch(),
-          children: t("Try again")
-        }
-      )
-    ] }) : !tournaments.length ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "mb-4 size-8 text-primary", "aria-hidden": "true" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: t("The lineup starts with a tournament.") }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t("Players appear here when they register for a tournament.") }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/tournaments", className: "btn btn-outline mt-6", children: t("Tournament board") })
-    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-end justify-between gap-4 border-y border-base-300 py-5", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "w-full sm:max-w-xs", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: t("Tournament") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "select",
             {
               className: "select w-full rounded-none",
@@ -47738,11 +49232,14 @@ function PlayersPage() {
                 setNotice(null);
                 mutation.reset();
               },
-              children: tournaments.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: item.id.toString(), children: [
-                item.title,
-                " / ",
-                t(item.status)
-              ] }, item.id.toString()))
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("All players") }),
+                tournaments.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: item.id.toString(), children: [
+                  item.title,
+                  " / ",
+                  t(item.status)
+                ] }, item.id.toString()))
+              ]
             }
           )
         ] }),
@@ -47768,28 +49265,13 @@ function PlayersPage() {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-4 text-primary", "aria-hidden": "true" }),
         t(notice)
       ] }) : null,
-      stateQuery.isLoading || !tournament ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "div",
-        {
-          className: "club-state mt-8",
-          "aria-busy": "true",
-          "aria-live": "polite",
-          children: t("Loading the selected lineup…")
-        }
-      ) : stateQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state mt-8", role: "alert", children: [
+      !selected ? /* @__PURE__ */ jsxRuntimeExports.jsx(SharedPlayersDirectory, { isAdmin }) : stateQuery.isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "club-state mt-8", "aria-busy": "true", "aria-live": "polite", children: t("Loading the selected lineup…") }) : stateQuery.isError || tournamentsQuery.isError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state mt-8", role: "alert", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold uppercase", children: t("Players unavailable.") }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t("We couldn't load this tournament's players.") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          Button,
-          {
-            className: "mt-6",
-            onClick: () => void stateQuery.refetch(),
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "size-4", "aria-hidden": "true" }),
-              t("Try again")
-            ]
-          }
-        )
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { className: "mt-6", onClick: () => void stateQuery.refetch(), children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "size-4", "aria-hidden": "true" }),
+          t("Try again")
+        ] })
       ] }) : !view ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-state mt-8", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t("This tournament is no longer available.") }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -47843,6 +49325,271 @@ function PlayersPage() {
     ] })
   ] });
 }
+const SDK_URL = "https://oauth.telegram.org/js/telegram-login.js?6";
+let loading;
+function loadTelegramLogin() {
+  var _a2;
+  if ((_a2 = window.Telegram) == null ? void 0 : _a2.Login) return Promise.resolve(window.Telegram.Login);
+  if (loading) return loading;
+  loading = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = SDK_URL;
+    script.async = true;
+    const timeout2 = window.setTimeout(() => fail(), 15e3);
+    function fail() {
+      window.clearTimeout(timeout2);
+      script.remove();
+      loading = void 0;
+      reject(
+        new Error(
+          "Couldn't load Telegram. Check your connection and try again."
+        )
+      );
+    }
+    script.onerror = fail;
+    script.onload = () => {
+      var _a3;
+      window.clearTimeout(timeout2);
+      if ((_a3 = window.Telegram) == null ? void 0 : _a3.Login) resolve(window.Telegram.Login);
+      else fail();
+    };
+    document.head.appendChild(script);
+  });
+  return loading;
+}
+function TelegramLink({
+  actor,
+  principal
+}) {
+  var _a2, _b2, _c2;
+  const { t, language: language2 } = useI18n();
+  const client2 = useQueryClient();
+  const active = reactExports.useRef(true);
+  const [waiting, setWaiting] = reactExports.useState(false);
+  const [loginError, setLoginError] = reactExports.useState(null);
+  const [success, setSuccess] = reactExports.useState(null);
+  const waitingTimer = reactExports.useRef(
+    void 0
+  );
+  const attempt = reactExports.useRef(0);
+  const config = useQuery({
+    queryKey: ["telegramConfig"],
+    queryFn: () => actor.getTelegramLinkConfig(),
+    staleTime: 6e4
+  });
+  const link = useQuery({
+    queryKey: ["telegramLink", principal],
+    queryFn: () => actor.getCallerTelegramLink()
+  });
+  const sdk = useQuery({
+    queryKey: ["telegramSdk"],
+    queryFn: loadTelegramLogin,
+    enabled: !!((_a2 = config.data) == null ? void 0 : _a2.clientId),
+    staleTime: Number.POSITIVE_INFINITY,
+    retry: false
+  });
+  reactExports.useEffect(() => {
+    active.current = true;
+    return () => {
+      var _a3;
+      active.current = false;
+      attempt.current += 1;
+      clearTimeout(waitingTimer.current);
+      (_a3 = sdk.data) == null ? void 0 : _a3.close();
+    };
+  }, [sdk.data]);
+  function saved(profile, message) {
+    client2.setQueryData(["profile", principal], profile);
+    void client2.invalidateQueries({ queryKey: ["users"] });
+    void client2.invalidateQueries({ queryKey: ["adminUsers"] });
+    void client2.invalidateQueries({ queryKey: ["telegramLink", principal] });
+    setSuccess(message);
+  }
+  const verify = useMutation({
+    mutationFn: (token) => actor.completeTelegramLink(token),
+    onSuccess: (profile) => {
+      saved(profile, "Telegram linked. Your username now matches Telegram.");
+      void challenge.refetch();
+    }
+  });
+  const unlink = useMutation({
+    mutationFn: () => actor.unlinkTelegram(),
+    onSuccess: (profile) => {
+      saved(profile, "Telegram unlinked. Your username is unchanged.");
+      void challenge.refetch();
+    }
+  });
+  const pending = waiting || verify.isPending || unlink.isPending;
+  const challenge = useQuery({
+    queryKey: ["telegramChallenge", principal, (_b2 = config.data) == null ? void 0 : _b2.clientId],
+    queryFn: () => actor.startTelegramLink(),
+    enabled: !!((_c2 = config.data) == null ? void 0 : _c2.clientId) && !!sdk.data,
+    staleTime: 0,
+    refetchOnWindowFocus: false,
+    refetchInterval: pending ? false : 12e4,
+    retry: false
+  });
+  const ready = !!sdk.data && !!challenge.data && !challenge.isFetching && !link.isPending && !pending;
+  const failure = loginError ?? (verify.error instanceof Error ? verify.error.message : null) ?? (unlink.error instanceof Error ? unlink.error.message : null);
+  const preparationError = config.isError || link.isError || sdk.isError || challenge.isError;
+  function start() {
+    if (!ready || !sdk.data || !challenge.data) return;
+    if (Number(challenge.data.expiresAt / 1000000n) <= Date.now()) {
+      setLoginError(
+        "The Telegram link request expired. Refresh it and try again."
+      );
+      void challenge.refetch();
+      return;
+    }
+    setLoginError(null);
+    setSuccess(null);
+    verify.reset();
+    unlink.reset();
+    setWaiting(true);
+    const currentAttempt = ++attempt.current;
+    waitingTimer.current = setTimeout(() => {
+      var _a3;
+      if (!active.current) return;
+      attempt.current += 1;
+      setWaiting(false);
+      setLoginError(
+        "Telegram didn't finish linking. Allow popups or retry in your browser."
+      );
+      (_a3 = sdk.data) == null ? void 0 : _a3.close();
+    }, 12e4);
+    try {
+      sdk.data.auth(
+        {
+          client_id: Number(challenge.data.clientId),
+          nonce: challenge.data.nonce,
+          scope: ["profile"],
+          lang: language2
+        },
+        (result) => {
+          if (!active.current || attempt.current !== currentAttempt) return;
+          clearTimeout(waitingTimer.current);
+          setWaiting(false);
+          if (result.error || !result.id_token) {
+            setLoginError(
+              "Telegram linking was cancelled or could not be completed. Try again."
+            );
+            return;
+          }
+          verify.mutate(result.id_token);
+        }
+      );
+    } catch {
+      clearTimeout(waitingTimer.current);
+      setWaiting(false);
+      setLoginError(
+        "Telegram didn't finish linking. Allow popups or retry in your browser."
+      );
+    }
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "section",
+    {
+      className: "space-y-4 border border-base-300 bg-base-200 p-6 sm:p-8",
+      "aria-labelledby": "telegram-link-title",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "flex items-center gap-3 border-b border-base-300 pb-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "size-5 text-primary", "aria-hidden": "true" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "h2",
+            {
+              id: "telegram-link-title",
+              className: "font-display text-xl font-semibold uppercase",
+              children: t("Telegram")
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm leading-relaxed text-base-content/60", children: t(
+          "Link Telegram to your existing member account. Linking replaces your current username with your Telegram username."
+        ) }),
+        link.data ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-sm text-primary", children: [
+          t("Linked Telegram account"),
+          " / @",
+          link.data.username
+        ] }) : null,
+        config.isSuccess && !config.data.clientId ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-base-content/55", children: t(
+          "Telegram linking is not configured yet. Ask an admin to set the public Login Client ID."
+        ) }) : null,
+        preparationError ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-3 text-sm text-error", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t("Couldn't prepare Telegram linking. Try again.") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              variant: "ghost",
+              size: "sm",
+              onClick: () => {
+                var _a3;
+                void config.refetch();
+                void link.refetch();
+                if ((_a3 = config.data) == null ? void 0 : _a3.clientId) {
+                  void sdk.refetch();
+                  void challenge.refetch();
+                }
+              },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "size-4", "aria-hidden": "true" }),
+                t("Try again")
+              ]
+            }
+          )
+        ] }) : null,
+        failure ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { role: "alert", className: "text-sm text-error", children: translateError(failure) }) : null,
+        success ? /* @__PURE__ */ jsxRuntimeExports.jsxs("output", { className: "flex items-center gap-2 text-sm text-primary", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-4", "aria-hidden": "true" }),
+          t(success)
+        ] }) : null,
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              type: "button",
+              loading: pending,
+              disabled: !ready || preparationError,
+              onClick: start,
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Link2, { className: "size-4", "aria-hidden": "true" }),
+                link.data ? t("Sync Telegram username") : t("Link Telegram")
+              ]
+            }
+          ),
+          waiting ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "ghost",
+              onClick: () => {
+                var _a3;
+                attempt.current += 1;
+                clearTimeout(waitingTimer.current);
+                (_a3 = sdk.data) == null ? void 0 : _a3.close();
+                setWaiting(false);
+              },
+              children: t("Cancel")
+            }
+          ) : link.data ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              variant: "outline",
+              disabled: pending,
+              onClick: () => {
+                setSuccess(null);
+                setLoginError(null);
+                unlink.mutate();
+              },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Unlink, { className: "size-4", "aria-hidden": "true" }),
+                t("Unlink Telegram")
+              ]
+            }
+          ) : null
+        ] })
+      ]
+    }
+  );
+}
 function ProfileEditor({
   actor,
   principal,
@@ -47853,6 +49600,10 @@ function ProfileEditor({
   const [name, setName] = reactExports.useState((profile == null ? void 0 : profile.displayName) ?? "");
   const [username, setUsername] = reactExports.useState((profile == null ? void 0 : profile.username) ?? "");
   const [formError, setFormError] = reactExports.useState(null);
+  const previousSaved = reactExports.useRef({
+    name: (profile == null ? void 0 : profile.displayName) ?? "",
+    username: (profile == null ? void 0 : profile.username) ?? ""
+  });
   const keepsExistingUsername = !!profile && username.trim() === profile.username.trim();
   const saveMutation = useMutation({
     mutationFn: (input) => authService.saveCallerProfile(actor, input),
@@ -47864,6 +49615,26 @@ function ProfileEditor({
       setUsername(saved.username);
     }
   });
+  reactExports.useEffect(() => {
+    const next = {
+      name: (profile == null ? void 0 : profile.displayName) ?? "",
+      username: (profile == null ? void 0 : profile.username) ?? ""
+    };
+    const nameChanged = previousSaved.current.name !== next.name;
+    const usernameChanged = previousSaved.current.username !== next.username;
+    if (nameChanged) setName(next.name);
+    if (usernameChanged) setUsername(next.username);
+    if (nameChanged || usernameChanged) {
+      setFormError(null);
+      if (saveMutation.isError) saveMutation.reset();
+    }
+    previousSaved.current = next;
+  }, [
+    profile == null ? void 0 : profile.displayName,
+    profile == null ? void 0 : profile.username,
+    saveMutation.isError,
+    saveMutation.reset
+  ]);
   function saveProfile() {
     setFormError(null);
     const trimmedName = name.trim();
@@ -48003,15 +49774,25 @@ function ProfilePage() {
     ) : profileQuery.isPending || isFetching || !actor ? /* @__PURE__ */ jsxRuntimeExports.jsxs("output", { className: "flex items-center justify-center gap-3 border border-base-300 p-12 text-sm text-muted-foreground", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "size-5 animate-spin", "aria-hidden": "true" }),
       t("Loading your profile")
-    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
-      ProfileEditor,
-      {
-        actor,
-        principal,
-        profile: profileQuery.data ?? null
-      },
-      principal
-    )
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        ProfileEditor,
+        {
+          actor,
+          principal,
+          profile: profileQuery.data ?? null
+        },
+        principal
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TelegramLink,
+        {
+          actor,
+          principal
+        },
+        `telegram-${principal}`
+      )
+    ] })
   ] }) });
 }
 function MatchCard({
@@ -48442,14 +50223,49 @@ const CARD_HEIGHT = 148;
 const COLUMN_WIDTH = 316;
 const ROW_HEIGHT = 184;
 const LANES = ["winners", "losers", "grandFinal", "resetFinal"];
+function nextPlayerMatch(matches, player) {
+  if (["removed", "eliminated", "champion"].includes(player.status)) return;
+  const candidates = matches.filter(
+    (match) => match.playerAId === player.id || match.playerBId === player.id
+  );
+  for (const status of ["playing", "ready", "pending"]) {
+    const eligible = candidates.filter((match) => match.status === status);
+    const next = eligible.find((match) => match.id === player.currentMatchId) ?? eligible[0];
+    if (next) return next;
+  }
+}
+function centerMatch(viewport, layout, node, zoom) {
+  viewport.scrollLeft = Math.max(
+    0,
+    Math.min(
+      layout.width * zoom - viewport.clientWidth,
+      (node.x + CARD_WIDTH / 2) * zoom - viewport.clientWidth / 2
+    )
+  );
+  viewport.scrollTop = Math.max(
+    0,
+    Math.min(
+      layout.height * zoom - viewport.clientHeight,
+      (node.y + CARD_HEIGHT / 2) * zoom - viewport.clientHeight / 2
+    )
+  );
+}
 function BracketGraph({
   matches,
   players,
   onSelect,
   fullscreen = false,
-  isAdmin = false
+  isAdmin = false,
+  focusMatchId
 }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const [playerSearch, setPlayerSearch] = reactExports.useState("");
+  const [choices, setChoices] = reactExports.useState([]);
+  const [feedback, setFeedback] = reactExports.useState(null);
+  const [searchFocus, setSearchFocus] = reactExports.useState();
+  const handledSearchRef = reactExports.useRef(void 0);
+  const searchZoomRef = reactExports.useRef(null);
+  const searchInputRef = reactExports.useRef(null);
   const {
     viewportRef,
     zoom,
@@ -48537,6 +50353,106 @@ function BracketGraph({
   const byId = new Map(
     layout.nodes.map((node) => [node.match.id.toString(), node])
   );
+  const focusedMatchRef = reactExports.useRef(void 0);
+  reactExports.useEffect(() => {
+    if (focusMatchId === void 0) {
+      focusedMatchRef.current = void 0;
+      return;
+    }
+    if (focusedMatchRef.current === focusMatchId) return;
+    const node = layout.nodes.find((item) => item.match.id === focusMatchId);
+    const viewport = viewportRef.current;
+    if (!node || !(viewport == null ? void 0 : viewport.clientWidth) || !viewport.clientHeight) return;
+    centerMatch(viewport, layout, node, zoom);
+    focusedMatchRef.current = focusMatchId;
+  }, [focusMatchId, layout, viewportRef, zoom]);
+  reactExports.useEffect(() => {
+    if (!searchFocus || handledSearchRef.current === searchFocus) return;
+    const node = layout.nodes.find(
+      (item) => item.match.id === searchFocus.matchId
+    );
+    const viewport = viewportRef.current;
+    if (!node || !viewport) return;
+    let observer;
+    const reveal = () => {
+      var _a2;
+      if (handledSearchRef.current === searchFocus) return;
+      if (!viewport.clientWidth || !viewport.clientHeight) return;
+      if (((_a2 = searchZoomRef.current) == null ? void 0 : _a2.request) !== searchFocus) {
+        searchZoomRef.current = {
+          request: searchFocus,
+          zoom: Math.max(
+            MIN_BRACKET_ZOOM,
+            Math.min(
+              1.4,
+              (viewport.clientWidth - 48) / CARD_WIDTH,
+              (viewport.clientHeight - 48) / CARD_HEIGHT
+            )
+          )
+        };
+      }
+      const targetZoom = searchZoomRef.current.zoom;
+      if (zoom !== targetZoom) {
+        zoomTo(targetZoom);
+        return;
+      }
+      centerMatch(viewport, layout, node, zoom);
+      handledSearchRef.current = searchFocus;
+      observer == null ? void 0 : observer.disconnect();
+    };
+    reveal();
+    if (handledSearchRef.current !== searchFocus && typeof ResizeObserver !== "undefined") {
+      observer = new ResizeObserver(reveal);
+      observer.observe(viewport);
+    }
+    return () => observer == null ? void 0 : observer.disconnect();
+  }, [searchFocus, layout, viewportRef, zoom, zoomTo]);
+  function findNextMatch(playerId) {
+    var _a2;
+    const player = players.find((item) => item.id === playerId);
+    if (!player) {
+      setChoices([]);
+      setSearchFocus(void 0);
+      setFeedback({ message: "No player matches this name.", params: {} });
+      return;
+    }
+    setChoices([]);
+    const match = nextPlayerMatch(matches, player);
+    if (!match) {
+      setSearchFocus(void 0);
+      setFeedback({
+        message: "No upcoming match for {name}.",
+        params: { name: player.name }
+      });
+      return;
+    }
+    (_a2 = searchInputRef.current) == null ? void 0 : _a2.blur();
+    setSearchFocus({ matchId: match.id });
+    setFeedback({
+      message: "Showing match {match} for {name}.",
+      params: {
+        match: `${matchLabel(match)} / M${match.id}`,
+        name: player.name
+      }
+    });
+  }
+  function searchPlayer() {
+    const normalize = (name) => name.trim().normalize("NFKC").toLocaleLowerCase(locale);
+    const search = normalize(playerSearch);
+    if (!search) return;
+    const exact = players.filter((player) => normalize(player.name) === search);
+    const found = exact.length ? exact : players.filter((player) => normalize(player.name).includes(search));
+    if (found.length === 1) {
+      findNextMatch(found[0].id);
+    } else {
+      setSearchFocus(void 0);
+      setChoices(found.map((player) => player.id));
+      setFeedback({
+        message: found.length ? "Several players match. Choose a player below." : "No player matches this name.",
+        params: {}
+      });
+    }
+  }
   if (!matches.length) {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `club-state${fullscreen ? " flex-1" : ""}`, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-2xl font-bold uppercase", children: t("No bracket yet.") }),
@@ -48551,6 +50467,88 @@ function BracketGraph({
       "aria-label": t("Complete tournament bracket"),
       className: fullscreen ? "flex min-h-0 flex-1 flex-col" : void 0,
       children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "form",
+          {
+            "data-ocid": "tournament.bracket_player_search",
+            className: "mb-4 shrink-0",
+            onSubmit: (event) => {
+              event.preventDefault();
+              searchPlayer();
+            },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "club-search flex min-w-0 flex-1 basis-48 items-center gap-3 border border-base-300 px-3", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Search,
+                    {
+                      className: "size-4 shrink-0 text-base-content/40",
+                      "aria-hidden": "true"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "input",
+                    {
+                      ref: searchInputRef,
+                      type: "search",
+                      "aria-label": t("Find a player in the bracket"),
+                      placeholder: t("PLAYER NAME"),
+                      className: "min-w-0 flex-1 bg-transparent py-3 font-mono text-xs outline-none placeholder:text-base-content/35",
+                      value: playerSearch,
+                      onChange: (event) => {
+                        setPlayerSearch(event.target.value);
+                        setChoices([]);
+                        setFeedback(null);
+                      }
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    type: "submit",
+                    className: "btn min-h-11 rounded-none border-primary/40 bg-primary/10 text-primary hover:bg-primary/20",
+                    disabled: !playerSearch.trim(),
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "size-4", "aria-hidden": "true" }),
+                      " ",
+                      t("Find next match")
+                    ]
+                  }
+                )
+              ] }),
+              feedback ? /* @__PURE__ */ jsxRuntimeExports.jsx("output", { className: "mt-2 block text-xs text-base-content/60", children: t(feedback) }) : null,
+              choices.length ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-3 grid max-h-32 gap-2 overflow-auto sm:grid-cols-2", children: choices.flatMap((id) => {
+                const player = players.find((item) => item.id === id);
+                if (!player) return [];
+                const registration = registrationLabel(player.registrationNumber);
+                return [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "button",
+                    {
+                      type: "button",
+                      "aria-label": t("Find next match for {name} / {registration}", {
+                        name: player.name,
+                        registration
+                      }),
+                      className: "flex min-h-11 items-center justify-between gap-3 border border-base-300 px-3 py-2 text-left hover:border-primary/60",
+                      onClick: () => findNextMatch(id),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "min-w-0 break-words font-display text-sm font-bold", children: player.name }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "shrink-0 font-mono text-[9px] text-base-content/45", children: [
+                          registration,
+                          " / ",
+                          t(player.status)
+                        ] })
+                      ]
+                    },
+                    id.toString()
+                  )
+                ];
+              }) }) : null
+            ]
+          }
+        ),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex flex-wrap items-center justify-between gap-4", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-wider text-base-content/45", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
@@ -48736,7 +50734,8 @@ function BracketGraph({
                       layout.nodes.map((node) => /* @__PURE__ */ jsxRuntimeExports.jsx(
                         "div",
                         {
-                          className: "absolute",
+                          "data-focused-match": (searchFocus == null ? void 0 : searchFocus.matchId) === node.match.id || void 0,
+                          className: `absolute ${(searchFocus == null ? void 0 : searchFocus.matchId) === node.match.id ? "ring-2 ring-primary ring-offset-4 ring-offset-base-100" : ""}`,
                           style: {
                             left: node.x,
                             top: node.y,
@@ -48922,6 +50921,419 @@ function FullscreenBracketFrame({
           )
         ] }),
         children
+      ]
+    }
+  );
+}
+const MATCH_STATUSES = [
+  "playing",
+  "ready",
+  "pending",
+  "completed",
+  "bye",
+  "void"
+];
+const BRACKETS = [
+  "winners",
+  "losers",
+  "grandFinal",
+  "resetFinal"
+];
+const PAGE_SIZE = 25;
+const DEFAULT_FILTERS = {
+  search: "",
+  status: "all",
+  bracket: "all",
+  round: "all",
+  table: "all",
+  sort: "bracket"
+};
+function MatchesPanel({
+  view,
+  onSelect
+}) {
+  const { t, locale } = useI18n();
+  const [filters, setFilters] = reactExports.useState(DEFAULT_FILTERS);
+  const [page, setPage] = reactExports.useState(1);
+  const players = reactExports.useMemo(
+    () => new Map(view.players.map((player) => [player.id, player])),
+    [view.players]
+  );
+  function participant(match, side) {
+    var _a2;
+    const id = side === "a" ? match.playerAId : match.playerBId;
+    return (id === void 0 ? void 0 : (_a2 = players.get(id)) == null ? void 0 : _a2.name) ?? sourceLabel(side === "a" ? match.sourceA : match.sourceB, view.matches);
+  }
+  function updateFilter(key, value) {
+    setFilters((previous) => ({
+      ...previous,
+      [key]: value,
+      ...key === "bracket" ? { round: "all" } : {}
+    }));
+    setPage(1);
+  }
+  const search = filters.search.trim().toLocaleLowerCase(locale);
+  const matches = view.matches.filter(
+    (match) => (filters.status === "all" || match.status === filters.status) && (filters.bracket === "all" || match.bracket === filters.bracket) && (filters.round === "all" || roundKey(match) === filters.round) && (filters.table === "all" || (filters.table === "none" ? match.table === void 0 : match.table === Number(filters.table))) && (!search || `${matchLabel(match)} M${match.id} #${match.id} ${participant(match, "a")} ${participant(match, "b")}`.toLocaleLowerCase(locale).includes(search))
+  );
+  if (filters.sort === "status") {
+    matches.sort(
+      (a2, b2) => MATCH_STATUSES.indexOf(a2.status) - MATCH_STATUSES.indexOf(b2.status)
+    );
+  }
+  const rounds = [
+    ...new Map(view.matches.map((match) => [roundKey(match), match])).values()
+  ].filter(
+    (match) => filters.bracket === "all" || match.bracket === filters.bracket
+  ).sort(
+    (a2, b2) => BRACKETS.indexOf(a2.bracket) - BRACKETS.indexOf(b2.bracket) || a2.round - b2.round
+  );
+  const tables = [
+    .../* @__PURE__ */ new Set([
+      ...view.tables.map((table) => table.number),
+      ...view.matches.flatMap(
+        (match) => match.table === void 0 ? [] : [match.table]
+      )
+    ])
+  ].sort((a2, b2) => a2 - b2);
+  const filtered = Object.entries(DEFAULT_FILTERS).some(
+    ([key, value]) => filters[key] !== value
+  );
+  const pageCount = Math.max(1, Math.ceil(matches.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const visible = matches.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+  const titleId = `matches-title-${view.tournament.id}`;
+  const cellClass = "block min-w-0 lg:table-cell lg:px-3 lg:py-4";
+  const mobileLabelClass = "technical-label mb-2 text-[9px] text-base-content/35 lg:hidden";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "section",
+    {
+      "aria-labelledby": titleId,
+      "data-ocid": "tournament.matches_section",
+      className: "mt-12 border-t border-base-300 pt-8",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "section-kicker mb-2", children: t("THE MATCHES / ALL ROUNDS") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { id: titleId, className: "font-display text-2xl font-bold uppercase", children: [
+            t("Matches"),
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono text-sm font-normal text-base-content/30", children: [
+              "/ ",
+              view.matches.length
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "club-search mb-5 flex w-full items-center gap-3 border border-base-300 px-3 sm:max-w-md", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "size-4 text-base-content/40", "aria-hidden": "true" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "input",
+            {
+              type: "search",
+              "aria-label": t("Search tournament matches"),
+              placeholder: t("PLAYER NAME / MATCH ID"),
+              className: "min-w-0 flex-1 bg-transparent py-3 font-mono text-xs outline-none placeholder:text-base-content/35",
+              value: filters.search,
+              onChange: (event) => updateFilter("search", event.target.value)
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-5 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: t("Match status") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: filters.status,
+                onChange: (event) => updateFilter("status", event.target.value),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: t("All statuses") }),
+                  MATCH_STATUSES.map((status) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: status, children: t(status) }, status))
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: t("Bracket") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: filters.bracket,
+                onChange: (event) => updateFilter("bracket", event.target.value),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: t("All brackets") }),
+                  BRACKETS.map((bracket) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: bracket, children: t(BRACKET_LABELS[bracket]) }, bracket))
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: t("Match round") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: filters.round,
+                onChange: (event) => updateFilter("round", event.target.value),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: t("All rounds") }),
+                  rounds.map((match) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: roundKey(match), children: roundLabel(match) }, roundKey(match)))
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-base-content/50", children: t("Match table") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: filters.table,
+                onChange: (event) => updateFilter("table", event.target.value),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "all", children: t("All tables") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "none", children: t("No table assigned") }),
+                  tables.map((table) => /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: table, children: [
+                    t("Table"),
+                    " ",
+                    table
+                  ] }, table))
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "col-span-2 sm:col-span-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-primary", children: t("Match sort order") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "select",
+              {
+                className: "select w-full rounded-none",
+                value: filters.sort,
+                onChange: (event) => updateFilter("sort", event.target.value),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "bracket", children: t("Bracket order") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "status", children: t("Status / live first") })
+                ]
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-5 flex flex-wrap items-center justify-between gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "p",
+            {
+              className: "font-mono text-[10px] text-base-content/45",
+              "aria-live": "polite",
+              children: t("{shown} of {total} matches", {
+                shown: matches.length,
+                total: view.matches.length
+              })
+            }
+          ),
+          filtered ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              className: "btn btn-ghost btn-xs",
+              onClick: () => {
+                setFilters(DEFAULT_FILTERS);
+                setPage(1);
+              },
+              children: t("Reset filters & sort")
+            }
+          ) : null
+        ] }),
+        visible.length ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:overflow-x-auto lg:border-y lg:border-base-300", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "table",
+          {
+            "data-ocid": "tournament.matches_table",
+            className: "block w-full text-left lg:table lg:min-w-[760px]",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { className: "hidden lg:table-header-group", children: /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { className: "border-b border-base-300", children: [
+                "Match",
+                "Players / matchup",
+                "Score",
+                "Status",
+                "Round",
+                "Table"
+              ].map((heading) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "th",
+                {
+                  scope: "col",
+                  className: "technical-label px-3 py-3 text-[9px] font-normal text-base-content/35",
+                  children: t(heading)
+                },
+                heading
+              )) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { className: "grid gap-4 sm:grid-cols-2 lg:table-row-group", children: visible.map((match) => {
+                const playerA = participant(match, "a");
+                const playerB = participant(match, "b");
+                return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "tr",
+                  {
+                    "data-ocid": `match.row.${match.id}`,
+                    className: "grid min-w-0 cursor-pointer grid-cols-2 gap-x-4 gap-y-4 border border-base-300 bg-base-200/30 p-4 transition-colors hover:bg-primary/5 focus-within:bg-primary/5 lg:table-row lg:border-x-0 lg:border-t-0 lg:border-b-base-300/70 lg:bg-transparent lg:p-0 lg:last:border-b-0",
+                    tabIndex: 0,
+                    onClick: () => onSelect(match),
+                    onKeyDown: (event) => {
+                      if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) {
+                        event.preventDefault();
+                        onSelect(match);
+                      }
+                    },
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "th",
+                        {
+                          scope: "row",
+                          className: `${cellClass} col-span-2 font-normal`,
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                            "button",
+                            {
+                              type: "button",
+                              className: "flex min-h-11 w-full items-center justify-between gap-3 text-left font-mono text-xs text-primary lg:min-h-8",
+                              "aria-label": t(
+                                "Open match {match}: {playerA} vs {playerB}",
+                                {
+                                  match: `${matchLabel(match)} / M${match.id}`,
+                                  playerA,
+                                  playerB
+                                }
+                              ),
+                              children: [
+                                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                                  matchLabel(match),
+                                  /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "ml-2 text-[10px] text-base-content/40", children: [
+                                    "M",
+                                    match.id.toString()
+                                  ] })
+                                ] }),
+                                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                  ArrowUpRight,
+                                  {
+                                    className: "size-3.5 shrink-0",
+                                    "aria-hidden": "true"
+                                  }
+                                )
+                              ]
+                            }
+                          )
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: `${cellClass} col-span-2 lg:max-w-72`, children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: mobileLabelClass, "aria-hidden": "true", children: t("Players / matchup") }),
+                        ["a", "b"].map((side) => {
+                          const id = side === "a" ? match.playerAId : match.playerBId;
+                          const winner = id !== void 0 && match.winnerId === id;
+                          return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "p",
+                            {
+                              className: `break-words font-display text-sm font-bold ${winner ? "text-primary" : id === void 0 ? "text-base-content/40" : "text-base-content"}`,
+                              children: side === "a" ? playerA : playerB
+                            },
+                            side
+                          );
+                        })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: cellClass, children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: mobileLabelClass, "aria-hidden": "true", children: t("Score") }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "whitespace-nowrap font-mono text-sm", children: [
+                          match.scoreA ?? "—",
+                          " : ",
+                          match.scoreB ?? "—"
+                        ] })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: cellClass, children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: mobileLabelClass, "aria-hidden": "true", children: t("Status") }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "span",
+                          {
+                            className: `technical-label text-[10px] ${match.status === "playing" ? "text-secondary" : match.status === "ready" || match.status === "completed" ? "text-primary" : "text-base-content/45"}`,
+                            children: t(match.status)
+                          }
+                        )
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        "td",
+                        {
+                          className: `${cellClass} font-mono text-[10px] text-base-content/45`,
+                          children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: mobileLabelClass, "aria-hidden": "true", children: t("Round") }),
+                            roundLabel(match)
+                          ]
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: `${cellClass} font-mono text-xs`, children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: mobileLabelClass, "aria-hidden": "true", children: t("Table") }),
+                        match.table === void 0 ? "—" : `T${match.table}`
+                      ] })
+                    ]
+                  },
+                  match.id.toString()
+                );
+              }) })
+            ]
+          }
+        ) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border border-dashed border-base-300 px-6 py-10 text-center", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-lg font-bold uppercase", children: t(
+            view.matches.length ? "No matching matches." : "No matches yet."
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-base-content/45", children: t(
+            view.matches.length ? "Try another player or adjust the status, bracket, round or table filters." : "Generate the bracket to see tournament matches here."
+          ) })
+        ] }),
+        matches.length > PAGE_SIZE ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "nav",
+          {
+            "aria-label": t("Matches"),
+            className: "mt-5 flex items-center justify-between gap-3",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  type: "button",
+                  className: "btn btn-ghost min-h-11 rounded-none",
+                  "aria-label": t("Previous matches page"),
+                  disabled: currentPage === 1,
+                  onClick: () => setPage(currentPage - 1),
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronLeft, { className: "size-4", "aria-hidden": "true" }),
+                    t("Previous")
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "p",
+                {
+                  className: "font-mono text-[10px] text-base-content/45",
+                  "aria-live": "polite",
+                  children: t("Page {page} of {pages}", {
+                    page: currentPage,
+                    pages: pageCount
+                  })
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  type: "button",
+                  className: "btn btn-ghost min-h-11 rounded-none",
+                  "aria-label": t("Next matches page"),
+                  disabled: currentPage === pageCount,
+                  onClick: () => setPage(currentPage + 1),
+                  children: [
+                    t("Next"),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { className: "size-4", "aria-hidden": "true" })
+                  ]
+                }
+              )
+            ]
+          }
+        ) : null
       ]
     }
   );
@@ -49442,6 +51854,8 @@ function TournamentDetailPage({
   const queryClient2 = useQueryClient();
   const queryKey = ["tournamentState", tournamentId.toString()];
   const [display, setDisplay] = reactExports.useState("standard");
+  const [bracketFocus, setBracketFocus] = reactExports.useState();
+  const focusMatchId = (bracketFocus == null ? void 0 : bracketFocus.tournamentId) === tournamentId ? bracketFocus.matchId : void 0;
   const changeFullscreen = reactExports.useCallback(
     (next) => {
       setDisplay("extended");
@@ -49493,21 +51907,34 @@ function TournamentDetailPage({
       );
     },
     onSuccess: (updated, variables) => {
-      var _a2, _b2, _c2;
+      var _a2, _b2, _c2, _d2;
       queryClient2.setQueryData(queryKey, updated);
       void queryClient2.invalidateQueries({ queryKey });
       void queryClient2.invalidateQueries({ queryKey: ["tournaments"] });
+      void queryClient2.invalidateQueries({ queryKey: ["players"] });
+      const action = variables.action;
       setNotice(
-        "Saved to the tournament. The floor, draw and queue are up to date."
+        (action.kind === "addPlayer" || action.kind === "addExistingPlayer") && !((_a2 = variables.options) == null ? void 0 : _a2.placeNewPlayer) && updated.generated ? "Registered in the waiting queue. Use Place in bracket to add them to the draw." : "Saved to the tournament. The floor, draw and queue are up to date."
       );
-      if (variables.action.kind === "addPlayer" && ((_a2 = variables.options) == null ? void 0 : _a2.placeNewPlayer)) {
+      if (action.kind === "placePlayer") {
+        const placedMatch = updated.matches.find(
+          (match) => match.sourceA.kind === "player" && match.sourceA.id === action.playerId || match.sourceB.kind === "player" && match.sourceB.id === action.playerId
+        );
+        setBracketFocus({
+          tournamentId,
+          matchId: (placedMatch == null ? void 0 : placedMatch.id) ?? action.matchId
+        });
+        setDisplay("extended");
+        setNotice("Player added to the bracket. Their match is now in view.");
+      }
+      if ((variables.action.kind === "addPlayer" || variables.action.kind === "addExistingPlayer") && ((_b2 = variables.options) == null ? void 0 : _b2.placeNewPlayer)) {
         const newPlayer = [...updated.players].sort(
           (a2, b2) => a2.registrationNumber > b2.registrationNumber ? -1 : 1
         )[0];
         if (newPlayer) setModal({ kind: "move", player: newPlayer });
-      } else if (((_b2 = variables.options) == null ? void 0 : _b2.returnToMatch) !== void 0) {
+      } else if (((_c2 = variables.options) == null ? void 0 : _c2.returnToMatch) !== void 0) {
         setModal({ kind: "match", matchId: variables.options.returnToMatch });
-      } else if (((_c2 = variables.options) == null ? void 0 : _c2.close) !== false) setModal(null);
+      } else if (((_d2 = variables.options) == null ? void 0 : _d2.close) !== false) setModal(null);
     }
   });
   function openModal(next) {
@@ -49521,7 +51948,7 @@ function TournamentDetailPage({
     actionMutation.mutate({ action, options });
   }
   const actionError = actionMutation.isError ? actionMutation.error instanceof Error ? actionMutation.error.message : "This action couldn't be saved. Try again." : null;
-  const loading = stateQuery.isLoading || isFetching && !view;
+  const loading2 = stateQuery.isLoading || isFetching && !view;
   function frame(content) {
     return fullscreen ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       FullscreenBracketFrame,
@@ -49533,7 +51960,7 @@ function TournamentDetailPage({
       }
     ) : content;
   }
-  if (loading)
+  if (loading2)
     return frame(
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
@@ -49626,6 +52053,7 @@ function TournamentDetailPage({
           {
             fullscreen: true,
             isAdmin,
+            focusMatchId,
             matches: view.matches,
             players: view.players,
             onSelect: (match) => openModal({ kind: "match", matchId: match.id })
@@ -49821,10 +52249,19 @@ function TournamentDetailPage({
       BracketGraph,
       {
         isAdmin,
+        focusMatchId,
         matches: view.matches,
         players: view.players,
         onSelect: (match) => openModal({ kind: "match", matchId: match.id })
       }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      MatchesPanel,
+      {
+        view,
+        onSelect: (match) => openModal({ kind: "match", matchId: match.id })
+      },
+      tournamentId.toString()
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       PlayersPanel,
@@ -50162,7 +52599,7 @@ function TournamentsPage() {
   const liveCount = tournaments.filter(
     (tournament) => tournament.status === TournamentStatus.live
   ).length;
-  const loading = tournamentsQuery.isLoading || isFetching && !tournamentsQuery.data;
+  const loading2 = tournamentsQuery.isLoading || isFetching && !tournamentsQuery.data;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "tournaments_page", className: "club-page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "tournament-hero relative grid gap-4 border-b border-base-300 pb-9 lg:grid-cols-[1.2fr_1fr]", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10", children: [
@@ -50213,7 +52650,7 @@ function TournamentsPage() {
                   children: t("The tournament board")
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-base-content/40", children: loading ? t("Connecting…") : t("{v1} upcoming / {v2} live", {
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-base-content/40", children: loading2 ? t("Connecting…") : t("{v1} upcoming / {v2} live", {
                 v1: upcomingCount,
                 v2: liveCount
               }) })
@@ -50284,7 +52721,7 @@ function TournamentsPage() {
               ]
             }
           ) : null,
-          loading ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          loading2 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "div",
             {
               "data-ocid": "tournaments.loading_state",
@@ -50959,7 +53396,7 @@ function UsersPage() {
   const filteredUsers = users.filter(
     (user) => (roleFilter === "all" || user.role === Role.admin) && (!query || `${user.displayName} ${user.username} ${user.bio ?? ""}`.toLowerCase().includes(query))
   ).sort((a2, b2) => a2.displayName.localeCompare(b2.displayName, getLocale()));
-  const loading = usersQuery.isLoading || isFetching && !usersQuery.data;
+  const loading2 = usersQuery.isLoading || isFetching && !usersQuery.data;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "users_page", className: "club-page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-10 flex flex-wrap items-end justify-between gap-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -50986,7 +53423,7 @@ function UsersPage() {
         }
       ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-2 border-l border-primary pl-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-4 text-primary", "aria-hidden": "true" }),
-        loading ? t("Connecting") : t("{v1} club members", { v1: users.length })
+        loading2 ? t("Connecting") : t("{v1} club members", { v1: users.length })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-toolbar mb-6 flex flex-wrap items-center justify-between gap-4 border-y border-base-300 py-4", children: [
@@ -51039,7 +53476,7 @@ function UsersPage() {
         ]
       }
     ) : null,
-    loading ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    loading2 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
         "data-ocid": "users.loading_state",

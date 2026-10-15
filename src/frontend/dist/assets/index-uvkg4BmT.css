@@ -4373,6 +4373,10 @@
     height: 148px;
   }
 
+  .h-auto {
+    height: auto;
+  }
+
   .h-dvh {
     height: 100dvh;
   }
@@ -4383,6 +4387,10 @@
 
   .h-svh {
     height: 100svh;
+  }
+
+  .max-h-32 {
+    max-height: calc(var(--spacing) * 32);
   }
 
   .max-h-\[75vh\] {
@@ -4535,6 +4543,14 @@
 
   .shrink-0 {
     flex-shrink: 0;
+  }
+
+  .grow {
+    flex-grow: 1;
+  }
+
+  .basis-48 {
+    flex-basis: calc(var(--spacing) * 48);
   }
 
   .origin-top-left {
@@ -4715,6 +4731,10 @@
 
   .gap-y-3 {
     row-gap: calc(var(--spacing) * 3);
+  }
+
+  .gap-y-4 {
+    row-gap: calc(var(--spacing) * 4);
   }
 
   .gap-y-5 {
@@ -5229,6 +5249,10 @@
     padding-bottom: calc(var(--spacing) * 3);
   }
 
+  .pb-4 {
+    padding-bottom: calc(var(--spacing) * 4);
+  }
+
   .pb-5 {
     padding-bottom: calc(var(--spacing) * 5);
   }
@@ -5422,6 +5446,14 @@
     word-break: break-all;
   }
 
+  .whitespace-normal {
+    white-space: normal;
+  }
+
+  .whitespace-nowrap {
+    white-space: nowrap;
+  }
+
   .whitespace-pre-wrap {
     white-space: pre-wrap;
   }
@@ -5612,8 +5644,26 @@
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
+  .ring-2 {
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
   .ring-base-300 {
     --tw-ring-color: var(--color-base-300);
+  }
+
+  .ring-primary {
+    --tw-ring-color: var(--color-primary);
+  }
+
+  .ring-offset-4 {
+    --tw-ring-offset-width: 4px;
+    --tw-ring-offset-shadow: var(--tw-ring-inset, ) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  }
+
+  .ring-offset-base-100 {
+    --tw-ring-offset-color: var(--color-base-100);
   }
 
   .outline {
@@ -5692,6 +5742,16 @@
     }
   }
 
+  .focus-within\:bg-primary\/5:focus-within {
+    background-color: var(--color-primary);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .focus-within\:bg-primary\/5:focus-within {
+      background-color: color-mix(in oklab, var(--color-primary) 5%, transparent);
+    }
+  }
+
   @media (hover: hover) {
     .hover\:border-primary\/60:hover {
       border-color: var(--color-primary);
@@ -5705,6 +5765,26 @@
 
     .hover\:bg-base-300:hover {
       background-color: var(--color-base-300);
+    }
+
+    .hover\:bg-primary\/5:hover {
+      background-color: var(--color-primary);
+    }
+
+    @supports (color: color-mix(in lab, red, red)) {
+      .hover\:bg-primary\/5:hover {
+        background-color: color-mix(in oklab, var(--color-primary) 5%, transparent);
+      }
+    }
+
+    .hover\:bg-primary\/20:hover {
+      background-color: var(--color-primary);
+    }
+
+    @supports (color: color-mix(in lab, red, red)) {
+      .hover\:bg-primary\/20:hover {
+        background-color: color-mix(in oklab, var(--color-primary) 20%, transparent);
+      }
     }
 
     .hover\:text-primary:hover {
@@ -5793,6 +5873,10 @@
       width: auto;
     }
 
+    .sm\:max-w-md {
+      max-width: var(--container-md);
+    }
+
     .sm\:max-w-xs {
       max-width: var(--container-xs);
     }
@@ -5815,6 +5899,10 @@
 
     .sm\:grid-cols-\[5rem_1fr_auto\] {
       grid-template-columns: 5rem 1fr auto;
+    }
+
+    .sm\:grid-cols-\[minmax\(0\,1fr\)_auto_auto\] {
+      grid-template-columns: minmax(0, 1fr) auto auto;
     }
 
     .sm\:flex-col {
@@ -5846,8 +5934,16 @@
       padding: calc(var(--spacing) * 5);
     }
 
+    .sm\:p-6 {
+      padding: calc(var(--spacing) * 6);
+    }
+
     .sm\:p-8 {
       padding: calc(var(--spacing) * 8);
+    }
+
+    .sm\:px-6 {
+      padding-inline: calc(var(--spacing) * 6);
     }
 
     .sm\:px-8 {
@@ -6069,8 +6165,16 @@
       min-height: 0;
     }
 
+    .lg\:min-h-8 {
+      min-height: calc(var(--spacing) * 8);
+    }
+
     .lg\:max-w-64 {
       max-width: calc(var(--spacing) * 64);
+    }
+
+    .lg\:max-w-72 {
+      max-width: calc(var(--spacing) * 72);
     }
 
     .lg\:min-w-0 {
