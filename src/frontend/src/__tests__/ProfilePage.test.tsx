@@ -1,6 +1,6 @@
 import type { ProfileInput, User } from "@/backend";
 import { ProfilePage } from "@/pages/ProfilePage";
-import type { TelegramLoginResult } from "@/services/telegram-login";
+import type { TelegramLoginResult } from "@/services/telegram-login.service";
 import { Principal } from "@icp-sdk/core/principal";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
@@ -30,8 +30,8 @@ vi.mock("@caffeineai/core-infrastructure", () => ({
   useActor: () => ({ actor: state.actor, isFetching: false }),
 }));
 vi.mock("@/hooks/useAuth", () => ({ useAuth: () => state.auth }));
-vi.mock("@/services/telegram-login", () => ({
-  loadTelegramLogin: () => state.sdk.load(),
+vi.mock("@/services/telegram-login.service", () => ({
+  telegramLoginService: { load: () => state.sdk.load() },
 }));
 
 const member = Principal.fromUint8Array(new Uint8Array([4, 5, 6]));

@@ -1,7 +1,7 @@
 import type { Backend, User } from "@/backend";
 import { Button } from "@/components/ui/Button";
 import { translateError, useI18n } from "@/i18n";
-import { loadTelegramLogin } from "@/services/telegram-login";
+import { telegramLoginService } from "@/services/telegram-login.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, Link2, RefreshCw, Send, Unlink } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -31,7 +31,7 @@ export function TelegramLink({
   });
   const sdk = useQuery({
     queryKey: ["telegramSdk"],
-    queryFn: loadTelegramLogin,
+    queryFn: () => telegramLoginService.load(),
     enabled: !!config.data?.clientId,
     staleTime: Number.POSITIVE_INFINITY,
     retry: false,

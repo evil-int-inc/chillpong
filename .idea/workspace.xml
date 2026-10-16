@@ -4,49 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="feature/add-editing-on-the-floor">
+    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="feature/telegram-login">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mops.lock" beforeDir="false" afterPath="$PROJECT_DIR$/mops.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mops.toml" beforeDir="false" afterPath="$PROJECT_DIR$/mops.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/dist/backend.did" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/dist/backend.did" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/dist/backend.most" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/dist/backend.most" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/dist/backend.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/dist/backend.wasm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/lib/tournament-bracket.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/lib/tournament-bracket.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/lib/tournament-organizer.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/lib/tournament-organizer.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/lib/users.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/lib/users.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/main.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/main.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/mixins/api-doc.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/mixins/api-doc.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/mixins/tournaments-api.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/mixins/tournaments-api.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/types/common.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/types/common.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/types/tournaments.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/types/tournaments.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-BQn-hATj.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-CXftey2s.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/AdminPage.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/AdminPage.test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/FullscreenBracket.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/FullscreenBracket.test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/MobileOrganizer.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/MobileOrganizer.test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/PlayersPage.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/PlayersPage.test.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/ProfilePage.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/ProfilePage.test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/TournamentDetailPage.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/TournamentDetailPage.test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/backend.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/backend.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/backend.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/backend.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/PlayersPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/PlayersPanel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/errors.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/errors.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/ka.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/ka.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/ru.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/ru.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/mocks/backend.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/mocks/backend.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/AdminPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/AdminPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/PlayersPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/PlayersPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/ProfilePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/ProfilePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/services/tournament-manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/services/tournament-manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/types/tournament-manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/types/tournament-manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/pocketic/backend.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/pocketic/backend.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/profile/TelegramLink.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/profile/TelegramLink.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/services/telegram-login.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +77,8 @@
       <workItem from="1791106090300" duration="3731000" />
       <workItem from="1791550280580" duration="971000" />
       <workItem from="1791718725569" duration="8944000" />
-      <workItem from="1791835107322" duration="598000" />
+      <workItem from="1791835107322" duration="2765000" />
+      <workItem from="1792096952493" duration="2184000" />
     </task>
     <task id="LOCAL-00001" summary="feature/redesign">
       <option name="closed" value="true" />
@@ -204,7 +168,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791721828172</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="feature/telegram-login">
+      <option name="closed" value="true" />
+      <created>1791919156181</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1791919156181</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TerminalProjectNonSharedOptionsProvider">
@@ -243,6 +215,7 @@
     <MESSAGE value="feature/full-bracket-full-view-and-zooming" />
     <MESSAGE value="feature/add-editing" />
     <MESSAGE value="feature/add-editing-on-the-floor" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature/add-editing-on-the-floor" />
+    <MESSAGE value="feature/telegram-login" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature/telegram-login" />
   </component>
 </project>
