@@ -51,12 +51,12 @@ module {
     if (userId.isAnonymous()) { return null };
     switch (users.get(userId)) {
       case (?user) {
-        ?{ id = userId; displayName = user.displayName; username = user.username; role };
+        ?{ id = userId; displayName = user.displayName; username = user.username; avatarUrl = user.avatarUrl; role };
       };
       case null {
         switch (accessControlState.userRoles.get(userId)) {
           case null { null };
-          case (?_) { ?{ id = userId; displayName = "Signed-in member"; username = ""; role } };
+          case (?_) { ?{ id = userId; displayName = "Signed-in member"; username = ""; avatarUrl = null; role } };
         };
       };
     };

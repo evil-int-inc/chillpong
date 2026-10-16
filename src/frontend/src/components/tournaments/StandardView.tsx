@@ -1,3 +1,4 @@
+import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { useI18n } from "@/i18n";
 import { countLabel } from "@/i18n/plurals";
 import {
@@ -215,7 +216,7 @@ export function StandardView({
                   {registrationLabel(player.registrationNumber)}
                 </span>
                 <span className="min-w-0 flex-1 break-words font-display font-bold">
-                  {player.name}
+                  <PlayerIdentity player={player} nameClassName="break-words" />
                 </span>
                 <span className="technical-label border border-base-300 px-2 py-1 text-[10px]">
                   L{player.skill}

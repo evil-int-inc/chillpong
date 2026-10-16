@@ -12,4 +12,7 @@ module {
   };
 
   public type PlayerInput = { name : Text; skillLevel : Nat };
+
+  // Resolve account metadata when reading; never retain stale avatar snapshots.
+  public type GlobalPlayerView = GlobalPlayer and { avatarUrl : ?Text };
 };

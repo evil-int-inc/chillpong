@@ -1,4 +1,4 @@
-import type { Tournament } from "@/backend";
+import type { Tournament, UserId } from "@/backend";
 import { getLocale, translate as t } from "@/i18n";
 
 export type Elimination = "single" | "double";
@@ -22,6 +22,8 @@ export type MatchStatus =
 export interface TournamentPlayerView {
   id: bigint;
   globalPlayerId?: bigint;
+  userId?: UserId;
+  avatarUrl?: string;
   name: string;
   skill: number;
   registrationNumber: bigint;

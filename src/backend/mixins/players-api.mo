@@ -18,37 +18,37 @@ mixin (
   players : Map.Map<Nat, Players.GlobalPlayer>,
   counters : Common.Counters,
 ) {
-  public query func listPlayers() : async [Players.GlobalPlayer] {
-    PlayersLib.list(players);
+  public query func listPlayers() : async [Players.GlobalPlayerView] {
+    PlayersLib.list(players).map(func player = PlayersLib.view(player, users));
   };
 
-  public shared ({ caller }) func createPlayer(input : Players.PlayerInput) : async Players.GlobalPlayer {
+  public shared ({ caller }) func createPlayer(input : Players.PlayerInput) : async Players.GlobalPlayerView {
     RolesLib.requireAdmin(accessControlState, caller);
-    PlayersLib.create(players, counters, input, Time.now());
+    PlayersLib.view(PlayersLib.create(players, counters, input, Time.now()), users);
   };
 
-  public shared ({ caller }) func updatePlayer(playerId : Nat, input : Players.PlayerInput) : async Players.GlobalPlayer {
+  public shared ({ caller }) func updatePlayer(playerId : Nat, input : Players.PlayerInput) : async Players.GlobalPlayerView {
     RolesLib.requireAdmin(accessControlState, caller);
     let updated = PlayersLib.update(players, playerId, input, Time.now());
     switch (updated.userId) {
       case (?userId) { ignore UsersLib.setLinkedPlayerName(users, usernames, userId, updated.name, RolesLib.effectiveRole(accessControlState, users, owner, userId)) };
       case null {};
     };
-    updated;
+    PlayersLib.view(updated, users);
   };
 
-  public shared ({ caller }) func linkPlayerToUser(playerId : Nat, userId : Common.UserId) : async Players.GlobalPlayer {
+  public shared ({ caller }) func linkPlayerToUser(playerId : Nat, userId : Common.UserId) : async Players.GlobalPlayerView {
     RolesLib.requireAdmin(accessControlState, caller);
     if (userId.isAnonymous() or accessControlState.userRoles.get(userId) == null) {
       Runtime.trap("Member must be an authenticated account");
     };
     let linked = PlayersLib.link(players, playerId, userId, Time.now());
     ignore UsersLib.setLinkedPlayerName(users, usernames, userId, linked.name, RolesLib.effectiveRole(accessControlState, users, owner, userId));
-    linked;
+    PlayersLib.view(linked, users);
   };
 
-  public shared ({ caller }) func unlinkPlayerFromUser(playerId : Nat) : async Players.GlobalPlayer {
+  public shared ({ caller }) func unlinkPlayerFromUser(playerId : Nat) : async Players.GlobalPlayerView {
     RolesLib.requireAdmin(accessControlState, caller);
-    PlayersLib.unlink(players, playerId, Time.now());
+    PlayersLib.view(PlayersLib.unlink(players, playerId, Time.now()), users);
   };
 };

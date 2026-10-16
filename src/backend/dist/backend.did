@@ -22,6 +22,7 @@ type Value =
  };
 type UserRoleView = 
  record {
+   avatarUrl: opt text;
    displayName: text;
    id: UserId;
    role: opt Role;
@@ -43,6 +44,7 @@ type UserId = principal;
 type User = 
  record {
    avatar: opt ExternalBlob;
+   avatarUrl: opt text;
    bio: opt text;
    createdAt: Timestamp;
    displayName: text;
@@ -102,6 +104,7 @@ type TournamentPlayerStatus =
  };
 type TournamentPlayer = 
  record {
+   avatarUrl: opt text;
    currentMatchId: opt nat;
    globalPlayerId: opt nat;
    id: nat;
@@ -113,6 +116,7 @@ type TournamentPlayer =
    skillLevel: nat;
    status: TournamentPlayerStatus;
    table: opt nat;
+   userId: opt UserId;
  };
 type TournamentMatchStatus = 
  variant {
@@ -305,8 +309,9 @@ type HttpHeader =
    name: text;
    value: text;
  };
-type GlobalPlayer = 
+type GlobalPlayerView =
  record {
+   avatarUrl: opt text;
    createdAt: Timestamp;
    id: nat;
    name: text;
@@ -361,7 +366,7 @@ service : {
   assignCallerUserRole: (user: principal, role: UserRole) -> ();
   bootstrapOwner: () -> ();
   completeTelegramLink: (idToken: text) -> (User);
-  createPlayer: (input: PlayerInput) -> (GlobalPlayer);
+  createPlayer: (input: PlayerInput) -> (GlobalPlayerView);
   createTournament: (input: TournamentInput) -> (Tournament);
   createUser: (userId: UserId, input: UserInput) -> (User);
   execute: (qJson: text) -> (Result) query;
@@ -378,8 +383,8 @@ service : {
   getUserByUsername: (username: text) -> (opt User) query;
   grantAdminRole: (target: UserId) -> (UserRoleView);
   isCallerAdmin: () -> (bool) query;
-  linkPlayerToUser: (playerId: nat, userId: UserId) -> (GlobalPlayer);
-  listPlayers: () -> (vec GlobalPlayer) query;
+  linkPlayerToUser: (playerId: nat, userId: UserId) -> (GlobalPlayerView);
+  listPlayers: () -> (vec GlobalPlayerView) query;
   listUsers: () -> (vec User) query;
   listUsersWithRoles: () -> (vec UserRoleView) query;
   revokeAdminRole: (target: UserId) -> (UserRoleView);
@@ -392,9 +397,9 @@ service : {
      context: blob;
      response: HttpRequestResult;
    }) -> (HttpRequestResult) query;
-  unlinkPlayerFromUser: (playerId: nat) -> (GlobalPlayer);
+  unlinkPlayerFromUser: (playerId: nat) -> (GlobalPlayerView);
   unlinkTelegram: () -> (User);
-  updatePlayer: (playerId: nat, input: PlayerInput) -> (GlobalPlayer);
+  updatePlayer: (playerId: nat, input: PlayerInput) -> (GlobalPlayerView);
   updateTournament: (id: nat, input: TournamentInput) -> (Tournament);
   updateUser: (userId: UserId, input: UserInput) -> (User);
 }

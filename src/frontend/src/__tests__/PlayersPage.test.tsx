@@ -1,5 +1,5 @@
 import {
-  type GlobalPlayer,
+  type GlobalPlayerView as GlobalPlayer,
   type Tournament,
   TournamentFormat,
   TournamentStatus,

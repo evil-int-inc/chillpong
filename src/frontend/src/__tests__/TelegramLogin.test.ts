@@ -177,11 +177,69 @@ describe("Telegram browser popup", () => {
     const callback = vi.fn();
     login.auth(options, callback);
     popup.close();
-    vi.advanceTimersByTime(400);
+    vi.advanceTimersByTime(200);
+    expect(callback).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(1_200);
     expect(callback).toHaveBeenCalledExactlyOnceWith({ error: "popup_closed" });
     expect(vi.getTimerCount()).toBe(0);
     message(popup, { event: "auth_result", result: "late-token" });
     expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  it("accepts an approval message queued just before the popup closes", async () => {
+    const popup = popupWindow();
+    vi.spyOn(window, "open").mockReturnValue(popup as unknown as Window);
+    const login = await browserLogin();
+    const callback = vi.fn();
+    login.auth(options, callback);
+    popup.close();
+    vi.advanceTimersByTime(600);
+    expect(callback).not.toHaveBeenCalled();
+    message(popup, { event: "auth_result", result: "signed-approved-token" });
+    expect(callback).toHaveBeenCalledExactlyOnceWith({
+      id_token: "signed-approved-token",
+    });
+    vi.advanceTimersByTime(2_000);
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("identifies a legacy Login Widget result without trusting its user fields", async () => {
+    const popup = popupWindow();
+    vi.spyOn(window, "open").mockReturnValue(popup as unknown as Window);
+    const login = await browserLogin();
+    const callback = vi.fn();
+    login.auth(options, callback);
+    message(
+      popup,
+      JSON.stringify({
+        event: "auth_result",
+        result: {
+          id: 123,
+          username: "legacy_user",
+          auth_date: 1,
+          hash: "hash",
+        },
+      }),
+    );
+    expect(callback).toHaveBeenCalledExactlyOnceWith({ error: "legacy_login" });
+    expect(popup.close).toHaveBeenCalledOnce();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("cancels a closed popup during the grace period and ignores a late approval", async () => {
+    const popup = popupWindow();
+    vi.spyOn(window, "open").mockReturnValue(popup as unknown as Window);
+    const login = await browserLogin();
+    const callback = vi.fn();
+    login.auth(options, callback);
+    popup.close();
+    vi.advanceTimersByTime(200);
+    login.close();
+    message(popup, { event: "auth_result", result: "abandoned-token" });
+    vi.advanceTimersByTime(2_000);
+    expect(callback).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(0);
   });
 
   it("cancels cleanly and ignores an abandoned popup after a fresh attempt", async () => {

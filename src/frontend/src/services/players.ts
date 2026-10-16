@@ -1,4 +1,8 @@
-import type { Backend, GlobalPlayer, UserId } from "@/backend";
+import type {
+  Backend,
+  GlobalPlayerView as GlobalPlayer,
+  UserId,
+} from "@/backend";
 
 export const PLAYERS_QUERY_KEY = ["players"] as const;
 

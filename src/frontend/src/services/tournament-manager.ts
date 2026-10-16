@@ -97,6 +97,8 @@ export function normalizeTournamentState(
     players: state.players.map((player) => ({
       id: player.id,
       globalPlayerId: player.globalPlayerId,
+      userId: player.userId,
+      avatarUrl: player.avatarUrl,
       name: player.name,
       skill: Number(player.skillLevel),
       registrationNumber: player.registrationNumber,

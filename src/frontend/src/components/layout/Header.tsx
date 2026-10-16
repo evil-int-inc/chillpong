@@ -1,4 +1,4 @@
-import { Avatar } from "@/components/ui/Avatar";
+import { UserAvatar } from "@/components/ui/Avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/i18n";
 import { Link, useLocation } from "@tanstack/react-router";
@@ -94,8 +94,8 @@ export function Header({ onOpenSidebar }: { onOpenSidebar: () => void }) {
               aria-label={t("Account details")}
               className="btn btn-ghost flex items-center gap-2.5 px-1 normal-case"
             >
-              <Avatar
-                src={profile?.avatar?.getDirectURL()}
+              <UserAvatar
+                user={profile}
                 name={profile?.displayName || profile?.username || t("Member")}
                 size="sm"
               />

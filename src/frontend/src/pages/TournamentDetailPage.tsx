@@ -1,4 +1,5 @@
 import { createActor } from "@/backend";
+import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { BracketGraph } from "@/components/tournaments/BracketGraph";
 import { CopyBracketLink } from "@/components/tournaments/CopyBracketLink";
 import { FullscreenBracketFrame } from "@/components/tournaments/FullscreenBracketFrame";
@@ -512,7 +513,7 @@ export function TournamentDetailPage({
               {t("THE FINAL POINT / TOURNAMENT CHAMPION")}
             </p>
             <h2 className="font-display text-3xl font-bold uppercase">
-              {champion.name} {t("wins.")}
+              <PlayerIdentity player={champion} size="lg" /> {t("wins.")}
             </h2>
           </div>
         </section>

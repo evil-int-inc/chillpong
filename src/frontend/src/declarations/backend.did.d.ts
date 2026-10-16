@@ -28,12 +28,13 @@ export type Error = { 'FrontendOriginsNotConfigured' : null } |
   { 'MissingField' : string } |
   { 'FrontendOriginMismatch' : { 'got' : string, 'expected' : Array<string> } };
 export type ExternalBlob = Uint8Array;
-export interface GlobalPlayer {
+export interface GlobalPlayerView {
   'id' : bigint,
   'userId' : [] | [UserId],
   'name' : string,
   'createdAt' : Timestamp,
   'updatedAt' : Timestamp,
+  'avatarUrl' : [] | [string],
   'skillLevel' : bigint,
 }
 export interface HttpHeader { 'value' : string, 'name' : string }
@@ -187,10 +188,12 @@ export interface TournamentPlayer {
   'id' : bigint,
   'status' : TournamentPlayerStatus,
   'table' : [] | [bigint],
+  'userId' : [] | [UserId],
   'name' : string,
   'seed' : [] | [bigint],
   'losses' : bigint,
   'registrationNumber' : bigint,
+  'avatarUrl' : [] | [string],
   'globalPlayerId' : [] | [bigint],
   'currentMatchId' : [] | [bigint],
   'skillLevel' : bigint,
@@ -239,6 +242,7 @@ export interface User {
   'displayName' : string,
   'createdAt' : Timestamp,
   'role' : [] | [Role],
+  'avatarUrl' : [] | [string],
   'avatar' : [] | [ExternalBlob],
 }
 export type UserId = Principal;
@@ -255,6 +259,7 @@ export interface UserRoleView {
   'username' : string,
   'displayName' : string,
   'role' : [] | [Role],
+  'avatarUrl' : [] | [string],
 }
 export type Value = { 'int' : bigint } |
   { 'nat' : bigint } |
@@ -302,7 +307,7 @@ export interface _SERVICE {
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'bootstrapOwner' : ActorMethod<[], undefined>,
   'completeTelegramLink' : ActorMethod<[string], User>,
-  'createPlayer' : ActorMethod<[PlayerInput], GlobalPlayer>,
+  'createPlayer' : ActorMethod<[PlayerInput], GlobalPlayerView>,
   'createTournament' : ActorMethod<[TournamentInput], Tournament>,
   'createUser' : ActorMethod<[UserId, UserInput], User>,
   'execute' : ActorMethod<[string], Result>,
@@ -319,8 +324,8 @@ export interface _SERVICE {
   'getUserByUsername' : ActorMethod<[string], [] | [User]>,
   'grantAdminRole' : ActorMethod<[UserId], UserRoleView>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
-  'linkPlayerToUser' : ActorMethod<[bigint, UserId], GlobalPlayer>,
-  'listPlayers' : ActorMethod<[], Array<GlobalPlayer>>,
+  'linkPlayerToUser' : ActorMethod<[bigint, UserId], GlobalPlayerView>,
+  'listPlayers' : ActorMethod<[], Array<GlobalPlayerView>>,
   'listUsers' : ActorMethod<[], Array<User>>,
   'listUsersWithRoles' : ActorMethod<[], Array<UserRoleView>>,
   'revokeAdminRole' : ActorMethod<[UserId], UserRoleView>,
@@ -332,9 +337,9 @@ export interface _SERVICE {
     [{ 'context' : Uint8Array, 'response' : HttpRequestResult }],
     HttpRequestResult
   >,
-  'unlinkPlayerFromUser' : ActorMethod<[bigint], GlobalPlayer>,
+  'unlinkPlayerFromUser' : ActorMethod<[bigint], GlobalPlayerView>,
   'unlinkTelegram' : ActorMethod<[], User>,
-  'updatePlayer' : ActorMethod<[bigint, PlayerInput], GlobalPlayer>,
+  'updatePlayer' : ActorMethod<[bigint, PlayerInput], GlobalPlayerView>,
   'updateTournament' : ActorMethod<[bigint, TournamentInput], Tournament>,
   'updateUser' : ActorMethod<[UserId, UserInput], User>,
 }

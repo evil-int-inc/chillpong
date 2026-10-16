@@ -1,3 +1,4 @@
+import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { useI18n } from "@/i18n";
 import { roundKey, roundLabel } from "@/types/player-filters";
 import {
@@ -7,6 +8,7 @@ import {
   type TournamentManagerView,
   type TournamentMatchView,
   matchLabel,
+  playerById,
   sourceLabel,
 } from "@/types/tournament-manager";
 import { ArrowUpRight, ChevronLeft, ChevronRight, Search } from "lucide-react";
@@ -336,12 +338,22 @@ export function MatchesPanel({
                           side === "a" ? match.playerAId : match.playerBId;
                         const winner =
                           id !== undefined && match.winnerId === id;
+                        const player = playerById(view.players, id);
                         return (
                           <p
                             key={side}
                             className={`break-words font-display text-sm font-bold ${winner ? "text-primary" : id === undefined ? "text-base-content/40" : "text-base-content"}`}
                           >
-                            {side === "a" ? playerA : playerB}
+                            {player ? (
+                              <PlayerIdentity
+                                player={player}
+                                nameClassName="break-words"
+                              />
+                            ) : side === "a" ? (
+                              playerA
+                            ) : (
+                              playerB
+                            )}
                           </p>
                         );
                       })}

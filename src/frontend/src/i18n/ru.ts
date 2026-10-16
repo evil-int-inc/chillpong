@@ -871,7 +871,7 @@ export const ru = {
   "Link Telegram to your existing member account. Linking replaces your current username with your Telegram username.":
     "Свяжите Telegram со своим аккаунтом. Ваш текущий никнейм будет заменён никнеймом из Telegram.",
   "Linked Telegram account": "Связанный аккаунт Telegram",
-  "Sync Telegram username": "Обновить никнейм из Telegram",
+  "Sync Telegram profile": "Обновить профиль из Telegram",
   "Telegram linking is not configured yet. Ask an admin to set the public Login Client ID.":
     "Связь с Telegram ещё не настроена. Попросите администратора указать публичный Login Client ID.",
   "Unlink Telegram": "Удалить связь с Telegram",
@@ -889,6 +889,8 @@ export const ru = {
     "Связь с Telegram не завершена. Разрешите всплывающие окна или повторите попытку в браузере.",
   "Telegram linking was cancelled or could not be completed. Try again.":
     "Связь с Telegram отменена или не завершена. Попробуйте снова.",
+  "This bot is using legacy Telegram login. Enable the new Login Widget in BotFather and register this site's URLs.":
+    "Этот бот использует устаревший вход через Telegram. Включите новый Login Widget в BotFather и добавьте разрешённые URL этого сайта.",
   "Telegram linking settings": "Настройки связи с Telegram",
   "Use the public Login Client ID from BotFather. Leave blank to disable linking. Bot tokens and client secrets are not needed here.":
     "Укажите публичный Login Client ID из BotFather. Оставьте поле пустым, чтобы отключить связь. Токены бота и секреты клиента здесь не нужны.",

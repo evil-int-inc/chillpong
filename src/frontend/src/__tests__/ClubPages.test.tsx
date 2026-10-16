@@ -93,6 +93,19 @@ beforeEach(() => {
 });
 
 describe("public club directory and tournament board", () => {
+  it("uses the shared avatar for a member's saved Telegram photo", async () => {
+    state.actor.listUsers.mockResolvedValue([
+      makeUser({ avatarUrl: "https://t.me/i/userpic/320/nino.jpg" }),
+    ]);
+    renderPage(<UsersPage />);
+    const avatar = await screen.findByRole("img", { name: "Nino" });
+    expect(avatar).toHaveAttribute(
+      "src",
+      "https://t.me/i/userpic/320/nino.jpg",
+    );
+    expect(avatar.closest("[data-ocid=avatar]")).toHaveClass("avatar");
+  });
+
   it("lets visitors browse users without creating or editing them", async () => {
     renderPage(<UsersPage />);
 

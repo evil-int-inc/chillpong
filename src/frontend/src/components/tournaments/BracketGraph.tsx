@@ -1,3 +1,4 @@
+import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { type LocalizedMessage, useI18n } from "@/i18n";
 import {
   BRACKET_LABELS,
@@ -394,7 +395,10 @@ export function BracketGraph({
                   onClick={() => findNextMatch(id)}
                 >
                   <span className="min-w-0 break-words font-display text-sm font-bold">
-                    {player.name}
+                    <PlayerIdentity
+                      player={player}
+                      nameClassName="break-words"
+                    />
                   </span>
                   <span className="shrink-0 font-mono text-[9px] text-base-content/45">
                     {registration} / {t(player.status)}

@@ -46,24 +46,39 @@ export function TelegramLink({
     };
   }, [sdk.data]);
 
-  function saved(profile: User, message: string) {
+  async function saved(profile: User, message: string) {
+    // Closing the popup can refocus the app and start reads of the old state.
+    // Cancel those reads before publishing the verified mutation result so a
+    // delayed response cannot restore the previous username or link status.
+    await Promise.all([
+      client.cancelQueries({ queryKey: ["profile", principal], exact: true }),
+      client.cancelQueries({
+        queryKey: ["telegramLink", principal],
+        exact: true,
+      }),
+    ]);
     client.setQueryData(["profile", principal], profile);
     void client.invalidateQueries({ queryKey: ["users"] });
     void client.invalidateQueries({ queryKey: ["adminUsers"] });
+    void client.invalidateQueries({ queryKey: ["players"] });
+    void client.invalidateQueries({ queryKey: ["tournamentState"] });
     void client.invalidateQueries({ queryKey: ["telegramLink", principal] });
     setSuccess(message);
   }
   const verify = useMutation({
     mutationFn: (token: string) => actor.completeTelegramLink(token),
-    onSuccess: (profile) => {
-      saved(profile, "Telegram linked. Your username now matches Telegram.");
+    onSuccess: async (profile) => {
+      await saved(
+        profile,
+        "Telegram linked. Your username now matches Telegram.",
+      );
       void challenge.refetch();
     },
   });
   const unlink = useMutation({
     mutationFn: () => actor.unlinkTelegram(),
-    onSuccess: (profile) => {
-      saved(profile, "Telegram unlinked. Your username is unchanged.");
+    onSuccess: async (profile) => {
+      await saved(profile, "Telegram unlinked. Your username is unchanged.");
       void challenge.refetch();
     },
   });
@@ -131,7 +146,9 @@ export function TelegramLink({
           setWaiting(false);
           if (result.error || !result.id_token) {
             setLoginError(
-              "Telegram linking was cancelled or could not be completed. Try again.",
+              result.error === "legacy_login"
+                ? "This bot is using legacy Telegram login. Enable the new Login Widget in BotFather and register this site's URLs."
+                : "Telegram linking was cancelled or could not be completed. Try again.",
             );
             return;
           }
@@ -219,7 +236,7 @@ export function TelegramLink({
           onClick={start}
         >
           <Link2 className="size-4" aria-hidden="true" />
-          {link.data ? t("Sync Telegram username") : t("Link Telegram")}
+          {link.data ? t("Sync Telegram profile") : t("Link Telegram")}
         </Button>
         {waiting ? (
           <Button

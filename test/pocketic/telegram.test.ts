@@ -28,6 +28,7 @@ const keys = JSON.stringify({
 	keys: [{ ...jwk, alg: "RS256", kid: keyId, use: "sig" }],
 });
 const clientId = "8851986381";
+const avatarUrl = "https://cdn.telegram.org/file/test-avatar.jpg?size=320";
 let pic: PocketIc;
 let actor: Actor<_SERVICE>;
 let canisterId: typeof owner;
@@ -46,6 +47,7 @@ function claims(request: LinkRequest, overrides: Record<string, unknown> = {}) {
 		exp: issuedAt + 3_600,
 		nonce: request.nonce,
 		preferred_username: "Telegram_Player",
+		picture: avatarUrl,
 		...overrides,
 	};
 }
@@ -204,6 +206,13 @@ describe("verified Telegram profile linking", () => {
 		expect(saved.id.toText()).toBe(owner.toText());
 		expect(saved.role).toEqual([{ admin: null }]);
 		expect(saved.bio).toEqual(["Keep this bio"]);
+		expect(saved.avatarUrl).toEqual([avatarUrl]);
+		expect((await actor.getCallerProfile())[0]?.avatarUrl).toEqual([avatarUrl]);
+		expect(
+			(await actor.listUsersWithRoles()).find(
+				(user) => user.id.toText() === owner.toText(),
+			)?.avatarUrl,
+		).toEqual([avatarUrl]);
 		expect(await actor.getUserByUsername("existing_name")).toEqual([]);
 		expect(
 			(await actor.getUserByUsername("TELEGRAM_PLAYER"))[0]?.id.toText(),
@@ -212,6 +221,98 @@ describe("verified Telegram profile linking", () => {
 			subject: "123456789",
 			username: "telegram_player",
 		});
+	});
+
+	it.each([
+		["missing", undefined],
+		["non-string", { url: avatarUrl }],
+		["empty", ""],
+		["non-HTTPS", "http://cdn.telegram.org/photo.jpg"],
+		["script", "javascript:alert(1)"],
+		["data URL", "data:image/png;base64,AAAA"],
+		["credentials", "https://trusted.example@attacker.example/photo.jpg"],
+		["missing host", "https:///photo.jpg"],
+		["invalid host", "https://bad_host.example/photo.jpg"],
+		["invalid port", "https://cdn.telegram.org:99999/photo.jpg"],
+		["backslash", "https://cdn.telegram.org\\@attacker.example/photo.jpg"],
+		["control character", "https://cdn.telegram.org/\nphoto.jpg"],
+		["oversized", `https://cdn.telegram.org/${"a".repeat(2048)}`],
+	])(
+		"links successfully without an avatar for a %s picture claim",
+		async (_description, picture) => {
+			const request = await actor.startTelegramLink();
+			const saved = await completeWithKeys(token(request, { picture }));
+			expect(saved.username).toBe("telegram_player");
+			expect(saved.avatarUrl).toEqual([]);
+			expect((await actor.getCallerProfile())[0]?.avatarUrl).toEqual([]);
+		},
+	);
+
+	it("projects current linked member avatars to the player directory and every tournament response", async () => {
+		const room = await actor.createTournament({
+			title: "Avatar cup",
+			description: "",
+			venue: "ChillPong",
+			startsAt: 1n,
+			format: { singles: null },
+			capacity: 8n,
+			status: { upcoming: null },
+		});
+		const player = await actor.createPlayer({
+			name: "Linked player",
+			skillLevel: 3n,
+		});
+		expect(player.avatarUrl).toEqual([]);
+		await actor.applyTournamentCommand(room.id, {
+			addExistingPlayer: { globalPlayerId: player.id },
+		});
+		const request = await actor.startTelegramLink();
+		await completeWithKeys(token(request));
+		const linked = await actor.linkPlayerToUser(player.id, owner);
+		expect(linked.avatarUrl).toEqual([avatarUrl]);
+		expect(
+			(await actor.listPlayers()).find((entry) => entry.id === player.id)
+				?.avatarUrl,
+		).toEqual([avatarUrl]);
+		expect(
+			(await actor.getTournamentState(room.id))[0]?.players[0],
+		).toMatchObject({ userId: [owner], avatarUrl: [avatarUrl] });
+		const command = await actor.applyTournamentCommand(room.id, {
+			configure: { elimination: { singleElimination: null }, tableCount: 2n },
+		});
+		expect(command.players[0]?.avatarUrl).toEqual([avatarUrl]);
+		const next = await nextRequest();
+		const nextAvatar = "https://cdn.telegram.org/file/replaced.jpg";
+		await actor.completeTelegramLink(token(next, { picture: nextAvatar }));
+		expect(
+			(await actor.getTournamentState(room.id))[0]?.players[0]?.avatarUrl,
+		).toEqual([nextAvatar]);
+		expect(
+			(
+				await actor.updatePlayer(player.id, {
+					name: "Updated linked player",
+					skillLevel: 4n,
+				})
+			).avatarUrl,
+		).toEqual([nextAvatar]);
+		expect((await actor.unlinkPlayerFromUser(player.id)).avatarUrl).toEqual([]);
+		expect(
+			(await actor.getTournamentState(room.id))[0]?.players[0],
+		).toMatchObject({ userId: [], avatarUrl: [] });
+		expect((await actor.getCallerProfile())[0]?.avatarUrl).toEqual([
+			nextAvatar,
+		]);
+	});
+
+	it("clears an imported avatar when a newly verified Telegram profile no longer shares a picture", async () => {
+		const request = await actor.startTelegramLink();
+		await completeWithKeys(token(request));
+		const next = await nextRequest();
+		const saved = await actor.completeTelegramLink(
+			token(next, { picture: undefined }),
+		);
+		expect(saved.avatarUrl).toEqual([]);
+		expect((await actor.getCallerProfile())[0]?.avatarUrl).toEqual([]);
 	});
 
 	it("consumes the nonce and rejects replay of a successful link", async () => {
@@ -338,13 +439,20 @@ describe("verified Telegram profile linking", () => {
 
 	it("rejects a token signed with an unrelated RSA key", async () => {
 		const request = await actor.startTelegramLink();
-		const message = token(request).split(".").slice(0, 2).join(".");
+		const before = (await actor.getCallerProfile())[0];
+		const message = token(request, {
+			picture: "https://attacker.example/avatar.jpg",
+		})
+			.split(".")
+			.slice(0, 2)
+			.join(".");
 		const unrelated = generateKeyPairSync("rsa", { modulusLength: 2048 });
 		const proof = `${message}.${sign("RSA-SHA256", Buffer.from(message), unrelated.privateKey).toString("base64url")}`;
 		await expect(completeWithKeys(proof)).rejects.toThrow(
 			/Invalid Telegram token signature/,
 		);
 		expect(await actor.getCallerTelegramLink()).toEqual([]);
+		expect((await actor.getCallerProfile())[0]).toEqual(before);
 	});
 
 	it.each([
@@ -467,6 +575,7 @@ describe("verified Telegram profile linking", () => {
 		const user = await actor.unlinkTelegram();
 		expect(user.username).toBe("telegram_player");
 		expect(user.displayName).toBe("Existing Player Name");
+		expect(user.avatarUrl).toEqual([avatarUrl]);
 		expect(await actor.getCallerTelegramLink()).toEqual([]);
 		const next = await nextRequest(member);
 		const linked = await actor.completeTelegramLink(

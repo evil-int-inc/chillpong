@@ -1,3 +1,4 @@
+import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { Button } from "@/components/ui/Button";
 import { useI18n } from "@/i18n";
 import { countLabel } from "@/i18n/plurals";
@@ -348,7 +349,11 @@ export function PlayersPanel({
                       scope="row"
                       className="order-first col-span-2 block min-w-0 break-words font-display text-xl font-bold lg:table-cell lg:max-w-64 lg:px-3 lg:py-4 lg:text-sm"
                     >
-                      {player.name}
+                      <PlayerIdentity
+                        player={player}
+                        size="sm"
+                        nameClassName="break-words"
+                      />
                     </th>
                     <td className="block min-w-0 lg:table-cell lg:px-3 lg:py-4">
                       <p

@@ -20,7 +20,7 @@ module {
   let clockSkewSeconds : Int = 60;
 
   public type Outcome<T> = { #ok : T; #err : Text };
-  public type Claims = { subject : Text; username : Text };
+  public type Claims = { subject : Text; username : Text; avatarUrl : ?Text };
   public type Token = {
     kid : Text;
     message : Blob;
@@ -117,6 +117,34 @@ module {
     true;
   };
 
+  // The picture is optional profile metadata, never an identity proof. Accept
+  // only a bounded HTTPS URL from the signed payload; malformed/missing photos
+  // must not prevent linking. No image is fetched by the canister.
+  func picture(payload : Json.Json) : ?Text {
+    let ?value = textField(payload, "picture") else return null;
+    if (value.size() > 2_048 or value.encodeUtf8().size() > 2_048) { return null };
+    let ?rest = value.stripStart(#text "https://") else return null;
+    for (c in value.chars()) {
+      if (c <= ' ' or c == '\u{007f}' or c == '\\' or c == '\"' or c == '<' or c == '>') { return null };
+    };
+    let ?authority = rest.split(#predicate(func c = c == '/' or c == '?' or c == '#')).next() else return null;
+    let hostParts = authority.split(#char ':').toArray();
+    if (hostParts.size() == 0 or hostParts.size() > 2) { return null };
+    let host = hostParts[0];
+    if (host.size() == 0 or host.size() > 253) { return null };
+    for (segment in host.split(#char '.')) {
+      if (segment.size() == 0 or segment.size() > 63 or segment.startsWith(#char '-') or segment.endsWith(#char '-')) { return null };
+      for (c in segment.chars()) {
+        if (not ((c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '-')) { return null };
+      };
+    };
+    if (hostParts.size() == 2) {
+      let ?port = Nat.fromText(hostParts[1]) else return null;
+      if (port == 0 or port > 65_535) { return null };
+    };
+    ?value;
+  };
+
   public func parseToken(idToken : Text, challenge : Telegram.Challenge, now : Int) : Outcome<Token> {
     if (idToken.size() > maxTokenBytes or idToken.encodeUtf8().size() > maxTokenBytes) { return #err("Telegram token is too large") };
     if (now >= challenge.expiresAt) { return #err("Telegram link expired. Try linking again.") };
@@ -152,7 +180,7 @@ module {
     };
     let ?username = textField(payload, "preferred_username") else return #err("Set a Telegram username before linking.");
     if (not validUsername(username)) { return #err("Set a valid Telegram username before linking.") };
-    #ok({ kid; message = Text.encodeUtf8(parts[0] # "." # parts[1]); signature; claims = { subject; username = username.toLower() } });
+    #ok({ kid; message = Text.encodeUtf8(parts[0] # "." # parts[1]); signature; claims = { subject; username = username.toLower(); avatarUrl = picture(payload) } });
   };
 
   func fromBytes(bytes : Blob) : Nat {

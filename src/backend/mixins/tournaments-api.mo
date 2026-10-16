@@ -1,11 +1,13 @@
 import Map "mo:core/Map";
 import Nat "mo:core/Nat";
+import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 import Time "mo:core/Time";
 import AccessControl "mo:caffeineai-authorization/access-control";
 import Common "../types/common";
 import Tournaments "../types/tournaments";
 import Players "../types/players";
+import Users "../types/users";
 import PlayersLib "../lib/players";
 import TournamentsLib "../lib/tournaments";
 import RolesLib "../lib/roles";
@@ -18,7 +20,25 @@ mixin (
   tournamentStates : Map.Map<Nat, Tournaments.TournamentStateData>,
   counters : Common.Counters,
   players : Map.Map<Nat, Players.GlobalPlayer>,
+  users : Map.Map<Common.UserId, Users.User>,
 ) {
+  func tournamentView(id : Nat, state : Tournaments.TournamentStateData) : Tournaments.TournamentState {
+    let result = Bracket.view(id, state);
+    { result with players = result.players.map(func player {
+      let linked = switch (player.globalPlayerId) {
+        case (?globalId) { players.get(globalId) };
+        case null { null };
+      };
+      switch (linked) {
+        case (?identity) {
+          let account = PlayersLib.view(identity, users);
+          { player with userId = account.userId; avatarUrl = account.avatarUrl };
+        };
+        case null { player };
+      };
+    }) };
+  };
+
   public query func getTournaments() : async [Tournaments.Tournament] {
     TournamentsLib.listTournaments(tournaments);
   };
@@ -46,7 +66,7 @@ mixin (
 
   public query func getTournamentState(id : Nat) : async ?Tournaments.TournamentState {
     switch (tournaments.get(id)) {
-      case (?tournament) { ?Bracket.view(id, tournamentStates.get(id) ?? Bracket.initial(tournament.createdAt)) };
+      case (?tournament) { ?tournamentView(id, tournamentStates.get(id) ?? Bracket.initial(tournament.createdAt)) };
       case null { null };
     };
   };
@@ -75,6 +95,6 @@ mixin (
     tournamentStates.add(id, state);
     let status : Tournaments.TournamentStatus = if (not state.started) { #upcoming } else if (Bracket.champion(state) == null) { #live } else { #completed };
     tournaments.add(id, { tournament with status; updatedAt = now });
-    Bracket.view(id, state);
+    tournamentView(id, state);
   };
 };

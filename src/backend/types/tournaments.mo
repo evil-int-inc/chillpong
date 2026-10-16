@@ -26,6 +26,8 @@ module {
   public type TournamentPlayer = {
     id : Nat;
     globalPlayerId : ?Nat;
+    userId : ?Common.UserId;
+    avatarUrl : ?Text;
     name : Text;
     skillLevel : Nat;
     registrationNumber : Nat;

@@ -5,8 +5,17 @@ import Runtime "mo:core/Runtime";
 import Text "mo:core/Text";
 import Common "../types/common";
 import Players "../types/players";
+import Users "../types/users";
 
 module {
+  public func view(player : Players.GlobalPlayer, users : Map.Map<Common.UserId, Users.User>) : Players.GlobalPlayerView {
+    let avatarUrl = switch (player.userId) {
+      case (?userId) { switch (users.get(userId)) { case (?user) { user.avatarUrl }; case null { null } } };
+      case null { null };
+    };
+    { player with avatarUrl };
+  };
+
   public func normalizeInput(input : Players.PlayerInput) : Players.PlayerInput {
     let name = input.name.trim(#predicate(Char.isWhitespace));
     if (name.size() == 0 or name.size() > 80) { Runtime.trap("Player name must be between 1 and 80 characters") };

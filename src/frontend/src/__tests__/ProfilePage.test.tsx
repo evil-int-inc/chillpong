@@ -364,6 +364,148 @@ describe("verified Telegram profile linking", () => {
     ).toBeNull();
   });
 
+  it("explains legacy Telegram login without changing the profile or linking unsigned account fields", async () => {
+    const user = userEvent.setup();
+    enableTelegram();
+    const page = renderPage();
+    await user.click(await readyTelegramButton());
+    await act(async () =>
+      telegramCallback()({
+        error: "legacy_login",
+        user: { id: 123, username: "unsigned_telegram" },
+      }),
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "This bot is using legacy Telegram login. Enable the new Login Widget in BotFather and register this site's URLs.",
+    );
+    expect(state.actor.completeTelegramLink).not.toHaveBeenCalled();
+    expect(state.actor.saveCallerProfile).not.toHaveBeenCalled();
+    expect(
+      screen.getByRole("textbox", { name: "Username / optional" }),
+    ).toHaveValue("previous-handle");
+    expect(
+      page.client.getQueryData<User>(["profile", member.toString()])?.username,
+    ).toBe("previous-handle");
+    expect(
+      screen.queryByText("Linked Telegram account", { exact: false }),
+    ).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "Unlink Telegram" }),
+    ).toBeNull();
+    expect(await readyTelegramButton()).toBeEnabled();
+  });
+
+  it("updates the linked Telegram avatar without refreshing, persists it, and ignores stale popup-focus reads", async () => {
+    const user = userEvent.setup();
+    enableTelegram();
+    let linked = false;
+    const verifiedLink = {
+      username: "verified_telegram",
+      subject: "verified-telegram-account",
+      linkedAt: 2n,
+    };
+    state.actor.getCallerTelegramLink.mockImplementation(async () =>
+      linked ? verifiedLink : null,
+    );
+    state.actor.completeTelegramLink.mockImplementation(async () => {
+      profile = {
+        ...profile!,
+        username: verifiedLink.username,
+        avatarUrl: "https://t.me/i/userpic/320/verified.jpg",
+      };
+      linked = true;
+      return { ...profile };
+    });
+    const page = renderPage();
+    await user.click(await readyTelegramButton());
+
+    // A focus refresh may have read the previous state before the canister
+    // completes verification, but deliver its response afterwards.
+    const oldProfile = { ...profile! };
+    let finishProfileRead!: (value: User) => void;
+    let finishLinkRead!: (value: null) => void;
+    state.actor.getCallerProfile.mockImplementationOnce(
+      () =>
+        new Promise<User>((resolve) => {
+          finishProfileRead = resolve;
+        }),
+    );
+    state.actor.getCallerTelegramLink.mockImplementationOnce(
+      () =>
+        new Promise<null>((resolve) => {
+          finishLinkRead = resolve;
+        }),
+    );
+    const staleReads: Promise<void>[] = [];
+    await act(async () => {
+      staleReads.push(
+        page.client.refetchQueries({
+          queryKey: ["profile", member.toString()],
+          exact: true,
+        }),
+        page.client.refetchQueries({
+          queryKey: ["telegramLink", member.toString()],
+          exact: true,
+        }),
+      );
+    });
+    await act(async () =>
+      telegramCallback()({ id_token: "verified-signed-token" }),
+    );
+    expect(
+      await screen.findByText("Linked Telegram account / @verified_telegram"),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("textbox", { name: "Username / optional" }),
+    ).toHaveValue(verifiedLink.username);
+    expect(
+      screen.getByRole("button", { name: "Unlink Telegram" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("img", { name: "Saved Name avatar" }),
+    ).toHaveAttribute("src", "https://t.me/i/userpic/320/verified.jpg");
+    expect(page.container.querySelector("input[type=file]")).toBeNull();
+    expect(screen.queryByRole("button", { name: /upload/i })).toBeNull();
+
+    await act(async () => {
+      finishProfileRead(oldProfile);
+      finishLinkRead(null);
+      await Promise.all(staleReads);
+    });
+    expect(
+      page.client.getQueryData<User>(["profile", member.toString()])?.username,
+    ).toBe(verifiedLink.username);
+    expect(
+      page.client.getQueryData(["telegramLink", member.toString()]),
+    ).toEqual(verifiedLink);
+    expect(
+      screen.getByRole("textbox", { name: "Username / optional" }),
+    ).toHaveValue(verifiedLink.username);
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(
+      screen.getByRole("img", { name: "Saved Name avatar" }),
+    ).toHaveAttribute("src", "https://t.me/i/userpic/320/verified.jpg");
+
+    page.unmount();
+    const reloaded = renderPage();
+    expect(
+      await screen.findByText("Linked Telegram account / @verified_telegram"),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("textbox", { name: "Username / optional" }),
+    ).toHaveValue(verifiedLink.username);
+    expect(
+      reloaded.client.getQueryData<User>(["profile", member.toString()])
+        ?.username,
+    ).toBe(verifiedLink.username);
+    expect(
+      screen.getByRole("img", { name: "Saved Name avatar" }),
+    ).toHaveAttribute("src", "https://t.me/i/userpic/320/verified.jpg");
+    expect(state.actor.completeTelegramLink).toHaveBeenCalledExactlyOnceWith(
+      "verified-signed-token",
+    );
+  });
+
   it("cancels a popup and ignores its late callback even after a new attempt starts", async () => {
     const user = userEvent.setup();
     enableTelegram();
@@ -400,6 +542,9 @@ describe("verified Telegram profile linking", () => {
       return { ...profile! };
     });
     const page = renderPage();
+    expect(
+      await screen.findByRole("button", { name: "Sync Telegram profile" }),
+    ).toBeVisible();
     await user.click(
       await screen.findByRole("button", { name: "Unlink Telegram" }),
     );

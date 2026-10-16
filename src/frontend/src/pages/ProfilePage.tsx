@@ -5,6 +5,7 @@ import {
   createActor,
 } from "@/backend";
 import { TelegramLink } from "@/components/profile/TelegramLink";
+import { UserAvatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { Input } from "@/components/ui/Input";
@@ -13,7 +14,7 @@ import { translateError, useI18n } from "@/i18n";
 import { authService } from "@/services/auth";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, Loader2, Save, UserRound } from "lucide-react";
+import { CheckCircle2, Loader2, Save } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 function ProfileEditor({
@@ -102,7 +103,14 @@ function ProfileEditor({
       }}
     >
       <div className="flex items-center gap-3 border-b border-base-300 pb-5">
-        <UserRound className="size-5 text-primary" aria-hidden="true" />
+        <UserAvatar
+          user={profile}
+          name={profile?.displayName || profile?.username || t("Member")}
+          alt={t("{v1} avatar", {
+            v1: profile?.displayName || profile?.username || t("Member"),
+          })}
+          size="xl"
+        />
         <h2 className="font-display text-xl font-semibold uppercase">
           {t("Your club identity")}
         </h2>

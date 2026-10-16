@@ -27,7 +27,10 @@ function previousFactory(): typeof idlFactory {
 function withoutGlobalIds(state: TournamentState) {
 	return {
 		...state,
-		players: state.players.map(({ globalPlayerId: _, ...player }) => player),
+		players: state.players.map(
+			({ globalPlayerId: _, userId: _user, avatarUrl: _avatar, ...player }) =>
+				player,
+		),
 	};
 }
 
@@ -110,8 +113,12 @@ describe.skipIf(!previousWasm || !previousDeclarations)(
 			});
 			const current = pic.createActor<_SERVICE>(idlFactory, fixture.canisterId);
 			current.setPrincipal(owner);
-			expect(await current.listUsers()).toEqual(profiles);
-			expect(await current.listUsersWithRoles()).toEqual(roles);
+			expect(await current.listUsers()).toEqual(
+				profiles.map((user) => ({ ...user, avatarUrl: [] })),
+			);
+			expect(await current.listUsersWithRoles()).toEqual(
+				roles.map((user) => ({ ...user, avatarUrl: [] })),
+			);
 			expect(await current.getMyRole()).toEqual([{ admin: null }]);
 			expect(await current.getTelegramLinkConfig()).toEqual({
 				clientId: ["8851986381"],

@@ -1,4 +1,5 @@
-import { type GlobalPlayer, createActor } from "@/backend";
+import { type GlobalPlayerView as GlobalPlayer, createActor } from "@/backend";
+import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { Button } from "@/components/ui/Button";
 import { translateError, useI18n } from "@/i18n";
 import { PLAYERS_QUERY_KEY, playerService } from "@/services/players";
@@ -243,7 +244,11 @@ export function SharedPlayersDirectory({ isAdmin }: { isAdmin: boolean }) {
             >
               <div className="min-w-0">
                 <p className="break-words font-display text-xl font-bold uppercase">
-                  {player.name}
+                  <PlayerIdentity
+                    player={player}
+                    size="sm"
+                    nameClassName="break-words"
+                  />
                 </p>
                 <p className="mt-1 font-mono text-xs text-base-content/45">
                   {registrationLabel(player.id)} / L

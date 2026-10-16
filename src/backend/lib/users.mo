@@ -84,6 +84,7 @@ module {
       displayName = normalized.displayName;
       username = normalized.username;
       avatar = null;
+      avatarUrl = null;
       bio = normalized.bio;
       createdAt = Time.now();
       role;
@@ -123,6 +124,7 @@ module {
     usernames : Map.Map<Text, Common.UserId>,
     id : Common.UserId,
     telegramUsername : ?Text,
+    avatarUrl : ?Text,
     role : ?Users.Role,
   ) : Users.User {
     let username = canonicalUsername(telegramUsername ?? "");
@@ -141,7 +143,7 @@ module {
     };
     if (existing.username != "") { usernames.remove(existing.username) };
     if (username != "") { usernames.add(username, id) };
-    let updated = { existing with username };
+    let updated = { existing with username; avatarUrl };
     users.add(id, updated);
     updated;
   };
@@ -215,7 +217,7 @@ module {
 
   public func listUserRoles(users : Map.Map<Common.UserId, Users.User>) : [Users.UserRoleView] {
     listUsers(users).map(func u = {
-      id = u.id; displayName = u.displayName; username = u.username; role = u.role
+      id = u.id; displayName = u.displayName; username = u.username; avatarUrl = u.avatarUrl; role = u.role
     });
   };
 };

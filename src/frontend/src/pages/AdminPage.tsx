@@ -1,7 +1,7 @@
 import { Role, createActor } from "@/backend";
 import { LinkPlayerDialog } from "@/components/players/LinkPlayerDialog";
 import { TelegramSettings } from "@/components/profile/TelegramSettings";
-import { Avatar } from "@/components/ui/Avatar";
+import { UserAvatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorState } from "@/components/ui/ErrorState";
@@ -309,7 +309,8 @@ export function AdminPage() {
                   data-ocid={`admin_user.item.${index + 1}`}
                   className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-4 p-5 md:grid-cols-[auto_minmax(0,1fr)_auto]"
                 >
-                  <Avatar
+                  <UserAvatar
+                    user={user}
                     name={
                       (user.displayName === "Signed-in member" && !user.username
                         ? t("Signed-in member")

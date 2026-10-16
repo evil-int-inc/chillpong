@@ -1,4 +1,8 @@
-import { type GlobalPlayer, Role, type UserRoleView } from "@/backend";
+import {
+  type GlobalPlayerView as GlobalPlayer,
+  Role,
+  type UserRoleView,
+} from "@/backend";
 import { AdminPage } from "@/pages/AdminPage";
 import { Principal } from "@icp-sdk/core/principal";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -112,6 +116,17 @@ beforeEach(() => {
 });
 
 describe("authenticated account administration", () => {
+  it("shows the saved Telegram avatar alongside the authenticated account", async () => {
+    accounts[2].avatarUrl = "https://t.me/i/userpic/320/nino.jpg";
+    renderPage();
+    const avatar = await screen.findByRole("img", { name: "Nino avatar" });
+    expect(avatar).toHaveAttribute(
+      "src",
+      "https://t.me/i/userpic/320/nino.jpg",
+    );
+    expect(avatar.closest("li")).toHaveTextContent(other.toString());
+  });
+
   it("filters by full and partial member IDs and clears missed searches", async () => {
     const user = userEvent.setup();
     renderPage();

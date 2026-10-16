@@ -1,3 +1,4 @@
+import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { useI18n } from "@/i18n";
 import {
   BRACKET_LABELS,
@@ -104,7 +105,16 @@ export function MatchCard({
                 <p
                   className={`truncate font-display font-bold ${compact ? "text-sm" : "text-lg"}`}
                 >
-                  {player?.name ?? sourceLabel(side.source, matches)}
+                  {player ? (
+                    <PlayerIdentity
+                      player={player}
+                      size={compact ? "xxs" : "xs"}
+                      nameClassName="truncate"
+                      className="max-w-full"
+                    />
+                  ) : (
+                    sourceLabel(side.source, matches)
+                  )}
                 </p>
                 {player ? (
                   <p className="mt-0.5 font-mono text-[9px] font-normal text-base-content/45">

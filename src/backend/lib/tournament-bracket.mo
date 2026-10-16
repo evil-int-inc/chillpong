@@ -349,7 +349,7 @@ module {
         };
       };
       {
-        id = item.id; globalPlayerId = item.globalPlayerId; name = item.name; skillLevel = item.skillLevel;
+        id = item.id; globalPlayerId = item.globalPlayerId; userId = null; avatarUrl = null; name = item.name; skillLevel = item.skillLevel;
         registrationNumber = item.registrationNumber; registeredAt = item.registeredAt;
         seed = seeds.get(item.id); status; losses = count;
         currentMatchId = switch (activeMatch) { case (?matchItem) { ?matchItem.id }; case null { null } };

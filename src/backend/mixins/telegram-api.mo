@@ -189,7 +189,7 @@ mixin (
     // Username collision validation precedes link mutation. A trap rolls back
     // this whole final message, preserving the old profile/link and nonce.
     let role = RolesLib.effectiveRole(accessControlState, users, owner, caller);
-    let saved = UsersLib.setVerifiedTelegramUsername(users, usernames, caller, ?verified.username, role);
+    let saved = UsersLib.setVerifiedTelegramUsername(users, usernames, caller, ?verified.username, verified.avatarUrl, role);
     switch (telegramLinks.get(caller)) {
       case (?old) { if (old.subject != verified.subject) { telegramOwners.remove(old.subject) } };
       case null {};

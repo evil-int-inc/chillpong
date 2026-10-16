@@ -873,7 +873,7 @@ export const ka = {
   "Link Telegram to your existing member account. Linking replaces your current username with your Telegram username.":
     "დააკავშირეთ Telegram თქვენს არსებულ ანგარიშთან. თქვენი მომხმარებლის სახელი ჩაანაცვლდება Telegram-ის მომხმარებლის სახელით.",
   "Linked Telegram account": "დაკავშირებული Telegram-ის ანგარიში",
-  "Sync Telegram username": "Telegram-ის მომხმარებლის სახელის განახლება",
+  "Sync Telegram profile": "Telegram-იდან პროფილის განახლება",
   "Telegram linking is not configured yet. Ask an admin to set the public Login Client ID.":
     "Telegram-ის დაკავშირება ჯერ არ არის გამართული. სთხოვეთ ადმინისტრატორს მიუთითოს საჯარო შესვლის კლიენტის ID.",
   "Unlink Telegram": "Telegram-ის კავშირის გაუქმება",
@@ -891,6 +891,8 @@ export const ka = {
     "Telegram-ის დაკავშირება ვერ დასრულდა. დაუშვით ამომხტარი ფანჯრები ან სცადეთ ხელახლა ბრაუზერში.",
   "Telegram linking was cancelled or could not be completed. Try again.":
     "Telegram-ის დაკავშირება გაუქმდა ან ვერ დასრულდა. სცადეთ ხელახლა.",
+  "This bot is using legacy Telegram login. Enable the new Login Widget in BotFather and register this site's URLs.":
+    "ეს ბოტი Telegram-ის შესვლის მოძველებულ მეთოდს იყენებს. ჩართეთ ახალი Login Widget BotFather-ში და დაამატეთ ამ საიტის ნებადართული URL-ები.",
   "Telegram linking settings": "Telegram-ის დაკავშირების პარამეტრები",
   "Use the public Login Client ID from BotFather. Leave blank to disable linking. Bot tokens and client secrets are not needed here.":
     "მიუთითეთ საჯარო შესვლის კლიენტის ID BotFather-იდან. დაკავშირების გასათიშად დატოვეთ ცარიელი. ბოტის ტოკენები და კლიენტის საიდუმლო გასაღებები აქ საჭირო არ არის.",

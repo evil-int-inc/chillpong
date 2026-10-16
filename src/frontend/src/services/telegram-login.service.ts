@@ -29,6 +29,8 @@ declare global {
 
 const TELEGRAM_ORIGIN = "https://oauth.telegram.org";
 const SDK_URL = "https://oauth.telegram.org/js/telegram-login.js?6";
+const POPUP_CLOSE_GRACE_MS = 1_000;
+
 class BrowserTelegramLogin implements TelegramLoginSdk {
   private dispose: (() => void) | undefined;
 
@@ -43,9 +45,8 @@ class BrowserTelegramLogin implements TelegramLoginSdk {
     callback: (result: TelegramLoginResult) => void,
   ): void {
     this.close();
-    // Telegram's browser SDK currently omits origin from this request,
-    // producing "origin required" even with a valid client/redirect URI.
-    // Keep its post_message flow and explicitly send the current site origin.
+    // Keep the site origin explicit. Bots without the new Login Widget enabled
+    // fall back to legacy login; reject that response below with a setup error.
     const url = new URL("/auth", TELEGRAM_ORIGIN);
     url.search = new URLSearchParams({
       response_type: "post_message",
@@ -67,6 +68,7 @@ class BrowserTelegramLogin implements TelegramLoginSdk {
 
     let pending = true;
     let timer: number | undefined;
+    let closeTimer: number | undefined;
     const finish = (result: TelegramLoginResult) => {
       if (!pending) return;
       this.close();
@@ -93,6 +95,10 @@ class BrowserTelegramLogin implements TelegramLoginSdk {
         // Only the signed token goes to the canister; all claims, including
         // the server nonce and client ID, are verified there as before.
         finish({ id_token: result.result });
+      } else if (result.result && typeof result.result === "object") {
+        // Legacy Login Widget returns a bot-token-signed user object, not the
+        // OIDC ID token verified by the canister. Do not treat it as a link.
+        finish({ error: "legacy_login" });
       } else {
         finish({ error: "missing_id_token" });
       }
@@ -100,6 +106,7 @@ class BrowserTelegramLogin implements TelegramLoginSdk {
     this.dispose = () => {
       pending = false;
       window.clearInterval(timer);
+      window.clearTimeout(closeTimer);
       window.removeEventListener("message", onMessage);
       try {
         popup.close();
@@ -109,7 +116,16 @@ class BrowserTelegramLogin implements TelegramLoginSdk {
     };
     window.addEventListener("message", onMessage);
     timer = window.setInterval(() => {
-      if (popup.closed) finish({ error: "popup_closed" });
+      if (popup.closed && closeTimer === undefined) {
+        window.clearInterval(timer);
+        // Telegram posts the result and then closes its popup. The close check
+        // can run before the queued message, especially after a suspended tab
+        // resumes. Keep the listener briefly so approval wins over cancellation.
+        closeTimer = window.setTimeout(
+          () => finish({ error: "popup_closed" }),
+          POPUP_CLOSE_GRACE_MS,
+        );
+      }
     }, 200);
     try {
       popup.focus();

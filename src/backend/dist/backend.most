@@ -92,6 +92,8 @@ type NewActor__1040413914 =
     usernames : Map__230067015<Text, UserId__233300904>;
     users : Map__230067015<UserId__233300904, User__739211136>
   };
+type NewActor__147081743 =
+  {users : Map__230067015<Principal, NewUser__741108202>};
 type NewActor__214184801 =
   {
     accessControlState : AccessControlState__201339279;
@@ -221,6 +223,17 @@ type NewUser__736721639 =
     displayName : Text;
     id : UserId__717334016;
     role : ?Role__349349103;
+    username : Text
+  };
+type NewUser__741108202 =
+  {
+    avatar : ?Blob;
+    avatarUrl : ?Text;
+    bio : ?Text;
+    createdAt : Int;
+    displayName : Text;
+    id : Principal;
+    role : ?Role__287442295;
     username : Text
   };
 type NewVideo__772532152 =
@@ -365,6 +378,8 @@ type OldActor__281766694 =
     usernames : Map__230067015<Text, UserId__359307712>;
     users : Map__230067015<UserId__359307712, User__877428867>
   };
+type OldActor__724703710 =
+  {users : Map__230067015<Principal, OldUser__599188639>};
 type OldActor__73935259 =
   {
     accessControlState : AccessControlState__201339279;
@@ -493,6 +508,16 @@ type OldUser__541675245 =
     id : UserId__717334016;
     username : Text
   };
+type OldUser__599188639 =
+  {
+    avatar : ?Blob;
+    bio : ?Text;
+    createdAt : Int;
+    displayName : Text;
+    id : Principal;
+    role : ?Role__287442295;
+    username : Text
+  };
 type OldUser__988560513 =
   {
     avatar : ?Text;
@@ -569,6 +594,7 @@ type Playlist__5791582 =
     videoIds : [Nat]
   };
 type Role__243528967 = {#admin};
+type Role__287442295 = {#admin};
 type Role__349349103 = {#admin};
 type Role__394731314 = {#admin};
 type Role__717780527 = {#admin};
@@ -982,6 +1008,7 @@ type User__877428867 =
 type User__98118558 =
   {
     avatar : ?ExternalBlob__220559234;
+    avatarUrl : ?Text;
     bio : ?Text;
     createdAt : Timestamp__301639476;
     displayName : Text;
@@ -1071,7 +1098,8 @@ type Video__47199758 =
   "20261004_000000_AddUserRoles" :
     (old : OldActor__916917201) -> NewActor__37944555;
   "20261004_095123" : (old : OldActor__970163513) -> NewActor__1040413914;
-  "20261012_000000" : (old : OldActor__281766694) -> NewActor__756050636
+  "20261012_000000" : (old : OldActor__281766694) -> NewActor__756050636;
+  "20261016_090000" : (old : OldActor__724703710) -> NewActor__147081743
 }
 actor  {
   stable accessControlState :

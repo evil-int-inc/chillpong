@@ -1,4 +1,5 @@
 import { createActor } from "@/backend";
+import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { Button } from "@/components/ui/Button";
 import { translateError, translateHistory, useI18n } from "@/i18n";
 import { countLabel } from "@/i18n/plurals";
@@ -321,7 +322,10 @@ function MovePlayerForm({
     >
       <p className="text-sm leading-relaxed text-base-content/60">
         {t("Place")}{" "}
-        <strong className="text-base-content">{player.name}</strong> {t("in")}{" "}
+        <strong className="text-base-content">
+          <PlayerIdentity player={player} />
+        </strong>{" "}
+        {t("in")}{" "}
         {entrant
           ? t("a pending winners-bracket slot")
           : t("their current unplayed bracket round")}
@@ -518,7 +522,15 @@ function MatchEditor({
                 <p
                   className={`font-display text-2xl font-bold ${side.id !== undefined && side.id === match.winnerId ? "text-primary" : ""}`}
                 >
-                  {player?.name ?? sourceLabel(side.source, view.matches)}
+                  {player ? (
+                    <PlayerIdentity
+                      player={player}
+                      size="sm"
+                      nameClassName="break-words"
+                    />
+                  ) : (
+                    sourceLabel(side.source, view.matches)
+                  )}
                 </p>
                 {player ? (
                   <p className="mt-1 font-mono text-[10px] text-base-content/45">
@@ -1244,7 +1256,7 @@ export function OrganizerDialogs({
             {modal.kind === "remove" ? (
               <div className="space-y-5">
                 <p className="font-display text-xl font-bold">
-                  {modal.player.name}{" "}
+                  <PlayerIdentity player={modal.player} size="sm" />{" "}
                   <span className="font-mono text-xs font-normal text-primary">
                     {registrationLabel(modal.player.registrationNumber)}
                   </span>

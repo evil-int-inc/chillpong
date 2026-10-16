@@ -1,4 +1,8 @@
-import { type GlobalPlayer, type UserRoleView, createActor } from "@/backend";
+import {
+  type GlobalPlayerView as GlobalPlayer,
+  type UserRoleView,
+  createActor,
+} from "@/backend";
 import { Button } from "@/components/ui/Button";
 import { translateError, useI18n } from "@/i18n";
 import { PLAYERS_QUERY_KEY, playerService } from "@/services/players";
@@ -62,6 +66,7 @@ export function LinkPlayerDialog({
       void queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
       void queryClient.invalidateQueries({ queryKey: ["users"] });
       void queryClient.invalidateQueries({ queryKey: ["profile"] });
+      void queryClient.invalidateQueries({ queryKey: ["tournamentState"] });
       onLinked(player, variables.unlink);
       onClose();
     },

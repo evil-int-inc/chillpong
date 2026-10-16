@@ -60,12 +60,13 @@ export type Error_ = {
         expected: Array<string>;
     };
 };
-export interface GlobalPlayer {
+export interface GlobalPlayerView {
     id: bigint;
     userId?: UserId;
     name: string;
     createdAt: Timestamp;
     updatedAt: Timestamp;
+    avatarUrl?: string;
     skillLevel: bigint;
 }
 export interface HttpHeader {
@@ -268,10 +269,12 @@ export interface TournamentPlayer {
     id: bigint;
     status: TournamentPlayerStatus;
     table?: bigint;
+    userId?: UserId;
     name: string;
     seed?: bigint;
     losses: bigint;
     registrationNumber: bigint;
+    avatarUrl?: string;
     globalPlayerId?: bigint;
     currentMatchId?: bigint;
     skillLevel: bigint;
@@ -304,6 +307,7 @@ export interface User {
     displayName: string;
     createdAt: Timestamp;
     role?: Role;
+    avatarUrl?: string;
     avatar?: ExternalBlob;
 }
 export type UserId = Principal;
@@ -317,6 +321,7 @@ export interface UserRoleView {
     username: string;
     displayName: string;
     role?: Role;
+    avatarUrl?: string;
 }
 export type Value = {
     __kind__: "int";
@@ -396,7 +401,7 @@ export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     bootstrapOwner(): Promise<void>;
     completeTelegramLink(idToken: string): Promise<User>;
-    createPlayer(input: PlayerInput): Promise<GlobalPlayer>;
+    createPlayer(input: PlayerInput): Promise<GlobalPlayerView>;
     createTournament(input: TournamentInput): Promise<Tournament>;
     createUser(userId: UserId, input: UserInput): Promise<User>;
     execute(qJson: string): Promise<Result>;
@@ -413,8 +418,8 @@ export interface backendInterface {
     getUserByUsername(username: string): Promise<User | null>;
     grantAdminRole(target: UserId): Promise<UserRoleView>;
     isCallerAdmin(): Promise<boolean>;
-    linkPlayerToUser(playerId: bigint, userId: UserId): Promise<GlobalPlayer>;
-    listPlayers(): Promise<Array<GlobalPlayer>>;
+    linkPlayerToUser(playerId: bigint, userId: UserId): Promise<GlobalPlayerView>;
+    listPlayers(): Promise<Array<GlobalPlayerView>>;
     listUsers(): Promise<Array<User>>;
     listUsersWithRoles(): Promise<Array<UserRoleView>>;
     revokeAdminRole(target: UserId): Promise<UserRoleView>;
@@ -426,9 +431,9 @@ export interface backendInterface {
         context: Uint8Array;
         response: HttpRequestResult;
     }): Promise<HttpRequestResult>;
-    unlinkPlayerFromUser(playerId: bigint): Promise<GlobalPlayer>;
+    unlinkPlayerFromUser(playerId: bigint): Promise<GlobalPlayerView>;
     unlinkTelegram(): Promise<User>;
-    updatePlayer(playerId: bigint, input: PlayerInput): Promise<GlobalPlayer>;
+    updatePlayer(playerId: bigint, input: PlayerInput): Promise<GlobalPlayerView>;
     updateTournament(id: bigint, input: TournamentInput): Promise<Tournament>;
     updateUser(userId: UserId, input: UserInput): Promise<User>;
 }

@@ -46,7 +46,7 @@ actor {
   include MixinAuthorization(accessControlState, null);
   include MixinObjectStorage();
   include UsersApi(accessControlState, users, usernames, owner);
-  include TournamentsApi(accessControlState, tournaments, tournamentStates, counters, players);
+  include TournamentsApi(accessControlState, tournaments, tournamentStates, counters, players, users);
   include PlayersApi(accessControlState, users, usernames, owner, players, counters);
   include TelegramApi(accessControlState, users, usernames, owner, telegramConfig, telegramLinks, telegramOwners, telegramChallenges, telegramCache);
   include RolesApi(accessControlState, users, owner);
@@ -55,7 +55,7 @@ actor {
   include Expose({
     entities = [
       users.toEntityManual("user", "User", "id")
-        .sample({ id = Principal.fromText("aaaaa-aa"); displayName = ""; username = ""; avatar = null; bio = null; createdAt = 0; role = null })
+        .sample({ id = Principal.fromText("aaaaa-aa"); displayName = ""; username = ""; avatar = null; avatarUrl = null; bio = null; createdAt = 0; role = null })
         .payload("id", func user = user.id)
         .payload("displayName", func user = user.displayName)
         .payload("username", func user = user.username)

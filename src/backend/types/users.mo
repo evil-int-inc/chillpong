@@ -11,6 +11,7 @@ module {
     displayName : Text;
     username : Text; // unique when nonempty
     avatar : ?Storage.ExternalBlob;
+    avatarUrl : ?Text; // Only the verified Telegram OIDC picture claim.
     bio : ?Text;
     createdAt : Common.Timestamp;
     role : ?Role;
@@ -33,6 +34,7 @@ module {
     id : Common.UserId;
     displayName : Text;
     username : Text;
+    avatarUrl : ?Text;
     role : ?Role;
   };
 };

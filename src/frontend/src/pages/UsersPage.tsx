@@ -1,4 +1,5 @@
 import { Role, type User, createActor } from "@/backend";
+import { UserAvatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -27,16 +28,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 const USERS_QUERY_KEY = ["users"] as const;
-
-function memberInitials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part.charAt(0))
-    .join("")
-    .toUpperCase();
-}
 
 function memberDate(timestamp: bigint) {
   return formatClubDate(new Date(Number(timestamp / 1_000_000n)), {
@@ -348,19 +339,12 @@ export function UsersPage() {
                 className="member-panel flex min-w-0 flex-col border border-base-300 bg-base-200/30 p-6"
               >
                 <div className="mb-7 flex items-start justify-between gap-3">
-                  <div className="member-avatar flex size-14 shrink-0 items-center justify-center overflow-hidden border border-base-300 bg-base-300 font-display text-xl font-bold text-primary">
-                    {user.avatar ? (
-                      <img
-                        src={user.avatar.getDirectURL()}
-                        alt=""
-                        className="size-full object-cover"
-                      />
-                    ) : (
-                      memberInitials(
-                        user.displayName || user.username || "Member",
-                      )
-                    )}
-                  </div>
+                  <UserAvatar
+                    user={user}
+                    name={user.displayName || user.username || t("Member")}
+                    size="xl"
+                    className="text-primary"
+                  />
                   {user.role === Role.admin ? (
                     <span className="technical-label flex items-center gap-1.5 text-primary">
                       <ShieldCheck className="size-3.5" aria-hidden="true" />{" "}
