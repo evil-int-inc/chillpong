@@ -45946,7 +45946,7 @@ const Button = reactExports.forwardRef(
     className,
     variant = "primary",
     size = "md",
-    loading: loading2 = false,
+    loading = false,
     fullWidth = false,
     disabled,
     children,
@@ -45967,11 +45967,11 @@ const Button = reactExports.forwardRef(
           fullWidth && "btn-block",
           className
         ),
-        disabled: disabled || loading2,
-        "aria-busy": loading2 || void 0,
+        disabled: disabled || loading,
+        "aria-busy": loading || void 0,
         ...props,
         children: [
-          loading2 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          loading ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "size-4 animate-spin", "aria-hidden": "true" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Loading") })
           ] }) : null,
@@ -49325,38 +49325,123 @@ function PlayersPage() {
     ] })
   ] });
 }
+const TELEGRAM_ORIGIN = "https://oauth.telegram.org";
 const SDK_URL = "https://oauth.telegram.org/js/telegram-login.js?6";
-let loading;
-function loadTelegramLogin() {
-  var _a2;
-  if ((_a2 = window.Telegram) == null ? void 0 : _a2.Login) return Promise.resolve(window.Telegram.Login);
-  if (loading) return loading;
-  loading = new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = SDK_URL;
-    script.async = true;
-    const timeout2 = window.setTimeout(() => fail(), 15e3);
-    function fail() {
-      window.clearTimeout(timeout2);
-      script.remove();
-      loading = void 0;
-      reject(
-        new Error(
-          "Couldn't load Telegram. Check your connection and try again."
-        )
-      );
-    }
-    script.onerror = fail;
-    script.onload = () => {
-      var _a3;
-      window.clearTimeout(timeout2);
-      if ((_a3 = window.Telegram) == null ? void 0 : _a3.Login) resolve(window.Telegram.Login);
-      else fail();
+class BrowserTelegramLogin {
+  constructor() {
+    __publicField(this, "dispose");
+  }
+  close() {
+    const cleanup = this.dispose;
+    this.dispose = void 0;
+    cleanup == null ? void 0 : cleanup();
+  }
+  auth(options, callback) {
+    this.close();
+    const url = new URL("/auth", TELEGRAM_ORIGIN);
+    url.search = new URLSearchParams({
+      response_type: "post_message",
+      client_id: String(options.client_id),
+      origin: window.location.origin,
+      redirect_uri: window.location.origin + window.location.pathname,
+      scope: ["openid", ...options.scope].join(" "),
+      nonce: options.nonce,
+      lang: options.lang
+    }).toString();
+    const popup = window.open(
+      url.href,
+      "chillpong_telegram_link",
+      "popup=yes,width=550,height=650"
+    );
+    if (!popup) throw new Error("Telegram popup was blocked");
+    let pending = true;
+    let timer;
+    const finish = (result) => {
+      if (!pending) return;
+      this.close();
+      callback(result);
     };
-    document.head.appendChild(script);
-  });
-  return loading;
+    const onMessage = (event) => {
+      if (event.origin !== TELEGRAM_ORIGIN || event.source !== popup) return;
+      let data = event.data;
+      if (typeof data === "string") {
+        try {
+          data = JSON.parse(data);
+        } catch {
+          return;
+        }
+      }
+      if (!data || typeof data !== "object") return;
+      const result = data;
+      if (result.event !== "auth_result") return;
+      if (typeof result.error === "string" && result.error) {
+        finish({ error: result.error });
+      } else if (typeof result.result === "string" && result.result) {
+        finish({ id_token: result.result });
+      } else {
+        finish({ error: "missing_id_token" });
+      }
+    };
+    this.dispose = () => {
+      pending = false;
+      window.clearInterval(timer);
+      window.removeEventListener("message", onMessage);
+      try {
+        popup.close();
+      } catch {
+      }
+    };
+    window.addEventListener("message", onMessage);
+    timer = window.setInterval(() => {
+      if (popup.closed) finish({ error: "popup_closed" });
+    }, 200);
+    try {
+      popup.focus();
+    } catch {
+    }
+  }
 }
+class TelegramLoginService {
+  constructor() {
+    __publicField(this, "loading");
+    __publicField(this, "browserLogin");
+  }
+  load() {
+    var _a2, _b2;
+    if (typeof ((_a2 = window.TelegramWebviewProxy) == null ? void 0 : _a2.postEvent) !== "function") {
+      this.browserLogin ?? (this.browserLogin = new BrowserTelegramLogin());
+      return Promise.resolve(this.browserLogin);
+    }
+    if ((_b2 = window.Telegram) == null ? void 0 : _b2.Login) return Promise.resolve(window.Telegram.Login);
+    if (this.loading) return this.loading;
+    this.loading = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = SDK_URL;
+      script.async = true;
+      const timeout2 = window.setTimeout(() => fail(), 15e3);
+      const fail = () => {
+        window.clearTimeout(timeout2);
+        script.remove();
+        this.loading = void 0;
+        reject(
+          new Error(
+            "Couldn't load Telegram. Check your connection and try again."
+          )
+        );
+      };
+      script.onerror = fail;
+      script.onload = () => {
+        var _a3;
+        window.clearTimeout(timeout2);
+        if ((_a3 = window.Telegram) == null ? void 0 : _a3.Login) resolve(window.Telegram.Login);
+        else fail();
+      };
+      document.head.appendChild(script);
+    });
+    return this.loading;
+  }
+}
+const telegramLoginService = new TelegramLoginService();
 function TelegramLink({
   actor,
   principal
@@ -49383,7 +49468,7 @@ function TelegramLink({
   });
   const sdk = useQuery({
     queryKey: ["telegramSdk"],
-    queryFn: loadTelegramLogin,
+    queryFn: () => telegramLoginService.load(),
     enabled: !!((_a2 = config.data) == null ? void 0 : _a2.clientId),
     staleTime: Number.POSITIVE_INFINITY,
     retry: false
@@ -51948,7 +52033,7 @@ function TournamentDetailPage({
     actionMutation.mutate({ action, options });
   }
   const actionError = actionMutation.isError ? actionMutation.error instanceof Error ? actionMutation.error.message : "This action couldn't be saved. Try again." : null;
-  const loading2 = stateQuery.isLoading || isFetching && !view;
+  const loading = stateQuery.isLoading || isFetching && !view;
   function frame(content) {
     return fullscreen ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       FullscreenBracketFrame,
@@ -51960,7 +52045,7 @@ function TournamentDetailPage({
       }
     ) : content;
   }
-  if (loading2)
+  if (loading)
     return frame(
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
@@ -52599,7 +52684,7 @@ function TournamentsPage() {
   const liveCount = tournaments.filter(
     (tournament) => tournament.status === TournamentStatus.live
   ).length;
-  const loading2 = tournamentsQuery.isLoading || isFetching && !tournamentsQuery.data;
+  const loading = tournamentsQuery.isLoading || isFetching && !tournamentsQuery.data;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "tournaments_page", className: "club-page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "tournament-hero relative grid gap-4 border-b border-base-300 pb-9 lg:grid-cols-[1.2fr_1fr]", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10", children: [
@@ -52650,7 +52735,7 @@ function TournamentsPage() {
                   children: t("The tournament board")
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-base-content/40", children: loading2 ? t("Connecting…") : t("{v1} upcoming / {v2} live", {
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-base-content/40", children: loading ? t("Connecting…") : t("{v1} upcoming / {v2} live", {
                 v1: upcomingCount,
                 v2: liveCount
               }) })
@@ -52721,7 +52806,7 @@ function TournamentsPage() {
               ]
             }
           ) : null,
-          loading2 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          loading ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "div",
             {
               "data-ocid": "tournaments.loading_state",
@@ -53396,7 +53481,7 @@ function UsersPage() {
   const filteredUsers = users.filter(
     (user) => (roleFilter === "all" || user.role === Role.admin) && (!query || `${user.displayName} ${user.username} ${user.bio ?? ""}`.toLowerCase().includes(query))
   ).sort((a2, b2) => a2.displayName.localeCompare(b2.displayName, getLocale()));
-  const loading2 = usersQuery.isLoading || isFetching && !usersQuery.data;
+  const loading = usersQuery.isLoading || isFetching && !usersQuery.data;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "users_page", className: "club-page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-10 flex flex-wrap items-end justify-between gap-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -53423,7 +53508,7 @@ function UsersPage() {
         }
       ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-2 border-l border-primary pl-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-4 text-primary", "aria-hidden": "true" }),
-        loading2 ? t("Connecting") : t("{v1} club members", { v1: users.length })
+        loading ? t("Connecting") : t("{v1} club members", { v1: users.length })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "club-toolbar mb-6 flex flex-wrap items-center justify-between gap-4 border-y border-base-300 py-4", children: [
@@ -53476,7 +53561,7 @@ function UsersPage() {
         ]
       }
     ) : null,
-    loading2 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    loading ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
         "data-ocid": "users.loading_state",
