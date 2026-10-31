@@ -342,12 +342,12 @@ type Error =
    UnknownNonce;
    UntrustedSsoSource: record {domain: text;};
  };
-type DeleteTournamentResult =
+type DeleteTournamentResult = 
  variant {
    err: DeleteTournamentError;
    ok;
  };
-type DeleteTournamentError =
+type DeleteTournamentError = 
  variant {
    notAuthorized;
    notFound;

@@ -1235,6 +1235,206 @@
       scale: 1;
     }
 
+    .toggle {
+      border: var(--border) solid currentColor;
+      color: var(--input-color);
+      cursor: pointer;
+      appearance: none;
+      vertical-align: middle;
+      webkit-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
+      --radius-selector-max: calc(var(--radius-selector) + var(--radius-selector) + var(--radius-selector));
+      border-radius: calc(var(--radius-selector) + min(var(--toggle-p), var(--radius-selector-max)) + min(var(--border), var(--radius-selector-max)));
+      padding: var(--toggle-p);
+      flex-shrink: 0;
+      grid-template-columns: 0fr 1fr 1fr;
+      place-content: center;
+      display: inline-grid;
+      position: relative;
+      box-shadow: inset 0 1px;
+    }
+
+    @supports (color: color-mix(in lab, red, red)) {
+      .toggle {
+        box-shadow: 0 1px color-mix(in oklab, currentColor calc(var(--depth) * 10%), #0000) inset;
+      }
+    }
+
+    .toggle {
+      --input-color: var(--color-base-content);
+      transition: color .3s, grid-template-columns .2s;
+    }
+
+    @supports (color: color-mix(in lab, red, red)) {
+      .toggle {
+        --input-color: color-mix(in oklab, var(--color-base-content) 50%, #0000);
+      }
+    }
+
+    .toggle {
+      --toggle-p: calc(var(--size) * .125);
+      --size: calc(var(--size-selector, .25rem) * 6);
+      width: calc((var(--size) * 2) - (var(--border) + var(--toggle-p)) * 2);
+      height: var(--size);
+    }
+
+    .toggle > * {
+      z-index: 1;
+      cursor: pointer;
+      appearance: none;
+      background-color: #0000;
+      border: none;
+      grid-column: 2 / span 1;
+      grid-row-start: 1;
+      height: 100%;
+      padding: .125rem;
+      transition: opacity .2s, rotate .4s;
+    }
+
+    .toggle > :focus {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
+
+    @media (forced-colors: active) {
+      .toggle > :focus {
+        outline-offset: 2px;
+        outline: 2px solid #0000;
+      }
+    }
+
+    .toggle > :nth-child(2) {
+      color: var(--color-base-100);
+      rotate: 0deg;
+    }
+
+    .toggle > :nth-child(3) {
+      color: var(--color-base-100);
+      opacity: 0;
+      rotate: -15deg;
+    }
+
+    .toggle:has(:checked) > :nth-child(2) {
+      opacity: 0;
+      rotate: 15deg;
+    }
+
+    .toggle:has(:checked) > :nth-child(3) {
+      opacity: 1;
+      rotate: 0deg;
+    }
+
+    .toggle:before {
+      aspect-ratio: 1;
+      border-radius: var(--radius-selector);
+      --tw-content: "";
+      content: var(--tw-content);
+      width: 100%;
+      height: 100%;
+      box-shadow: 0 -1px oklch(0% 0 0 / calc(var(--depth) * .1)) inset, 0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * .1)) inset, 0 1px currentColor;
+      background-color: currentColor;
+      grid-row-start: 1;
+      grid-column-start: 2;
+      transition: background-color .1s, translate .2s, inset-inline-start .2s;
+      position: relative;
+      inset-inline-start: 0;
+      translate: 0;
+    }
+
+    @supports (color: color-mix(in lab, red, red)) {
+      .toggle:before {
+        box-shadow: 0 -1px oklch(0% 0 0 / calc(var(--depth) * .1)) inset, 0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * .1)) inset, 0 1px color-mix(in oklab, currentColor calc(var(--depth) * 10%), #0000);
+      }
+    }
+
+    .toggle:before {
+      background-size: auto, calc(var(--noise) * 100%);
+      background-image: none, var(--fx-noise);
+    }
+
+    @media (forced-colors: active) {
+      .toggle:before {
+        outline-style: var(--tw-outline-style);
+        outline-offset: calc(1px * -1);
+        outline-width: 1px;
+      }
+    }
+
+    @media print {
+      .toggle:before {
+        outline-offset: -1rem;
+        outline: .25rem solid;
+      }
+    }
+
+    .toggle:focus-visible, .toggle:has(:focus-visible) {
+      outline-offset: 2px;
+      outline: 2px solid;
+    }
+
+    .toggle:checked {
+      background-color: var(--color-base-100);
+      --input-color: var(--color-base-content);
+      grid-template-columns: 1fr 1fr 0fr;
+    }
+
+    .toggle:checked:before {
+      background-color: currentColor;
+    }
+
+    @starting-style {
+      .toggle:checked:before {
+        opacity: 0;
+      }
+    }
+
+    .toggle[aria-checked="true"] {
+      background-color: var(--color-base-100);
+      --input-color: var(--color-base-content);
+      grid-template-columns: 1fr 1fr 0fr;
+    }
+
+    .toggle[aria-checked="true"]:before {
+      background-color: currentColor;
+    }
+
+    @starting-style {
+      .toggle[aria-checked="true"]:before {
+        opacity: 0;
+      }
+    }
+
+    .toggle:has( > input:checked) {
+      background-color: var(--color-base-100);
+      --input-color: var(--color-base-content);
+      grid-template-columns: 1fr 1fr 0fr;
+    }
+
+    .toggle:has( > input:checked):before {
+      background-color: currentColor;
+    }
+
+    @starting-style {
+      .toggle:has( > input:checked):before {
+        opacity: 0;
+      }
+    }
+
+    .toggle:indeterminate {
+      grid-template-columns: .5fr 1fr .5fr;
+    }
+
+    .toggle:disabled {
+      cursor: not-allowed;
+      opacity: .3;
+    }
+
+    .toggle:disabled:before {
+      border: var(--border) solid currentColor;
+      background-color: #0000;
+    }
+
     .input {
       appearance: none;
       background-color: var(--color-base-100);
@@ -2867,12 +3067,12 @@
       --aura-radius: var(--radius-box);
     }
 
-    .aura:has( > .checkbox,  > .toggle,  > .badge) {
-      --aura-radius: var(--radius-selector);
-    }
-
     .aura:has( > .btn,  > .input,  > .select) {
       --aura-radius: var(--radius-field);
+    }
+
+    .aura:has( > .checkbox,  > .toggle,  > .badge) {
+      --aura-radius: var(--radius-selector);
     }
 
     .alert {
@@ -5052,6 +5252,16 @@
   @supports (color: color-mix(in lab, red, red)) {
     .bg-destructive\/10 {
       background-color: color-mix(in oklab, var(--color-error) 10%, transparent);
+    }
+  }
+
+  .bg-error\/5 {
+    background-color: var(--color-error);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-error\/5 {
+      background-color: color-mix(in oklab, var(--color-error) 5%, transparent);
     }
   }
 
