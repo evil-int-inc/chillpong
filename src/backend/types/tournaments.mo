@@ -1,6 +1,9 @@
 import Common "common";
 
 module {
+  public type DeleteTournamentError = { #notAuthorized; #notFound };
+  public type DeleteTournamentResult = { #ok; #err : DeleteTournamentError };
+
   public type TournamentFormat = { #singles; #doubles };
   public type TournamentStatus = { #upcoming; #live; #completed };
 

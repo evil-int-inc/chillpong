@@ -6,6 +6,7 @@ import {
   createActor,
 } from "@/backend";
 import { CopyBracketLink } from "@/components/tournaments/CopyBracketLink";
+import { DeleteTournamentDialog } from "@/components/tournaments/DeleteTournamentDialog";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -30,6 +31,7 @@ import {
   Pencil,
   Plus,
   Search,
+  Trash2,
   Trophy,
   Users,
   X,
@@ -189,6 +191,7 @@ export function TournamentsPage() {
   const [filter, setFilter] = useState<StatusFilter>("all");
   const [editor, setEditor] = useState<Tournament | "new" | null>(null);
   const [detail, setDetail] = useState<Tournament | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Tournament | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [venue, setVenue] = useState("");
@@ -267,10 +270,11 @@ export function TournamentsPage() {
   }
 
   function closeEditor() {
-    if (!saveMutation.isPending) setEditor(null);
+    if (!saveMutation.isPending && !deleteTarget) setEditor(null);
   }
 
   function saveTournament() {
+    if (deleteTarget) return;
     setFormError(null);
     if (!title.trim() || title.trim().length > 100) {
       setFormError(
@@ -813,7 +817,7 @@ export function TournamentsPage() {
                 type="button"
                 aria-label={t("Close tournament editor")}
                 className="btn btn-ghost btn-square btn-sm"
-                disabled={saveMutation.isPending}
+                disabled={saveMutation.isPending || !!deleteTarget}
                 onClick={closeEditor}
               >
                 <X className="size-5" aria-hidden="true" />
@@ -968,6 +972,7 @@ export function TournamentsPage() {
                   type="submit"
                   data-ocid="tournaments.save_button"
                   loading={saveMutation.isPending}
+                  disabled={!!deleteTarget}
                 >
                   {editor === "new"
                     ? t("Create tournament")
@@ -975,9 +980,52 @@ export function TournamentsPage() {
                 </Button>
               </div>
             </form>
+            {editor !== "new" ? (
+              <section
+                aria-labelledby="tournament-delete-section-title"
+                className="mt-8 border border-error/35 bg-error/5 p-4 sm:p-5"
+              >
+                <h3
+                  id="tournament-delete-section-title"
+                  className="technical-label mb-3 text-error"
+                >
+                  {t("Delete tournament")}
+                </h3>
+                <p className="mb-4 text-sm leading-relaxed text-base-content/65">
+                  {t(
+                    "This permanently deletes the tournament, its registrations, matches, results, and history. This cannot be undone.",
+                  )}
+                </p>
+                <Button
+                  variant="danger"
+                  disabled={saveMutation.isPending || !!deleteTarget}
+                  onClick={() => setDeleteTarget(editor)}
+                >
+                  <Trash2 className="size-4" aria-hidden="true" />
+                  {t("Delete tournament")}
+                </Button>
+              </section>
+            ) : null}
           </div>
         ) : null}
       </dialog>
+      {deleteTarget && isAdmin ? (
+        <DeleteTournamentDialog
+          tournament={deleteTarget}
+          actor={actor ?? null}
+          isAdmin={isAdmin}
+          onClose={() => setDeleteTarget(null)}
+          onDeleted={(deleted) => {
+            setDeleteTarget(null);
+            setEditor(null);
+            setDetail(null);
+            setNotice({
+              message: "{title} has been deleted.",
+              params: { title: deleted.title },
+            });
+          }}
+        />
+      ) : null}
     </div>
   );
 }

@@ -969,4 +969,14 @@ export const ru = {
     "Неподдерживаемый заголовок токена Telegram",
   "Wait a few seconds before trying Telegram again":
     "Подождите несколько секунд перед следующей попыткой связи с Telegram",
+  "Delete tournament": "Удалить турнир",
+  "Delete tournament?": "Удалить турнир?",
+  "Delete permanently": "Удалить навсегда",
+  "This permanently deletes the tournament, its registrations, matches, results, and history. This cannot be undone.":
+    "Турнир, регистрации участников, матчи, результаты и история будут удалены навсегда. Это действие нельзя отменить.",
+  "Shared club players and member accounts will be kept.":
+    "Игроки клуба и аккаунты участников сохранятся.",
+  "Couldn't delete this tournament. Try again.":
+    "Не удалось удалить турнир. Попробуйте снова.",
+  "{title} has been deleted.": "Турнир «{title}» удалён.",
 } satisfies Record<Message, string>;

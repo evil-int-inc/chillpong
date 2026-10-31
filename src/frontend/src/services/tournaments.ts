@@ -1,4 +1,9 @@
-import type { Backend, Tournament, TournamentInput } from "@/backend";
+import {
+  type Backend,
+  DeleteTournamentError,
+  type Tournament,
+  type TournamentInput,
+} from "@/backend";
 
 /** Tournament reads are public; the backend protects all mutations. */
 export class TournamentService {
@@ -20,6 +25,17 @@ export class TournamentService {
     input: TournamentInput,
   ): Promise<Tournament> {
     return actor.updateTournament(id, input);
+  }
+
+  async remove(actor: Backend, id: bigint): Promise<void> {
+    const result = await actor.deleteTournament(id);
+    if (result.__kind__ === "err") {
+      throw new Error(
+        result.err === DeleteTournamentError.notFound
+          ? "Tournament not found"
+          : "Unauthorized: Only admins can perform this action",
+      );
+    }
   }
 }
 

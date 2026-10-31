@@ -1,4 +1,11 @@
 export const messages = [
+  "Delete tournament",
+  "Delete tournament?",
+  "Delete permanently",
+  "This permanently deletes the tournament, its registrations, matches, results, and history. This cannot be undone.",
+  "Shared club players and member accounts will be kept.",
+  "Couldn't delete this tournament. Try again.",
+  "{title} has been deleted.",
   "Find a player in the bracket",
   "PLAYER NAME",
   "Find next match",

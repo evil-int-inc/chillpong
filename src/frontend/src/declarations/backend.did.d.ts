@@ -12,6 +12,10 @@ import type { Principal } from '@icp-sdk/core/principal';
 
 export interface Cell { 'value' : Value, 'name' : string }
 export interface Config { 'clientId' : [] | [string] }
+export type DeleteTournamentError = { 'notAuthorized' : null } |
+  { 'notFound' : null };
+export type DeleteTournamentResult = { 'ok' : null } |
+  { 'err' : DeleteTournamentError };
 export type Error = { 'FrontendOriginsNotConfigured' : null } |
   {
     'MixedSsoSources' : {
@@ -310,6 +314,7 @@ export interface _SERVICE {
   'createPlayer' : ActorMethod<[PlayerInput], GlobalPlayerView>,
   'createTournament' : ActorMethod<[TournamentInput], Tournament>,
   'createUser' : ActorMethod<[UserId, UserInput], User>,
+  'deleteTournament' : ActorMethod<[bigint], DeleteTournamentResult>,
   'execute' : ActorMethod<[string], Result>,
   'getApiDoc' : ActorMethod<[], string>,
   'getCallerProfile' : ActorMethod<[], [] | [User]>,

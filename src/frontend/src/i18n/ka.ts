@@ -973,4 +973,14 @@ export const ka = {
     "Telegram-ის ტოკენის სათაური არ არის მხარდაჭერილი",
   "Wait a few seconds before trying Telegram again":
     "Telegram-ის დაკავშირების ხელახლა ცდამდე დაელოდეთ რამდენიმე წამს",
+  "Delete tournament": "ტურნირის წაშლა",
+  "Delete tournament?": "წაიშალოს ტურნირი?",
+  "Delete permanently": "სამუდამოდ წაშლა",
+  "This permanently deletes the tournament, its registrations, matches, results, and history. This cannot be undone.":
+    "ტურნირი, მონაწილეთა რეგისტრაციები, მატჩები, შედეგები და ისტორია სამუდამოდ წაიშლება. ამ მოქმედების გაუქმება შეუძლებელია.",
+  "Shared club players and member accounts will be kept.":
+    "კლუბის მოთამაშეები და წევრების ანგარიშები შენარჩუნდება.",
+  "Couldn't delete this tournament. Try again.":
+    "ტურნირის წაშლა ვერ მოხერხდა. სცადეთ ხელახლა.",
+  "{title} has been deleted.": "ტურნირი „{title}“ წაიშალა.",
 } satisfies Record<Message, string>;

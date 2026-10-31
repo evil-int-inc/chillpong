@@ -64,6 +64,18 @@ mixin (
     TournamentsLib.updateTournament(tournaments, id, { input with status });
   };
 
+  public shared ({ caller }) func deleteTournament(id : Nat) : async Tournaments.DeleteTournamentResult {
+    if (caller.isAnonymous() or accessControlState.userRoles.get(caller) != ?#admin) {
+      return #err(#notAuthorized);
+    };
+    if (tournaments.get(id) == null) { return #err(#notFound) };
+    // Registrations, matches, results, and undo history belong to this state.
+    // Shared player identities and member accounts belong to the club.
+    tournamentStates.remove(id);
+    tournaments.remove(id);
+    #ok;
+  };
+
   public query func getTournamentState(id : Nat) : async ?Tournaments.TournamentState {
     switch (tournaments.get(id)) {
       case (?tournament) { ?tournamentView(id, tournamentStates.get(id) ?? Bracket.initial(tournament.createdAt)) };

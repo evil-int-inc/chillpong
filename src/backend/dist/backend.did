@@ -342,6 +342,16 @@ type Error =
    UnknownNonce;
    UntrustedSsoSource: record {domain: text;};
  };
+type DeleteTournamentResult =
+ variant {
+   err: DeleteTournamentError;
+   ok;
+ };
+type DeleteTournamentError =
+ variant {
+   notAuthorized;
+   notFound;
+ };
 type Config = record {clientId: opt text;};
 type Cell = 
  record {
@@ -369,6 +379,7 @@ service : {
   createPlayer: (input: PlayerInput) -> (GlobalPlayerView);
   createTournament: (input: TournamentInput) -> (Tournament);
   createUser: (userId: UserId, input: UserInput) -> (User);
+  deleteTournament: (id: nat) -> (DeleteTournamentResult);
   execute: (qJson: text) -> (Result) query;
   getApiDoc: () -> (text) query;
   getCallerProfile: () -> (opt User) query;

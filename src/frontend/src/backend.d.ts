@@ -16,6 +16,13 @@ export interface Cell {
 export interface Config {
     clientId?: string;
 }
+export type DeleteTournamentResult = {
+    __kind__: "ok";
+    ok: null;
+} | {
+    __kind__: "err";
+    err: DeleteTournamentError;
+};
 export type Error_ = {
     __kind__: "FrontendOriginsNotConfigured";
     FrontendOriginsNotConfigured: null;
@@ -342,6 +349,10 @@ export type Value = {
     __kind__: "text";
     text: string;
 };
+export enum DeleteTournamentError {
+    notAuthorized = "notAuthorized",
+    notFound = "notFound"
+}
 export enum Role {
     admin = "admin"
 }
@@ -404,6 +415,7 @@ export interface backendInterface {
     createPlayer(input: PlayerInput): Promise<GlobalPlayerView>;
     createTournament(input: TournamentInput): Promise<Tournament>;
     createUser(userId: UserId, input: UserInput): Promise<User>;
+    deleteTournament(id: bigint): Promise<DeleteTournamentResult>;
     execute(qJson: string): Promise<Result>;
     getApiDoc(): Promise<string>;
     getCallerProfile(): Promise<User | null>;

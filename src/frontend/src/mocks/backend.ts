@@ -1,5 +1,6 @@
 import { Principal } from "@icp-sdk/core/principal";
 import {
+  DeleteTournamentError,
   Role,
   type GlobalPlayerView as GlobalPlayer,
   type Tournament,
@@ -126,6 +127,13 @@ function roleView(user: User): UserRoleView {
 }
 
 export const mockBackend: backendInterface = {
+  deleteTournament: async (id) => {
+    if (!tournaments.some((tournament) => tournament.id === id)) {
+      return { __kind__: "err", err: DeleteTournamentError.notFound };
+    }
+    tournaments = tournaments.filter((tournament) => tournament.id !== id);
+    return { __kind__: "ok", ok: null };
+  },
   getTelegramLinkConfig: async () => ({ clientId: telegramClientId ?? undefined }),
   setTelegramLinkConfig: async (clientId) => { telegramClientId = clientId; },
   getCallerTelegramLink: async () => null,
