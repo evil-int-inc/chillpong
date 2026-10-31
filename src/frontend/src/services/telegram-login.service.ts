@@ -1,3 +1,5 @@
+import type { TelegramMiniAppApi } from "@/services/telegram-mini-app.service";
+
 export interface TelegramLoginResult {
   id_token?: string;
   error?: string;
@@ -20,7 +22,7 @@ export interface TelegramLoginSdk {
 
 declare global {
   interface Window {
-    Telegram?: { Login?: TelegramLoginSdk };
+    Telegram?: { Login?: TelegramLoginSdk; WebApp?: TelegramMiniAppApi };
     TelegramWebviewProxy?: {
       postEvent(eventType: string, eventData: string): void;
     };

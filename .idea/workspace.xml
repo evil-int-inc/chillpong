@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="feature/remove-tournament">
+    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="feature/telegram-bot-ink">
       <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-CX0Y3KYN.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-VdjhBHmh.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/assets/index-DC5PiVbi.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-VdjhBHmh.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/AdminPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/AdminPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/services/telegram-login.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/services/telegram-login.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +79,7 @@
       <workItem from="1791718725569" duration="8944000" />
       <workItem from="1791835107322" duration="2765000" />
       <workItem from="1792096952493" duration="4048000" />
-      <workItem from="1793456776500" duration="1761000" />
+      <workItem from="1793456776500" duration="3101000" />
     </task>
     <task id="LOCAL-00001" summary="feature/redesign">
       <option name="closed" value="true" />
@@ -192,7 +193,15 @@
       <option name="project" value="LOCAL" />
       <updated>1793468691949</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="feature/telegram-bot-ink">
+      <option name="closed" value="true" />
+      <created>1793469039239</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1793469039239</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TerminalProjectNonSharedOptionsProvider">
@@ -234,6 +243,7 @@
     <MESSAGE value="feature/telegram-login" />
     <MESSAGE value="bugfix/telegram-login" />
     <MESSAGE value="feature/remove-tournament" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature/remove-tournament" />
+    <MESSAGE value="feature/telegram-bot-ink" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature/telegram-bot-ink" />
   </component>
 </project>

@@ -1,5 +1,6 @@
 import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { type LocalizedMessage, useI18n } from "@/i18n";
+import { telegramMiniAppService } from "@/services/telegram-mini-app.service";
 import {
   BRACKET_LABELS,
   type BracketLane,
@@ -80,6 +81,12 @@ export function BracketGraph({
   focusMatchId,
 }: BracketGraphProps) {
   const { t, locale } = useI18n();
+  const hasBracket = matches.length > 0;
+  useEffect(() => {
+    if (hasBracket && telegramMiniAppService.isInTelegramMiniApp()) {
+      return telegramMiniAppService.protectBracketGestures();
+    }
+  }, [hasBracket]);
   const [playerSearch, setPlayerSearch] = useState("");
   const [choices, setChoices] = useState<bigint[]>([]);
   const [feedback, setFeedback] = useState<LocalizedMessage | null>(null);
