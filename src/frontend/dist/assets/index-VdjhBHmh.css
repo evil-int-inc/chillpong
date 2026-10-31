@@ -3687,6 +3687,12 @@
       grid-column-start: 1;
     }
 
+    .avatar-placeholder > div {
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+
     .btn-square {
       width: var(--size);
       height: var(--size);
@@ -4251,6 +4257,10 @@
 
   .table {
     display: table;
+  }
+
+  .aspect-square {
+    aspect-ratio: 1;
   }
 
   .size-1\.5 {
@@ -5327,6 +5337,10 @@
   .text-xs {
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
+  }
+
+  .text-\[0\.5rem\] {
+    font-size: .5rem;
   }
 
   .text-\[0\.6rem\] {

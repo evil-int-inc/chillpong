@@ -309,7 +309,7 @@ type HttpHeader =
    name: text;
    value: text;
  };
-type GlobalPlayerView =
+type GlobalPlayerView = 
  record {
    avatarUrl: opt text;
    createdAt: Timestamp;

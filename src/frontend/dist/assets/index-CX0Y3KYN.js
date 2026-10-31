@@ -33969,7 +33969,7 @@ const ka = {
   "Link Telegram": "Telegram-ის დაკავშირება",
   "Link Telegram to your existing member account. Linking replaces your current username with your Telegram username.": "დააკავშირეთ Telegram თქვენს არსებულ ანგარიშთან. თქვენი მომხმარებლის სახელი ჩაანაცვლდება Telegram-ის მომხმარებლის სახელით.",
   "Linked Telegram account": "დაკავშირებული Telegram-ის ანგარიში",
-  "Sync Telegram username": "Telegram-ის მომხმარებლის სახელის განახლება",
+  "Sync Telegram profile": "Telegram-იდან პროფილის განახლება",
   "Telegram linking is not configured yet. Ask an admin to set the public Login Client ID.": "Telegram-ის დაკავშირება ჯერ არ არის გამართული. სთხოვეთ ადმინისტრატორს მიუთითოს საჯარო შესვლის კლიენტის ID.",
   "Unlink Telegram": "Telegram-ის კავშირის გაუქმება",
   "Couldn't load Telegram. Check your connection and try again.": "Telegram-ის ჩატვირთვა ვერ მოხერხდა. შეამოწმეთ ინტერნეტკავშირი და სცადეთ ხელახლა.",
@@ -33979,6 +33979,7 @@ const ka = {
   "The Telegram link request expired. Refresh it and try again.": "Telegram-ის დაკავშირების მოთხოვნას ვადა გაუვიდა. განაახლეთ ის და სცადეთ ხელახლა.",
   "Telegram didn't finish linking. Allow popups or retry in your browser.": "Telegram-ის დაკავშირება ვერ დასრულდა. დაუშვით ამომხტარი ფანჯრები ან სცადეთ ხელახლა ბრაუზერში.",
   "Telegram linking was cancelled or could not be completed. Try again.": "Telegram-ის დაკავშირება გაუქმდა ან ვერ დასრულდა. სცადეთ ხელახლა.",
+  "This bot is using legacy Telegram login. Enable the new Login Widget in BotFather and register this site's URLs.": "ეს ბოტი Telegram-ის შესვლის მოძველებულ მეთოდს იყენებს. ჩართეთ ახალი Login Widget BotFather-ში და დაამატეთ ამ საიტის ნებადართული URL-ები.",
   "Telegram linking settings": "Telegram-ის დაკავშირების პარამეტრები",
   "Use the public Login Client ID from BotFather. Leave blank to disable linking. Bot tokens and client secrets are not needed here.": "მიუთითეთ საჯარო შესვლის კლიენტის ID BotFather-იდან. დაკავშირების გასათიშად დატოვეთ ცარიელი. ბოტის ტოკენები და კლიენტის საიდუმლო გასაღებები აქ საჭირო არ არის.",
   "Couldn't load Telegram settings.": "Telegram-ის პარამეტრების ჩატვირთვა ვერ მოხერხდა.",
@@ -34721,7 +34722,7 @@ const ru = {
   "Link Telegram": "Связать Telegram",
   "Link Telegram to your existing member account. Linking replaces your current username with your Telegram username.": "Свяжите Telegram со своим аккаунтом. Ваш текущий никнейм будет заменён никнеймом из Telegram.",
   "Linked Telegram account": "Связанный аккаунт Telegram",
-  "Sync Telegram username": "Обновить никнейм из Telegram",
+  "Sync Telegram profile": "Обновить профиль из Telegram",
   "Telegram linking is not configured yet. Ask an admin to set the public Login Client ID.": "Связь с Telegram ещё не настроена. Попросите администратора указать публичный Login Client ID.",
   "Unlink Telegram": "Удалить связь с Telegram",
   "Couldn't load Telegram. Check your connection and try again.": "Не удалось загрузить Telegram. Проверьте подключение и попробуйте снова.",
@@ -34731,6 +34732,7 @@ const ru = {
   "The Telegram link request expired. Refresh it and try again.": "Запрос на связь с Telegram истёк. Обновите его и попробуйте снова.",
   "Telegram didn't finish linking. Allow popups or retry in your browser.": "Связь с Telegram не завершена. Разрешите всплывающие окна или повторите попытку в браузере.",
   "Telegram linking was cancelled or could not be completed. Try again.": "Связь с Telegram отменена или не завершена. Попробуйте снова.",
+  "This bot is using legacy Telegram login. Enable the new Login Widget in BotFather and register this site's URLs.": "Этот бот использует устаревший вход через Telegram. Включите новый Login Widget в BotFather и добавьте разрешённые URL этого сайта.",
   "Telegram linking settings": "Настройки связи с Telegram",
   "Use the public Login Client ID from BotFather. Leave blank to disable linking. Bot tokens and client secrets are not needed here.": "Укажите публичный Login Client ID из BotFather. Оставьте поле пустым, чтобы отключить связь. Токены бота и секреты клиента здесь не нужны.",
   "Couldn't load Telegram settings.": "Не удалось загрузить настройки Telegram.",
@@ -35028,14 +35030,17 @@ const TournamentPlayerStatus = Variant({
   "ready": Null,
   "removed": Null
 });
+const UserId = Principal2;
 const TournamentPlayer = Record({
   "id": Nat,
   "status": TournamentPlayerStatus,
   "table": Opt(Nat),
+  "userId": Opt(UserId),
   "name": Text,
   "seed": Opt(Nat),
   "losses": Nat,
   "registrationNumber": Nat,
+  "avatarUrl": Opt(Text),
   "globalPlayerId": Opt(Nat),
   "currentMatchId": Opt(Nat),
   "skillLevel": Nat,
@@ -35061,7 +35066,6 @@ const UserRole = Variant({
   "user": Null,
   "guest": Null
 });
-const UserId = Principal2;
 const Role$1 = Variant({ "admin": Null });
 const ExternalBlob2 = Vec(Nat8);
 const User$1 = Record({
@@ -35071,18 +35075,20 @@ const User$1 = Record({
   "displayName": Text,
   "createdAt": Timestamp,
   "role": Opt(Role$1),
+  "avatarUrl": Opt(Text),
   "avatar": Opt(ExternalBlob2)
 });
 const PlayerInput = Record({
   "name": Text,
   "skillLevel": Nat
 });
-const GlobalPlayer = Record({
+const GlobalPlayerView = Record({
   "id": Nat,
   "userId": Opt(UserId),
   "name": Text,
   "createdAt": Timestamp,
   "updatedAt": Timestamp,
+  "avatarUrl": Opt(Text),
   "skillLevel": Nat
 });
 const TournamentStatus$1 = Variant({
@@ -35143,7 +35149,8 @@ const UserRoleView = Record({
   "id": UserId,
   "username": Text,
   "displayName": Text,
-  "role": Opt(Role$1)
+  "role": Opt(Role$1),
+  "avatarUrl": Opt(Text)
 });
 const ProfileInput = Record({
   "username": Text,
@@ -35198,7 +35205,7 @@ Service({
   "assignCallerUserRole": Func([Principal2, UserRole], [], []),
   "bootstrapOwner": Func([], [], []),
   "completeTelegramLink": Func([Text], [User$1], []),
-  "createPlayer": Func([PlayerInput], [GlobalPlayer], []),
+  "createPlayer": Func([PlayerInput], [GlobalPlayerView], []),
   "createTournament": Func([TournamentInput], [Tournament], []),
   "createUser": Func([UserId, UserInput], [User$1], []),
   "execute": Func([Text], [Result], ["query"]),
@@ -35219,8 +35226,8 @@ Service({
   "getUserByUsername": Func([Text], [Opt(User$1)], ["query"]),
   "grantAdminRole": Func([UserId], [UserRoleView], []),
   "isCallerAdmin": Func([], [Bool], ["query"]),
-  "linkPlayerToUser": Func([Nat, UserId], [GlobalPlayer], []),
-  "listPlayers": Func([], [Vec(GlobalPlayer)], ["query"]),
+  "linkPlayerToUser": Func([Nat, UserId], [GlobalPlayerView], []),
+  "listPlayers": Func([], [Vec(GlobalPlayerView)], ["query"]),
   "listUsers": Func([], [Vec(User$1)], ["query"]),
   "listUsersWithRoles": Func([], [Vec(UserRoleView)], ["query"]),
   "revokeAdminRole": Func([UserId], [UserRoleView], []),
@@ -35238,9 +35245,9 @@ Service({
     [HttpRequestResult],
     ["query"]
   ),
-  "unlinkPlayerFromUser": Func([Nat], [GlobalPlayer], []),
+  "unlinkPlayerFromUser": Func([Nat], [GlobalPlayerView], []),
   "unlinkTelegram": Func([], [User$1], []),
-  "updatePlayer": Func([Nat, PlayerInput], [GlobalPlayer], []),
+  "updatePlayer": Func([Nat, PlayerInput], [GlobalPlayerView], []),
   "updateTournament": Func([Nat, TournamentInput], [Tournament], []),
   "updateUser": Func([UserId, UserInput], [User$1], [])
 });
@@ -35401,14 +35408,17 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "ready": IDL2.Null,
     "removed": IDL2.Null
   });
+  const UserId2 = IDL2.Principal;
   const TournamentPlayer2 = IDL2.Record({
     "id": IDL2.Nat,
     "status": TournamentPlayerStatus2,
     "table": IDL2.Opt(IDL2.Nat),
+    "userId": IDL2.Opt(UserId2),
     "name": IDL2.Text,
     "seed": IDL2.Opt(IDL2.Nat),
     "losses": IDL2.Nat,
     "registrationNumber": IDL2.Nat,
+    "avatarUrl": IDL2.Opt(IDL2.Text),
     "globalPlayerId": IDL2.Opt(IDL2.Nat),
     "currentMatchId": IDL2.Opt(IDL2.Nat),
     "skillLevel": IDL2.Nat,
@@ -35434,7 +35444,6 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "user": IDL2.Null,
     "guest": IDL2.Null
   });
-  const UserId2 = IDL2.Principal;
   const Role2 = IDL2.Variant({ "admin": IDL2.Null });
   const ExternalBlob3 = IDL2.Vec(IDL2.Nat8);
   const User2 = IDL2.Record({
@@ -35444,15 +35453,17 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "displayName": IDL2.Text,
     "createdAt": Timestamp2,
     "role": IDL2.Opt(Role2),
+    "avatarUrl": IDL2.Opt(IDL2.Text),
     "avatar": IDL2.Opt(ExternalBlob3)
   });
   const PlayerInput2 = IDL2.Record({ "name": IDL2.Text, "skillLevel": IDL2.Nat });
-  const GlobalPlayer2 = IDL2.Record({
+  const GlobalPlayerView2 = IDL2.Record({
     "id": IDL2.Nat,
     "userId": IDL2.Opt(UserId2),
     "name": IDL2.Text,
     "createdAt": Timestamp2,
     "updatedAt": Timestamp2,
+    "avatarUrl": IDL2.Opt(IDL2.Text),
     "skillLevel": IDL2.Nat
   });
   const TournamentStatus2 = IDL2.Variant({
@@ -35513,7 +35524,8 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "id": UserId2,
     "username": IDL2.Text,
     "displayName": IDL2.Text,
-    "role": IDL2.Opt(Role2)
+    "role": IDL2.Opt(Role2),
+    "avatarUrl": IDL2.Opt(IDL2.Text)
   });
   const ProfileInput2 = IDL2.Record({
     "username": IDL2.Text,
@@ -35568,7 +35580,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "assignCallerUserRole": IDL2.Func([IDL2.Principal, UserRole2], [], []),
     "bootstrapOwner": IDL2.Func([], [], []),
     "completeTelegramLink": IDL2.Func([IDL2.Text], [User2], []),
-    "createPlayer": IDL2.Func([PlayerInput2], [GlobalPlayer2], []),
+    "createPlayer": IDL2.Func([PlayerInput2], [GlobalPlayerView2], []),
     "createTournament": IDL2.Func([TournamentInput2], [Tournament2], []),
     "createUser": IDL2.Func([UserId2, UserInput2], [User2], []),
     "execute": IDL2.Func([IDL2.Text], [Result2], ["query"]),
@@ -35589,8 +35601,8 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "getUserByUsername": IDL2.Func([IDL2.Text], [IDL2.Opt(User2)], ["query"]),
     "grantAdminRole": IDL2.Func([UserId2], [UserRoleView2], []),
     "isCallerAdmin": IDL2.Func([], [IDL2.Bool], ["query"]),
-    "linkPlayerToUser": IDL2.Func([IDL2.Nat, UserId2], [GlobalPlayer2], []),
-    "listPlayers": IDL2.Func([], [IDL2.Vec(GlobalPlayer2)], ["query"]),
+    "linkPlayerToUser": IDL2.Func([IDL2.Nat, UserId2], [GlobalPlayerView2], []),
+    "listPlayers": IDL2.Func([], [IDL2.Vec(GlobalPlayerView2)], ["query"]),
     "listUsers": IDL2.Func([], [IDL2.Vec(User2)], ["query"]),
     "listUsersWithRoles": IDL2.Func([], [IDL2.Vec(UserRoleView2)], ["query"]),
     "revokeAdminRole": IDL2.Func([UserId2], [UserRoleView2], []),
@@ -35608,9 +35620,9 @@ const idlFactory = ({ IDL: IDL2 }) => {
       [HttpRequestResult2],
       ["query"]
     ),
-    "unlinkPlayerFromUser": IDL2.Func([IDL2.Nat], [GlobalPlayer2], []),
+    "unlinkPlayerFromUser": IDL2.Func([IDL2.Nat], [GlobalPlayerView2], []),
     "unlinkTelegram": IDL2.Func([], [User2], []),
-    "updatePlayer": IDL2.Func([IDL2.Nat, PlayerInput2], [GlobalPlayer2], []),
+    "updatePlayer": IDL2.Func([IDL2.Nat, PlayerInput2], [GlobalPlayerView2], []),
     "updateTournament": IDL2.Func([IDL2.Nat, TournamentInput2], [Tournament2], []),
     "updateUser": IDL2.Func([UserId2, UserInput2], [User2], [])
   });
@@ -35801,14 +35813,14 @@ class Backend {
   async assignCallerUserRole(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n47(this._uploadFile, this._downloadFile, arg1));
+        const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n49(this._uploadFile, this._downloadFile, arg1));
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n47(this._uploadFile, this._downloadFile, arg1));
+      const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n49(this._uploadFile, this._downloadFile, arg1));
       return result;
     }
   }
@@ -35830,28 +35842,28 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.completeTelegramLink(arg0);
-        return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+        return from_candid_User_n51(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.completeTelegramLink(arg0);
-      return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+      return from_candid_User_n51(this._uploadFile, this._downloadFile, result);
     }
   }
   async createPlayer(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.createPlayer(arg0);
-        return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+        return from_candid_GlobalPlayerView_n58(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.createPlayer(arg0);
-      return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+      return from_candid_GlobalPlayerView_n58(this._uploadFile, this._downloadFile, result);
     }
   }
   async createTournament(arg0) {
@@ -35872,14 +35884,14 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.createUser(arg0, to_candid_UserInput_n72(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+        return from_candid_User_n51(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.createUser(arg0, to_candid_UserInput_n72(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+      return from_candid_User_n51(this._uploadFile, this._downloadFile, result);
     }
   }
   async execute(arg0) {
@@ -35956,14 +35968,14 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.getMyRole();
-        return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n53(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getMyRole();
-      return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n53(this._uploadFile, this._downloadFile, result);
     }
   }
   async getTelegramLinkConfig() {
@@ -36082,14 +36094,14 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.linkPlayerToUser(arg0, arg1);
-        return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+        return from_candid_GlobalPlayerView_n58(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.linkPlayerToUser(arg0, arg1);
-      return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+      return from_candid_GlobalPlayerView_n58(this._uploadFile, this._downloadFile, result);
     }
   }
   async listPlayers() {
@@ -36152,14 +36164,14 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.saveCallerProfile(arg0);
-        return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+        return from_candid_User_n51(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.saveCallerProfile(arg0);
-      return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+      return from_candid_User_n51(this._uploadFile, this._downloadFile, result);
     }
   }
   async schema() {
@@ -36222,42 +36234,42 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.unlinkPlayerFromUser(arg0);
-        return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+        return from_candid_GlobalPlayerView_n58(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.unlinkPlayerFromUser(arg0);
-      return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+      return from_candid_GlobalPlayerView_n58(this._uploadFile, this._downloadFile, result);
     }
   }
   async unlinkTelegram() {
     if (this.processError) {
       try {
         const result = await this.actor.unlinkTelegram();
-        return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+        return from_candid_User_n51(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.unlinkTelegram();
-      return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+      return from_candid_User_n51(this._uploadFile, this._downloadFile, result);
     }
   }
   async updatePlayer(arg0, arg1) {
     if (this.processError) {
       try {
         const result = await this.actor.updatePlayer(arg0, arg1);
-        return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+        return from_candid_GlobalPlayerView_n58(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.updatePlayer(arg0, arg1);
-      return from_candid_GlobalPlayer_n57(this._uploadFile, this._downloadFile, result);
+      return from_candid_GlobalPlayerView_n58(this._uploadFile, this._downloadFile, result);
     }
   }
   async updateTournament(arg0, arg1) {
@@ -36278,14 +36290,14 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.updateUser(arg0, to_candid_UserInput_n72(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+        return from_candid_User_n51(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.updateUser(arg0, to_candid_UserInput_n72(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_User_n49(this._uploadFile, this._downloadFile, result);
+      return from_candid_User_n51(this._uploadFile, this._downloadFile, result);
     }
   }
 }
@@ -36298,11 +36310,11 @@ function from_candid_Config_n86(_uploadFile, _downloadFile, value) {
 function from_candid_Error_n10(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n11(_uploadFile, _downloadFile, value);
 }
-async function from_candid_ExternalBlob_n56(_uploadFile, _downloadFile, value) {
+async function from_candid_ExternalBlob_n57(_uploadFile, _downloadFile, value) {
   return await _downloadFile(value);
 }
-function from_candid_GlobalPlayer_n57(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n58(_uploadFile, _downloadFile, value);
+function from_candid_GlobalPlayerView_n58(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n59(_uploadFile, _downloadFile, value);
 }
 function from_candid_MatchSource_n40(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n41(_uploadFile, _downloadFile, value);
@@ -36313,8 +36325,8 @@ function from_candid_Result__1_n8(_uploadFile, _downloadFile, value) {
 function from_candid_Result_n74(_uploadFile, _downloadFile, value) {
   return from_candid_record_n75(_uploadFile, _downloadFile, value);
 }
-function from_candid_Role_n53(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n54(_uploadFile, _downloadFile, value);
+function from_candid_Role_n54(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n55(_uploadFile, _downloadFile, value);
 }
 function from_candid_TournamentBracket_n38(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n39(_uploadFile, _downloadFile, value);
@@ -36358,8 +36370,8 @@ function from_candid_UserRoleView_n91(_uploadFile, _downloadFile, value) {
 function from_candid_UserRole_n84(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n85(_uploadFile, _downloadFile, value);
 }
-async function from_candid_User_n49(_uploadFile, _downloadFile, value) {
-  return await from_candid_record_n50(_uploadFile, _downloadFile, value);
+async function from_candid_User_n51(_uploadFile, _downloadFile, value) {
+  return await from_candid_record_n52(_uploadFile, _downloadFile, value);
 }
 function from_candid_Value_n80(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n81(_uploadFile, _downloadFile, value);
@@ -36367,17 +36379,17 @@ function from_candid_Value_n80(_uploadFile, _downloadFile, value) {
 function from_candid__ImmutableObjectStorageRefillResult_n4(_uploadFile, _downloadFile, value) {
   return from_candid_record_n5(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n51(_uploadFile, _downloadFile, value) {
+function from_candid_opt_n47(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n52(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : from_candid_Role_n53(_uploadFile, _downloadFile, value[0]);
-}
-async function from_candid_opt_n55(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : await from_candid_ExternalBlob_n56(_uploadFile, _downloadFile, value[0]);
-}
-function from_candid_opt_n59(_uploadFile, _downloadFile, value) {
+function from_candid_opt_n48(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n53(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : from_candid_Role_n54(_uploadFile, _downloadFile, value[0]);
+}
+async function from_candid_opt_n56(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : await from_candid_ExternalBlob_n57(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_opt_n6(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
@@ -36386,7 +36398,7 @@ function from_candid_opt_n7(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
 async function from_candid_opt_n82(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : await from_candid_User_n49(_uploadFile, _downloadFile, value[0]);
+  return value.length === 0 ? null : await from_candid_User_n51(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_opt_n83(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
@@ -36446,10 +36458,12 @@ function from_candid_record_n44(_uploadFile, _downloadFile, value) {
     id: value.id,
     status: from_candid_TournamentPlayerStatus_n45(_uploadFile, _downloadFile, value.status),
     table: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.table)),
+    userId: record_opt_to_undefined(from_candid_opt_n47(_uploadFile, _downloadFile, value.userId)),
     name: value.name,
     seed: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.seed)),
     losses: value.losses,
     registrationNumber: value.registrationNumber,
+    avatarUrl: record_opt_to_undefined(from_candid_opt_n48(_uploadFile, _downloadFile, value.avatarUrl)),
     globalPlayerId: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.globalPlayerId)),
     currentMatchId: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.currentMatchId)),
     skillLevel: value.skillLevel,
@@ -36462,24 +36476,26 @@ function from_candid_record_n5(_uploadFile, _downloadFile, value) {
     topped_up_amount: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.topped_up_amount))
   };
 }
-async function from_candid_record_n50(_uploadFile, _downloadFile, value) {
+async function from_candid_record_n52(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
-    bio: record_opt_to_undefined(from_candid_opt_n51(_uploadFile, _downloadFile, value.bio)),
+    bio: record_opt_to_undefined(from_candid_opt_n48(_uploadFile, _downloadFile, value.bio)),
     username: value.username,
     displayName: value.displayName,
     createdAt: value.createdAt,
-    role: record_opt_to_undefined(from_candid_opt_n52(_uploadFile, _downloadFile, value.role)),
-    avatar: record_opt_to_undefined(await from_candid_opt_n55(_uploadFile, _downloadFile, value.avatar))
+    role: record_opt_to_undefined(from_candid_opt_n53(_uploadFile, _downloadFile, value.role)),
+    avatarUrl: record_opt_to_undefined(from_candid_opt_n48(_uploadFile, _downloadFile, value.avatarUrl)),
+    avatar: record_opt_to_undefined(await from_candid_opt_n56(_uploadFile, _downloadFile, value.avatar))
   };
 }
-function from_candid_record_n58(_uploadFile, _downloadFile, value) {
+function from_candid_record_n59(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
-    userId: record_opt_to_undefined(from_candid_opt_n59(_uploadFile, _downloadFile, value.userId)),
+    userId: record_opt_to_undefined(from_candid_opt_n47(_uploadFile, _downloadFile, value.userId)),
     name: value.name,
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
+    avatarUrl: record_opt_to_undefined(from_candid_opt_n48(_uploadFile, _downloadFile, value.avatarUrl)),
     skillLevel: value.skillLevel
   };
 }
@@ -36511,7 +36527,7 @@ function from_candid_record_n79(_uploadFile, _downloadFile, value) {
 }
 function from_candid_record_n87(_uploadFile, _downloadFile, value) {
   return {
-    clientId: record_opt_to_undefined(from_candid_opt_n51(_uploadFile, _downloadFile, value.clientId))
+    clientId: record_opt_to_undefined(from_candid_opt_n48(_uploadFile, _downloadFile, value.clientId))
   };
 }
 function from_candid_record_n92(_uploadFile, _downloadFile, value) {
@@ -36519,7 +36535,8 @@ function from_candid_record_n92(_uploadFile, _downloadFile, value) {
     id: value.id,
     username: value.username,
     displayName: value.displayName,
-    role: record_opt_to_undefined(from_candid_opt_n52(_uploadFile, _downloadFile, value.role))
+    role: record_opt_to_undefined(from_candid_opt_n53(_uploadFile, _downloadFile, value.role)),
+    avatarUrl: record_opt_to_undefined(from_candid_opt_n48(_uploadFile, _downloadFile, value.avatarUrl))
   };
 }
 function from_candid_variant_n11(_uploadFile, _downloadFile, value) {
@@ -36585,7 +36602,7 @@ function from_candid_variant_n41(_uploadFile, _downloadFile, value) {
 function from_candid_variant_n46(_uploadFile, _downloadFile, value) {
   return "advanced" in value ? "advanced" : "playing" in value ? "playing" : "eliminated" in value ? "eliminated" : "champion" in value ? "champion" : "waiting" in value ? "waiting" : "ready" in value ? "ready" : "removed" in value ? "removed" : value;
 }
-function from_candid_variant_n54(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n55(_uploadFile, _downloadFile, value) {
   return "admin" in value ? "admin" : value;
 }
 function from_candid_variant_n69(_uploadFile, _downloadFile, value) {
@@ -36646,10 +36663,10 @@ function from_candid_vec_n90(_uploadFile, _downloadFile, value) {
   return value.map((x2) => from_candid_Tournament_n66(_uploadFile, _downloadFile, x2));
 }
 function from_candid_vec_n93(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_GlobalPlayer_n57(_uploadFile, _downloadFile, x2));
+  return value.map((x2) => from_candid_GlobalPlayerView_n58(_uploadFile, _downloadFile, x2));
 }
 async function from_candid_vec_n94(_uploadFile, _downloadFile, value) {
-  return await Promise.all(value.map(async (x2) => await from_candid_User_n49(_uploadFile, _downloadFile, x2)));
+  return await Promise.all(value.map(async (x2) => await from_candid_User_n51(_uploadFile, _downloadFile, x2)));
 }
 function from_candid_vec_n95(_uploadFile, _downloadFile, value) {
   return value.map((x2) => from_candid_UserRoleView_n91(_uploadFile, _downloadFile, x2));
@@ -36675,8 +36692,8 @@ function to_candid_TournamentStatus_n62(_uploadFile, _downloadFile, value) {
 function to_candid_UserInput_n72(_uploadFile, _downloadFile, value) {
   return to_candid_record_n73(_uploadFile, _downloadFile, value);
 }
-function to_candid_UserRole_n47(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n48(_uploadFile, _downloadFile, value);
+function to_candid_UserRole_n49(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n50(_uploadFile, _downloadFile, value);
 }
 function to_candid__ImmutableObjectStorageRefillInformation_n2(_uploadFile, _downloadFile, value) {
   return to_candid_record_n3(_uploadFile, _downloadFile, value);
@@ -36803,7 +36820,7 @@ function to_candid_variant_n20(_uploadFile, _downloadFile, value) {
     doubleElimination: null
   } : value;
 }
-function to_candid_variant_n48(_uploadFile, _downloadFile, value) {
+function to_candid_variant_n50(_uploadFile, _downloadFile, value) {
   return value == "admin" ? {
     admin: null
   } : value == "user" ? {
@@ -40226,12 +40243,24 @@ function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 const sizeClasses$1 = {
+  xxs: "size-4 text-[0.5rem]",
   xs: "size-6 text-[0.6rem]",
   sm: "size-8 text-xs",
   md: "size-10 text-sm",
   lg: "size-12 text-base",
   xl: "size-16 text-xl"
 };
+function imageSource(src) {
+  if (!(src == null ? void 0 : src.trim())) return void 0;
+  try {
+    const url = new URL(src, window.location.href);
+    if (url.protocol === "https:" || url.protocol === "blob:" || url.protocol === "http:" && url.origin === window.location.origin) {
+      return url.href;
+    }
+  } catch {
+  }
+  return void 0;
+}
 function initialsOf(name) {
   if (!name) return "";
   return name.trim().split(/\s+/).slice(0, 2).map((part) => part.charAt(0).toUpperCase()).join("");
@@ -40239,30 +40268,58 @@ function initialsOf(name) {
 const Avatar = reactExports.forwardRef(
   ({ className, src, alt, name, size = "md", ...props }, ref) => {
     const initials = initialsOf(name);
+    const image = imageSource(src);
+    const [failedImage, setFailedImage] = reactExports.useState();
+    const showImage = !!image && image !== failedImage;
+    const label = alt ?? name ?? "";
     return /* @__PURE__ */ jsxRuntimeExports.jsx(
       "span",
       {
         ref,
         "data-ocid": "avatar",
+        role: !showImage && label ? "img" : void 0,
+        "aria-label": !showImage && label ? label : void 0,
+        "aria-hidden": label ? void 0 : true,
         className: cn(
-          "avatar inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-base-300 text-base-content/60 ring-1 ring-base-300",
+          "avatar inline-flex shrink-0 text-base-content/60",
+          !showImage && "avatar-placeholder",
           sizeClasses$1[size],
           className
         ),
         ...props,
-        children: src ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex aspect-square size-full items-center justify-center overflow-hidden rounded-full bg-base-300 ring-1 ring-base-300", children: showImage ? /* @__PURE__ */ jsxRuntimeExports.jsx(
           "img",
           {
-            src,
-            alt: alt ?? name ?? "",
-            className: "size-full object-cover"
-          }
-        ) : initials ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "aria-hidden": "true", className: "font-display font-semibold", children: initials }) : /* @__PURE__ */ jsxRuntimeExports.jsx(User, { className: "size-1/2", "aria-hidden": "true" })
+            src: image,
+            alt: label,
+            className: "size-full object-cover",
+            loading: "lazy",
+            decoding: "async",
+            referrerPolicy: "no-referrer",
+            onError: () => setFailedImage(image)
+          },
+          image
+        ) : initials ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "aria-hidden": "true", className: "font-display font-semibold", children: initials }) : /* @__PURE__ */ jsxRuntimeExports.jsx(User, { className: "size-1/2", "aria-hidden": "true" }) })
       }
     );
   }
 );
 Avatar.displayName = "Avatar";
+const UserAvatar = reactExports.forwardRef(
+  ({ user, name, src, ...props }, ref) => {
+    var _a2;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Avatar,
+      {
+        ref,
+        ...props,
+        name: name ?? ((user == null ? void 0 : user.displayName) || (user == null ? void 0 : user.username)),
+        src: src ?? (user == null ? void 0 : user.avatarUrl) ?? ((_a2 = user == null ? void 0 : user.avatar) == null ? void 0 : _a2.getDirectURL())
+      }
+    );
+  }
+);
+UserAvatar.displayName = "UserAvatar";
 var prefix = "Invariant failed";
 function invariant(condition, message) {
   if (condition) {
@@ -45575,7 +45632,6 @@ function LanguageSwitcher() {
   );
 }
 function Header({ onOpenSidebar }) {
-  var _a2;
   const { t } = useI18n();
   const { pathname } = useLocation();
   const {
@@ -45655,9 +45711,9 @@ function Header({ onOpenSidebar }) {
                 className: "btn btn-ghost flex items-center gap-2.5 px-1 normal-case",
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    Avatar,
+                    UserAvatar,
                     {
-                      src: (_a2 = profile == null ? void 0 : profile.avatar) == null ? void 0 : _a2.getDirectURL(),
+                      user: profile,
                       name: (profile == null ? void 0 : profile.displayName) || (profile == null ? void 0 : profile.username) || t("Member"),
                       size: "sm"
                     }
@@ -45680,8 +45736,8 @@ function Header({ onOpenSidebar }) {
                   to: "/profile",
                   className: "btn btn-primary btn-sm mb-5 w-full",
                   onClick: (event) => {
-                    var _a3;
-                    return (_a3 = event.currentTarget.closest("details")) == null ? void 0 : _a3.removeAttribute("open");
+                    var _a2;
+                    return (_a2 = event.currentTarget.closest("details")) == null ? void 0 : _a2.removeAttribute("open");
                   },
                   children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(UserRound, { className: "size-4", "aria-hidden": "true" }),
@@ -46053,6 +46109,7 @@ function LinkPlayerDialog({
       void queryClient2.invalidateQueries({ queryKey: ["adminUsers"] });
       void queryClient2.invalidateQueries({ queryKey: ["users"] });
       void queryClient2.invalidateQueries({ queryKey: ["profile"] });
+      void queryClient2.invalidateQueries({ queryKey: ["tournamentState"] });
       onLinked(player, variables.unlink);
       onClose();
     }
@@ -46738,8 +46795,9 @@ function AdminPage() {
               className: "grid grid-cols-[auto_minmax(0,1fr)] items-start gap-4 p-5 md:grid-cols-[auto_minmax(0,1fr)_auto]",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Avatar,
+                  UserAvatar,
                   {
+                    user,
                     name: (user.displayName === "Signed-in member" && !user.username ? t("Signed-in member") : user.displayName) || user.username || t("Member"),
                     size: "md",
                     alt: t("{v1} avatar", {
@@ -46852,6 +46910,26 @@ function AdminPage() {
       (linkingUser == null ? void 0 : linkingUser.id.toString()) ?? "none"
     )
   ] }) });
+}
+function PlayerIdentity({
+  player,
+  size = "xs",
+  className,
+  nameClassName
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: cn("inline-flex min-w-0 items-center gap-2", className), children: [
+    player.userId || player.avatarUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      UserAvatar,
+      {
+        user: { avatarUrl: player.avatarUrl },
+        name: player.name,
+        size,
+        alt: "",
+        "aria-hidden": "true"
+      }
+    ) : null,
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: cn("min-w-0", nameClassName), children: player.name })
+  ] });
 }
 const SKILL_LEVELS = [
   "Beginner",
@@ -47150,7 +47228,14 @@ function SharedPlayersDirectory({ isAdmin }) {
         className: "flex flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6",
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "break-words font-display text-xl font-bold uppercase", children: player.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "break-words font-display text-xl font-bold uppercase", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              PlayerIdentity,
+              {
+                player,
+                size: "sm",
+                nameClassName: "break-words"
+              }
+            ) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1 font-mono text-xs text-base-content/45", children: [
               registrationLabel(player.id),
               " / L",
@@ -47491,7 +47576,7 @@ function MovePlayerForm({
         /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/60", children: [
           t("Place"),
           " ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-base-content", children: player.name }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-base-content", children: /* @__PURE__ */ jsxRuntimeExports.jsx(PlayerIdentity, { player }) }),
           " ",
           t("in"),
           " ",
@@ -47644,7 +47729,14 @@ function MatchEditor({
                 "p",
                 {
                   className: `font-display text-2xl font-bold ${side.id !== void 0 && side.id === match.winnerId ? "text-primary" : ""}`,
-                  children: (player == null ? void 0 : player.name) ?? sourceLabel(side.source, view.matches)
+                  children: player ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    PlayerIdentity,
+                    {
+                      player,
+                      size: "sm",
+                      nameClassName: "break-words"
+                    }
+                  ) : sourceLabel(side.source, view.matches)
                 }
               ),
               player ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1 font-mono text-[10px] text-base-content/45", children: [
@@ -48281,7 +48373,7 @@ function OrganizerDialogs({
           ) : null,
           modal.kind === "remove" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-display text-xl font-bold", children: [
-              modal.player.name,
+              /* @__PURE__ */ jsxRuntimeExports.jsx(PlayerIdentity, { player: modal.player, size: "sm" }),
               " ",
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-xs font-normal text-primary", children: registrationLabel(modal.player.registrationNumber) })
             ] }),
@@ -48749,7 +48841,14 @@ function PlayersPanel({
                         {
                           scope: "row",
                           className: "order-first col-span-2 block min-w-0 break-words font-display text-xl font-bold lg:table-cell lg:max-w-64 lg:px-3 lg:py-4 lg:text-sm",
-                          children: player.name
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            PlayerIdentity,
+                            {
+                              player,
+                              size: "sm",
+                              nameClassName: "break-words"
+                            }
+                          )
                         }
                       ),
                       /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "block min-w-0 lg:table-cell lg:px-3 lg:py-4", children: [
@@ -48934,6 +49033,8 @@ function normalizeTournamentState(state, tournament) {
     players: state.players.map((player) => ({
       id: player.id,
       globalPlayerId: player.globalPlayerId,
+      userId: player.userId,
+      avatarUrl: player.avatarUrl,
       name: player.name,
       skill: Number(player.skillLevel),
       registrationNumber: player.registrationNumber,
@@ -49327,6 +49428,7 @@ function PlayersPage() {
 }
 const TELEGRAM_ORIGIN = "https://oauth.telegram.org";
 const SDK_URL = "https://oauth.telegram.org/js/telegram-login.js?6";
+const POPUP_CLOSE_GRACE_MS = 1e3;
 class BrowserTelegramLogin {
   constructor() {
     __publicField(this, "dispose");
@@ -49356,6 +49458,7 @@ class BrowserTelegramLogin {
     if (!popup) throw new Error("Telegram popup was blocked");
     let pending = true;
     let timer;
+    let closeTimer;
     const finish = (result) => {
       if (!pending) return;
       this.close();
@@ -49378,6 +49481,8 @@ class BrowserTelegramLogin {
         finish({ error: result.error });
       } else if (typeof result.result === "string" && result.result) {
         finish({ id_token: result.result });
+      } else if (result.result && typeof result.result === "object") {
+        finish({ error: "legacy_login" });
       } else {
         finish({ error: "missing_id_token" });
       }
@@ -49385,6 +49490,7 @@ class BrowserTelegramLogin {
     this.dispose = () => {
       pending = false;
       window.clearInterval(timer);
+      window.clearTimeout(closeTimer);
       window.removeEventListener("message", onMessage);
       try {
         popup.close();
@@ -49393,7 +49499,13 @@ class BrowserTelegramLogin {
     };
     window.addEventListener("message", onMessage);
     timer = window.setInterval(() => {
-      if (popup.closed) finish({ error: "popup_closed" });
+      if (popup.closed && closeTimer === void 0) {
+        window.clearInterval(timer);
+        closeTimer = window.setTimeout(
+          () => finish({ error: "popup_closed" }),
+          POPUP_CLOSE_GRACE_MS
+        );
+      }
     }, 200);
     try {
       popup.focus();
@@ -49483,24 +49595,36 @@ function TelegramLink({
       (_a3 = sdk.data) == null ? void 0 : _a3.close();
     };
   }, [sdk.data]);
-  function saved(profile, message) {
+  async function saved(profile, message) {
+    await Promise.all([
+      client2.cancelQueries({ queryKey: ["profile", principal], exact: true }),
+      client2.cancelQueries({
+        queryKey: ["telegramLink", principal],
+        exact: true
+      })
+    ]);
     client2.setQueryData(["profile", principal], profile);
     void client2.invalidateQueries({ queryKey: ["users"] });
     void client2.invalidateQueries({ queryKey: ["adminUsers"] });
+    void client2.invalidateQueries({ queryKey: ["players"] });
+    void client2.invalidateQueries({ queryKey: ["tournamentState"] });
     void client2.invalidateQueries({ queryKey: ["telegramLink", principal] });
     setSuccess(message);
   }
   const verify = useMutation({
     mutationFn: (token) => actor.completeTelegramLink(token),
-    onSuccess: (profile) => {
-      saved(profile, "Telegram linked. Your username now matches Telegram.");
+    onSuccess: async (profile) => {
+      await saved(
+        profile,
+        "Telegram linked. Your username now matches Telegram."
+      );
       void challenge.refetch();
     }
   });
   const unlink = useMutation({
     mutationFn: () => actor.unlinkTelegram(),
-    onSuccess: (profile) => {
-      saved(profile, "Telegram unlinked. Your username is unchanged.");
+    onSuccess: async (profile) => {
+      await saved(profile, "Telegram unlinked. Your username is unchanged.");
       void challenge.refetch();
     }
   });
@@ -49556,7 +49680,7 @@ function TelegramLink({
           setWaiting(false);
           if (result.error || !result.id_token) {
             setLoginError(
-              "Telegram linking was cancelled or could not be completed. Try again."
+              result.error === "legacy_login" ? "This bot is using legacy Telegram login. Enable the new Login Widget in BotFather and register this site's URLs." : "Telegram linking was cancelled or could not be completed. Try again."
             );
             return;
           }
@@ -49637,7 +49761,7 @@ function TelegramLink({
               onClick: start,
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Link2, { className: "size-4", "aria-hidden": "true" }),
-                link.data ? t("Sync Telegram username") : t("Link Telegram")
+                link.data ? t("Sync Telegram profile") : t("Link Telegram")
               ]
             }
           ),
@@ -49749,7 +49873,17 @@ function ProfileEditor({
       },
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 border-b border-base-300 pb-5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(UserRound, { className: "size-5 text-primary", "aria-hidden": "true" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            UserAvatar,
+            {
+              user: profile,
+              name: (profile == null ? void 0 : profile.displayName) || (profile == null ? void 0 : profile.username) || t("Member"),
+              alt: t("{v1} avatar", {
+                v1: (profile == null ? void 0 : profile.displayName) || (profile == null ? void 0 : profile.username) || t("Member")
+              }),
+              size: "xl"
+            }
+          ),
           /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-xl font-semibold uppercase", children: t("Your club identity") })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -49951,7 +50085,15 @@ function MatchCard({
                     "p",
                     {
                       className: `truncate font-display font-bold ${compact ? "text-sm" : "text-lg"}`,
-                      children: (player == null ? void 0 : player.name) ?? sourceLabel(side.source, matches)
+                      children: player ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        PlayerIdentity,
+                        {
+                          player,
+                          size: compact ? "xxs" : "xs",
+                          nameClassName: "truncate",
+                          className: "max-w-full"
+                        }
+                      ) : sourceLabel(side.source, matches)
                     }
                   ),
                   player ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-0.5 font-mono text-[9px] font-normal text-base-content/45", children: [
@@ -50619,7 +50761,13 @@ function BracketGraph({
                       className: "flex min-h-11 items-center justify-between gap-3 border border-base-300 px-3 py-2 text-left hover:border-primary/60",
                       onClick: () => findNextMatch(id),
                       children: [
-                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "min-w-0 break-words font-display text-sm font-bold", children: player.name }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "min-w-0 break-words font-display text-sm font-bold", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          PlayerIdentity,
+                          {
+                            player,
+                            nameClassName: "break-words"
+                          }
+                        ) }),
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "shrink-0 font-mono text-[9px] text-base-content/45", children: [
                           registration,
                           " / ",
@@ -51314,11 +51462,18 @@ function MatchesPanel({
                         ["a", "b"].map((side) => {
                           const id = side === "a" ? match.playerAId : match.playerBId;
                           const winner = id !== void 0 && match.winnerId === id;
+                          const player = playerById(view.players, id);
                           return /* @__PURE__ */ jsxRuntimeExports.jsx(
                             "p",
                             {
                               className: `break-words font-display text-sm font-bold ${winner ? "text-primary" : id === void 0 ? "text-base-content/40" : "text-base-content"}`,
-                              children: side === "a" ? playerA : playerB
+                              children: player ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                PlayerIdentity,
+                                {
+                                  player,
+                                  nameClassName: "break-words"
+                                }
+                              ) : side === "a" ? playerA : playerB
                             },
                             side
                           );
@@ -51699,7 +51854,7 @@ function StandardView({
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-5 font-mono text-[10px] text-base-content/25", children: (index2 + 1).toString().padStart(2, "0") }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-12 font-mono text-xs text-primary", children: registrationLabel(player.registrationNumber) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "min-w-0 flex-1 break-words font-display font-bold", children: player.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "min-w-0 flex-1 break-words font-display font-bold", children: /* @__PURE__ */ jsxRuntimeExports.jsx(PlayerIdentity, { player, nameClassName: "break-words" }) }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label border border-base-300 px-2 py-1 text-[10px]", children: [
                   "L",
                   player.skill
@@ -52223,7 +52378,7 @@ function TournamentDetailPage({
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label mb-2 text-primary", children: t("THE FINAL POINT / TOURNAMENT CHAMPION") }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "font-display text-3xl font-bold uppercase", children: [
-          champion.name,
+          /* @__PURE__ */ jsxRuntimeExports.jsx(PlayerIdentity, { player: champion, size: "lg" }),
           " ",
           t("wins.")
         ] })
@@ -53363,9 +53518,6 @@ class UserService {
 }
 const userService = new UserService();
 const USERS_QUERY_KEY = ["users"];
-function memberInitials(name) {
-  return name.trim().split(/\s+/).slice(0, 2).map((part) => part.charAt(0)).join("").toUpperCase();
-}
 function memberDate(timestamp) {
   return formatClubDate(new Date(Number(timestamp / 1000000n)), {
     month: "short",
@@ -53642,16 +53794,15 @@ function UsersPage() {
               className: "member-panel flex min-w-0 flex-col border border-base-300 bg-base-200/30 p-6",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-7 flex items-start justify-between gap-3", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "member-avatar flex size-14 shrink-0 items-center justify-center overflow-hidden border border-base-300 bg-base-300 font-display text-xl font-bold text-primary", children: user.avatar ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    "img",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    UserAvatar,
                     {
-                      src: user.avatar.getDirectURL(),
-                      alt: "",
-                      className: "size-full object-cover"
+                      user,
+                      name: user.displayName || user.username || t("Member"),
+                      size: "xl",
+                      className: "text-primary"
                     }
-                  ) : memberInitials(
-                    user.displayName || user.username || "Member"
-                  ) }),
+                  ),
                   user.role === Role.admin ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-1.5 text-primary", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "size-3.5", "aria-hidden": "true" }),
                     " ",
