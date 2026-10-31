@@ -16,11 +16,13 @@ import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,
+  ArrowUpRight,
   Check,
   CheckCircle2,
   Copy,
   RefreshCw,
   Search,
+  Send,
   ShieldCheck,
   ShieldMinus,
   ShieldPlus,
@@ -196,6 +198,17 @@ export function AdminPage() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
+            <a
+              href="https://t.me/chill_pong_bot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-outline btn-sm"
+              data-ocid="admin.telegram_bot_link"
+            >
+              <Send className="size-4" aria-hidden="true" />
+              @chill_pong_bot
+              <ArrowUpRight className="size-3.5" aria-hidden="true" />
+            </a>
             <a href="/admin/accounts" className="btn btn-outline btn-sm">
               {t("Edit profiles")}
             </a>
