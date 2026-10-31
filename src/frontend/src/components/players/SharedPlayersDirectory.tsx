@@ -1,4 +1,5 @@
 import { type GlobalPlayerView as GlobalPlayer, createActor } from "@/backend";
+import { DeletePlayerDialog } from "@/components/players/DeletePlayerDialog";
 import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { Button } from "@/components/ui/Button";
 import { translateError, useI18n } from "@/i18n";
@@ -6,7 +7,7 @@ import { PLAYERS_QUERY_KEY, playerService } from "@/services/players";
 import { SKILL_LEVELS, registrationLabel } from "@/types/tournament-manager";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Pencil, Plus, Search, X } from "lucide-react";
+import { Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 function SharedPlayerForm({
@@ -86,6 +87,7 @@ export function SharedPlayersDirectory({ isAdmin }: { isAdmin: boolean }) {
   const [skill, setSkill] = useState("all");
   const [sort, setSort] = useState("registration");
   const [editing, setEditing] = useState<GlobalPlayer | "new" | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<GlobalPlayer | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const directory = useQuery({
@@ -148,10 +150,13 @@ export function SharedPlayersDirectory({ isAdmin }: { isAdmin: boolean }) {
               : 0,
     );
   function edit(player: GlobalPlayer | "new") {
-    if (!isAdmin || save.isPending) return;
+    if (!isAdmin || save.isPending || deleteTarget) return;
     save.reset();
     setNotice(null);
     setEditing(player);
+  }
+  function closeEditor() {
+    if (!save.isPending && !deleteTarget) setEditing(null);
   }
   return (
     <section className="mt-6" aria-labelledby="shared-players-title">
@@ -297,7 +302,16 @@ export function SharedPlayersDirectory({ isAdmin }: { isAdmin: boolean }) {
         aria-labelledby="shared-player-dialog-title"
         onCancel={(event) => {
           event.preventDefault();
-          if (!save.isPending) setEditing(null);
+          closeEditor();
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            event.preventDefault();
+            closeEditor();
+          }
+        }}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) closeEditor();
         }}
       >
         {open ? (
@@ -315,8 +329,8 @@ export function SharedPlayersDirectory({ isAdmin }: { isAdmin: boolean }) {
                 variant="ghost"
                 size="icon"
                 aria-label={t("Close")}
-                disabled={save.isPending}
-                onClick={() => setEditing(null)}
+                disabled={save.isPending || !!deleteTarget}
+                onClick={closeEditor}
               >
                 <X className="size-5" aria-hidden="true" />
               </Button>
@@ -326,7 +340,9 @@ export function SharedPlayersDirectory({ isAdmin }: { isAdmin: boolean }) {
                 key={editing === "new" ? "new" : editing?.id.toString()}
                 player={editing === "new" ? undefined : (editing ?? undefined)}
                 pending={save.isPending}
-                onSave={(name, skill) => save.mutate({ name, skill })}
+                onSave={(name, skill) => {
+                  if (!deleteTarget) save.mutate({ name, skill });
+                }}
               />
               {save.isError ? (
                 <p role="alert" className="mt-5 text-sm text-error">
@@ -337,12 +353,38 @@ export function SharedPlayersDirectory({ isAdmin }: { isAdmin: boolean }) {
                   )}
                 </p>
               ) : null}
+              {editing && editing !== "new" ? (
+                <section
+                  aria-labelledby="shared-player-delete-title"
+                  className="mt-6 border border-error/35 bg-error/5 p-4"
+                >
+                  <h3
+                    id="shared-player-delete-title"
+                    className="technical-label mb-3 text-error"
+                  >
+                    {t("Delete player")}
+                  </h3>
+                  <p className="mb-4 text-sm leading-relaxed text-base-content/65">
+                    {t(
+                      "Member accounts and saved tournament registrations, matches, and results will be kept.",
+                    )}
+                  </p>
+                  <Button
+                    variant="danger"
+                    disabled={save.isPending || !!deleteTarget}
+                    onClick={() => setDeleteTarget(editing)}
+                  >
+                    <Trash2 className="size-4" aria-hidden="true" />
+                    {t("Delete player")}
+                  </Button>
+                </section>
+              ) : null}
             </div>
             <footer className="mt-5 shrink-0 border-t border-base-300 pt-4">
               <Button
                 variant="ghost"
-                disabled={save.isPending}
-                onClick={() => setEditing(null)}
+                disabled={save.isPending || !!deleteTarget}
+                onClick={closeEditor}
               >
                 {t("Cancel")}
               </Button>
@@ -350,6 +392,19 @@ export function SharedPlayersDirectory({ isAdmin }: { isAdmin: boolean }) {
           </div>
         ) : null}
       </dialog>
+      {deleteTarget && isAdmin ? (
+        <DeletePlayerDialog
+          player={deleteTarget}
+          actor={actor ?? null}
+          isAdmin={isAdmin}
+          onClose={() => setDeleteTarget(null)}
+          onDeleted={() => {
+            setDeleteTarget(null);
+            setEditing(null);
+            setNotice("Player deleted from the shared directory.");
+          }}
+        />
+      ) : null}
     </section>
   );
 }

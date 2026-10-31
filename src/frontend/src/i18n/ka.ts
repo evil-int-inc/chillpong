@@ -983,4 +983,17 @@ export const ka = {
   "Couldn't delete this tournament. Try again.":
     "ტურნირის წაშლა ვერ მოხერხდა. სცადეთ ხელახლა.",
   "{title} has been deleted.": "ტურნირი „{title}“ წაიშალა.",
+  "Delete player": "მოთამაშის წაშლა",
+  "Delete player?": "წაიშალოს მოთამაშე?",
+  "This permanently removes the player from the shared directory and releases their member link. This cannot be undone.":
+    "მოთამაშე სამუდამოდ წაიშლება საერთო სიიდან და მისი კავშირი წევრის ანგარიშთან გაუქმდება. ამ მოქმედების გაუქმება შეუძლებელია.",
+  "Member accounts and saved tournament registrations, matches, and results will be kept.":
+    "წევრების ანგარიშები, ტურნირებში შენახული რეგისტრაციები, მატჩები და შედეგები შენარჩუნდება.",
+  "Couldn't delete this player. Try again.":
+    "მოთამაშის წაშლა ვერ მოხერხდა. სცადეთ ხელახლა.",
+  "Player deleted from the shared directory.":
+    "მოთამაშე წაიშალა საერთო სიიდან.",
+  "Remove from tournament": "ტურნირიდან ამოღება",
+  "Remove this registration from the selected tournament. The shared player remains available.":
+    "რეგისტრაცია წაიშლება არჩეული ტურნირიდან. მოთამაშე საერთო სიაში დარჩება.",
 } satisfies Record<Message, string>;

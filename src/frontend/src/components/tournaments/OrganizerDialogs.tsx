@@ -18,7 +18,7 @@ import {
 } from "@/types/tournament-manager";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Flag, X } from "lucide-react";
+import { AlertTriangle, Flag, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export type OrganizerModal =
@@ -1227,6 +1227,37 @@ export function OrganizerDialogs({
                 pending={pending}
                 onAction={onAction}
               />
+            ) : null}
+            {modal.kind === "player" &&
+            modal.player &&
+            isAdmin &&
+            modal.player.status !== "removed" ? (
+              <section
+                aria-labelledby="registration-remove-title"
+                className="mt-6 border border-error/35 bg-error/5 p-4"
+              >
+                <h3
+                  id="registration-remove-title"
+                  className="technical-label mb-3 text-error"
+                >
+                  {t("Remove from tournament")}
+                </h3>
+                <p className="mb-4 text-sm leading-relaxed text-base-content/65">
+                  {t(
+                    "Remove this registration from the selected tournament. The shared player remains available.",
+                  )}
+                </p>
+                <Button
+                  variant="danger"
+                  disabled={pending}
+                  onClick={() =>
+                    onOpen({ kind: "remove", player: modal.player! })
+                  }
+                >
+                  <Trash2 className="size-4" aria-hidden="true" />
+                  {t("Remove from tournament")}
+                </Button>
+              </section>
             ) : null}
             {match &&
             (modal.kind === "match" ||

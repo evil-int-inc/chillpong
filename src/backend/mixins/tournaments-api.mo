@@ -34,7 +34,7 @@ mixin (
           let account = PlayersLib.view(identity, users);
           { player with userId = account.userId; avatarUrl = account.avatarUrl };
         };
-        case null { player };
+        case null { { player with globalPlayerId = null; userId = null; avatarUrl = null } };
       };
     }) };
   };
@@ -56,12 +56,8 @@ mixin (
 
   public shared ({ caller }) func updateTournament(id : Nat, input : Tournaments.TournamentInput) : async Tournaments.Tournament {
     RolesLib.requireAdmin(accessControlState, caller);
-    let state = tournamentStates.get(id);
-    let status = switch (state) {
-      case (?engine) { if (engine.started) { if (Bracket.champion(engine) == null) { #live } else { #completed } } else { input.status } };
-      case null { input.status };
-    };
-    TournamentsLib.updateTournament(tournaments, id, { input with status });
+    // The editor explicitly sets the event status, independently of the draw.
+    TournamentsLib.updateTournament(tournaments, id, input);
   };
 
   public shared ({ caller }) func deleteTournament(id : Nat) : async Tournaments.DeleteTournamentResult {
@@ -105,7 +101,11 @@ mixin (
       case _ { Organizer.apply(original, command, now) };
     };
     tournamentStates.add(id, state);
-    let status : Tournaments.TournamentStatus = if (not state.started) { #upcoming } else if (Bracket.champion(state) == null) { #live } else { #completed };
+    // A completed event with an unfinished draw was closed manually. Keep it
+    // closed during corrections. Automatic completion still follows the draw,
+    // so undoing a finished final can reopen an automatically completed event.
+    let manuallyCompleted = tournament.status == #completed and Bracket.champion(original) == null;
+    let status : Tournaments.TournamentStatus = if (manuallyCompleted) { #completed } else if (not state.started) { #upcoming } else if (Bracket.champion(state) == null) { #live } else { #completed };
     tournaments.add(id, { tournament with status; updatedAt = now });
     tournamentView(id, state);
   };

@@ -12,6 +12,10 @@ import type { Principal } from '@icp-sdk/core/principal';
 
 export interface Cell { 'value' : Value, 'name' : string }
 export interface Config { 'clientId' : [] | [string] }
+export type DeletePlayerError = { 'notAuthorized' : null } |
+  { 'notFound' : null };
+export type DeletePlayerResult = { 'ok' : null } |
+  { 'err' : DeletePlayerError };
 export type DeleteTournamentError = { 'notAuthorized' : null } |
   { 'notFound' : null };
 export type DeleteTournamentResult = { 'ok' : null } |
@@ -314,6 +318,7 @@ export interface _SERVICE {
   'createPlayer' : ActorMethod<[PlayerInput], GlobalPlayerView>,
   'createTournament' : ActorMethod<[TournamentInput], Tournament>,
   'createUser' : ActorMethod<[UserId, UserInput], User>,
+  'deletePlayer' : ActorMethod<[bigint], DeletePlayerResult>,
   'deleteTournament' : ActorMethod<[bigint], DeleteTournamentResult>,
   'execute' : ActorMethod<[string], Result>,
   'getApiDoc' : ActorMethod<[], string>,

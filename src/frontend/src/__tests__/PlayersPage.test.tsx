@@ -368,6 +368,29 @@ describe("Players page", () => {
     });
   });
 
+  it("lets admins remove a tournament registration from its player editor after confirmation", async () => {
+    const user = userEvent.setup();
+    state.auth.isAdmin = true;
+    state.manager.apply.mockResolvedValue(lineup());
+    renderPage();
+    await selectTournament(user);
+    await user.click(await screen.findByRole("button", { name: "Edit Beka" }));
+    await user.click(
+      screen.getByRole("button", { name: "Remove from tournament" }),
+    );
+    const confirmation = screen.getByRole("dialog", { name: "Remove player?" });
+    expect(state.manager.apply).not.toHaveBeenCalled();
+    await user.click(
+      within(confirmation).getByRole("button", { name: "Remove player" }),
+    );
+    expect(state.manager.apply).toHaveBeenCalledWith(
+      state.actor,
+      2n,
+      { kind: "removePlayer", playerId: 5n },
+      lineup().tournament,
+    );
+  });
+
   it("registers an existing shared player and opens the late entrant placement flow", async () => {
     const user = userEvent.setup();
     state.auth.isAdmin = true;

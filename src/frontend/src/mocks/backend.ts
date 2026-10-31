@@ -1,5 +1,6 @@
 import { Principal } from "@icp-sdk/core/principal";
 import {
+  DeletePlayerError,
   DeleteTournamentError,
   Role,
   type GlobalPlayerView as GlobalPlayer,
@@ -127,6 +128,13 @@ function roleView(user: User): UserRoleView {
 }
 
 export const mockBackend: backendInterface = {
+  deletePlayer: async (id) => {
+    if (!globalPlayers.some((player) => player.id === id)) {
+      return { __kind__: "err", err: DeletePlayerError.notFound };
+    }
+    globalPlayers = globalPlayers.filter((player) => player.id !== id);
+    return { __kind__: "ok", ok: null };
+  },
   deleteTournament: async (id) => {
     if (!tournaments.some((tournament) => tournament.id === id)) {
       return { __kind__: "err", err: DeleteTournamentError.notFound };

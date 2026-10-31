@@ -257,6 +257,14 @@ export const UserInput = IDL.Record({
   'username' : IDL.Text,
   'displayName' : IDL.Text,
 });
+export const DeletePlayerError = IDL.Variant({
+  'notAuthorized' : IDL.Null,
+  'notFound' : IDL.Null,
+});
+export const DeletePlayerResult = IDL.Variant({
+  'ok' : IDL.Null,
+  'err' : DeletePlayerError,
+});
 export const DeleteTournamentError = IDL.Variant({
   'notAuthorized' : IDL.Null,
   'notFound' : IDL.Null,
@@ -348,6 +356,7 @@ export const idlService = IDL.Service({
   'createPlayer' : IDL.Func([PlayerInput], [GlobalPlayerView], []),
   'createTournament' : IDL.Func([TournamentInput], [Tournament], []),
   'createUser' : IDL.Func([UserId, UserInput], [User], []),
+  'deletePlayer' : IDL.Func([IDL.Nat], [DeletePlayerResult], []),
   'deleteTournament' : IDL.Func([IDL.Nat], [DeleteTournamentResult], []),
   'execute' : IDL.Func([IDL.Text], [Result], ['query']),
   'getApiDoc' : IDL.Func([], [IDL.Text], ['query']),
@@ -645,6 +654,14 @@ export const idlFactory = ({ IDL }) => {
     'username' : IDL.Text,
     'displayName' : IDL.Text,
   });
+  const DeletePlayerError = IDL.Variant({
+    'notAuthorized' : IDL.Null,
+    'notFound' : IDL.Null,
+  });
+  const DeletePlayerResult = IDL.Variant({
+    'ok' : IDL.Null,
+    'err' : DeletePlayerError,
+  });
   const DeleteTournamentError = IDL.Variant({
     'notAuthorized' : IDL.Null,
     'notFound' : IDL.Null,
@@ -736,6 +753,7 @@ export const idlFactory = ({ IDL }) => {
     'createPlayer' : IDL.Func([PlayerInput], [GlobalPlayerView], []),
     'createTournament' : IDL.Func([TournamentInput], [Tournament], []),
     'createUser' : IDL.Func([UserId, UserInput], [User], []),
+    'deletePlayer' : IDL.Func([IDL.Nat], [DeletePlayerResult], []),
     'deleteTournament' : IDL.Func([IDL.Nat], [DeleteTournamentResult], []),
     'execute' : IDL.Func([IDL.Text], [Result], ['query']),
     'getApiDoc' : IDL.Func([], [IDL.Text], ['query']),

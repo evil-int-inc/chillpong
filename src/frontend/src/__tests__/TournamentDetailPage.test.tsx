@@ -173,6 +173,26 @@ beforeEach(() => {
 });
 
 describe("live tournament room", () => {
+  it.each([false, true])(
+    "shows manual completion without inventing a champion for admin=%s",
+    async (isAdmin) => {
+      state.auth.isAdmin = isAdmin;
+      state.actor.getTournament.mockResolvedValue({
+        ...tournament,
+        status: TournamentStatus.completed,
+      });
+      renderRoom();
+      const heading = await screen.findByRole("heading", {
+        name: "Warehouse Cup",
+      });
+      const header = within(heading.closest("header")!);
+      expect(header.getByText("Completed")).toBeVisible();
+      expect(header.queryByText("Live")).toBeNull();
+      expect(screen.queryByText("wins.")).toBeNull();
+      expect(state.actor.applyTournamentCommand).not.toHaveBeenCalled();
+    },
+  );
+
   it.each([
     { width: 390, isAdmin: false },
     { width: 1440, isAdmin: false },

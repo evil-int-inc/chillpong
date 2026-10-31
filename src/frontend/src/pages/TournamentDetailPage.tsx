@@ -1,4 +1,4 @@
-import { createActor } from "@/backend";
+import { TournamentStatus, createActor } from "@/backend";
 import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { BracketGraph } from "@/components/tournaments/BracketGraph";
 import { CopyBracketLink } from "@/components/tournaments/CopyBracketLink";
@@ -393,6 +393,8 @@ export function TournamentDetailPage({
       </div>,
     );
   const champion = playerById(view.players, view.championId);
+  const completed =
+    view.complete || view.tournament.status === TournamentStatus.completed;
   const activePlayers = view.players.filter(
     (player) => player.status !== "removed",
   );
@@ -452,9 +454,9 @@ export function TournamentDetailPage({
             CHILLPONG / CP {tournamentId.toString().padStart(3, "0")}
           </p>
           <span
-            className={`technical-label border px-2 py-1 text-[9px] ${view.complete ? "border-primary/40 text-primary" : !view.canChangeFormat ? "border-secondary/40 text-secondary" : "border-base-300 text-base-content/45"}`}
+            className={`technical-label border px-2 py-1 text-[9px] ${completed ? "border-primary/40 text-primary" : !view.canChangeFormat ? "border-secondary/40 text-secondary" : "border-base-300 text-base-content/45"}`}
           >
-            {view.complete
+            {completed
               ? t("Completed")
               : !view.canChangeFormat
                 ? t("Live")

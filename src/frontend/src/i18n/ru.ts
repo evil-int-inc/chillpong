@@ -979,4 +979,16 @@ export const ru = {
   "Couldn't delete this tournament. Try again.":
     "Не удалось удалить турнир. Попробуйте снова.",
   "{title} has been deleted.": "Турнир «{title}» удалён.",
+  "Delete player": "Удалить игрока",
+  "Delete player?": "Удалить игрока?",
+  "This permanently removes the player from the shared directory and releases their member link. This cannot be undone.":
+    "Игрок будет навсегда удалён из общего списка. Связь с аккаунтом участника будет снята. Это действие нельзя отменить.",
+  "Member accounts and saved tournament registrations, matches, and results will be kept.":
+    "Аккаунты участников, сохранённые регистрации в турнирах, матчи и результаты сохранятся.",
+  "Couldn't delete this player. Try again.":
+    "Не удалось удалить игрока. Попробуйте снова.",
+  "Player deleted from the shared directory.": "Игрок удалён из общего списка.",
+  "Remove from tournament": "Удалить из турнира",
+  "Remove this registration from the selected tournament. The shared player remains available.":
+    "Удалить регистрацию из выбранного турнира. Игрок останется в общем списке.",
 } satisfies Record<Message, string>;

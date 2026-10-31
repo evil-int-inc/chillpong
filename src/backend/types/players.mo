@@ -1,6 +1,9 @@
 import Common "common";
 
 module {
+  public type DeletePlayerError = { #notAuthorized; #notFound };
+  public type DeletePlayerResult = { #ok; #err : DeletePlayerError };
+
   // Club identity is independent of a tournament's monotonic registration ID.
   public type GlobalPlayer = {
     id : Nat;

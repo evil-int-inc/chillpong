@@ -1,231 +1,232 @@
 // Version: 4.0.0
-type AccessControlState__201339279 =
+type AccessControlState__261372415 =
   {
     var adminAssigned : Bool;
-    userRoles : Map__230067015<Principal, UserRole__91647283>
+    userRoles : Map__679956457<Principal, UserRole__45088130>
   };
-type CachedKeys__408913751 = {body : Text; expiresAt : Int};
-type Challenge__865311509 =
+type CachedKeys__118740466 = {body : Text; expiresAt : Int};
+type Challenge__896042439 =
   {clientId : Text; createdAt : Int; expiresAt : Int; nonce : Text};
-type Counters__1003182404 =
+type Counters__114325055 =
   {
     var nextNotificationId : Nat;
     var nextUploadSessionId : Nat;
     var nextVideoId : Nat
   };
-type Counters__177425929 =
+type Counters__311061747 =
   {
     var nextNotificationId : Nat;
     var nextUploadSessionId : Nat;
     var nextVideoId : Nat
   };
-type Counters__287071612 = {var nextTournamentId : Nat};
-type Counters__485904279 =
+type Counters__349982765 =
+  {
+    var nextNotificationId : Nat;
+    var nextPlaylistId : Nat;
+    var nextUploadSessionId : Nat;
+    var nextVideoId : Nat
+  };
+type Counters__820198913 =
   {
     var nextNotificationId : Nat;
     var nextUploadSessionId : Nat;
     var nextVideoId : Nat
   };
-type Counters__592162840 =
+type Counters__857444746 = {var nextTournamentId : Nat};
+type Counters__943581966 =
   {var nextPlayerId : Nat; var nextTournamentId : Nat};
-type Counters__776219605 =
+type Data__261636696<T> = {var count : Nat__242495073; elements : [var ?T]};
+type Data__318629856<K, V> =
+  {var count : Nat__242495073; kvs : [var ?(K, V)]};
+type ExternalBlob__724338717 = Blob;
+type GlobalPlayer__1042385594 =
   {
-    var nextNotificationId : Nat;
-    var nextPlaylistId : Nat;
-    var nextUploadSessionId : Nat;
-    var nextVideoId : Nat
-  };
-type Data__44217153<K, V> = {var count : Nat__227979830; kvs : [var ?(K, V)]};
-type Data__846125122<T> = {var count : Nat__227979830; elements : [var ?T]};
-type ExternalBlob__220559234 = Blob;
-type GlobalPlayer__1039836348 =
-  {
-    createdAt : Timestamp__489896911;
+    createdAt : Timestamp__881172354;
     id : Nat;
     name : Text;
     skillLevel : Nat;
-    updatedAt : Timestamp__489896911;
-    userId : ?UserId__359307712
+    updatedAt : Timestamp__881172354;
+    userId : ?UserId__889935858
   };
-type GlobalPlayer__433234045 =
+type GlobalPlayer__636956351 =
   {
-    createdAt : Timestamp__301639476;
+    createdAt : Timestamp__867202833;
     id : Nat;
     name : Text;
     skillLevel : Nat;
-    updatedAt : Timestamp__301639476;
-    userId : ?UserId__158757552
+    updatedAt : Timestamp__867202833;
+    userId : ?UserId__653285603
   };
-type Internal__23036296<T> =
-  {children : [var ?Node__620761243<T>]; data : Data__846125122<T>};
-type Internal__283199666<K, V> =
-  {children : [var ?Node__204828119<K, V>]; data : Data__44217153<K, V>};
-type Leaf__598469445<K, V> = {data : Data__44217153<K, V>};
-type Leaf__948582970<T> = {data : Data__846125122<T>};
-type Link__822551193 = {linkedAt : Int; subject : Text; username : Text};
-type List__355132335<T> =
+type Internal__116420078<T> =
+  {children : [var ?Node__381153438<T>]; data : Data__261636696<T>};
+type Internal__533453770<K, V> =
+  {children : [var ?Node__83493451<K, V>]; data : Data__318629856<K, V>};
+type Leaf__286774416<K, V> = {data : Data__318629856<K, V>};
+type Leaf__59630373<T> = {data : Data__261636696<T>};
+type Link__1002623170 = {linkedAt : Int; subject : Text; username : Text};
+type List__194091671<T> =
   {
-    var blockIndex : Nat__227979830;
+    var blockIndex : Nat__242495073;
     var blocks : [var [var ?T]];
-    var elementIndex : Nat__227979830
+    var elementIndex : Nat__242495073
   };
-type List__836382695<T> = List__355132335<T>;
-type Map__230067015<K, V> = Map__405889023<K, V>;
-type Map__405889023<K, V> = Map__603270868<K, V>;
-type Map__603270868<K, V> =
-  {var root : Node__204828119<K, V>; var size : Nat__227979830};
-type MatchSource__173584773 =
+type List__338392271<T> = List__194091671<T>;
+type Map__133344505<K, V> = Map__863628887<K, V>;
+type Map__679956457<K, V> = Map__133344505<K, V>;
+type Map__863628887<K, V> =
+  {var root : Node__83493451<K, V>; var size : Nat__242495073};
+type MatchSource__1006027011 =
   {#bye; #loser : Nat; #player : Nat; #winner : Nat};
-type MatchSource__836927700 =
+type MatchSource__243971301 =
   {#bye; #loser : Nat; #player : Nat; #winner : Nat};
-type MatchSource__885781153 =
+type MatchSource__470363877 =
   {#bye; #loser : Nat; #player : Nat; #winner : Nat};
-type Nat__227979830 = Nat__920180692;
+type Nat__242495073 = Nat__920180692;
 type Nat__920180692 = Nat;
-type NewActor__1040413914 =
+type NewActor__1047497543 =
   {
-    accessControlState : AccessControlState__201339279;
-    counters : Counters__287071612;
-    owner : OwnerState__672420373;
-    tournamentStates : Map__230067015<Nat, TournamentStateData__185211701>;
-    tournaments : Map__230067015<Nat, Tournament__395879928>;
-    usernames : Map__230067015<Text, UserId__233300904>;
-    users : Map__230067015<UserId__233300904, User__739211136>
-  };
-type NewActor__147081743 =
-  {users : Map__230067015<Principal, NewUser__741108202>};
-type NewActor__214184801 =
-  {
-    accessControlState : AccessControlState__201339279;
-    counters : Counters__1003182404;
+    accessControlState : AccessControlState__261372415;
+    counters : Counters__820198913;
     notifications :
-      Map__230067015<UserId__492452412,
-                      List__836382695<Notification__454448864>>;
-    storage : StorageState__318305926;
+      Map__679956457<UserId__515135497,
+                      List__338392271<Notification__542543059>>;
+    storage : StorageState__610374905;
     subscribers :
-      Map__230067015<UserId__492452412, Set__70493310<UserId__492452412>>;
+      Map__679956457<UserId__515135497, Set__457284313<UserId__515135497>>;
     subscriptions :
-      Map__230067015<UserId__492452412, Set__70493310<UserId__492452412>>;
-    uploadSessions : Map__230067015<Nat, UploadSession__949803304>;
-    usernames : Map__230067015<Text, UserId__492452412>;
-    users : Map__230067015<UserId__492452412, User__651487727>;
-    videos : Map__230067015<Nat, NewVideo__772532152>
+      Map__679956457<UserId__515135497, Set__457284313<UserId__515135497>>;
+    uploadSessions : Map__679956457<Nat, UploadSession__748366903>;
+    usernames : Map__679956457<Text, UserId__515135497>;
+    users : Map__679956457<UserId__515135497, User__205361988>;
+    videos : Map__679956457<Nat, Video__109729827>
   };
-type NewActor__311564264 =
+type NewActor__216309001 =
   {
-    accessControlState : AccessControlState__201339279;
-    counters : NewCounters__845888662;
+    accessControlState : AccessControlState__261372415;
+    counters : Counters__114325055;
     notifications :
-      Map__230067015<UserId__627489109,
-                      List__836382695<Notification__530914594>>;
-    playlists : Map__230067015<Nat, Playlist__22922453>;
-    storage : StorageState__332683869;
+      Map__679956457<UserId__682082571,
+                      List__338392271<Notification__604516828>>;
+    storage : StorageState__178925894;
     subscribers :
-      Map__230067015<UserId__627489109, Set__70493310<UserId__627489109>>;
+      Map__679956457<UserId__682082571, Set__457284313<UserId__682082571>>;
     subscriptions :
-      Map__230067015<UserId__627489109, Set__70493310<UserId__627489109>>;
-    uploadSessions : Map__230067015<Nat, UploadSession__146182586>;
-    usernames : Map__230067015<Text, UserId__627489109>;
-    users : Map__230067015<UserId__627489109, User__392640650>;
-    videos : Map__230067015<Nat, Video__223929970>
+      Map__679956457<UserId__682082571, Set__457284313<UserId__682082571>>;
+    uploadSessions : Map__679956457<Nat, UploadSession__48878359>;
+    usernames : Map__679956457<Text, UserId__682082571>;
+    users : Map__679956457<UserId__682082571, NewUser__188049256>;
+    videos : Map__679956457<Nat, NewVideo__148754275>
   };
-type NewActor__37944555 =
+type NewActor__259190255 =
   {
-    accessControlState : AccessControlState__201339279;
-    counters : Counters__776219605;
+    accessControlState : AccessControlState__261372415;
+    counters : Counters__349982765;
     notifications :
-      Map__230067015<UserId__717334016,
-                      List__836382695<Notification__326488685>>;
-    owner : OwnerState__737824329;
-    playlists : Map__230067015<Nat, Playlist__5791582>;
-    storage : StorageState__789856954;
+      Map__679956457<UserId__21066712,
+                      List__338392271<Notification__879082015>>;
+    owner : OwnerState__377518726;
+    playlists : Map__679956457<Nat, Playlist__87374321>;
+    storage : StorageState__293410811;
     subscribers :
-      Map__230067015<UserId__717334016, Set__70493310<UserId__717334016>>;
+      Map__679956457<UserId__21066712, Set__457284313<UserId__21066712>>;
     subscriptions :
-      Map__230067015<UserId__717334016, Set__70493310<UserId__717334016>>;
-    uploadSessions : Map__230067015<Nat, UploadSession__868171378>;
-    usernames : Map__230067015<Text, UserId__717334016>;
-    users : Map__230067015<UserId__717334016, NewUser__736721639>;
-    videos : Map__230067015<Nat, Video__47199758>
+      Map__679956457<UserId__21066712, Set__457284313<UserId__21066712>>;
+    uploadSessions : Map__679956457<Nat, UploadSession__169069349>;
+    usernames : Map__679956457<Text, UserId__21066712>;
+    users : Map__679956457<UserId__21066712, NewUser__141614490>;
+    videos : Map__679956457<Nat, Video__370140646>
   };
-type NewActor__756050636 =
+type NewActor__30893995 =
   {
-    accessControlState : AccessControlState__201339279;
-    counters : Counters__592162840;
-    owner : OwnerState__868291661;
-    players : Map__230067015<Nat, GlobalPlayer__1039836348>;
-    telegramCache : TelegramCacheState__758443797;
+    accessControlState : AccessControlState__261372415;
+    counters : NewCounters__786245997;
+    notifications :
+      Map__679956457<UserId__1070114152,
+                      List__338392271<Notification__212335143>>;
+    playlists : Map__679956457<Nat, Playlist__394936065>;
+    storage : StorageState__544585618;
+    subscribers :
+      Map__679956457<UserId__1070114152, Set__457284313<UserId__1070114152>>;
+    subscriptions :
+      Map__679956457<UserId__1070114152, Set__457284313<UserId__1070114152>>;
+    uploadSessions : Map__679956457<Nat, UploadSession__494081559>;
+    usernames : Map__679956457<Text, UserId__1070114152>;
+    users : Map__679956457<UserId__1070114152, User__427798023>;
+    videos : Map__679956457<Nat, Video__1004281086>
+  };
+type NewActor__460382630 =
+  {
+    accessControlState : AccessControlState__261372415;
+    counters : Counters__943581966;
+    owner : OwnerState__811528118;
+    players : Map__679956457<Nat, GlobalPlayer__1042385594>;
+    telegramCache : TelegramCacheState__1167015;
     telegramChallenges :
-      Map__230067015<Principal, TelegramChallenge__796257689>;
-    telegramConfig : TelegramConfigState__881765373;
-    telegramLinks : Map__230067015<Principal, TelegramLink__119324554>;
-    telegramOwners : Map__230067015<Text, Principal>;
-    tournamentStates : Map__230067015<Nat, TournamentStateData__849744412>;
-    tournaments : Map__230067015<Nat, Tournament__1015679667>;
-    usernames : Map__230067015<Text, UserId__359307712>;
-    users : Map__230067015<UserId__359307712, User__877428867>
+      Map__679956457<Principal, TelegramChallenge__258273595>;
+    telegramConfig : TelegramConfigState__676750224;
+    telegramLinks : Map__679956457<Principal, TelegramLink__225583016>;
+    telegramOwners : Map__679956457<Text, Principal>;
+    tournamentStates : Map__679956457<Nat, TournamentStateData__755054266>;
+    tournaments : Map__679956457<Nat, Tournament__904596223>;
+    usernames : Map__679956457<Text, UserId__889935858>;
+    users : Map__679956457<UserId__889935858, User__117997340>
   };
-type NewActor__816907118 =
+type NewActor__623342450 =
   {
-    accessControlState : AccessControlState__201339279;
-    counters : Counters__177425929;
-    notifications :
-      Map__230067015<UserId__102032063,
-                      List__836382695<Notification__588476026>>;
-    storage : StorageState__231977270;
-    subscribers :
-      Map__230067015<UserId__102032063, Set__70493310<UserId__102032063>>;
-    subscriptions :
-      Map__230067015<UserId__102032063, Set__70493310<UserId__102032063>>;
-    uploadSessions : Map__230067015<Nat, UploadSession__709497193>;
-    usernames : Map__230067015<Text, UserId__102032063>;
-    users : Map__230067015<UserId__102032063, User__719185563>;
-    videos : Map__230067015<Nat, Video__229399347>
+    accessControlState : AccessControlState__261372415;
+    counters : Counters__857444746;
+    owner : OwnerState__882107869;
+    tournamentStates : Map__679956457<Nat, TournamentStateData__360142664>;
+    tournaments : Map__679956457<Nat, Tournament__1021621204>;
+    usernames : Map__679956457<Text, UserId__405761030>;
+    users : Map__679956457<UserId__405761030, User__634194939>
   };
-type NewActor__93192655 =
+type NewActor__658182512 =
+  {users : Map__679956457<Principal, NewUser__340917085>};
+type NewActor__734176251 =
   {
-    accessControlState : AccessControlState__201339279;
-    counters : Counters__485904279;
+    accessControlState : AccessControlState__261372415;
+    counters : Counters__311061747;
     notifications :
-      Map__230067015<UserId__6567742,
-                      List__836382695<Notification__753884358>>;
-    storage : StorageState__902502466;
+      Map__679956457<UserId__299322624,
+                      List__338392271<Notification__194916309>>;
+    storage : StorageState__142800722;
     subscribers :
-      Map__230067015<UserId__6567742, Set__70493310<UserId__6567742>>;
+      Map__679956457<UserId__299322624, Set__457284313<UserId__299322624>>;
     subscriptions :
-      Map__230067015<UserId__6567742, Set__70493310<UserId__6567742>>;
-    uploadSessions : Map__230067015<Nat, UploadSession__376384348>;
-    usernames : Map__230067015<Text, UserId__6567742>;
-    users : Map__230067015<UserId__6567742, NewUser__281843501>;
-    videos : Map__230067015<Nat, NewVideo__794546171>
+      Map__679956457<UserId__299322624, Set__457284313<UserId__299322624>>;
+    uploadSessions : Map__679956457<Nat, UploadSession__307295513>;
+    usernames : Map__679956457<Text, UserId__299322624>;
+    users : Map__679956457<UserId__299322624, User__269767060>;
+    videos : Map__679956457<Nat, NewVideo__63042482>
   };
-type NewCounters__845888662 =
+type NewCounters__786245997 =
   {
     var nextNotificationId : Nat;
     var nextPlaylistId : Nat;
     var nextUploadSessionId : Nat;
     var nextVideoId : Nat
   };
-type NewUser__281843501 =
+type NewUser__141614490 =
   {
     avatar : ?Blob;
     bio : ?Text;
-    createdAt : Timestamp__782546889;
+    createdAt : Timestamp__300596825;
     displayName : Text;
-    id : UserId__6567742;
+    id : UserId__21066712;
+    role : ?Role__492265973;
     username : Text
   };
-type NewUser__736721639 =
+type NewUser__188049256 =
   {
     avatar : ?Blob;
     bio : ?Text;
-    createdAt : Timestamp__448015156;
+    createdAt : Timestamp__969149890;
     displayName : Text;
-    id : UserId__717334016;
-    role : ?Role__349349103;
+    id : UserId__682082571;
     username : Text
   };
-type NewUser__741108202 =
+type NewUser__340917085 =
   {
     avatar : ?Blob;
     avatarUrl : ?Text;
@@ -233,242 +234,242 @@ type NewUser__741108202 =
     createdAt : Int;
     displayName : Text;
     id : Principal;
-    role : ?Role__287442295;
+    role : ?Role__804891622;
     username : Text
   };
-type NewVideo__772532152 =
+type NewVideo__148754275 =
   {
-    createdAt : Timestamp__821732354;
+    createdAt : Timestamp__969149890;
     description : ?Text;
     fileSize : Nat;
     filename : Text;
     id : Nat;
     isPrivate : Bool;
     mimeType : Text;
-    ownerId : UserId__492452412;
-    publishedAt : ?Timestamp__821732354;
-    status : VideoStatus__164070526;
-    thumbnail : ?Blob;
-    title : Text;
-    video : Blob
-  };
-type NewVideo__794546171 =
-  {
-    createdAt : Timestamp__782546889;
-    description : ?Text;
-    fileSize : Nat;
-    filename : Text;
-    id : Nat;
-    isPrivate : Bool;
-    mimeType : Text;
-    ownerId : UserId__6567742;
-    publishedAt : ?Timestamp__782546889;
-    status : VideoStatus__38300231;
+    ownerId : UserId__682082571;
+    publishedAt : ?Timestamp__969149890;
+    status : VideoStatus__148216005;
     thumbnail : ?Blob;
     title : Text;
     video : Blob;
     viewCount : Nat
   };
-type Node__204828119<K, V> =
-  {#internal : Internal__283199666<K, V>; #leaf : Leaf__598469445<K, V>};
-type Node__620761243<T> =
-  {#internal : Internal__23036296<T>; #leaf : Leaf__948582970<T>};
-type NotificationKind__62040954 =
+type NewVideo__63042482 =
   {
-    #newSubscriber : {channelId : UserId__102032063};
-    #newVideo : {channelId : UserId__102032063; videoId : Nat}
-  };
-type NotificationKind__711683500 =
-  {
-    #newSubscriber : {channelId : UserId__6567742};
-    #newVideo : {channelId : UserId__6567742; videoId : Nat}
-  };
-type NotificationKind__715826093 =
-  {
-    #newSubscriber : {channelId : UserId__492452412};
-    #newVideo : {channelId : UserId__492452412; videoId : Nat}
-  };
-type NotificationKind__7745454 =
-  {
-    #newSubscriber : {channelId : UserId__233300904};
-    #newVideo : {channelId : UserId__233300904; videoId : Nat}
-  };
-type NotificationKind__795237022 =
-  {
-    #newSubscriber : {channelId : UserId__627489109};
-    #newVideo : {channelId : UserId__627489109; videoId : Nat}
-  };
-type NotificationKind__985219311 =
-  {
-    #newSubscriber : {channelId : UserId__717334016};
-    #newVideo : {channelId : UserId__717334016; videoId : Nat}
-  };
-type Notification__326488685 =
-  {
-    createdAt : Timestamp__448015156;
+    createdAt : Timestamp__585836105;
+    description : ?Text;
+    fileSize : Nat;
+    filename : Text;
     id : Nat;
-    kind : NotificationKind__985219311;
-    read : Bool;
-    recipientId : UserId__717334016
+    isPrivate : Bool;
+    mimeType : Text;
+    ownerId : UserId__299322624;
+    publishedAt : ?Timestamp__585836105;
+    status : VideoStatus__502480782;
+    thumbnail : ?Blob;
+    title : Text;
+    video : Blob
   };
-type Notification__377582216 =
+type Node__381153438<T> =
+  {#internal : Internal__116420078<T>; #leaf : Leaf__59630373<T>};
+type Node__83493451<K, V> =
+  {#internal : Internal__533453770<K, V>; #leaf : Leaf__286774416<K, V>};
+type NotificationKind__106224784 =
   {
-    createdAt : Timestamp__553296630;
+    #newSubscriber : {channelId : UserId__1070114152};
+    #newVideo : {channelId : UserId__1070114152; videoId : Nat}
+  };
+type NotificationKind__109730079 =
+  {
+    #newSubscriber : {channelId : UserId__21066712};
+    #newVideo : {channelId : UserId__21066712; videoId : Nat}
+  };
+type NotificationKind__369861847 =
+  {
+    #newSubscriber : {channelId : UserId__515135497};
+    #newVideo : {channelId : UserId__515135497; videoId : Nat}
+  };
+type NotificationKind__456769463 =
+  {
+    #newSubscriber : {channelId : UserId__682082571};
+    #newVideo : {channelId : UserId__682082571; videoId : Nat}
+  };
+type NotificationKind__490671925 =
+  {
+    #newSubscriber : {channelId : UserId__405761030};
+    #newVideo : {channelId : UserId__405761030; videoId : Nat}
+  };
+type NotificationKind__693899164 =
+  {
+    #newSubscriber : {channelId : UserId__299322624};
+    #newVideo : {channelId : UserId__299322624; videoId : Nat}
+  };
+type Notification__194916309 =
+  {
+    createdAt : Timestamp__585836105;
     id : Nat;
-    kind : NotificationKind__7745454;
+    kind : NotificationKind__693899164;
     read : Bool;
-    recipientId : UserId__233300904
+    recipientId : UserId__299322624
   };
-type Notification__454448864 =
+type Notification__212335143 =
   {
-    createdAt : Timestamp__821732354;
+    createdAt : Timestamp__92058377;
     id : Nat;
-    kind : NotificationKind__715826093;
+    kind : NotificationKind__106224784;
     read : Bool;
-    recipientId : UserId__492452412
+    recipientId : UserId__1070114152
   };
-type Notification__530914594 =
+type Notification__542543059 =
   {
-    createdAt : Timestamp__163841900;
+    createdAt : Timestamp__34942582;
     id : Nat;
-    kind : NotificationKind__795237022;
+    kind : NotificationKind__369861847;
     read : Bool;
-    recipientId : UserId__627489109
+    recipientId : UserId__515135497
   };
-type Notification__588476026 =
+type Notification__604516828 =
   {
-    createdAt : Timestamp__233582861;
+    createdAt : Timestamp__969149890;
     id : Nat;
-    kind : NotificationKind__62040954;
+    kind : NotificationKind__456769463;
     read : Bool;
-    recipientId : UserId__102032063
+    recipientId : UserId__682082571
   };
-type Notification__753884358 =
+type Notification__623850570 =
   {
-    createdAt : Timestamp__782546889;
+    createdAt : Timestamp__1010249634;
     id : Nat;
-    kind : NotificationKind__711683500;
+    kind : NotificationKind__490671925;
     read : Bool;
-    recipientId : UserId__6567742
+    recipientId : UserId__405761030
   };
-type OldActor__1059771209 =
+type Notification__879082015 =
   {
-    accessControlState : AccessControlState__201339279;
-    counters : OldCounters__241796366;
+    createdAt : Timestamp__300596825;
+    id : Nat;
+    kind : NotificationKind__109730079;
+    read : Bool;
+    recipientId : UserId__21066712
+  };
+type OldActor__190952464 =
+  {
+    accessControlState : AccessControlState__261372415;
+    counters : OldCounters__285619044;
+    owner : OwnerState__811528118;
+    tournamentStates : Map__679956457<Nat, OldState__147858>;
+    tournaments : Map__679956457<Nat, Tournament__904596223>;
+    usernames : Map__679956457<Text, UserId__889935858>;
+    users : Map__679956457<UserId__889935858, User__117997340>
+  };
+type OldActor__352325703 =
+  {
+    accessControlState : AccessControlState__261372415;
+    counters : OldCounters__744852177;
     notifications :
-      Map__230067015<UserId__627489109,
-                      List__836382695<Notification__530914594>>;
-    storage : StorageState__332683869;
+      Map__679956457<UserId__405761030,
+                      List__338392271<Notification__623850570>>;
+    owner : OwnerState__882107869;
+    playlists : Map__679956457<Nat, Playlist__237522937>;
+    storage : StorageState__463465626;
     subscribers :
-      Map__230067015<UserId__627489109, Set__70493310<UserId__627489109>>;
+      Map__679956457<UserId__405761030, Set__457284313<UserId__405761030>>;
     subscriptions :
-      Map__230067015<UserId__627489109, Set__70493310<UserId__627489109>>;
-    uploadSessions : Map__230067015<Nat, UploadSession__146182586>;
-    usernames : Map__230067015<Text, UserId__627489109>;
-    users : Map__230067015<UserId__627489109, User__392640650>;
-    videos : Map__230067015<Nat, Video__223929970>
+      Map__679956457<UserId__405761030, Set__457284313<UserId__405761030>>;
+    uploadSessions : Map__679956457<Nat, UploadSession__242907587>;
+    usernames : Map__679956457<Text, UserId__405761030>;
+    users : Map__679956457<UserId__405761030, User__634194939>;
+    videos : Map__679956457<Nat, Video__488773457>
   };
-type OldActor__281766694 =
+type OldActor__521764651 =
   {
-    accessControlState : AccessControlState__201339279;
-    counters : OldCounters__392037715;
-    owner : OwnerState__868291661;
-    tournamentStates : Map__230067015<Nat, OldState__1056713329>;
-    tournaments : Map__230067015<Nat, Tournament__1015679667>;
-    usernames : Map__230067015<Text, UserId__359307712>;
-    users : Map__230067015<UserId__359307712, User__877428867>
-  };
-type OldActor__724703710 =
-  {users : Map__230067015<Principal, OldUser__599188639>};
-type OldActor__73935259 =
-  {
-    accessControlState : AccessControlState__201339279;
-    counters : Counters__485904279;
+    accessControlState : AccessControlState__261372415;
+    counters : Counters__349982765;
     notifications :
-      Map__230067015<UserId__6567742,
-                      List__836382695<Notification__753884358>>;
-    storage : StorageState__902502466;
+      Map__679956457<UserId__21066712,
+                      List__338392271<Notification__879082015>>;
+    playlists : Map__679956457<Nat, Playlist__87374321>;
+    storage : StorageState__293410811;
     subscribers :
-      Map__230067015<UserId__6567742, Set__70493310<UserId__6567742>>;
+      Map__679956457<UserId__21066712, Set__457284313<UserId__21066712>>;
     subscriptions :
-      Map__230067015<UserId__6567742, Set__70493310<UserId__6567742>>;
-    uploadSessions : Map__230067015<Nat, UploadSession__376384348>;
-    usernames : Map__230067015<Text, UserId__6567742>;
-    users : Map__230067015<UserId__6567742, OldUser__988560513>;
-    videos : Map__230067015<Nat, OldVideo__246683380>
+      Map__679956457<UserId__21066712, Set__457284313<UserId__21066712>>;
+    uploadSessions : Map__679956457<Nat, UploadSession__169069349>;
+    usernames : Map__679956457<Text, UserId__21066712>;
+    users : Map__679956457<UserId__21066712, OldUser__264202020>;
+    videos : Map__679956457<Nat, Video__370140646>
   };
-type OldActor__764662210 =
+type OldActor__578604593 =
   {
-    accessControlState : AccessControlState__201339279;
-    counters : Counters__1003182404;
+    accessControlState : AccessControlState__261372415;
+    counters : OldCounters__324762481;
     notifications :
-      Map__230067015<UserId__492452412,
-                      List__836382695<Notification__454448864>>;
-    storage : StorageState__318305926;
+      Map__679956457<UserId__1070114152,
+                      List__338392271<Notification__212335143>>;
+    storage : StorageState__544585618;
     subscribers :
-      Map__230067015<UserId__492452412, Set__70493310<UserId__492452412>>;
+      Map__679956457<UserId__1070114152, Set__457284313<UserId__1070114152>>;
     subscriptions :
-      Map__230067015<UserId__492452412, Set__70493310<UserId__492452412>>;
-    uploadSessions : Map__230067015<Nat, UploadSession__949803304>;
-    usernames : Map__230067015<Text, UserId__492452412>;
-    users : Map__230067015<UserId__492452412, User__651487727>;
-    videos : Map__230067015<Nat, OldVideo__102392380>
+      Map__679956457<UserId__1070114152, Set__457284313<UserId__1070114152>>;
+    uploadSessions : Map__679956457<Nat, UploadSession__494081559>;
+    usernames : Map__679956457<Text, UserId__1070114152>;
+    users : Map__679956457<UserId__1070114152, User__427798023>;
+    videos : Map__679956457<Nat, Video__1004281086>
   };
-type OldActor__792294613 = {};
-type OldActor__916917201 =
+type OldActor__856747021 = {};
+type OldActor__942908590 =
   {
-    accessControlState : AccessControlState__201339279;
-    counters : Counters__776219605;
+    accessControlState : AccessControlState__261372415;
+    counters : Counters__311061747;
     notifications :
-      Map__230067015<UserId__717334016,
-                      List__836382695<Notification__326488685>>;
-    playlists : Map__230067015<Nat, Playlist__5791582>;
-    storage : StorageState__789856954;
+      Map__679956457<UserId__299322624,
+                      List__338392271<Notification__194916309>>;
+    storage : StorageState__142800722;
     subscribers :
-      Map__230067015<UserId__717334016, Set__70493310<UserId__717334016>>;
+      Map__679956457<UserId__299322624, Set__457284313<UserId__299322624>>;
     subscriptions :
-      Map__230067015<UserId__717334016, Set__70493310<UserId__717334016>>;
-    uploadSessions : Map__230067015<Nat, UploadSession__868171378>;
-    usernames : Map__230067015<Text, UserId__717334016>;
-    users : Map__230067015<UserId__717334016, OldUser__541675245>;
-    videos : Map__230067015<Nat, Video__47199758>
+      Map__679956457<UserId__299322624, Set__457284313<UserId__299322624>>;
+    uploadSessions : Map__679956457<Nat, UploadSession__307295513>;
+    usernames : Map__679956457<Text, UserId__299322624>;
+    users : Map__679956457<UserId__299322624, User__269767060>;
+    videos : Map__679956457<Nat, OldVideo__218677815>
   };
-type OldActor__970163513 =
+type OldActor__95622544 =
+  {users : Map__679956457<Principal, OldUser__303318649>};
+type OldActor__970475634 =
   {
-    accessControlState : AccessControlState__201339279;
-    counters : OldCounters__637956642;
+    accessControlState : AccessControlState__261372415;
+    counters : Counters__114325055;
     notifications :
-      Map__230067015<UserId__233300904,
-                      List__836382695<Notification__377582216>>;
-    owner : OwnerState__672420373;
-    playlists : Map__230067015<Nat, Playlist__1015849449>;
-    storage : StorageState__582478514;
+      Map__679956457<UserId__682082571,
+                      List__338392271<Notification__604516828>>;
+    storage : StorageState__178925894;
     subscribers :
-      Map__230067015<UserId__233300904, Set__70493310<UserId__233300904>>;
+      Map__679956457<UserId__682082571, Set__457284313<UserId__682082571>>;
     subscriptions :
-      Map__230067015<UserId__233300904, Set__70493310<UserId__233300904>>;
-    uploadSessions : Map__230067015<Nat, UploadSession__751473154>;
-    usernames : Map__230067015<Text, UserId__233300904>;
-    users : Map__230067015<UserId__233300904, User__739211136>;
-    videos : Map__230067015<Nat, Video__1000247654>
+      Map__679956457<UserId__682082571, Set__457284313<UserId__682082571>>;
+    uploadSessions : Map__679956457<Nat, UploadSession__48878359>;
+    usernames : Map__679956457<Text, UserId__682082571>;
+    users : Map__679956457<UserId__682082571, OldUser__887051231>;
+    videos : Map__679956457<Nat, OldVideo__618185565>
   };
-type OldCounters__241796366 =
+type OldCounters__285619044 = {var nextTournamentId : Nat};
+type OldCounters__324762481 =
   {
     var nextNotificationId : Nat;
     var nextUploadSessionId : Nat;
     var nextVideoId : Nat
   };
-type OldCounters__392037715 = {var nextTournamentId : Nat};
-type OldCounters__637956642 =
+type OldCounters__744852177 =
   {
     var nextNotificationId : Nat;
     var nextPlaylistId : Nat;
     var nextUploadSessionId : Nat;
     var nextVideoId : Nat
   };
-type OldHistory__618920228 =
-  {action : TournamentAction__652054679; snapshot : OldSnapshot__699050040};
-type OldPlayer__634441436 =
+type OldHistory__672048762 =
+  {action : TournamentAction__622462648; snapshot : OldSnapshot__542706384};
+type OldPlayer__272451569 =
   {
     id : Nat;
     name : Text;
@@ -478,196 +479,196 @@ type OldPlayer__634441436 =
     removed : Bool;
     skillLevel : Nat
   };
-type OldSnapshot__699050040 =
+type OldSnapshot__542706384 =
   {
-    elimination : TournamentElimination__491545262;
-    matches : [TournamentMatch__200222966];
-    players : [OldPlayer__634441436];
+    elimination : TournamentElimination__609208946;
+    matches : [TournamentMatch__437837541];
+    players : [OldPlayer__272451569];
     started : Bool;
     tableCount : Nat
   };
-type OldState__1056713329 =
+type OldState__147858 =
   {
-    elimination : TournamentElimination__491545262;
-    history : [OldHistory__618920228];
-    matches : [TournamentMatch__200222966];
+    elimination : TournamentElimination__609208946;
+    history : [OldHistory__672048762];
+    matches : [TournamentMatch__437837541];
     nextActionId : Nat;
     nextMatchId : Nat;
     nextRegistrationNumber : Nat;
-    players : [OldPlayer__634441436];
+    players : [OldPlayer__272451569];
     started : Bool;
     tableCount : Nat;
     updatedAt : Int
   };
-type OldUser__541675245 =
+type OldUser__264202020 =
   {
     avatar : ?Blob;
     bio : ?Text;
-    createdAt : Timestamp__448015156;
+    createdAt : Timestamp__300596825;
     displayName : Text;
-    id : UserId__717334016;
+    id : UserId__21066712;
     username : Text
   };
-type OldUser__599188639 =
+type OldUser__303318649 =
   {
     avatar : ?Blob;
     bio : ?Text;
     createdAt : Int;
     displayName : Text;
     id : Principal;
-    role : ?Role__287442295;
+    role : ?Role__804891622;
     username : Text
   };
-type OldUser__988560513 =
+type OldUser__887051231 =
   {
     avatar : ?Text;
     bio : ?Text;
-    createdAt : Timestamp__782546889;
+    createdAt : Timestamp__969149890;
     displayName : Text;
-    id : UserId__6567742;
+    id : UserId__682082571;
     username : Text
   };
-type OldVideo__102392380 =
+type OldVideo__218677815 =
   {
-    createdAt : Timestamp__821732354;
+    createdAt : Timestamp__585836105;
     description : ?Text;
     fileSize : Nat;
     id : Nat;
     mimeType : Text;
-    ownerId : UserId__492452412;
-    publishedAt : ?Timestamp__821732354;
-    status : VideoStatus__164070526;
+    ownerId : UserId__299322624;
+    publishedAt : ?Timestamp__585836105;
+    status : VideoStatus__502480782;
     thumbnailAssetId : ?Text;
     title : Text;
     videoAssetId : Text
   };
-type OldVideo__246683380 =
+type OldVideo__618185565 =
   {
-    createdAt : Timestamp__782546889;
+    createdAt : Timestamp__969149890;
     description : ?Text;
     fileSize : Nat;
     filename : Text;
     id : Nat;
     isPrivate : Bool;
     mimeType : Text;
-    ownerId : UserId__6567742;
-    publishedAt : ?Timestamp__782546889;
-    status : VideoStatus__38300231;
+    ownerId : UserId__682082571;
+    publishedAt : ?Timestamp__969149890;
+    status : VideoStatus__148216005;
     thumbnail : ?Blob;
     title : Text;
     video : Blob
   };
-type OwnerState__672420373 =
+type OwnerState__377518726 =
   {var ownerApplied : Bool; var ownerPrincipal : ?Principal};
-type OwnerState__737824329 =
+type OwnerState__811528118 =
   {var ownerApplied : Bool; var ownerPrincipal : ?Principal};
-type OwnerState__868291661 =
+type OwnerState__882107869 =
   {var ownerApplied : Bool; var ownerPrincipal : ?Principal};
-type Playlist__1015849449 =
+type Playlist__237522937 =
   {
-    createdAt : Timestamp__553296630;
+    createdAt : Timestamp__1010249634;
     id : Nat;
     isPrivate : Bool;
-    ownerId : UserId__233300904;
+    ownerId : UserId__405761030;
     title : Text;
-    updatedAt : Timestamp__553296630;
+    updatedAt : Timestamp__1010249634;
     videoIds : [Nat]
   };
-type Playlist__22922453 =
+type Playlist__394936065 =
   {
-    createdAt : Timestamp__163841900;
+    createdAt : Timestamp__92058377;
     id : Nat;
     isPrivate : Bool;
-    ownerId : UserId__627489109;
+    ownerId : UserId__1070114152;
     title : Text;
-    updatedAt : Timestamp__163841900;
+    updatedAt : Timestamp__92058377;
     videoIds : [Nat]
   };
-type Playlist__5791582 =
+type Playlist__87374321 =
   {
-    createdAt : Timestamp__448015156;
+    createdAt : Timestamp__300596825;
     id : Nat;
     isPrivate : Bool;
-    ownerId : UserId__717334016;
+    ownerId : UserId__21066712;
     title : Text;
-    updatedAt : Timestamp__448015156;
+    updatedAt : Timestamp__300596825;
     videoIds : [Nat]
   };
-type Role__243528967 = {#admin};
-type Role__287442295 = {#admin};
-type Role__349349103 = {#admin};
-type Role__394731314 = {#admin};
-type Role__717780527 = {#admin};
-type Set__1053317950<T> =
-  {var root : Node__620761243<T>; var size : Nat__227979830};
-type Set__70493310<T> = Set__1053317950<T>;
-type StorageState__231977270 = {var providers : [Text]};
-type StorageState__318305926 = {var providers : [Text]};
-type StorageState__332683869 = {var providers : [Text]};
-type StorageState__582478514 = {var providers : [Text]};
-type StorageState__789856954 = {var providers : [Text]};
-type StorageState__902502466 = {var providers : [Text]};
-type TelegramCacheState__758443797 =
-  {var keys : ?TelegramCachedKeys__1017184802};
-type TelegramCachedKeys__1017184802 = {body : Text; expiresAt : Int};
-type TelegramChallenge__796257689 =
+type Role__222711035 = {#admin};
+type Role__309273540 = {#admin};
+type Role__492265973 = {#admin};
+type Role__708326091 = {#admin};
+type Role__804891622 = {#admin};
+type Set__246251635<T> =
+  {var root : Node__381153438<T>; var size : Nat__242495073};
+type Set__457284313<T> = Set__246251635<T>;
+type StorageState__142800722 = {var providers : [Text]};
+type StorageState__178925894 = {var providers : [Text]};
+type StorageState__293410811 = {var providers : [Text]};
+type StorageState__463465626 = {var providers : [Text]};
+type StorageState__544585618 = {var providers : [Text]};
+type StorageState__610374905 = {var providers : [Text]};
+type TelegramCacheState__1167015 =
+  {var keys : ?TelegramCachedKeys__426316937};
+type TelegramCachedKeys__426316937 = {body : Text; expiresAt : Int};
+type TelegramChallenge__258273595 =
   {clientId : Text; createdAt : Int; expiresAt : Int; nonce : Text};
-type TelegramConfigState__881765373 = {var clientId : ?Text};
-type TelegramLink__119324554 =
+type TelegramConfigState__676750224 = {var clientId : ?Text};
+type TelegramLink__225583016 =
   {linkedAt : Int; subject : Text; username : Text};
-type Timestamp__163841900 = Int;
-type Timestamp__233582861 = Int;
-type Timestamp__301639476 = Int;
-type Timestamp__448015156 = Int;
-type Timestamp__489896911 = Int;
-type Timestamp__553296630 = Int;
-type Timestamp__782546889 = Int;
-type Timestamp__821732354 = Int;
-type TournamentAction__1015781336 =
-  {caption : Text; createdAt : Timestamp__301639476; id : Nat};
-type TournamentAction__481048844 =
-  {caption : Text; createdAt : Timestamp__553296630; id : Nat};
-type TournamentAction__652054679 =
-  {caption : Text; createdAt : Timestamp__489896911; id : Nat};
-type TournamentBracket__357837475 =
+type Timestamp__1010249634 = Int;
+type Timestamp__300596825 = Int;
+type Timestamp__34942582 = Int;
+type Timestamp__585836105 = Int;
+type Timestamp__867202833 = Int;
+type Timestamp__881172354 = Int;
+type Timestamp__92058377 = Int;
+type Timestamp__969149890 = Int;
+type TournamentAction__35323075 =
+  {caption : Text; createdAt : Timestamp__1010249634; id : Nat};
+type TournamentAction__622462648 =
+  {caption : Text; createdAt : Timestamp__881172354; id : Nat};
+type TournamentAction__950495246 =
+  {caption : Text; createdAt : Timestamp__867202833; id : Nat};
+type TournamentBracket__368757748 =
   {#grandFinal; #losers; #resetFinal; #winners};
-type TournamentBracket__631698015 =
+type TournamentBracket__45571616 =
   {#grandFinal; #losers; #resetFinal; #winners};
-type TournamentBracket__763145018 =
+type TournamentBracket__551081822 =
   {#grandFinal; #losers; #resetFinal; #winners};
-type TournamentElimination__491545262 =
+type TournamentElimination__461312602 =
   {#doubleElimination; #singleElimination};
-type TournamentElimination__528582440 =
+type TournamentElimination__609208946 =
   {#doubleElimination; #singleElimination};
-type TournamentElimination__977315717 =
+type TournamentElimination__817365292 =
   {#doubleElimination; #singleElimination};
-type TournamentFormat__190292373 = {#doubles; #singles};
-type TournamentFormat__509402924 = {#doubles; #singles};
-type TournamentFormat__720572682 = {#doubles; #singles};
-type TournamentHistoryEntry__1003246225 =
+type TournamentFormat__1051705035 = {#doubles; #singles};
+type TournamentFormat__458326327 = {#doubles; #singles};
+type TournamentFormat__79554317 = {#doubles; #singles};
+type TournamentHistoryEntry__1067981887 =
   {
-    action : TournamentAction__1015781336;
-    snapshot : TournamentSnapshot__630781586
+    action : TournamentAction__950495246;
+    snapshot : TournamentSnapshot__384883713
   };
-type TournamentHistoryEntry__363860423 =
+type TournamentHistoryEntry__147654687 =
   {
-    action : TournamentAction__652054679;
-    snapshot : TournamentSnapshot__1182325
+    action : TournamentAction__622462648;
+    snapshot : TournamentSnapshot__15026021
   };
-type TournamentHistoryEntry__708206741 =
+type TournamentHistoryEntry__397748245 =
   {
-    action : TournamentAction__481048844;
-    snapshot : TournamentSnapshot__766352259
+    action : TournamentAction__35323075;
+    snapshot : TournamentSnapshot__414262708
   };
-type TournamentMatchStatus__114053792 =
+type TournamentMatchStatus__222603877 =
   {#blocked; #bye; #cancelled; #completed; #playing; #ready};
-type TournamentMatchStatus__901365494 =
+type TournamentMatchStatus__266036740 =
   {#blocked; #bye; #cancelled; #completed; #playing; #ready};
-type TournamentMatchStatus__984372147 =
+type TournamentMatchStatus__361103596 =
   {#blocked; #bye; #cancelled; #completed; #playing; #ready};
-type TournamentMatch__200222966 =
+type TournamentMatch__1039079176 =
   {
-    bracket : TournamentBracket__763145018;
+    bracket : TournamentBracket__551081822;
     id : Nat;
     loserId : ?Nat;
     manualOverride : Bool;
@@ -678,15 +679,15 @@ type TournamentMatch__200222966 =
     round : Nat;
     scoreA : ?Nat;
     scoreB : ?Nat;
-    sourceA : MatchSource__836927700;
-    sourceB : MatchSource__836927700;
-    status : TournamentMatchStatus__901365494;
+    sourceA : MatchSource__1006027011;
+    sourceB : MatchSource__1006027011;
+    status : TournamentMatchStatus__222603877;
     table : ?Nat;
     winnerId : ?Nat
   };
-type TournamentMatch__289593269 =
+type TournamentMatch__437837541 =
   {
-    bracket : TournamentBracket__631698015;
+    bracket : TournamentBracket__45571616;
     id : Nat;
     loserId : ?Nat;
     manualOverride : Bool;
@@ -697,15 +698,15 @@ type TournamentMatch__289593269 =
     round : Nat;
     scoreA : ?Nat;
     scoreB : ?Nat;
-    sourceA : MatchSource__173584773;
-    sourceB : MatchSource__173584773;
-    status : TournamentMatchStatus__984372147;
+    sourceA : MatchSource__470363877;
+    sourceB : MatchSource__470363877;
+    status : TournamentMatchStatus__266036740;
     table : ?Nat;
     winnerId : ?Nat
   };
-type TournamentMatch__336709022 =
+type TournamentMatch__545560548 =
   {
-    bracket : TournamentBracket__357837475;
+    bracket : TournamentBracket__368757748;
     id : Nat;
     loserId : ?Nat;
     manualOverride : Bool;
@@ -716,436 +717,436 @@ type TournamentMatch__336709022 =
     round : Nat;
     scoreA : ?Nat;
     scoreB : ?Nat;
-    sourceA : MatchSource__885781153;
-    sourceB : MatchSource__885781153;
-    status : TournamentMatchStatus__114053792;
+    sourceA : MatchSource__243971301;
+    sourceB : MatchSource__243971301;
+    status : TournamentMatchStatus__361103596;
     table : ?Nat;
     winnerId : ?Nat
   };
-type TournamentPlayerData__148205111 =
+type TournamentPlayerData__216480658 =
   {
     globalPlayerId : ?Nat;
     id : Nat;
     name : Text;
     queuePriority : Int;
-    registeredAt : Timestamp__489896911;
+    registeredAt : Timestamp__867202833;
     registrationNumber : Nat;
     removed : Bool;
     skillLevel : Nat
   };
-type TournamentPlayerData__554997312 =
+type TournamentPlayerData__523644074 =
+  {
+    id : Nat;
+    name : Text;
+    queuePriority : Int;
+    registeredAt : Timestamp__1010249634;
+    registrationNumber : Nat;
+    removed : Bool;
+    skillLevel : Nat
+  };
+type TournamentPlayerData__791298130 =
   {
     globalPlayerId : ?Nat;
     id : Nat;
     name : Text;
     queuePriority : Int;
-    registeredAt : Timestamp__301639476;
+    registeredAt : Timestamp__881172354;
     registrationNumber : Nat;
     removed : Bool;
     skillLevel : Nat
   };
-type TournamentPlayerData__842661514 =
+type TournamentSnapshot__15026021 =
   {
-    id : Nat;
-    name : Text;
-    queuePriority : Int;
-    registeredAt : Timestamp__553296630;
-    registrationNumber : Nat;
-    removed : Bool;
-    skillLevel : Nat
-  };
-type TournamentSnapshot__1182325 =
-  {
-    elimination : TournamentElimination__491545262;
-    matches : [TournamentMatch__200222966];
-    players : [TournamentPlayerData__148205111];
+    elimination : TournamentElimination__609208946;
+    matches : [TournamentMatch__437837541];
+    players : [TournamentPlayerData__791298130];
     started : Bool;
     tableCount : Nat
   };
-type TournamentSnapshot__630781586 =
+type TournamentSnapshot__384883713 =
   {
-    elimination : TournamentElimination__977315717;
-    matches : [TournamentMatch__336709022];
-    players : [TournamentPlayerData__554997312];
+    elimination : TournamentElimination__817365292;
+    matches : [TournamentMatch__1039079176];
+    players : [TournamentPlayerData__216480658];
     started : Bool;
     tableCount : Nat
   };
-type TournamentSnapshot__766352259 =
+type TournamentSnapshot__414262708 =
   {
-    elimination : TournamentElimination__528582440;
-    matches : [TournamentMatch__289593269];
-    players : [TournamentPlayerData__842661514];
+    elimination : TournamentElimination__461312602;
+    matches : [TournamentMatch__545560548];
+    players : [TournamentPlayerData__523644074];
     started : Bool;
     tableCount : Nat
   };
-type TournamentStateData__185211701 =
+type TournamentStateData__338944453 =
   {
-    elimination : TournamentElimination__528582440;
-    history : [TournamentHistoryEntry__708206741];
-    matches : [TournamentMatch__289593269];
+    elimination : TournamentElimination__817365292;
+    history : [TournamentHistoryEntry__1067981887];
+    matches : [TournamentMatch__1039079176];
     nextActionId : Nat;
     nextMatchId : Nat;
     nextRegistrationNumber : Nat;
-    players : [TournamentPlayerData__842661514];
+    players : [TournamentPlayerData__216480658];
     started : Bool;
     tableCount : Nat;
-    updatedAt : Timestamp__553296630
+    updatedAt : Timestamp__867202833
   };
-type TournamentStateData__294373932 =
+type TournamentStateData__360142664 =
   {
-    elimination : TournamentElimination__977315717;
-    history : [TournamentHistoryEntry__1003246225];
-    matches : [TournamentMatch__336709022];
+    elimination : TournamentElimination__461312602;
+    history : [TournamentHistoryEntry__397748245];
+    matches : [TournamentMatch__545560548];
     nextActionId : Nat;
     nextMatchId : Nat;
     nextRegistrationNumber : Nat;
-    players : [TournamentPlayerData__554997312];
+    players : [TournamentPlayerData__523644074];
     started : Bool;
     tableCount : Nat;
-    updatedAt : Timestamp__301639476
+    updatedAt : Timestamp__1010249634
   };
-type TournamentStateData__849744412 =
+type TournamentStateData__755054266 =
   {
-    elimination : TournamentElimination__491545262;
-    history : [TournamentHistoryEntry__363860423];
-    matches : [TournamentMatch__200222966];
+    elimination : TournamentElimination__609208946;
+    history : [TournamentHistoryEntry__147654687];
+    matches : [TournamentMatch__437837541];
     nextActionId : Nat;
     nextMatchId : Nat;
     nextRegistrationNumber : Nat;
-    players : [TournamentPlayerData__148205111];
+    players : [TournamentPlayerData__791298130];
     started : Bool;
     tableCount : Nat;
-    updatedAt : Timestamp__489896911
+    updatedAt : Timestamp__881172354
   };
-type TournamentStatus__1039157151 = {#completed; #live; #upcoming};
-type TournamentStatus__365499588 = {#completed; #live; #upcoming};
-type TournamentStatus__831356115 = {#completed; #live; #upcoming};
-type Tournament__1015679667 =
+type TournamentStatus__1053590508 = {#completed; #live; #upcoming};
+type TournamentStatus__391579108 = {#completed; #live; #upcoming};
+type TournamentStatus__666809177 = {#completed; #live; #upcoming};
+type Tournament__1021621204 =
   {
     capacity : Nat;
-    createdAt : Timestamp__489896911;
+    createdAt : Timestamp__1010249634;
     description : Text;
-    format : TournamentFormat__720572682;
+    format : TournamentFormat__458326327;
     id : Nat;
-    startsAt : Timestamp__489896911;
-    status : TournamentStatus__1039157151;
+    startsAt : Timestamp__1010249634;
+    status : TournamentStatus__391579108;
     title : Text;
-    updatedAt : Timestamp__489896911;
+    updatedAt : Timestamp__1010249634;
     venue : Text
   };
-type Tournament__116332582 =
+type Tournament__218985429 =
   {
     capacity : Nat;
-    createdAt : Timestamp__301639476;
+    createdAt : Timestamp__867202833;
     description : Text;
-    format : TournamentFormat__190292373;
+    format : TournamentFormat__79554317;
     id : Nat;
-    startsAt : Timestamp__301639476;
-    status : TournamentStatus__831356115;
+    startsAt : Timestamp__867202833;
+    status : TournamentStatus__1053590508;
     title : Text;
-    updatedAt : Timestamp__301639476;
+    updatedAt : Timestamp__867202833;
     venue : Text
   };
-type Tournament__395879928 =
+type Tournament__904596223 =
   {
     capacity : Nat;
-    createdAt : Timestamp__553296630;
+    createdAt : Timestamp__881172354;
     description : Text;
-    format : TournamentFormat__509402924;
+    format : TournamentFormat__1051705035;
     id : Nat;
-    startsAt : Timestamp__553296630;
-    status : TournamentStatus__365499588;
+    startsAt : Timestamp__881172354;
+    status : TournamentStatus__666809177;
     title : Text;
-    updatedAt : Timestamp__553296630;
+    updatedAt : Timestamp__881172354;
     venue : Text
   };
-type UploadKind__20317635 = {#thumbnail; #video};
-type UploadKind__294767643 = {#thumbnail; #video};
-type UploadKind__508260726 = {#thumbnail; #video};
-type UploadKind__659348794 = {#thumbnail; #video};
-type UploadKind__712424058 = {#thumbnail; #video};
-type UploadKind__959372778 = {#thumbnail; #video};
-type UploadSession__146182586 =
+type UploadKind__1047598395 = {#thumbnail; #video};
+type UploadKind__291312341 = {#thumbnail; #video};
+type UploadKind__385843156 = {#thumbnail; #video};
+type UploadKind__664313258 = {#thumbnail; #video};
+type UploadKind__850166383 = {#thumbnail; #video};
+type UploadKind__988951442 = {#thumbnail; #video};
+type UploadSession__169069349 =
   {
     assetId : Text;
     chunkSize : Nat;
-    createdAt : Timestamp__163841900;
+    createdAt : Timestamp__300596825;
     id : Nat;
-    kind : UploadKind__659348794;
+    kind : UploadKind__988951442;
     mimeType : Text;
-    ownerId : UserId__627489109;
+    ownerId : UserId__21066712;
     receivedBytes : Nat;
-    status : UploadStatus__1052245393;
+    status : UploadStatus__183554629;
     totalSize : Nat
   };
-type UploadSession__376384348 =
+type UploadSession__242907587 =
   {
     assetId : Text;
     chunkSize : Nat;
-    createdAt : Timestamp__782546889;
+    createdAt : Timestamp__1010249634;
     id : Nat;
-    kind : UploadKind__294767643;
+    kind : UploadKind__1047598395;
     mimeType : Text;
-    ownerId : UserId__6567742;
+    ownerId : UserId__405761030;
     receivedBytes : Nat;
-    status : UploadStatus__600167116;
+    status : UploadStatus__26358880;
     totalSize : Nat
   };
-type UploadSession__709497193 =
+type UploadSession__307295513 =
   {
     assetId : Text;
     chunkSize : Nat;
-    createdAt : Timestamp__233582861;
+    createdAt : Timestamp__585836105;
     id : Nat;
-    kind : UploadKind__508260726;
+    kind : UploadKind__850166383;
     mimeType : Text;
-    ownerId : UserId__102032063;
+    ownerId : UserId__299322624;
     receivedBytes : Nat;
-    status : UploadStatus__447660933;
+    status : UploadStatus__602223004;
     totalSize : Nat
   };
-type UploadSession__751473154 =
+type UploadSession__48878359 =
   {
     assetId : Text;
     chunkSize : Nat;
-    createdAt : Timestamp__553296630;
+    createdAt : Timestamp__969149890;
     id : Nat;
-    kind : UploadKind__959372778;
+    kind : UploadKind__291312341;
     mimeType : Text;
-    ownerId : UserId__233300904;
+    ownerId : UserId__682082571;
     receivedBytes : Nat;
-    status : UploadStatus__656987915;
+    status : UploadStatus__321843414;
     totalSize : Nat
   };
-type UploadSession__868171378 =
+type UploadSession__494081559 =
   {
     assetId : Text;
     chunkSize : Nat;
-    createdAt : Timestamp__448015156;
+    createdAt : Timestamp__92058377;
     id : Nat;
-    kind : UploadKind__20317635;
+    kind : UploadKind__385843156;
     mimeType : Text;
-    ownerId : UserId__717334016;
+    ownerId : UserId__1070114152;
     receivedBytes : Nat;
-    status : UploadStatus__699537399;
+    status : UploadStatus__351699081;
     totalSize : Nat
   };
-type UploadSession__949803304 =
+type UploadSession__748366903 =
   {
     assetId : Text;
     chunkSize : Nat;
-    createdAt : Timestamp__821732354;
+    createdAt : Timestamp__34942582;
     id : Nat;
-    kind : UploadKind__712424058;
+    kind : UploadKind__664313258;
     mimeType : Text;
-    ownerId : UserId__492452412;
+    ownerId : UserId__515135497;
     receivedBytes : Nat;
-    status : UploadStatus__223873926;
+    status : UploadStatus__1014058291;
     totalSize : Nat
   };
-type UploadStatus__1052245393 = {#active; #cancelled; #completed; #finalized};
-type UploadStatus__223873926 = {#active; #cancelled; #completed; #finalized};
-type UploadStatus__447660933 = {#active; #cancelled; #completed; #finalized};
-type UploadStatus__600167116 = {#active; #cancelled; #completed; #finalized};
-type UploadStatus__656987915 = {#active; #cancelled; #completed; #finalized};
-type UploadStatus__699537399 = {#active; #cancelled; #completed; #finalized};
-type UserId__102032063 = Principal;
-type UserId__158757552 = Principal;
-type UserId__233300904 = Principal;
-type UserId__359307712 = Principal;
-type UserId__492452412 = Principal;
-type UserId__627489109 = Principal;
-type UserId__6567742 = Principal;
-type UserId__717334016 = Principal;
-type UserRole__91647283 = {#admin; #guest; #user};
-type User__392640650 =
+type UploadStatus__1014058291 = {#active; #cancelled; #completed; #finalized};
+type UploadStatus__183554629 = {#active; #cancelled; #completed; #finalized};
+type UploadStatus__26358880 = {#active; #cancelled; #completed; #finalized};
+type UploadStatus__321843414 = {#active; #cancelled; #completed; #finalized};
+type UploadStatus__351699081 = {#active; #cancelled; #completed; #finalized};
+type UploadStatus__602223004 = {#active; #cancelled; #completed; #finalized};
+type UserId__1070114152 = Principal;
+type UserId__21066712 = Principal;
+type UserId__299322624 = Principal;
+type UserId__405761030 = Principal;
+type UserId__515135497 = Principal;
+type UserId__653285603 = Principal;
+type UserId__682082571 = Principal;
+type UserId__889935858 = Principal;
+type UserRole__45088130 = {#admin; #guest; #user};
+type User__117997340 =
   {
     avatar : ?Blob;
     bio : ?Text;
-    createdAt : Timestamp__163841900;
+    createdAt : Timestamp__881172354;
     displayName : Text;
-    id : UserId__627489109;
+    id : UserId__889935858;
+    role : ?Role__309273540;
     username : Text
   };
-type User__651487727 =
+type User__205361988 =
   {
     avatar : ?Text;
     bio : ?Text;
-    createdAt : Timestamp__821732354;
+    createdAt : Timestamp__34942582;
     displayName : Text;
-    id : UserId__492452412;
+    id : UserId__515135497;
     username : Text
   };
-type User__719185563 =
+type User__269767060 =
   {
     avatar : ?Text;
     bio : ?Text;
-    createdAt : Timestamp__233582861;
+    createdAt : Timestamp__585836105;
     displayName : Text;
-    id : UserId__102032063;
+    id : UserId__299322624;
     username : Text
   };
-type User__739211136 =
+type User__427798023 =
   {
     avatar : ?Blob;
     bio : ?Text;
-    createdAt : Timestamp__553296630;
+    createdAt : Timestamp__92058377;
     displayName : Text;
-    id : UserId__233300904;
-    role : ?Role__394731314;
+    id : UserId__1070114152;
     username : Text
   };
-type User__877428867 =
+type User__564120620 =
   {
-    avatar : ?Blob;
-    bio : ?Text;
-    createdAt : Timestamp__489896911;
-    displayName : Text;
-    id : UserId__359307712;
-    role : ?Role__243528967;
-    username : Text
-  };
-type User__98118558 =
-  {
-    avatar : ?ExternalBlob__220559234;
+    avatar : ?ExternalBlob__724338717;
     avatarUrl : ?Text;
     bio : ?Text;
-    createdAt : Timestamp__301639476;
+    createdAt : Timestamp__867202833;
     displayName : Text;
-    id : UserId__158757552;
-    role : ?Role__717780527;
+    id : UserId__653285603;
+    role : ?Role__222711035;
     username : Text
   };
-type VideoStatus__107661496 = {#deleted; #draft; #processing; #published};
-type VideoStatus__164070526 = {#deleted; #draft; #processing; #published};
-type VideoStatus__38300231 = {#deleted; #draft; #processing; #published};
-type VideoStatus__699435885 = {#deleted; #draft; #processing; #published};
-type VideoStatus__93214261 = {#deleted; #draft; #processing; #published};
-type VideoStatus__985142981 = {#deleted; #draft; #processing; #published};
-type Video__1000247654 =
+type User__634194939 =
   {
-    createdAt : Timestamp__553296630;
+    avatar : ?Blob;
+    bio : ?Text;
+    createdAt : Timestamp__1010249634;
+    displayName : Text;
+    id : UserId__405761030;
+    role : ?Role__708326091;
+    username : Text
+  };
+type VideoStatus__106874479 = {#deleted; #draft; #processing; #published};
+type VideoStatus__148216005 = {#deleted; #draft; #processing; #published};
+type VideoStatus__502480782 = {#deleted; #draft; #processing; #published};
+type VideoStatus__651813480 = {#deleted; #draft; #processing; #published};
+type VideoStatus__957181472 = {#deleted; #draft; #processing; #published};
+type VideoStatus__978325886 = {#deleted; #draft; #processing; #published};
+type Video__1004281086 =
+  {
+    createdAt : Timestamp__92058377;
     description : ?Text;
     fileSize : Nat;
     filename : Text;
     id : Nat;
     isPrivate : Bool;
     mimeType : Text;
-    ownerId : UserId__233300904;
-    publishedAt : ?Timestamp__553296630;
-    status : VideoStatus__985142981;
+    ownerId : UserId__1070114152;
+    publishedAt : ?Timestamp__92058377;
+    status : VideoStatus__957181472;
     thumbnail : ?Blob;
     title : Text;
     video : Blob;
     viewCount : Nat
   };
-type Video__223929970 =
+type Video__109729827 =
   {
-    createdAt : Timestamp__163841900;
-    description : ?Text;
-    fileSize : Nat;
-    filename : Text;
-    id : Nat;
-    isPrivate : Bool;
-    mimeType : Text;
-    ownerId : UserId__627489109;
-    publishedAt : ?Timestamp__163841900;
-    status : VideoStatus__699435885;
-    thumbnail : ?Blob;
-    title : Text;
-    video : Blob;
-    viewCount : Nat
-  };
-type Video__229399347 =
-  {
-    createdAt : Timestamp__233582861;
+    createdAt : Timestamp__34942582;
     description : ?Text;
     fileSize : Nat;
     id : Nat;
     mimeType : Text;
-    ownerId : UserId__102032063;
-    publishedAt : ?Timestamp__233582861;
-    status : VideoStatus__107661496;
+    ownerId : UserId__515135497;
+    publishedAt : ?Timestamp__34942582;
+    status : VideoStatus__106874479;
     thumbnailAssetId : ?Text;
     title : Text;
     videoAssetId : Text
   };
-type Video__47199758 =
+type Video__370140646 =
   {
-    createdAt : Timestamp__448015156;
+    createdAt : Timestamp__300596825;
     description : ?Text;
     fileSize : Nat;
     filename : Text;
     id : Nat;
     isPrivate : Bool;
     mimeType : Text;
-    ownerId : UserId__717334016;
-    publishedAt : ?Timestamp__448015156;
-    status : VideoStatus__93214261;
+    ownerId : UserId__21066712;
+    publishedAt : ?Timestamp__300596825;
+    status : VideoStatus__651813480;
+    thumbnail : ?Blob;
+    title : Text;
+    video : Blob;
+    viewCount : Nat
+  };
+type Video__488773457 =
+  {
+    createdAt : Timestamp__1010249634;
+    description : ?Text;
+    fileSize : Nat;
+    filename : Text;
+    id : Nat;
+    isPrivate : Bool;
+    mimeType : Text;
+    ownerId : UserId__405761030;
+    publishedAt : ?Timestamp__1010249634;
+    status : VideoStatus__978325886;
     thumbnail : ?Blob;
     title : Text;
     video : Blob;
     viewCount : Nat
   };
 {
-  "20260830_000000" : (_old : OldActor__792294613) -> NewActor__816907118;
+  "20260830_000000" : (_old : OldActor__856747021) -> NewActor__1047497543;
   "20260830_230000_AddObjectStorageAndPrivacy" :
-    (old : OldActor__764662210) -> NewActor__214184801;
+    (old : OldActor__942908590) -> NewActor__734176251;
   "20260831_010000_AddViewsAndAvatarStorage" :
-    (old : OldActor__73935259) -> NewActor__93192655;
+    (old : OldActor__970475634) -> NewActor__216309001;
   "20260903_000000_AddPlaylists" :
-    (old : OldActor__1059771209) -> NewActor__311564264;
+    (old : OldActor__578604593) -> NewActor__30893995;
   "20261004_000000_AddUserRoles" :
-    (old : OldActor__916917201) -> NewActor__37944555;
-  "20261004_095123" : (old : OldActor__970163513) -> NewActor__1040413914;
-  "20261012_000000" : (old : OldActor__281766694) -> NewActor__756050636;
-  "20261016_090000" : (old : OldActor__724703710) -> NewActor__147081743
+    (old : OldActor__521764651) -> NewActor__259190255;
+  "20261004_095123" : (old : OldActor__352325703) -> NewActor__623342450;
+  "20261012_000000" : (old : OldActor__190952464) -> NewActor__460382630;
+  "20261016_090000" : (old : OldActor__95622544) -> NewActor__658182512
 }
 actor  {
   stable accessControlState :
     {
       var adminAssigned : Bool;
-      userRoles : Map__230067015<Principal, UserRole__91647283>
+      userRoles : Map__679956457<Principal, UserRole__45088130>
     };
   stable counters : {var nextPlayerId : Nat; var nextTournamentId : Nat};
   stable owner : {var ownerApplied : Bool; var ownerPrincipal : ?Principal};
   stable players :
     {
-      var root : Node__204828119<Nat, GlobalPlayer__433234045>;
-      var size : Nat__227979830
+      var root : Node__83493451<Nat, GlobalPlayer__636956351>;
+      var size : Nat__242495073
     };
-  stable telegramCache : {var keys : ?CachedKeys__408913751};
+  stable telegramCache : {var keys : ?CachedKeys__118740466};
   stable telegramChallenges :
     {
-      var root : Node__204828119<Principal, Challenge__865311509>;
-      var size : Nat__227979830
+      var root : Node__83493451<Principal, Challenge__896042439>;
+      var size : Nat__242495073
     };
   stable telegramConfig : {var clientId : ?Text};
   stable telegramLinks :
     {
-      var root : Node__204828119<Principal, Link__822551193>;
-      var size : Nat__227979830
+      var root : Node__83493451<Principal, Link__1002623170>;
+      var size : Nat__242495073
     };
   stable telegramOwners :
-    {var root : Node__204828119<Text, Principal>; var size : Nat__227979830};
+    {var root : Node__83493451<Text, Principal>; var size : Nat__242495073};
   stable tournamentStates :
     {
-      var root : Node__204828119<Nat, TournamentStateData__294373932>;
-      var size : Nat__227979830
+      var root : Node__83493451<Nat, TournamentStateData__338944453>;
+      var size : Nat__242495073
     };
   stable tournaments :
     {
-      var root : Node__204828119<Nat, Tournament__116332582>;
-      var size : Nat__227979830
+      var root : Node__83493451<Nat, Tournament__218985429>;
+      var size : Nat__242495073
     };
   stable usernames :
     {
-      var root : Node__204828119<Text, UserId__158757552>;
-      var size : Nat__227979830
+      var root : Node__83493451<Text, UserId__653285603>;
+      var size : Nat__242495073
     };
   stable users :
     {
-      var root : Node__204828119<UserId__158757552, User__98118558>;
-      var size : Nat__227979830
+      var root : Node__83493451<UserId__653285603, User__564120620>;
+      var size : Nat__242495073
     }
 };

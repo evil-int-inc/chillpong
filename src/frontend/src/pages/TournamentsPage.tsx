@@ -222,12 +222,22 @@ export function TournamentsPage() {
         : tournamentService.update(actor, editor.id, input);
     },
     onSuccess: (tournament) => {
+      queryClient.setQueryData<Tournament[]>(
+        TOURNAMENTS_QUERY_KEY,
+        (previous) => [
+          ...(previous ?? []).filter((entry) => entry.id !== tournament.id),
+          tournament,
+        ],
+      );
       setNotice({
         message: "{title} is saved. See you at the table.",
         params: { title: tournament.title },
       });
       setEditor(null);
       void queryClient.invalidateQueries({ queryKey: TOURNAMENTS_QUERY_KEY });
+      void queryClient.invalidateQueries({
+        queryKey: ["tournamentState", tournament.id.toString()],
+      });
     },
   });
 
@@ -954,10 +964,11 @@ export function TournamentsPage() {
                   role="alert"
                   className="border border-error/40 px-3 py-3 text-sm text-error"
                 >
-                  {t(formError) ??
-                    (saveMutation.error instanceof Error
+                  {formError
+                    ? t(formError)
+                    : saveMutation.error instanceof Error
                       ? translateError(saveMutation.error.message)
-                      : t("Couldn't save this tournament. Try again."))}
+                      : t("Couldn't save this tournament. Try again.")}
                 </p>
               ) : null}
               <div className="flex justify-end gap-3 border-t border-base-300 pt-5">

@@ -757,6 +757,14 @@ export const messages = [
   "Unauthorized: Sign in to link Telegram",
   "Unsupported Telegram token header",
   "Wait a few seconds before trying Telegram again",
+  "Delete player",
+  "Delete player?",
+  "This permanently removes the player from the shared directory and releases their member link. This cannot be undone.",
+  "Member accounts and saved tournament registrations, matches, and results will be kept.",
+  "Couldn't delete this player. Try again.",
+  "Player deleted from the shared directory.",
+  "Remove from tournament",
+  "Remove this registration from the selected tournament. The shared player remains available.",
 ] as const;
 
 export type Message = (typeof messages)[number];

@@ -352,6 +352,16 @@ type DeleteTournamentError =
    notAuthorized;
    notFound;
  };
+type DeletePlayerResult =
+ variant {
+   err: DeletePlayerError;
+   ok;
+ };
+type DeletePlayerError =
+ variant {
+   notAuthorized;
+   notFound;
+ };
 type Config = record {clientId: opt text;};
 type Cell = 
  record {
@@ -379,6 +389,7 @@ service : {
   createPlayer: (input: PlayerInput) -> (GlobalPlayerView);
   createTournament: (input: TournamentInput) -> (Tournament);
   createUser: (userId: UserId, input: UserInput) -> (User);
+  deletePlayer: (playerId: nat) -> (DeletePlayerResult);
   deleteTournament: (id: nat) -> (DeleteTournamentResult);
   execute: (qJson: text) -> (Result) query;
   getApiDoc: () -> (text) query;

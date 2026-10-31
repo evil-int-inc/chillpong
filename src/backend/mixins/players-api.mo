@@ -37,6 +37,17 @@ mixin (
     PlayersLib.view(updated, users);
   };
 
+  public shared ({ caller }) func deletePlayer(playerId : Nat) : async Players.DeletePlayerResult {
+    if (caller.isAnonymous() or accessControlState.userRoles.get(caller) != ?#admin) {
+      return #err(#notAuthorized);
+    };
+    if (players.get(playerId) == null) { return #err(#notFound) };
+    // Tournament registrations retain their own names and results. Removing
+    // the shared identity releases its member link without deleting an account.
+    players.remove(playerId);
+    #ok;
+  };
+
   public shared ({ caller }) func linkPlayerToUser(playerId : Nat, userId : Common.UserId) : async Players.GlobalPlayerView {
     RolesLib.requireAdmin(accessControlState, caller);
     if (userId.isAnonymous() or accessControlState.userRoles.get(userId) == null) {
