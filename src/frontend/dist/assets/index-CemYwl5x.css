@@ -2996,6 +2996,22 @@
       }
     }
 
+    .footer {
+      grid-auto-flow: row;
+      place-items: start;
+      gap: 2.5rem 1rem;
+      width: 100%;
+      font-size: .875rem;
+      line-height: 1.25rem;
+      display: grid;
+    }
+
+    .footer > :not(script, style, template) {
+      place-items: start;
+      gap: .5rem;
+      display: grid;
+    }
+
     .menu .dropdown:focus-within .menu-dropdown-toggle:after {
       translate: 0 1px;
       rotate: 45deg;
@@ -4599,6 +4615,10 @@
     height: 100svh;
   }
 
+  .max-h-24 {
+    max-height: calc(var(--spacing) * 24);
+  }
+
   .max-h-32 {
     max-height: calc(var(--spacing) * 32);
   }
@@ -4961,6 +4981,10 @@
 
   :where(.divide-base-300 > :not(:last-child)), :where(.divide-border > :not(:last-child)) {
     border-color: var(--color-base-300);
+  }
+
+  .self-end {
+    align-self: flex-end;
   }
 
   .truncate {

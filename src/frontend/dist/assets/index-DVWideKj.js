@@ -34042,7 +34042,9 @@ const ka = {
   "Couldn't delete this player. Try again.": "მოთამაშის წაშლა ვერ მოხერხდა. სცადეთ ხელახლა.",
   "Player deleted from the shared directory.": "მოთამაშე წაიშალა საერთო სიიდან.",
   "Remove from tournament": "ტურნირიდან ამოღება",
-  "Remove this registration from the selected tournament. The shared player remains available.": "რეგისტრაცია წაიშლება არჩეული ტურნირიდან. მოთამაშე საერთო სიაში დარჩება."
+  "Remove this registration from the selected tournament. The shared player remains available.": "რეგისტრაცია წაიშლება არჩეული ტურნირიდან. მოთამაშე საერთო სიაში დარჩება.",
+  "Already registered in this tournament. Choose a match to place this player in the bracket.": "მოთამაშე უკვე რეგისტრირებულია ტურნირში. ბადეში დასამატებლად აირჩიეთ მატჩი.",
+  "No safe bracket slots": "ბადეში უსაფრთხო პოზიციები არ არის"
 };
 const ru = {
   "Find a player in the bracket": "Найти игрока в турнирной сетке",
@@ -34810,7 +34812,9 @@ const ru = {
   "Couldn't delete this player. Try again.": "Не удалось удалить игрока. Попробуйте снова.",
   "Player deleted from the shared directory.": "Игрок удалён из общего списка.",
   "Remove from tournament": "Удалить из турнира",
-  "Remove this registration from the selected tournament. The shared player remains available.": "Удалить регистрацию из выбранного турнира. Игрок останется в общем списке."
+  "Remove this registration from the selected tournament. The shared player remains available.": "Удалить регистрацию из выбранного турнира. Игрок останется в общем списке.",
+  "Already registered in this tournament. Choose a match to place this player in the bracket.": "Игрок уже зарегистрирован в турнире. Выберите матч, чтобы добавить его в сетку.",
+  "No safe bracket slots": "Нет доступных мест в сетке"
 };
 const LANGUAGE_STORAGE_KEY = "chillpong.language";
 const LANGUAGES = [
@@ -47238,11 +47242,35 @@ function matchLabel(match) {
 function playerById(players, id) {
   return id === void 0 ? void 0 : players.find((player) => player.id === id);
 }
+function lockedBracketMatches(matches) {
+  const parents = /* @__PURE__ */ new Map();
+  const grandFinals = matches.filter((match) => match.bracket === "grandFinal");
+  for (const match of matches) {
+    const incoming = [match.sourceA, match.sourceB].flatMap(
+      (source) => source.kind === "winner" || source.kind === "loser" ? [source.id] : []
+    );
+    if (match.bracket === "resetFinal")
+      incoming.push(...grandFinals.map((final) => final.id));
+    parents.set(match.id, incoming);
+  }
+  const locked = /* @__PURE__ */ new Set();
+  const pending = matches.filter(
+    (match) => match.status === "playing" || match.status === "completed"
+  ).map((match) => match.id);
+  for (let index2 = 0; index2 < pending.length; index2++) {
+    const id = pending[index2];
+    if (locked.has(id)) continue;
+    locked.add(id);
+    pending.push(...parents.get(id) ?? []);
+  }
+  return locked;
+}
 function playerMovement(view, player) {
   const fresh = playerById(view.players, player.id) ?? player;
   const none = { entrant: false, targets: [] };
   if (fresh.status !== "waiting" && fresh.status !== "ready" && fresh.status !== "advanced")
     return none;
+  const locked = lockedBracketMatches(view.matches);
   const pending = view.matches.filter(
     (match) => (match.bracket === "winners" || match.bracket === "losers") && (match.status === "ready" || match.status === "pending")
   );
@@ -47255,7 +47283,7 @@ function playerMovement(view, player) {
       entrant: false,
       current,
       targets: pending.filter(
-        (match) => match.bracket === current.bracket && match.round === current.round
+        (match) => !locked.has(current.id) && !locked.has(match.id) && match.bracket === current.bracket && match.round === current.round
       ).sort(
         (a2, b2) => Number(a2.id === current.id) - Number(b2.id === current.id)
       )
@@ -47269,7 +47297,7 @@ function playerMovement(view, player) {
     entrant,
     current: void 0,
     targets: entrant ? view.matches.filter(
-      (match) => match.bracket === "winners" && match.round >= 1 && match.status !== "playing" && match.status !== "completed" && match.status !== "void"
+      (match) => match.bracket === "winners" && match.round >= 1 && !locked.has(match.id) && match.status !== "playing" && match.status !== "completed" && match.status !== "void"
     ) : []
   };
 }
@@ -47918,6 +47946,9 @@ function MovePlayerForm({
           });
       },
       children: [
+        entrant ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "border border-primary/30 bg-primary/5 p-3 text-sm text-primary", children: t(
+          "Already registered in this tournament. Choose a match to place this player in the bracket."
+        ) }) : null,
         /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm leading-relaxed text-base-content/60", children: [
           t("Place"),
           " ",
@@ -47959,7 +47990,7 @@ function MovePlayerForm({
                   " ",
                   ((_b2 = playerById(view.players, match.playerBId)) == null ? void 0 : _b2.name) ?? sourceLabel(match.sourceB, view.matches)
                 ] }, match.id.toString());
-              }) : /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("No safe opening slots") })
+              }) : /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("No safe bracket slots") })
             }
           )
         ] }),
@@ -48843,18 +48874,29 @@ function OrganizerDialogs({
                 children: t("Confirm undo")
               }
             )
-          ] }) : null,
+          ] }) : null
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "mt-4 flex shrink-0 flex-col gap-3 border-t border-base-300 pt-4", children: [
           error ? /* @__PURE__ */ jsxRuntimeExports.jsx(
             "p",
             {
               "data-ocid": "tournament.action_error",
               role: "alert",
-              className: "mt-5 border border-error/35 px-4 py-3 text-sm text-error",
+              className: "max-h-24 overflow-y-auto border border-error/35 px-4 py-3 text-sm text-error",
               children: translateError(error)
             }
-          ) : null
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "mt-4 flex shrink-0 justify-end border-t border-base-300 pt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", disabled: pending, onClick: onClose, children: (modal.kind === "player" || modal.kind === "reset") && modal.returnToMatch !== void 0 ? t("Back to match") : modal.kind === "match" ? t("Close") : t("Cancel") }) })
+          ) : null,
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              className: "self-end",
+              variant: "ghost",
+              disabled: pending,
+              onClick: onClose,
+              children: (modal.kind === "player" || modal.kind === "reset") && modal.returnToMatch !== void 0 ? t("Back to match") : modal.kind === "match" ? t("Close") : t("Cancel")
+            }
+          )
+        ] })
       ] }) : null
     }
   );
