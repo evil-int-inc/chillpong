@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="bugfix/tournament-status-and-player-deletion">
-      <change beforePath="$PROJECT_DIR$/.idea/swift-toolchain.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/swift-toolchain.xml" afterDir="false" />
+    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="bugfix/do-not-add-player-in-old-bye-slots">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-nRGR1BjI.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/ka.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/ka.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/ru.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/ru.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/types/tournament-manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/types/tournament-manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/BracketLatePlayers.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/BracketLatePlayers.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/hooks/use-mobile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/hooks/use-mobile.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +80,7 @@
       <workItem from="1791835107322" duration="2765000" />
       <workItem from="1792096952493" duration="4048000" />
       <workItem from="1793456776500" duration="6520000" />
-      <workItem from="1793543948069" duration="876000" />
+      <workItem from="1793543948069" duration="2104000" />
     </task>
     <task id="LOCAL-00001" summary="feature/redesign">
       <option name="closed" value="true" />
@@ -222,7 +218,15 @@
       <option name="project" value="LOCAL" />
       <updated>1793473678346</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="bugfix/do-not-add-player-in-old-bye-slots">
+      <option name="closed" value="true" />
+      <created>1793546232657</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1793546232657</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TerminalProjectNonSharedOptionsProvider">
@@ -267,6 +271,7 @@
     <MESSAGE value="feature/telegram-bot-ink" />
     <MESSAGE value="bugfix/telegram-full-bracket-swap" />
     <MESSAGE value="bugfix/tournament-status-and-player-deletion" />
-    <option name="LAST_COMMIT_MESSAGE" value="bugfix/tournament-status-and-player-deletion" />
+    <MESSAGE value="bugfix/do-not-add-player-in-old-bye-slots" />
+    <option name="LAST_COMMIT_MESSAGE" value="bugfix/do-not-add-player-in-old-bye-slots" />
   </component>
 </project>

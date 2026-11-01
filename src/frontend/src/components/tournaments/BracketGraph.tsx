@@ -1,4 +1,5 @@
 import { PlayerIdentity } from "@/components/players/PlayerIdentity";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { type LocalizedMessage, useI18n } from "@/i18n";
 import { telegramMiniAppService } from "@/services/telegram-mini-app.service";
 import {
@@ -81,6 +82,7 @@ export function BracketGraph({
   focusMatchId,
 }: BracketGraphProps) {
   const { t, locale } = useI18n();
+  const isMobile = useIsMobile();
   const hasBracket = matches.length > 0;
   useEffect(() => {
     if (hasBracket && telegramMiniAppService.isInTelegramMiniApp()) {
@@ -425,13 +427,15 @@ export function BracketGraph({
             />{" "}
             {t("Winner advances")}
           </span>
-          <span className="flex items-center gap-2">
-            <span
-              className="w-5 border-t border-dashed border-secondary/60"
-              aria-hidden="true"
-            />{" "}
-            {t("Loser drops")}
-          </span>
+          {!isMobile ? (
+            <span className="flex items-center gap-2">
+              <span
+                className="w-5 border-t border-dashed border-secondary/60"
+                aria-hidden="true"
+              />{" "}
+              {t("Loser drops")}
+            </span>
+          ) : null}
           <span>{t("Drag to pan / scroll or pinch to zoom")}</span>
         </div>
         <div className="flex items-center gap-2 border border-base-300 p-1">
@@ -518,7 +522,10 @@ export function BracketGraph({
                   { source: node.match.sourceA, slot: "a", offset: 69 },
                   { source: node.match.sourceB, slot: "b", offset: 111 },
                 ].map(({ source, slot, offset }) => {
-                  if (source.kind !== "winner" && source.kind !== "loser")
+                  if (
+                    source.kind !== "winner" &&
+                    (source.kind !== "loser" || isMobile)
+                  )
                     return null;
                   const parent = byId.get(source.id.toString());
                   if (!parent) return null;

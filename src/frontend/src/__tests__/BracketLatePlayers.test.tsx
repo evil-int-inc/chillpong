@@ -3,9 +3,17 @@ import type {
   TournamentMatchView,
   TournamentPlayerView,
 } from "@/types/tournament-manager";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+afterEach(() => vi.unstubAllGlobals());
 
 const players: TournamentPlayerView[] = [
   "Alex",
@@ -158,7 +166,8 @@ function assertVisibleDraw(matches: TournamentMatchView[]) {
       count +
       [item.sourceA, item.sourceB].filter(
         (source) =>
-          (source.kind === "winner" || source.kind === "loser") &&
+          (source.kind === "winner" ||
+            (source.kind === "loser" && window.innerWidth >= 768)) &&
           matchIds.has(source.id),
       ).length,
     0,
@@ -166,6 +175,10 @@ function assertVisibleDraw(matches: TournamentMatchView[]) {
   expect(bracket.querySelectorAll("svg path[d^='M ']")).toHaveLength(
     dependencyCount,
   );
+  if (window.innerWidth < 768)
+    expect(bracket.querySelectorAll("svg path[stroke-dasharray]")).toHaveLength(
+      0,
+    );
   return { width, height };
 }
 
@@ -236,53 +249,82 @@ describe("late entrants in the full bracket", () => {
     expect(onSelect).toHaveBeenCalledExactlyOnceWith(after.at(-1));
   });
 
-  it("preserves losers and championship dependencies when late qualifiers grow the winners bracket", () => {
-    const matches = [
-      ...insertedDraw(),
-      match(11n, {
-        bracket: "losers",
-        position: 1,
-        sourceA: { kind: "loser", id: 8n },
-        sourceB: { kind: "loser", id: 1n },
-        playerAId: undefined,
-        playerBId: undefined,
-        status: "pending",
-      }),
-      match(12n, {
-        bracket: "grandFinal",
-        position: 1,
-        sourceA: { kind: "winner", id: 7n },
-        sourceB: { kind: "winner", id: 11n },
-        playerAId: undefined,
-        playerBId: undefined,
-        status: "pending",
-      }),
-      match(13n, {
-        bracket: "resetFinal",
-        position: 1,
-        sourceA: { kind: "winner", id: 12n },
-        sourceB: { kind: "loser", id: 12n },
-        playerAId: undefined,
-        playerBId: undefined,
-        status: "pending",
-      }),
-    ];
-    render(
-      <BracketGraph matches={matches} players={players} onSelect={vi.fn()} />,
-    );
-    assertVisibleDraw(matches);
-    expect(
-      screen.getByRole("heading", { name: "Winners bracket" }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("heading", { name: /Losers bracket/ }),
-    ).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Grand final" })).toBeVisible();
-    expect(screen.getByRole("heading", { name: /Reset final/ })).toBeVisible();
-    expect(screen.getByTestId("match.card.11")).toHaveTextContent(
-      "Loser / W0.1",
-    );
-  });
+  it.each([false, true])(
+    "shows red connections only on desktop with fullscreen=%s",
+    (fullscreen) => {
+      vi.stubGlobal("innerWidth", 1440);
+      const matches = [
+        ...insertedDraw(),
+        match(11n, {
+          bracket: "losers",
+          position: 1,
+          sourceA: { kind: "loser", id: 8n },
+          sourceB: { kind: "loser", id: 1n },
+          playerAId: undefined,
+          playerBId: undefined,
+          status: "pending",
+        }),
+        match(12n, {
+          bracket: "grandFinal",
+          position: 1,
+          sourceA: { kind: "winner", id: 7n },
+          sourceB: { kind: "winner", id: 11n },
+          playerAId: undefined,
+          playerBId: undefined,
+          status: "pending",
+        }),
+        match(13n, {
+          bracket: "resetFinal",
+          position: 1,
+          sourceA: { kind: "winner", id: 12n },
+          sourceB: { kind: "loser", id: 12n },
+          playerAId: undefined,
+          playerBId: undefined,
+          status: "pending",
+        }),
+      ];
+      render(
+        <BracketGraph
+          matches={matches}
+          players={players}
+          onSelect={vi.fn()}
+          fullscreen={fullscreen}
+        />,
+      );
+      assertVisibleDraw(matches);
+      expect(
+        screen.getByRole("heading", { name: "Winners bracket" }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole("heading", { name: /Losers bracket/ }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole("heading", { name: "Grand final" }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole("heading", { name: /Reset final/ }),
+      ).toBeVisible();
+      expect(screen.getByTestId("match.card.11")).toHaveTextContent(
+        "Loser / W0.1",
+      );
+      const bracket = screen.getByTestId("tournament.bracket");
+      expect(bracket.querySelectorAll("path[stroke-dasharray]")).toHaveLength(
+        3,
+      );
+      expect(screen.getByText("Loser drops")).toBeVisible();
+      vi.stubGlobal("innerWidth", 767);
+      fireEvent(window, new Event("resize"));
+      assertVisibleDraw(matches);
+      expect(screen.queryByText("Loser drops")).toBeNull();
+      vi.stubGlobal("innerWidth", 768);
+      fireEvent(window, new Event("resize"));
+      assertVisibleDraw(matches);
+      expect(bracket.querySelectorAll("path[stroke-dasharray]")).toHaveLength(
+        3,
+      );
+      expect(screen.getByText("Loser drops")).toBeVisible();
+    },
+  );
 
   it("centers a placed match at the current zoom once and then preserves manual navigation", async () => {
     const user = userEvent.setup();
