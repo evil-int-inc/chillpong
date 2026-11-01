@@ -34034,7 +34034,15 @@ const ka = {
   "This permanently deletes the tournament, its registrations, matches, results, and history. This cannot be undone.": "ტურნირი, მონაწილეთა რეგისტრაციები, მატჩები, შედეგები და ისტორია სამუდამოდ წაიშლება. ამ მოქმედების გაუქმება შეუძლებელია.",
   "Shared club players and member accounts will be kept.": "კლუბის მოთამაშეები და წევრების ანგარიშები შენარჩუნდება.",
   "Couldn't delete this tournament. Try again.": "ტურნირის წაშლა ვერ მოხერხდა. სცადეთ ხელახლა.",
-  "{title} has been deleted.": "ტურნირი „{title}“ წაიშალა."
+  "{title} has been deleted.": "ტურნირი „{title}“ წაიშალა.",
+  "Delete player": "მოთამაშის წაშლა",
+  "Delete player?": "წაიშალოს მოთამაშე?",
+  "This permanently removes the player from the shared directory and releases their member link. This cannot be undone.": "მოთამაშე სამუდამოდ წაიშლება საერთო სიიდან და მისი კავშირი წევრის ანგარიშთან გაუქმდება. ამ მოქმედების გაუქმება შეუძლებელია.",
+  "Member accounts and saved tournament registrations, matches, and results will be kept.": "წევრების ანგარიშები, ტურნირებში შენახული რეგისტრაციები, მატჩები და შედეგები შენარჩუნდება.",
+  "Couldn't delete this player. Try again.": "მოთამაშის წაშლა ვერ მოხერხდა. სცადეთ ხელახლა.",
+  "Player deleted from the shared directory.": "მოთამაშე წაიშალა საერთო სიიდან.",
+  "Remove from tournament": "ტურნირიდან ამოღება",
+  "Remove this registration from the selected tournament. The shared player remains available.": "რეგისტრაცია წაიშლება არჩეული ტურნირიდან. მოთამაშე საერთო სიაში დარჩება."
 };
 const ru = {
   "Find a player in the bracket": "Найти игрока в турнирной сетке",
@@ -34794,7 +34802,15 @@ const ru = {
   "This permanently deletes the tournament, its registrations, matches, results, and history. This cannot be undone.": "Турнир, регистрации участников, матчи, результаты и история будут удалены навсегда. Это действие нельзя отменить.",
   "Shared club players and member accounts will be kept.": "Игроки клуба и аккаунты участников сохранятся.",
   "Couldn't delete this tournament. Try again.": "Не удалось удалить турнир. Попробуйте снова.",
-  "{title} has been deleted.": "Турнир «{title}» удалён."
+  "{title} has been deleted.": "Турнир «{title}» удалён.",
+  "Delete player": "Удалить игрока",
+  "Delete player?": "Удалить игрока?",
+  "This permanently removes the player from the shared directory and releases their member link. This cannot be undone.": "Игрок будет навсегда удалён из общего списка. Связь с аккаунтом участника будет снята. Это действие нельзя отменить.",
+  "Member accounts and saved tournament registrations, matches, and results will be kept.": "Аккаунты участников, сохранённые регистрации в турнирах, матчи и результаты сохранятся.",
+  "Couldn't delete this player. Try again.": "Не удалось удалить игрока. Попробуйте снова.",
+  "Player deleted from the shared directory.": "Игрок удалён из общего списка.",
+  "Remove from tournament": "Удалить из турнира",
+  "Remove this registration from the selected tournament. The shared player remains available.": "Удалить регистрацию из выбранного турнира. Игрок останется в общем списке."
 };
 const LANGUAGE_STORAGE_KEY = "chillpong.language";
 const LANGUAGES = [
@@ -35140,6 +35156,14 @@ const UserInput = Record({
   "username": Text,
   "displayName": Text
 });
+const DeletePlayerError$1 = Variant({
+  "notAuthorized": Null,
+  "notFound": Null
+});
+const DeletePlayerResult = Variant({
+  "ok": Null,
+  "err": DeletePlayerError$1
+});
 const DeleteTournamentError$1 = Variant({
   "notAuthorized": Null,
   "notFound": Null
@@ -35230,6 +35254,7 @@ Service({
   "createPlayer": Func([PlayerInput], [GlobalPlayerView], []),
   "createTournament": Func([TournamentInput], [Tournament], []),
   "createUser": Func([UserId, UserInput], [User$1], []),
+  "deletePlayer": Func([Nat], [DeletePlayerResult], []),
   "deleteTournament": Func([Nat], [DeleteTournamentResult], []),
   "execute": Func([Text], [Result], ["query"]),
   "getApiDoc": Func([], [Text], ["query"]),
@@ -35524,6 +35549,14 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "username": IDL2.Text,
     "displayName": IDL2.Text
   });
+  const DeletePlayerError2 = IDL2.Variant({
+    "notAuthorized": IDL2.Null,
+    "notFound": IDL2.Null
+  });
+  const DeletePlayerResult2 = IDL2.Variant({
+    "ok": IDL2.Null,
+    "err": DeletePlayerError2
+  });
   const DeleteTournamentError2 = IDL2.Variant({
     "notAuthorized": IDL2.Null,
     "notFound": IDL2.Null
@@ -35614,6 +35647,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "createPlayer": IDL2.Func([PlayerInput2], [GlobalPlayerView2], []),
     "createTournament": IDL2.Func([TournamentInput2], [Tournament2], []),
     "createUser": IDL2.Func([UserId2, UserInput2], [User2], []),
+    "deletePlayer": IDL2.Func([IDL2.Nat], [DeletePlayerResult2], []),
     "deleteTournament": IDL2.Func([IDL2.Nat], [DeleteTournamentResult2], []),
     "execute": IDL2.Func([IDL2.Text], [Result2], ["query"]),
     "getApiDoc": IDL2.Func([], [IDL2.Text], ["query"]),
@@ -35670,6 +35704,11 @@ function candid_none() {
 function record_opt_to_undefined(arg) {
   return arg == null ? void 0 : arg;
 }
+var DeletePlayerError = /* @__PURE__ */ ((DeletePlayerError2) => {
+  DeletePlayerError2["notAuthorized"] = "notAuthorized";
+  DeletePlayerError2["notFound"] = "notFound";
+  return DeletePlayerError2;
+})(DeletePlayerError || {});
 var DeleteTournamentError = /* @__PURE__ */ ((DeleteTournamentError2) => {
   DeleteTournamentError2["notAuthorized"] = "notAuthorized";
   DeleteTournamentError2["notFound"] = "notFound";
@@ -35931,32 +35970,46 @@ class Backend {
       return from_candid_User_n51(this._uploadFile, this._downloadFile, result);
     }
   }
+  async deletePlayer(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.deletePlayer(arg0);
+        return from_candid_DeletePlayerResult_n74(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.deletePlayer(arg0);
+      return from_candid_DeletePlayerResult_n74(this._uploadFile, this._downloadFile, result);
+    }
+  }
   async deleteTournament(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.deleteTournament(arg0);
-        return from_candid_DeleteTournamentResult_n74(this._uploadFile, this._downloadFile, result);
+        return from_candid_DeleteTournamentResult_n78(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.deleteTournament(arg0);
-      return from_candid_DeleteTournamentResult_n74(this._uploadFile, this._downloadFile, result);
+      return from_candid_DeleteTournamentResult_n78(this._uploadFile, this._downloadFile, result);
     }
   }
   async execute(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.execute(arg0);
-        return from_candid_Result_n78(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_n81(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.execute(arg0);
-      return from_candid_Result_n78(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_n81(this._uploadFile, this._downloadFile, result);
     }
   }
   async getApiDoc() {
@@ -35977,42 +36030,42 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.getCallerProfile();
-        return from_candid_opt_n86(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n89(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getCallerProfile();
-      return from_candid_opt_n86(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n89(this._uploadFile, this._downloadFile, result);
     }
   }
   async getCallerTelegramLink() {
     if (this.processError) {
       try {
         const result = await this.actor.getCallerTelegramLink();
-        return from_candid_opt_n87(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n90(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getCallerTelegramLink();
-      return from_candid_opt_n87(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n90(this._uploadFile, this._downloadFile, result);
     }
   }
   async getCallerUserRole() {
     if (this.processError) {
       try {
         const result = await this.actor.getCallerUserRole();
-        return from_candid_UserRole_n88(this._uploadFile, this._downloadFile, result);
+        return from_candid_UserRole_n91(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getCallerUserRole();
-      return from_candid_UserRole_n88(this._uploadFile, this._downloadFile, result);
+      return from_candid_UserRole_n91(this._uploadFile, this._downloadFile, result);
     }
   }
   async getMyRole() {
@@ -36033,98 +36086,98 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.getTelegramLinkConfig();
-        return from_candid_Config_n90(this._uploadFile, this._downloadFile, result);
+        return from_candid_Config_n93(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getTelegramLinkConfig();
-      return from_candid_Config_n90(this._uploadFile, this._downloadFile, result);
+      return from_candid_Config_n93(this._uploadFile, this._downloadFile, result);
     }
   }
   async getTournament(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.getTournament(arg0);
-        return from_candid_opt_n92(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n95(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getTournament(arg0);
-      return from_candid_opt_n92(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n95(this._uploadFile, this._downloadFile, result);
     }
   }
   async getTournamentState(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.getTournamentState(arg0);
-        return from_candid_opt_n93(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n96(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getTournamentState(arg0);
-      return from_candid_opt_n93(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n96(this._uploadFile, this._downloadFile, result);
     }
   }
   async getTournaments() {
     if (this.processError) {
       try {
         const result = await this.actor.getTournaments();
-        return from_candid_vec_n94(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n97(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getTournaments();
-      return from_candid_vec_n94(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n97(this._uploadFile, this._downloadFile, result);
     }
   }
   async getUser(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.getUser(arg0);
-        return from_candid_opt_n86(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n89(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getUser(arg0);
-      return from_candid_opt_n86(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n89(this._uploadFile, this._downloadFile, result);
     }
   }
   async getUserByUsername(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.getUserByUsername(arg0);
-        return from_candid_opt_n86(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n89(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getUserByUsername(arg0);
-      return from_candid_opt_n86(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n89(this._uploadFile, this._downloadFile, result);
     }
   }
   async grantAdminRole(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.grantAdminRole(arg0);
-        return from_candid_UserRoleView_n95(this._uploadFile, this._downloadFile, result);
+        return from_candid_UserRoleView_n98(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.grantAdminRole(arg0);
-      return from_candid_UserRoleView_n95(this._uploadFile, this._downloadFile, result);
+      return from_candid_UserRoleView_n98(this._uploadFile, this._downloadFile, result);
     }
   }
   async isCallerAdmin() {
@@ -36159,56 +36212,56 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.listPlayers();
-        return from_candid_vec_n97(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n100(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listPlayers();
-      return from_candid_vec_n97(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n100(this._uploadFile, this._downloadFile, result);
     }
   }
   async listUsers() {
     if (this.processError) {
       try {
         const result = await this.actor.listUsers();
-        return from_candid_vec_n98(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n101(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listUsers();
-      return from_candid_vec_n98(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n101(this._uploadFile, this._downloadFile, result);
     }
   }
   async listUsersWithRoles() {
     if (this.processError) {
       try {
         const result = await this.actor.listUsersWithRoles();
-        return from_candid_vec_n99(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n102(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listUsersWithRoles();
-      return from_candid_vec_n99(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n102(this._uploadFile, this._downloadFile, result);
     }
   }
   async revokeAdminRole(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.revokeAdminRole(arg0);
-        return from_candid_UserRoleView_n95(this._uploadFile, this._downloadFile, result);
+        return from_candid_UserRoleView_n98(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.revokeAdminRole(arg0);
-      return from_candid_UserRoleView_n95(this._uploadFile, this._downloadFile, result);
+      return from_candid_UserRoleView_n98(this._uploadFile, this._downloadFile, result);
     }
   }
   async saveCallerProfile(arg0) {
@@ -36242,14 +36295,14 @@ class Backend {
   async setTelegramLinkConfig(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.setTelegramLinkConfig(to_candid_opt_n100(this._uploadFile, this._downloadFile, arg0));
+        const result = await this.actor.setTelegramLinkConfig(to_candid_opt_n103(this._uploadFile, this._downloadFile, arg0));
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.setTelegramLinkConfig(to_candid_opt_n100(this._uploadFile, this._downloadFile, arg0));
+      const result = await this.actor.setTelegramLinkConfig(to_candid_opt_n103(this._uploadFile, this._downloadFile, arg0));
       return result;
     }
   }
@@ -36352,17 +36405,23 @@ class Backend {
     }
   }
 }
-function from_candid_Cell_n82(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n83(_uploadFile, _downloadFile, value);
+function from_candid_Cell_n85(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n86(_uploadFile, _downloadFile, value);
 }
-function from_candid_Config_n90(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n91(_uploadFile, _downloadFile, value);
+function from_candid_Config_n93(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n94(_uploadFile, _downloadFile, value);
 }
-function from_candid_DeleteTournamentError_n76(_uploadFile, _downloadFile, value) {
+function from_candid_DeletePlayerError_n76(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n77(_uploadFile, _downloadFile, value);
 }
-function from_candid_DeleteTournamentResult_n74(_uploadFile, _downloadFile, value) {
+function from_candid_DeletePlayerResult_n74(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n75(_uploadFile, _downloadFile, value);
+}
+function from_candid_DeleteTournamentError_n80(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n77(_uploadFile, _downloadFile, value);
+}
+function from_candid_DeleteTournamentResult_n78(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n79(_uploadFile, _downloadFile, value);
 }
 function from_candid_Error_n10(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n11(_uploadFile, _downloadFile, value);
@@ -36379,8 +36438,8 @@ function from_candid_MatchSource_n40(_uploadFile, _downloadFile, value) {
 function from_candid_Result__1_n8(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n9(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_n78(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n79(_uploadFile, _downloadFile, value);
+function from_candid_Result_n81(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n82(_uploadFile, _downloadFile, value);
 }
 function from_candid_Role_n54(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n55(_uploadFile, _downloadFile, value);
@@ -36421,17 +36480,17 @@ function from_candid_TournamentTable_n29(_uploadFile, _downloadFile, value) {
 function from_candid_Tournament_n66(_uploadFile, _downloadFile, value) {
   return from_candid_record_n67(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRoleView_n95(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n96(_uploadFile, _downloadFile, value);
+function from_candid_UserRoleView_n98(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n99(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRole_n88(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n89(_uploadFile, _downloadFile, value);
+function from_candid_UserRole_n91(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n92(_uploadFile, _downloadFile, value);
 }
 async function from_candid_User_n51(_uploadFile, _downloadFile, value) {
   return await from_candid_record_n52(_uploadFile, _downloadFile, value);
 }
-function from_candid_Value_n84(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n85(_uploadFile, _downloadFile, value);
+function from_candid_Value_n87(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n88(_uploadFile, _downloadFile, value);
 }
 function from_candid__ImmutableObjectStorageRefillResult_n4(_uploadFile, _downloadFile, value) {
   return from_candid_record_n5(_uploadFile, _downloadFile, value);
@@ -36454,16 +36513,16 @@ function from_candid_opt_n6(_uploadFile, _downloadFile, value) {
 function from_candid_opt_n7(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
-async function from_candid_opt_n86(_uploadFile, _downloadFile, value) {
+async function from_candid_opt_n89(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : await from_candid_User_n51(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_opt_n87(_uploadFile, _downloadFile, value) {
+function from_candid_opt_n90(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n92(_uploadFile, _downloadFile, value) {
+function from_candid_opt_n95(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : from_candid_Tournament_n66(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_opt_n93(_uploadFile, _downloadFile, value) {
+function from_candid_opt_n96(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : from_candid_TournamentState_n24(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_record_n25(_uploadFile, _downloadFile, value) {
@@ -36570,24 +36629,24 @@ function from_candid_record_n67(_uploadFile, _downloadFile, value) {
     format: from_candid_TournamentFormat_n70(_uploadFile, _downloadFile, value.format)
   };
 }
-function from_candid_record_n79(_uploadFile, _downloadFile, value) {
+function from_candid_record_n82(_uploadFile, _downloadFile, value) {
   return {
     hasMore: value.hasMore,
-    rows: from_candid_vec_n80(_uploadFile, _downloadFile, value.rows)
+    rows: from_candid_vec_n83(_uploadFile, _downloadFile, value.rows)
   };
 }
-function from_candid_record_n83(_uploadFile, _downloadFile, value) {
+function from_candid_record_n86(_uploadFile, _downloadFile, value) {
   return {
-    value: from_candid_Value_n84(_uploadFile, _downloadFile, value.value),
+    value: from_candid_Value_n87(_uploadFile, _downloadFile, value.value),
     name: value.name
   };
 }
-function from_candid_record_n91(_uploadFile, _downloadFile, value) {
+function from_candid_record_n94(_uploadFile, _downloadFile, value) {
   return {
     clientId: record_opt_to_undefined(from_candid_opt_n48(_uploadFile, _downloadFile, value.clientId))
   };
 }
-function from_candid_record_n96(_uploadFile, _downloadFile, value) {
+function from_candid_record_n99(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
     username: value.username,
@@ -36674,13 +36733,22 @@ function from_candid_variant_n75(_uploadFile, _downloadFile, value) {
     ok: value.ok
   } : "err" in value ? {
     __kind__: "err",
-    err: from_candid_DeleteTournamentError_n76(_uploadFile, _downloadFile, value.err)
+    err: from_candid_DeletePlayerError_n76(_uploadFile, _downloadFile, value.err)
   } : value;
 }
 function from_candid_variant_n77(_uploadFile, _downloadFile, value) {
   return "notAuthorized" in value ? "notAuthorized" : "notFound" in value ? "notFound" : value;
 }
-function from_candid_variant_n85(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n79(_uploadFile, _downloadFile, value) {
+  return "ok" in value ? {
+    __kind__: "ok",
+    ok: value.ok
+  } : "err" in value ? {
+    __kind__: "err",
+    err: from_candid_DeleteTournamentError_n80(_uploadFile, _downloadFile, value.err)
+  } : value;
+}
+function from_candid_variant_n88(_uploadFile, _downloadFile, value) {
   return "int" in value ? {
     __kind__: "int",
     int: value.int
@@ -36701,9 +36769,6 @@ function from_candid_variant_n85(_uploadFile, _downloadFile, value) {
     text: value.text
   } : value;
 }
-function from_candid_variant_n89(_uploadFile, _downloadFile, value) {
-  return "admin" in value ? "admin" : "user" in value ? "user" : "guest" in value ? "guest" : value;
-}
 function from_candid_variant_n9(_uploadFile, _downloadFile, value) {
   return "ok" in value ? {
     __kind__: "ok",
@@ -36712,6 +36777,18 @@ function from_candid_variant_n9(_uploadFile, _downloadFile, value) {
     __kind__: "err",
     err: from_candid_Error_n10(_uploadFile, _downloadFile, value.err)
   } : value;
+}
+function from_candid_variant_n92(_uploadFile, _downloadFile, value) {
+  return "admin" in value ? "admin" : "user" in value ? "user" : "guest" in value ? "guest" : value;
+}
+function from_candid_vec_n100(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_GlobalPlayerView_n58(_uploadFile, _downloadFile, x2));
+}
+async function from_candid_vec_n101(_uploadFile, _downloadFile, value) {
+  return await Promise.all(value.map(async (x2) => await from_candid_User_n51(_uploadFile, _downloadFile, x2)));
+}
+function from_candid_vec_n102(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_UserRoleView_n98(_uploadFile, _downloadFile, x2));
 }
 function from_candid_vec_n28(_uploadFile, _downloadFile, value) {
   return value.map((x2) => from_candid_TournamentTable_n29(_uploadFile, _downloadFile, x2));
@@ -36722,23 +36799,14 @@ function from_candid_vec_n33(_uploadFile, _downloadFile, value) {
 function from_candid_vec_n42(_uploadFile, _downloadFile, value) {
   return value.map((x2) => from_candid_TournamentPlayer_n43(_uploadFile, _downloadFile, x2));
 }
-function from_candid_vec_n80(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_vec_n81(_uploadFile, _downloadFile, x2));
+function from_candid_vec_n83(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_vec_n84(_uploadFile, _downloadFile, x2));
 }
-function from_candid_vec_n81(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_Cell_n82(_uploadFile, _downloadFile, x2));
-}
-function from_candid_vec_n94(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_Tournament_n66(_uploadFile, _downloadFile, x2));
+function from_candid_vec_n84(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_Cell_n85(_uploadFile, _downloadFile, x2));
 }
 function from_candid_vec_n97(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_GlobalPlayerView_n58(_uploadFile, _downloadFile, x2));
-}
-async function from_candid_vec_n98(_uploadFile, _downloadFile, value) {
-  return await Promise.all(value.map(async (x2) => await from_candid_User_n51(_uploadFile, _downloadFile, x2)));
-}
-function from_candid_vec_n99(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_UserRoleView_n95(_uploadFile, _downloadFile, x2));
+  return value.map((x2) => from_candid_Tournament_n66(_uploadFile, _downloadFile, x2));
 }
 function to_candid_TournamentCommand_n12(_uploadFile, _downloadFile, value) {
   return to_candid_variant_n13(_uploadFile, _downloadFile, value);
@@ -36770,7 +36838,7 @@ function to_candid__ImmutableObjectStorageRefillInformation_n2(_uploadFile, _dow
 function to_candid_opt_n1(_uploadFile, _downloadFile, value) {
   return value === null ? candid_none() : candid_some(to_candid__ImmutableObjectStorageRefillInformation_n2(_uploadFile, _downloadFile, value));
 }
-function to_candid_opt_n100(_uploadFile, _downloadFile, value) {
+function to_candid_opt_n103(_uploadFile, _downloadFile, value) {
   return value === null ? candid_none() : candid_some(value);
 }
 function to_candid_record_n14(_uploadFile, _downloadFile, value) {
@@ -46124,6 +46192,14 @@ class PlayerService {
   unlink(actor, playerId) {
     return actor.unlinkPlayerFromUser(playerId);
   }
+  async remove(actor, playerId) {
+    const result = await actor.deletePlayer(playerId);
+    if (result.__kind__ === "err") {
+      throw new Error(
+        result.err === DeletePlayerError.notFound ? "Player not found" : "Unauthorized: Only admins can perform this action"
+      );
+    }
+  }
 }
 const playerService = new PlayerService();
 function LinkPlayerDialog({
@@ -47015,6 +47091,130 @@ function PlayerIdentity({
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: cn("min-w-0", nameClassName), children: player.name })
   ] });
 }
+function DeletePlayerDialog({
+  player,
+  actor,
+  isAdmin,
+  onClose,
+  onDeleted
+}) {
+  const { t } = useI18n();
+  const client2 = useQueryClient();
+  const dialog = reactExports.useRef(null);
+  const cancelButton = reactExports.useRef(null);
+  const deletion = useMutation({
+    mutationFn: async () => {
+      if (!actor || !isAdmin) throw new Error("Admin access is required.");
+      await playerService.remove(actor, player.id);
+    },
+    onSuccess: async () => {
+      await client2.cancelQueries({ queryKey: PLAYERS_QUERY_KEY });
+      client2.setQueryData(
+        PLAYERS_QUERY_KEY,
+        (previous) => previous == null ? void 0 : previous.filter((entry) => entry.id !== player.id)
+      );
+      void client2.invalidateQueries({ queryKey: PLAYERS_QUERY_KEY });
+      void client2.invalidateQueries({ queryKey: ["tournamentState"] });
+      onDeleted();
+    }
+  });
+  reactExports.useEffect(() => {
+    var _a2;
+    const element = dialog.current;
+    if (!element) return;
+    if (!element.open) element.showModal();
+    (_a2 = cancelButton.current) == null ? void 0 : _a2.focus();
+    return () => {
+      if (element.open) element.close();
+    };
+  }, []);
+  function close() {
+    if (!deletion.isPending) onClose();
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "dialog",
+    {
+      ref: dialog,
+      "data-ocid": "players.delete_dialog",
+      className: "modal club-modal",
+      "aria-labelledby": "player-delete-title",
+      "aria-describedby": "player-delete-description",
+      onCancel: (event) => {
+        event.preventDefault();
+        close();
+      },
+      onKeyDown: (event) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          close();
+        }
+      },
+      onClick: (event) => {
+        if (event.target === event.currentTarget) close();
+      },
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "modal-box max-w-lg rounded-none border border-error/40 bg-base-200 p-6 sm:p-8", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex items-center gap-3 text-error", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { className: "size-6 shrink-0", "aria-hidden": "true" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "h2",
+            {
+              id: "player-delete-title",
+              className: "font-display text-2xl font-bold uppercase",
+              children: t("Delete player?")
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-4 break-words font-display text-xl font-bold", children: /* @__PURE__ */ jsxRuntimeExports.jsx(PlayerIdentity, { player, size: "sm" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "p",
+          {
+            id: "player-delete-description",
+            className: "text-sm leading-relaxed text-base-content/70",
+            children: t(
+              "This permanently removes the player from the shared directory and releases their member link. This cannot be undone."
+            )
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-base-content/50", children: t(
+          "Member accounts and saved tournament registrations, matches, and results will be kept."
+        ) }),
+        deletion.isError ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "p",
+          {
+            role: "alert",
+            className: "mt-5 border border-error/40 p-3 text-sm text-error",
+            children: deletion.error instanceof Error ? translateError(deletion.error.message) : t("Couldn't delete this player. Try again.")
+          }
+        ) : null,
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "mt-6 flex flex-wrap justify-end gap-3 border-t border-base-300 pt-5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              ref: cancelButton,
+              variant: "ghost",
+              disabled: deletion.isPending,
+              onClick: close,
+              children: t("Cancel")
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              variant: "danger",
+              loading: deletion.isPending,
+              "data-ocid": "players.confirm_delete_button",
+              onClick: () => deletion.mutate(),
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "size-4", "aria-hidden": "true" }),
+                t("Delete permanently")
+              ]
+            }
+          )
+        ] })
+      ] })
+    }
+  );
+}
 const SKILL_LEVELS = [
   "Beginner",
   "Lower Intermediate",
@@ -47168,6 +47368,7 @@ function SharedPlayersDirectory({ isAdmin }) {
   const [skill, setSkill] = reactExports.useState("all");
   const [sort, setSort] = reactExports.useState("registration");
   const [editing, setEditing] = reactExports.useState(null);
+  const [deleteTarget, setDeleteTarget] = reactExports.useState(null);
   const [notice, setNotice] = reactExports.useState(null);
   const dialog = reactExports.useRef(null);
   const directory = useQuery({
@@ -47215,10 +47416,13 @@ function SharedPlayersDirectory({ isAdmin }) {
     (a2, b2) => sort === "name" ? a2.name.localeCompare(b2.name) : sort === "skill" && a2.skillLevel !== b2.skillLevel ? Number(a2.skillLevel - b2.skillLevel) : a2.id < b2.id ? -1 : a2.id > b2.id ? 1 : 0
   );
   function edit(player) {
-    if (!isAdmin || save.isPending) return;
+    if (!isAdmin || save.isPending || deleteTarget) return;
     save.reset();
     setNotice(null);
     setEditing(player);
+  }
+  function closeEditor() {
+    if (!save.isPending && !deleteTarget) setEditing(null);
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mt-6", "aria-labelledby": "shared-players-title", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex flex-wrap items-center justify-between gap-4", children: [
@@ -47360,7 +47564,16 @@ function SharedPlayersDirectory({ isAdmin }) {
         "aria-labelledby": "shared-player-dialog-title",
         onCancel: (event) => {
           event.preventDefault();
-          if (!save.isPending) setEditing(null);
+          closeEditor();
+        },
+        onKeyDown: (event) => {
+          if (event.key === "Escape") {
+            event.preventDefault();
+            closeEditor();
+          }
+        },
+        onClick: (event) => {
+          if (event.target === event.currentTarget) closeEditor();
         },
         children: open ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "modal-box flex max-h-[calc(100dvh-2rem)] w-[calc(100%-1rem)] max-w-xl flex-col overflow-hidden rounded-none border border-base-300 bg-base-200 p-4 sm:p-8", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex shrink-0 items-start justify-between gap-3", children: [
@@ -47378,8 +47591,8 @@ function SharedPlayersDirectory({ isAdmin }) {
                 variant: "ghost",
                 size: "icon",
                 "aria-label": t("Close"),
-                disabled: save.isPending,
-                onClick: () => setEditing(null),
+                disabled: save.isPending || !!deleteTarget,
+                onClick: closeEditor,
                 children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "size-5", "aria-hidden": "true" })
               }
             )
@@ -47390,26 +47603,74 @@ function SharedPlayersDirectory({ isAdmin }) {
               {
                 player: editing === "new" ? void 0 : editing ?? void 0,
                 pending: save.isPending,
-                onSave: (name, skill2) => save.mutate({ name, skill: skill2 })
+                onSave: (name, skill2) => {
+                  if (!deleteTarget) save.mutate({ name, skill: skill2 });
+                }
               },
               editing === "new" ? "new" : editing == null ? void 0 : editing.id.toString()
             ),
             save.isError ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { role: "alert", className: "mt-5 text-sm text-error", children: translateError(
               save.error instanceof Error ? save.error.message : "Couldn't save this change. Try again."
-            ) }) : null
+            ) }) : null,
+            editing && editing !== "new" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "section",
+              {
+                "aria-labelledby": "shared-player-delete-title",
+                className: "mt-6 border border-error/35 bg-error/5 p-4",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "h3",
+                    {
+                      id: "shared-player-delete-title",
+                      className: "technical-label mb-3 text-error",
+                      children: t("Delete player")
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-4 text-sm leading-relaxed text-base-content/65", children: t(
+                    "Member accounts and saved tournament registrations, matches, and results will be kept."
+                  ) }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Button,
+                    {
+                      variant: "danger",
+                      disabled: save.isPending || !!deleteTarget,
+                      onClick: () => setDeleteTarget(editing),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "size-4", "aria-hidden": "true" }),
+                        t("Delete player")
+                      ]
+                    }
+                  )
+                ]
+              }
+            ) : null
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { className: "mt-5 shrink-0 border-t border-base-300 pt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             Button,
             {
               variant: "ghost",
-              disabled: save.isPending,
-              onClick: () => setEditing(null),
+              disabled: save.isPending || !!deleteTarget,
+              onClick: closeEditor,
               children: t("Cancel")
             }
           ) })
         ] }) : null
       }
-    )
+    ),
+    deleteTarget && isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      DeletePlayerDialog,
+      {
+        player: deleteTarget,
+        actor: actor ?? null,
+        isAdmin,
+        onClose: () => setDeleteTarget(null),
+        onDeleted: () => {
+          setDeleteTarget(null);
+          setEditing(null);
+          setNotice("Player deleted from the shared directory.");
+        }
+      }
+    ) : null
   ] });
 }
 function PlayerForm({
@@ -48432,6 +48693,38 @@ function OrganizerDialogs({
               onAction
             },
             modal.player.id.toString()
+          ) : null,
+          modal.kind === "player" && modal.player && isAdmin && modal.player.status !== "removed" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "section",
+            {
+              "aria-labelledby": "registration-remove-title",
+              className: "mt-6 border border-error/35 bg-error/5 p-4",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "h3",
+                  {
+                    id: "registration-remove-title",
+                    className: "technical-label mb-3 text-error",
+                    children: t("Remove from tournament")
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-4 text-sm leading-relaxed text-base-content/65", children: t(
+                  "Remove this registration from the selected tournament. The shared player remains available."
+                ) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Button,
+                  {
+                    variant: "danger",
+                    disabled: pending,
+                    onClick: () => onOpen({ kind: "remove", player: modal.player }),
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "size-4", "aria-hidden": "true" }),
+                      t("Remove from tournament")
+                    ]
+                  }
+                )
+              ]
+            }
           ) : null,
           match && (modal.kind === "match" || (modal.kind === "player" || modal.kind === "reset") && modal.returnToMatch !== void 0) ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { hidden: modal.kind !== "match", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             MatchEditor,
@@ -52475,6 +52768,7 @@ function TournamentDetailPage({
       ] }) })
     );
   const champion = playerById(view.players, view.championId);
+  const completed = view.complete || view.tournament.status === TournamentStatus.completed;
   const activePlayers = view.players.filter(
     (player) => player.status !== "removed"
   );
@@ -52540,8 +52834,8 @@ function TournamentDetailPage({
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "span",
           {
-            className: `technical-label border px-2 py-1 text-[9px] ${view.complete ? "border-primary/40 text-primary" : !view.canChangeFormat ? "border-secondary/40 text-secondary" : "border-base-300 text-base-content/45"}`,
-            children: view.complete ? t("Completed") : !view.canChangeFormat ? t("Live") : view.generated ? t("Draw ready") : t("Registration open")
+            className: `technical-label border px-2 py-1 text-[9px] ${completed ? "border-primary/40 text-primary" : !view.canChangeFormat ? "border-secondary/40 text-secondary" : "border-base-300 text-base-content/45"}`,
+            children: completed ? t("Completed") : !view.canChangeFormat ? t("Live") : view.generated ? t("Draw ready") : t("Registration open")
           }
         )
       ] }),
@@ -53080,12 +53374,22 @@ function TournamentsPage() {
       return editor === "new" ? tournamentService.create(actor, input) : tournamentService.update(actor, editor.id, input);
     },
     onSuccess: (tournament) => {
+      queryClient2.setQueryData(
+        TOURNAMENTS_QUERY_KEY,
+        (previous) => [
+          ...(previous ?? []).filter((entry) => entry.id !== tournament.id),
+          tournament
+        ]
+      );
       setNotice({
         message: "{title} is saved. See you at the table.",
         params: { title: tournament.title }
       });
       setEditor(null);
       void queryClient2.invalidateQueries({ queryKey: TOURNAMENTS_QUERY_KEY });
+      void queryClient2.invalidateQueries({
+        queryKey: ["tournamentState", tournament.id.toString()]
+      });
     }
   });
   reactExports.useEffect(() => {
@@ -53812,7 +54116,7 @@ function TournamentsPage() {
                     "data-ocid": "tournaments.form_error",
                     role: "alert",
                     className: "border border-error/40 px-3 py-3 text-sm text-error",
-                    children: t(formError) ?? (saveMutation.error instanceof Error ? translateError(saveMutation.error.message) : t("Couldn't save this tournament. Try again."))
+                    children: formError ? t(formError) : saveMutation.error instanceof Error ? translateError(saveMutation.error.message) : t("Couldn't save this tournament. Try again.")
                   }
                 ) : null,
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-3 border-t border-base-300 pt-5", children: [

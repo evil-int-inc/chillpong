@@ -352,12 +352,12 @@ type DeleteTournamentError =
    notAuthorized;
    notFound;
  };
-type DeletePlayerResult =
+type DeletePlayerResult = 
  variant {
    err: DeletePlayerError;
    ok;
  };
-type DeletePlayerError =
+type DeletePlayerError = 
  variant {
    notAuthorized;
    notFound;
