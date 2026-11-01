@@ -765,6 +765,8 @@ export const messages = [
   "Player deleted from the shared directory.",
   "Remove from tournament",
   "Remove this registration from the selected tournament. The shared player remains available.",
+  "Already registered in this tournament. Choose a match to place this player in the bracket.",
+  "No safe bracket slots",
 ] as const;
 
 export type Message = (typeof messages)[number];

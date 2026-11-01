@@ -4,29 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="bugfix/telegram-full-bracket-swap">
-      <change beforePath="$PROJECT_DIR$/src/backend/dist/backend.did" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/dist/backend.did" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/dist/backend.most" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/dist/backend.most" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/dist/backend.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/dist/backend.wasm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/mixins/players-api.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/mixins/players-api.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/mixins/tournaments-api.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/mixins/tournaments-api.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/backend/types/players.mo" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/types/players.mo" afterDir="false" />
+    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="bugfix/tournament-status-and-player-deletion">
+      <change beforePath="$PROJECT_DIR$/.idea/swift-toolchain.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/swift-toolchain.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-nRGR1BjI.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/PlayersPage.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/PlayersPage.test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/TournamentDetailPage.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/TournamentDetailPage.test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/backend.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/backend.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/backend.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/backend.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/players/SharedPlayersDirectory.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/players/SharedPlayersDirectory.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/OrganizerDialogs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/declarations/backend.did.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/ka.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/ka.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/ru.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/ru.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/mocks/backend.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/mocks/backend.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentsPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/services/players.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/services/players.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/types/tournament-manager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/types/tournament-manager.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +83,8 @@
       <workItem from="1791718725569" duration="8944000" />
       <workItem from="1791835107322" duration="2765000" />
       <workItem from="1792096952493" duration="4048000" />
-      <workItem from="1793456776500" duration="5577000" />
+      <workItem from="1793456776500" duration="6520000" />
+      <workItem from="1793543948069" duration="876000" />
     </task>
     <task id="LOCAL-00001" summary="feature/redesign">
       <option name="closed" value="true" />
@@ -226,7 +214,15 @@
       <option name="project" value="LOCAL" />
       <updated>1793471033710</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="bugfix/tournament-status-and-player-deletion">
+      <option name="closed" value="true" />
+      <created>1793473678346</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1793473678346</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TerminalProjectNonSharedOptionsProvider">
@@ -270,6 +266,7 @@
     <MESSAGE value="feature/remove-tournament" />
     <MESSAGE value="feature/telegram-bot-ink" />
     <MESSAGE value="bugfix/telegram-full-bracket-swap" />
-    <option name="LAST_COMMIT_MESSAGE" value="bugfix/telegram-full-bracket-swap" />
+    <MESSAGE value="bugfix/tournament-status-and-player-deletion" />
+    <option name="LAST_COMMIT_MESSAGE" value="bugfix/tournament-status-and-player-deletion" />
   </component>
 </project>

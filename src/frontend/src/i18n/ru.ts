@@ -991,4 +991,7 @@ export const ru = {
   "Remove from tournament": "Удалить из турнира",
   "Remove this registration from the selected tournament. The shared player remains available.":
     "Удалить регистрацию из выбранного турнира. Игрок останется в общем списке.",
+  "Already registered in this tournament. Choose a match to place this player in the bracket.":
+    "Игрок уже зарегистрирован в турнире. Выберите матч, чтобы добавить его в сетку.",
+  "No safe bracket slots": "Нет доступных мест в сетке",
 } satisfies Record<Message, string>;

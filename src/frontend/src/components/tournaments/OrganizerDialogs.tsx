@@ -320,6 +320,13 @@ function MovePlayerForm({
           });
       }}
     >
+      {entrant ? (
+        <p className="border border-primary/30 bg-primary/5 p-3 text-sm text-primary">
+          {t(
+            "Already registered in this tournament. Choose a match to place this player in the bracket.",
+          )}
+        </p>
+      ) : null}
       <p className="text-sm leading-relaxed text-base-content/60">
         {t("Place")}{" "}
         <strong className="text-base-content">
@@ -362,7 +369,7 @@ function MovePlayerForm({
               </option>
             ))
           ) : (
-            <option value="">{t("No safe opening slots")}</option>
+            <option value="">{t("No safe bracket slots")}</option>
           )}
         </select>
       </label>
@@ -1394,18 +1401,23 @@ export function OrganizerDialogs({
                 </Button>
               </div>
             ) : null}
+          </div>
+          <footer className="mt-4 flex shrink-0 flex-col gap-3 border-t border-base-300 pt-4">
             {error ? (
               <p
                 data-ocid="tournament.action_error"
                 role="alert"
-                className="mt-5 border border-error/35 px-4 py-3 text-sm text-error"
+                className="max-h-24 overflow-y-auto border border-error/35 px-4 py-3 text-sm text-error"
               >
                 {translateError(error)}
               </p>
             ) : null}
-          </div>
-          <footer className="mt-4 flex shrink-0 justify-end border-t border-base-300 pt-4">
-            <Button variant="ghost" disabled={pending} onClick={onClose}>
+            <Button
+              className="self-end"
+              variant="ghost"
+              disabled={pending}
+              onClick={onClose}
+            >
               {(modal.kind === "player" || modal.kind === "reset") &&
               modal.returnToMatch !== undefined
                 ? t("Back to match")

@@ -121,7 +121,36 @@ export function playerById(players: TournamentPlayerView[], id?: bigint) {
     : players.find((player) => player.id === id);
 }
 
-/** Only unplayed WB/LB positions can move; a fresh queue entrant may be placed. */
+/** A structural edit must preserve every scored or running downstream match. */
+function lockedBracketMatches(matches: TournamentMatchView[]): Set<bigint> {
+  const parents = new Map<bigint, bigint[]>();
+  const grandFinals = matches.filter((match) => match.bracket === "grandFinal");
+  for (const match of matches) {
+    const incoming = [match.sourceA, match.sourceB].flatMap((source) =>
+      source.kind === "winner" || source.kind === "loser" ? [source.id] : [],
+    );
+    // The reset final also depends on the grand final's result, even though
+    // its participant sources refer directly to the two bracket winners.
+    if (match.bracket === "resetFinal")
+      incoming.push(...grandFinals.map((final) => final.id));
+    parents.set(match.id, incoming);
+  }
+  const locked = new Set<bigint>();
+  const pending = matches
+    .filter(
+      (match) => match.status === "playing" || match.status === "completed",
+    )
+    .map((match) => match.id);
+  for (let index = 0; index < pending.length; index++) {
+    const id = pending[index];
+    if (locked.has(id)) continue;
+    locked.add(id);
+    pending.push(...(parents.get(id) ?? []));
+  }
+  return locked;
+}
+
+/** Only safe unplayed WB/LB positions can move; a queue entrant may be placed. */
 export function playerMovement(
   view: TournamentManagerView,
   player: TournamentPlayerView,
@@ -138,6 +167,7 @@ export function playerMovement(
     fresh.status !== "advanced"
   )
     return none;
+  const locked = lockedBracketMatches(view.matches);
   const pending = view.matches.filter(
     (match) =>
       (match.bracket === "winners" || match.bracket === "losers") &&
@@ -156,7 +186,10 @@ export function playerMovement(
       targets: pending
         .filter(
           (match) =>
-            match.bracket === current.bracket && match.round === current.round,
+            !locked.has(current.id) &&
+            !locked.has(match.id) &&
+            match.bracket === current.bracket &&
+            match.round === current.round,
         )
         .sort(
           (a, b) => Number(a.id === current.id) - Number(b.id === current.id),
@@ -178,6 +211,7 @@ export function playerMovement(
           (match) =>
             match.bracket === "winners" &&
             match.round >= 1 &&
+            !locked.has(match.id) &&
             match.status !== "playing" &&
             match.status !== "completed" &&
             match.status !== "void",

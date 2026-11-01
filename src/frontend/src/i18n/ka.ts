@@ -996,4 +996,7 @@ export const ka = {
   "Remove from tournament": "ტურნირიდან ამოღება",
   "Remove this registration from the selected tournament. The shared player remains available.":
     "რეგისტრაცია წაიშლება არჩეული ტურნირიდან. მოთამაშე საერთო სიაში დარჩება.",
+  "Already registered in this tournament. Choose a match to place this player in the bracket.":
+    "მოთამაშე უკვე რეგისტრირებულია ტურნირში. ბადეში დასამატებლად აირჩიეთ მატჩი.",
+  "No safe bracket slots": "ბადეში უსაფრთხო პოზიციები არ არის",
 } satisfies Record<Message, string>;
