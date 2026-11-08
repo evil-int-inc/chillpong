@@ -33285,6 +33285,7 @@ const ka = {
   "Several players match. Choose a player below.": "რამდენიმე მოთამაშე მოიძებნა. აირჩიეთ მოთამაშე ქვემოთ.",
   "Find next match for {name} / {registration}": "მოთამაშის {name} / {registration} შემდეგი მატჩის პოვნა",
   "Showing match {match} for {name}.": "ნაჩვენებია მოთამაშის {name} მატჩი {match}.",
+  "Showing last finished match {match} for {name}.": "ნაჩვენებია მოთამაშის {name} ბოლო დასრულებული მატჩი {match}.",
   Matches: "მატჩები",
   "THE MATCHES / ALL ROUNDS": "მატჩები / ყველა რაუნდი",
   "Search tournament matches": "ტურნირის მატჩების ძებნა",
@@ -33523,6 +33524,8 @@ const ka = {
   "Grand final": "გრანდ ფინალი",
   "If later rounds depend on this result, a plain reset is rejected until downstream results are explicitly included.": "თუ შემდგომი რაუნდები ამ შედეგზეა დამოკიდებული, განულება მხოლოდ მათი შედეგების ჩათვლითაა შესაძლებელი.",
   "Include removed players": "წაშლილი მოთამაშეების ჩვენება",
+  Info: "ინფორმაცია",
+  "Info view": "ტურნირის ინფორმაცია",
   Intermediate: "საშუალო დონე",
   Joined: "შემოუერთდა",
   "Keep the ball moving.": "ბურთი მოძრაობაში გქონდეს.",
@@ -34055,6 +34058,7 @@ const ru = {
   "Several players match. Choose a player below.": "Найдено несколько игроков. Выберите игрока ниже.",
   "Find next match for {name} / {registration}": "Найти следующий матч игрока {name} / {registration}",
   "Showing match {match} for {name}.": "Показан матч {match} игрока {name}.",
+  "Showing last finished match {match} for {name}.": "Показан последний завершённый матч {match} игрока {name}.",
   Matches: "Матчи",
   "THE MATCHES / ALL ROUNDS": "МАТЧИ / ВСЕ РАУНДЫ",
   "Search tournament matches": "Поиск матчей турнира",
@@ -34293,6 +34297,8 @@ const ru = {
   "Grand final": "Гранд-финал",
   "If later rounds depend on this result, a plain reset is rejected until downstream results are explicitly included.": "Если следующие раунды зависят от результата, сброс возможен только с явным включением последующих результатов.",
   "Include removed players": "Показать удалённых",
+  Info: "Информация",
+  "Info view": "Информация о турнире",
   Intermediate: "Средний",
   Joined: "В клубе с",
   "Keep the ball moving.": "Не останавливай мяч.",
@@ -50577,6 +50583,7 @@ function MatchCard({
   matches,
   onSelect,
   compact = false,
+  dense = false,
   isAdmin = false
 }) {
   const { t } = useI18n();
@@ -50595,12 +50602,91 @@ function MatchCard({
       slot: "b"
     }
   ];
+  const border = match.status === "playing" ? "border-secondary/65" : match.status === "ready" ? "border-primary/45" : "border-base-300";
+  const status = match.table ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Table2, { className: "size-3", "aria-hidden": "true" }),
+    " T",
+    match.table,
+    " /",
+    " ",
+    t(match.status)
+  ] }) : match.status === "completed" ? t("Final") : match.status === "bye" ? t("BYE") : match.status === "void" ? t("Voided") : match.status === "ready" ? t("Ready") : t("Waiting");
+  const override = match.manualOverride || match.prioritized;
+  if (dense) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "button",
+      {
+        type: "button",
+        "data-ocid": `match.card.${match.id}`,
+        className: `match-card grid h-full w-full grid-rows-[18px_repeat(2,minmax(0,1fr))] border bg-base-200 text-left ${border}`,
+        onClick: () => onSelect(match),
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex min-w-0 items-center justify-between gap-2 px-2 text-[9px] text-base-content/60", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex min-w-0 items-center gap-1.5", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: matchLabel(match) }),
+              override ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { title: t("Manual override"), className: "text-secondary", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Manual override") })
+              ] }) : null
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "span",
+              {
+                className: `flex shrink-0 items-center gap-1 ${match.status === "playing" ? "text-secondary" : "text-primary"}`,
+                children: status
+              }
+            )
+          ] }),
+          sides.map((side) => {
+            const player = playerById(players, side.id);
+            const name = (player == null ? void 0 : player.name) ?? sourceLabel(side.source, matches);
+            const winner = side.id !== void 0 && match.winnerId === side.id;
+            const playerDetails = player ? `${name} · ${registrationLabel(player.registrationNumber)} / L${player.skill}` : name;
+            return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "span",
+              {
+                title: playerDetails,
+                className: `grid min-w-0 grid-cols-[2rem_minmax(0,1fr)_1.75rem] items-center border-t border-base-300 text-sm ${winner ? "bg-primary/10" : "bg-base-content/5"}`,
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "grid h-full place-items-center bg-base-content/5 font-mono text-[10px] text-base-content/60", children: (player == null ? void 0 : player.registrationNumber.toString()) ?? "—" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "span",
+                    {
+                      className: `min-w-0 truncate px-1.5 ${winner ? "font-semibold text-primary" : player ? "text-base-content" : "text-base-content/60"}`,
+                      children: player ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        PlayerIdentity,
+                        {
+                          player,
+                          size: "xxs",
+                          nameClassName: "truncate",
+                          className: "max-w-full gap-1 align-middle"
+                        }
+                      ) : name
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "span",
+                    {
+                      className: `grid h-full place-items-center font-mono ${winner && side.score !== void 0 ? "bg-primary font-bold text-primary-content" : "bg-base-content/5 text-base-content/80"}`,
+                      children: side.score ?? "—"
+                    }
+                  )
+                ]
+              },
+              side.slot
+            );
+          }),
+          isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: actionLabel }) : null
+        ]
+      }
+    );
+  }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "button",
     {
       type: "button",
       "data-ocid": `match.card.${match.id}`,
-      className: `match-card group block w-full border bg-base-200 text-left transition-colors hover:border-primary/60 ${match.status === "playing" ? "border-secondary/65" : match.status === "ready" ? "border-primary/45" : "border-base-300"} ${compact ? "h-[148px] p-3" : "p-5"}`,
+      className: `match-card group block w-full border bg-base-200 text-left transition-colors hover:border-primary/60 ${border} ${compact ? "h-[148px] p-3" : "p-5"}`,
       onClick: () => onSelect(match),
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-3 flex items-center justify-between gap-2", children: [
@@ -50609,7 +50695,7 @@ function MatchCard({
               v1: t(BRACKET_LABELS[match.bracket]),
               v2: match.round
             }),
-            compact && (match.manualOverride || match.prioritized) ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { title: t("Manual override"), className: "text-secondary", children: [
+            compact && override ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { title: t("Manual override"), className: "text-secondary", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: t("Manual override") })
             ] }) : null
@@ -50618,14 +50704,7 @@ function MatchCard({
             "span",
             {
               className: `technical-label flex items-center gap-1 text-[9px] ${match.status === "playing" ? "text-secondary" : "text-primary"}`,
-              children: match.table ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Table2, { className: "size-3", "aria-hidden": "true" }),
-                " T",
-                match.table,
-                " /",
-                " ",
-                t(match.status)
-              ] }) : match.status === "completed" ? t("Final") : match.status === "bye" ? t("BYE") : match.status === "void" ? t("Voided") : match.status === "ready" ? t("Ready") : t("Waiting")
+              children: status
             }
           )
         ] }),
@@ -50679,7 +50758,7 @@ function MatchCard({
         ] }) : null,
         !compact ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 flex items-center justify-between border-t border-base-300 pt-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/40", children: isAdmin ? actionLabel : `${matchLabel(match)} / ${t(match.status)}` }),
-          match.manualOverride || match.prioritized ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-1 text-[8px] text-secondary", children: [
+          override ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label flex items-center gap-1 text-[8px] text-secondary", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "size-3", "aria-hidden": "true" }),
             " ",
             t("Manual override")
@@ -51002,35 +51081,55 @@ function useBracketNavigation(enabled) {
     onClickCapture
   };
 }
-const CARD_WIDTH = 248;
-const CARD_HEIGHT = 148;
-const COLUMN_WIDTH = 316;
-const ROW_HEIGHT = 184;
+const BRACKET_DIMENSIONS = {
+  compact: {
+    cardWidth: 224,
+    cardHeight: 68,
+    columnWidth: 272,
+    rowHeight: 84,
+    headerHeight: 64,
+    sectionPadding: 96,
+    entryOffsets: [31, 55]
+  },
+  extended: {
+    cardWidth: 248,
+    cardHeight: 148,
+    columnWidth: 316,
+    rowHeight: 184,
+    headerHeight: 82,
+    sectionPadding: 148,
+    entryOffsets: [69, 111]
+  }
+};
 const LANES = ["winners", "losers", "grandFinal", "resetFinal"];
-function nextPlayerMatch(matches, player) {
-  if (["removed", "eliminated", "champion"].includes(player.status)) return;
+function findPlayerMatch(matches, player) {
   const candidates = matches.filter(
     (match) => match.playerAId === player.id || match.playerBId === player.id
   );
+  const inactive = ["removed", "eliminated", "champion"].includes(
+    player.status
+  );
   for (const status of ["playing", "ready", "pending"]) {
+    if (inactive && status !== "playing") break;
     const eligible = candidates.filter((match) => match.status === status);
     const next = eligible.find((match) => match.id === player.currentMatchId) ?? eligible[0];
     if (next) return next;
   }
+  return candidates.reverse().find((match) => match.status === "completed");
 }
 function centerMatch(viewport, layout, node, zoom) {
   viewport.scrollLeft = Math.max(
     0,
     Math.min(
       layout.width * zoom - viewport.clientWidth,
-      (node.x + CARD_WIDTH / 2) * zoom - viewport.clientWidth / 2
+      (node.x + layout.cardWidth / 2) * zoom - viewport.clientWidth / 2
     )
   );
   viewport.scrollTop = Math.max(
     0,
     Math.min(
       layout.height * zoom - viewport.clientHeight,
-      (node.y + CARD_HEIGHT / 2) * zoom - viewport.clientHeight / 2
+      (node.y + layout.cardHeight / 2) * zoom - viewport.clientHeight / 2
     )
   );
 }
@@ -51038,12 +51137,14 @@ function BracketGraph({
   matches,
   players,
   onSelect,
+  variant = "extended",
   fullscreen = false,
   isAdmin = false,
   focusMatchId
 }) {
   const { t, locale } = useI18n();
   const isMobile = useIsMobile();
+  const dimensions = BRACKET_DIMENSIONS[variant];
   const hasBracket = matches.length > 0;
   reactExports.useEffect(() => {
     if (hasBracket && telegramMiniAppService.isInTelegramMiniApp()) {
@@ -51066,6 +51167,14 @@ function BracketGraph({
     ...navigationHandlers
   } = useBracketNavigation(matches.length > 0);
   const layout = reactExports.useMemo(() => {
+    const {
+      cardWidth,
+      cardHeight,
+      columnWidth,
+      rowHeight,
+      headerHeight,
+      sectionPadding
+    } = dimensions;
     const nodes = [];
     const headings = [];
     let top = 28;
@@ -51103,7 +51212,7 @@ function BracketGraph({
           (column) => laneMatches.filter((match) => depth(match) === column).length
         )
       );
-      const sectionHeight = Math.max(ROW_HEIGHT, count * ROW_HEIGHT);
+      const sectionHeight = Math.max(rowHeight, count * rowHeight);
       headings.push({
         lane,
         top,
@@ -51126,21 +51235,23 @@ function BracketGraph({
         for (const [index2, match] of roundMatches.entries()) {
           nodes.push({
             match,
-            x: 28 + column * COLUMN_WIDTH,
-            y: top + 82 + (index2 + 0.5) * sectionHeight / roundMatches.length - CARD_HEIGHT / 2
+            x: 28 + column * columnWidth,
+            y: top + headerHeight + (index2 + 0.5) * sectionHeight / roundMatches.length - cardHeight / 2
           });
         }
       }
       columns = Math.max(columns, Math.max(...columnNumbers) + 1);
-      top += sectionHeight + 148;
+      top += sectionHeight + sectionPadding;
     }
     return {
       nodes,
       headings,
-      width: 56 + columns * COLUMN_WIDTH - (COLUMN_WIDTH - CARD_WIDTH),
+      cardWidth,
+      cardHeight,
+      width: 56 + (columns - 1) * columnWidth + cardWidth,
       height: top
     };
-  }, [matches, t]);
+  }, [dimensions, matches, t]);
   const byId = new Map(
     layout.nodes.map((node) => [node.match.id.toString(), node])
   );
@@ -51176,8 +51287,8 @@ function BracketGraph({
             MIN_BRACKET_ZOOM,
             Math.min(
               1.4,
-              (viewport.clientWidth - 48) / CARD_WIDTH,
-              (viewport.clientHeight - 48) / CARD_HEIGHT
+              (viewport.clientWidth - 48) / layout.cardWidth,
+              (viewport.clientHeight - 48) / layout.cardHeight
             )
           )
         };
@@ -51198,7 +51309,7 @@ function BracketGraph({
     }
     return () => observer == null ? void 0 : observer.disconnect();
   }, [searchFocus, layout, viewportRef, zoom, zoomTo]);
-  function findNextMatch(playerId) {
+  function focusPlayerMatch(playerId) {
     var _a2;
     const player = players.find((item) => item.id === playerId);
     if (!player) {
@@ -51208,7 +51319,7 @@ function BracketGraph({
       return;
     }
     setChoices([]);
-    const match = nextPlayerMatch(matches, player);
+    const match = findPlayerMatch(matches, player);
     if (!match) {
       setSearchFocus(void 0);
       setFeedback({
@@ -51220,7 +51331,7 @@ function BracketGraph({
     (_a2 = searchInputRef.current) == null ? void 0 : _a2.blur();
     setSearchFocus({ matchId: match.id });
     setFeedback({
-      message: "Showing match {match} for {name}.",
+      message: match.status === "completed" ? "Showing last finished match {match} for {name}." : "Showing match {match} for {name}.",
       params: {
         match: `${matchLabel(match)} / M${match.id}`,
         name: player.name
@@ -51234,7 +51345,7 @@ function BracketGraph({
     const exact = players.filter((player) => normalize(player.name) === search);
     const found = exact.length ? exact : players.filter((player) => normalize(player.name).includes(search));
     if (found.length === 1) {
-      findNextMatch(found[0].id);
+      focusPlayerMatch(found[0].id);
     } else {
       setSearchFocus(void 0);
       setChoices(found.map((player) => player.id));
@@ -51323,7 +51434,7 @@ function BracketGraph({
                         registration
                       }),
                       className: "flex min-h-11 items-center justify-between gap-3 border border-base-300 px-3 py-2 text-left hover:border-primary/60",
-                      onClick: () => findNextMatch(id),
+                      onClick: () => focusPlayerMatch(id),
                       children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "min-w-0 break-words font-display text-sm font-bold", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                           PlayerIdentity,
@@ -51445,6 +51556,7 @@ function BracketGraph({
           {
             ref: viewportRef,
             "data-ocid": "tournament.bracket",
+            "data-variant": variant,
             "data-panning": isPanning || void 0,
             className: `bracket-viewport overflow-auto border border-base-300 bg-base-100 ${fullscreen ? "min-h-0 flex-1" : "max-h-[75vh]"}`,
             "aria-label": t("Scrollable bracket graph"),
@@ -51474,23 +51586,32 @@ function BracketGraph({
                           height: layout.height,
                           children: layout.nodes.flatMap(
                             (node) => [
-                              { source: node.match.sourceA, slot: "a", offset: 69 },
-                              { source: node.match.sourceB, slot: "b", offset: 111 }
+                              {
+                                source: node.match.sourceA,
+                                slot: "a",
+                                offset: dimensions.entryOffsets[0]
+                              },
+                              {
+                                source: node.match.sourceB,
+                                slot: "b",
+                                offset: dimensions.entryOffsets[1]
+                              }
                             ].map(({ source, slot, offset }) => {
                               if (source.kind !== "winner" && (source.kind !== "loser" || isMobile))
                                 return null;
                               const parent = byId.get(source.id.toString());
                               if (!parent) return null;
-                              const fromX = parent.x + CARD_WIDTH;
-                              const fromY = parent.y + CARD_HEIGHT / 2;
+                              const fromX = parent.x + layout.cardWidth;
+                              const fromY = parent.y + layout.cardHeight / 2;
                               const toX = node.x;
                               const toY = node.y + offset;
-                              const bend = fromX < toX ? (fromX + toX) / 2 : fromX + 30;
+                              const bend = fromX < toX ? (fromX + toX) / 2 : Math.min(fromX + 30, layout.width - 1);
                               const crossLane = parent.match.bracket !== node.match.bracket;
+                              const path = variant === "compact" ? `M ${fromX} ${fromY} H ${bend} V ${toY} H ${toX}` : `M ${fromX} ${fromY} C ${bend} ${fromY}, ${bend} ${toY}, ${toX} ${toY}`;
                               return /* @__PURE__ */ jsxRuntimeExports.jsx(
                                 "path",
                                 {
-                                  d: `M ${fromX} ${fromY} C ${bend} ${fromY}, ${bend} ${toY}, ${toX} ${toY}`,
+                                  d: path,
                                   fill: "none",
                                   stroke: source.kind === "loser" ? "var(--color-secondary)" : "var(--color-primary)",
                                   strokeWidth: 1,
@@ -51520,7 +51641,7 @@ function BracketGraph({
                           {
                             className: "technical-label absolute text-[10px] text-base-content/40",
                             style: {
-                              left: 28 + column.index * COLUMN_WIDTH,
+                              left: 28 + column.index * dimensions.columnWidth,
                               top: heading.top + 39
                             },
                             children: heading.lane === "grandFinal" || heading.lane === "resetFinal" ? t("Championship") : t(column.caption)
@@ -51536,8 +51657,8 @@ function BracketGraph({
                           style: {
                             left: node.x,
                             top: node.y,
-                            width: CARD_WIDTH,
-                            height: CARD_HEIGHT
+                            width: layout.cardWidth,
+                            height: layout.cardHeight
                           },
                           children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                             MatchCard,
@@ -51547,7 +51668,8 @@ function BracketGraph({
                               matches,
                               onSelect,
                               isAdmin,
-                              compact: true
+                              compact: true,
+                              dense: variant === "compact"
                             }
                           )
                         },
@@ -51564,15 +51686,21 @@ function BracketGraph({
     }
   );
 }
-function bracketPath(tournamentId) {
-  return `/tournaments/${encodeURIComponent(tournamentId.toString())}?view=bracket`;
+function validateBracketSearch(search) {
+  if (search.view !== "bracket") return {};
+  return search.layout === "compact" ? { view: "bracket", layout: "compact" } : { view: "bracket" };
 }
-function bracketUrl(tournamentId, origin = window.location.origin) {
-  return new URL(bracketPath(tournamentId), origin).toString();
+function bracketPath(tournamentId, layout = "compact") {
+  const suffix2 = layout === "compact" ? "&layout=compact" : "";
+  return `/tournaments/${encodeURIComponent(tournamentId.toString())}?view=bracket${suffix2}`;
+}
+function bracketUrl(tournamentId, origin = window.location.origin, layout) {
+  return new URL(bracketPath(tournamentId, layout), origin).toString();
 }
 function CopyBracketLink({
   tournamentId,
   compact = false,
+  layout,
   className,
   "data-ocid": ocid
 }) {
@@ -51581,7 +51709,7 @@ function CopyBracketLink({
     "idle"
   );
   const attempt = reactExports.useRef(0);
-  const url = bracketUrl(tournamentId);
+  const url = bracketUrl(tournamentId, void 0, layout);
   const previousUrl = reactExports.useRef(url);
   reactExports.useEffect(() => {
     if (previousUrl.current !== url) {
@@ -51654,6 +51782,7 @@ function CopyBracketLink({
 function FullscreenBracketFrame({
   tournamentId,
   title,
+  layout,
   onClose,
   children
 }) {
@@ -51703,7 +51832,7 @@ function FullscreenBracketFrame({
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "truncate font-display text-lg font-bold uppercase sm:text-2xl", children: title ?? t("Complete tournament bracket") })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(CopyBracketLink, { tournamentId, compact: true }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CopyBracketLink, { tournamentId, layout, compact: true }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
@@ -51721,6 +51850,307 @@ function FullscreenBracketFrame({
       ]
     }
   );
+}
+function TableAssignment({
+  view,
+  table,
+  pending,
+  onAssign
+}) {
+  const { t } = useI18n();
+  const candidates = view.matches.filter(
+    (match) => (match.status === "ready" || match.status === "playing") && match.playerAId !== void 0 && match.playerBId !== void 0
+  );
+  const current = candidates.find((match) => match.id === table.matchId);
+  const currentId = (current == null ? void 0 : current.id.toString()) ?? "";
+  const [selectedId, setSelectedId] = reactExports.useState(currentId);
+  const selected = candidates.find(
+    (match) => match.id.toString() === selectedId
+  );
+  const selectionAvailable = selectedId === "" || !!selected;
+  reactExports.useEffect(() => {
+    setSelectedId(currentId);
+  }, [currentId]);
+  reactExports.useEffect(() => {
+    if (!selectionAvailable) setSelectedId(currentId);
+  }, [currentId, selectionAvailable]);
+  const changed = selectedId !== currentId;
+  const otherTable = (selected == null ? void 0 : selected.table) !== void 0 && selected.table !== table.number ? selected.table : void 0;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "form",
+    {
+      className: "mt-4 space-y-3 border-t border-base-300 pt-4",
+      onSubmit: (event) => {
+        event.preventDefault();
+        if (pending || !changed || !selectionAvailable) return;
+        if (selected) onAssign(selected.id, table.number);
+        else if (current) onAssign(current.id, void 0);
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Match for table {v1}", { v1: table.number }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "select",
+            {
+              "data-ocid": `tournament.table_match_select.${table.number}`,
+              className: "select w-full min-w-0 rounded-none",
+              value: selectedId,
+              disabled: pending || !candidates.length,
+              onChange: (event) => setSelectedId(event.target.value),
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("No match / clear table") }),
+                candidates.map((match) => {
+                  var _a2, _b2;
+                  return /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: match.id.toString(), children: [
+                    matchLabel(match),
+                    " /",
+                    " ",
+                    (_a2 = playerById(view.players, match.playerAId)) == null ? void 0 : _a2.name,
+                    " ",
+                    t("vs"),
+                    " ",
+                    (_b2 = playerById(view.players, match.playerBId)) == null ? void 0 : _b2.name,
+                    " /",
+                    " ",
+                    t(match.status),
+                    match.table !== void 0 ? ` / ${t("Table")} ${match.table}` : ""
+                  ] }, match.id.toString());
+                })
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
+          "Choose any ready or playing match. Assigning a ready match does not start it."
+        ) }),
+        changed && current ? /* @__PURE__ */ jsxRuntimeExports.jsx("output", { className: "block text-xs leading-relaxed text-secondary", children: otherTable !== void 0 ? t("Table assignments will be exchanged with table {v1}.", {
+          v1: otherTable
+        }) : t(
+          "The current match returns to ready without a table. Results and bracket progress are preserved."
+        ) }) : changed && otherTable !== void 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("output", { className: "block text-xs leading-relaxed text-secondary", children: t("Moving this match frees table {v1}.", { v1: otherTable }) }) : null,
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            type: "submit",
+            variant: "outline",
+            className: "w-full",
+            "data-ocid": `tournament.table_match_apply.${table.number}`,
+            "aria-label": t("Apply assignment to table {v1}", { v1: table.number }),
+            loading: pending,
+            disabled: !changed || !selectionAvailable,
+            children: t("Apply assignment")
+          }
+        )
+      ]
+    }
+  );
+}
+function InfoView({
+  view,
+  isAdmin,
+  pending,
+  onSelect,
+  onAssign
+}) {
+  const { t } = useI18n();
+  const next = view.nextMatches.map((id) => view.matches.find((match) => match.id === id)).filter((match) => !!match).slice(0, 5);
+  const queue = view.waitingQueue.map((id) => playerById(view.players, id)).filter((player) => player !== void 0);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-10", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-labelledby": "floor-title", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex items-center justify-between gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "h2",
+          {
+            id: "floor-title",
+            className: "font-display text-xl font-bold uppercase",
+            children: t("On the floor")
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[10px] text-base-content/40", children: countLabel(view.tableCount, "physicalTable") })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          "data-ocid": "tournament.tables",
+          className: "table-floor grid gap-4 md:grid-cols-2 2xl:grid-cols-3",
+          children: view.tables.map((table) => {
+            const match = view.matches.find(
+              (item) => item.id === table.matchId
+            );
+            return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "article",
+              {
+                className: "border border-base-300 bg-base-200/20 p-4",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-4 flex items-center justify-between", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "technical-label flex items-center gap-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Table2,
+                        {
+                          className: "size-4 text-primary",
+                          "aria-hidden": "true"
+                        }
+                      ),
+                      " ",
+                      t("Table"),
+                      " ",
+                      table.number
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "span",
+                      {
+                        className: `technical-label text-[9px] ${table.status === "playing" ? "text-secondary" : "text-base-content/40"}`,
+                        children: t(table.status)
+                      }
+                    )
+                  ] }),
+                  match ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    MatchCard,
+                    {
+                      match,
+                      players: view.players,
+                      matches: view.matches,
+                      onSelect,
+                      isAdmin
+                    }
+                  ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-h-40 flex-col items-center justify-center border border-dashed border-base-300 text-center", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      Table2,
+                      {
+                        className: "mb-3 size-7 text-base-content/20",
+                        "aria-hidden": "true"
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-lg font-bold uppercase", children: t("Table is clear.") }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-xs text-base-content/40", children: view.generated ? t("Ready for the next rally.") : t("Waiting for the tournament draw.") })
+                  ] }),
+                  isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    TableAssignment,
+                    {
+                      view,
+                      table,
+                      pending,
+                      onAssign
+                    }
+                  ) : null
+                ]
+              },
+              table.number
+            );
+          })
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-labelledby": "next-title", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex flex-wrap items-center justify-between gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "h2",
+          {
+            id: "next-title",
+            className: "font-display text-xl font-bold uppercase",
+            children: t("Next matches")
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[9px] text-base-content/40", children: t(
+          "Skill compatibility → registration order → bracket availability"
+        ) })
+      ] }),
+      next.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          "data-ocid": "tournament.next_matches",
+          className: "grid gap-4 md:grid-cols-2 xl:grid-cols-3",
+          children: next.map((match, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "p",
+              {
+                className: `technical-label mb-2 text-[10px] ${index2 === 0 ? "text-primary" : "text-base-content/40"}`,
+                children: t(
+                  ["Next", "Following", "Then", "After that", "On deck"][index2]
+                )
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              MatchCard,
+              {
+                match,
+                players: view.players,
+                matches: view.matches,
+                onSelect,
+                isAdmin
+              }
+            )
+          ] }, match.id.toString()))
+        }
+      ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3 border border-dashed border-base-300 p-6", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Clock3,
+          {
+            className: "mt-0.5 size-5 shrink-0 text-base-content/35",
+            "aria-hidden": "true"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display font-bold uppercase", children: view.complete ? t("The night has a winner.") : t("No decided matches waiting.") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-sm text-base-content/45", children: view.complete ? t("The complete results are in the full bracket.") : view.generated ? t(
+            "Upcoming pairings appear as their bracket dependencies finish."
+          ) : t(
+            "Add players and generate the bracket to decide the first games."
+          ) })
+        ] })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-labelledby": "queue-title", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex items-center justify-between gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "h2",
+          {
+            id: "queue-title",
+            className: "font-display text-xl font-bold uppercase",
+            children: t("Waiting queue / next to play")
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[10px] text-base-content/40", children: t("{count} waiting", { count: queue.length }) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-4 text-xs leading-relaxed text-base-content/45", children: t(
+        "Original registration numbers stay fixed between rounds. Manual priority is shown in the organizer history."
+      ) }),
+      queue.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "ol",
+        {
+          "data-ocid": "tournament.waiting_queue",
+          className: "grid divide-y divide-base-300 border-y border-base-300",
+          children: queue.map((player, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "li",
+            {
+              className: "flex flex-wrap items-center gap-4 py-4",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-5 font-mono text-[10px] text-base-content/25", children: (index2 + 1).toString().padStart(2, "0") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-12 font-mono text-xs text-primary", children: registrationLabel(player.registrationNumber) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "min-w-0 flex-1 break-words font-display font-bold", children: /* @__PURE__ */ jsxRuntimeExports.jsx(PlayerIdentity, { player, nameClassName: "break-words" }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label border border-base-300 px-2 py-1 text-[10px]", children: [
+                  "L",
+                  player.skill
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono text-[10px] text-base-content/40", children: [
+                  t("Registered"),
+                  " ",
+                  tbilisiTime(player.registeredAt)
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/35", children: t(player.status) })
+              ]
+            },
+            player.id.toString()
+          ))
+        }
+      ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 border border-dashed border-base-300 p-6 text-sm text-base-content/45", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-5", "aria-hidden": "true" }),
+        view.players.length ? t("Everyone is playing, advanced or finished.") : t(
+          "The lineup is open. Players join the queue when registered."
+        )
+      ] })
+    ] })
+  ] });
 }
 const MATCH_STATUSES = [
   "playing",
@@ -52142,307 +52572,6 @@ function MatchesPanel({
     }
   );
 }
-function TableAssignment({
-  view,
-  table,
-  pending,
-  onAssign
-}) {
-  const { t } = useI18n();
-  const candidates = view.matches.filter(
-    (match) => (match.status === "ready" || match.status === "playing") && match.playerAId !== void 0 && match.playerBId !== void 0
-  );
-  const current = candidates.find((match) => match.id === table.matchId);
-  const currentId = (current == null ? void 0 : current.id.toString()) ?? "";
-  const [selectedId, setSelectedId] = reactExports.useState(currentId);
-  const selected = candidates.find(
-    (match) => match.id.toString() === selectedId
-  );
-  const selectionAvailable = selectedId === "" || !!selected;
-  reactExports.useEffect(() => {
-    setSelectedId(currentId);
-  }, [currentId]);
-  reactExports.useEffect(() => {
-    if (!selectionAvailable) setSelectedId(currentId);
-  }, [currentId, selectionAvailable]);
-  const changed = selectedId !== currentId;
-  const otherTable = (selected == null ? void 0 : selected.table) !== void 0 && selected.table !== table.number ? selected.table : void 0;
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "form",
-    {
-      className: "mt-4 space-y-3 border-t border-base-300 pt-4",
-      onSubmit: (event) => {
-        event.preventDefault();
-        if (pending || !changed || !selectionAvailable) return;
-        if (selected) onAssign(selected.id, table.number);
-        else if (current) onAssign(current.id, void 0);
-      },
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label mb-2 block text-[10px]", children: t("Match for table {v1}", { v1: table.number }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "select",
-            {
-              "data-ocid": `tournament.table_match_select.${table.number}`,
-              className: "select w-full min-w-0 rounded-none",
-              value: selectedId,
-              disabled: pending || !candidates.length,
-              onChange: (event) => setSelectedId(event.target.value),
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", children: t("No match / clear table") }),
-                candidates.map((match) => {
-                  var _a2, _b2;
-                  return /* @__PURE__ */ jsxRuntimeExports.jsxs("option", { value: match.id.toString(), children: [
-                    matchLabel(match),
-                    " /",
-                    " ",
-                    (_a2 = playerById(view.players, match.playerAId)) == null ? void 0 : _a2.name,
-                    " ",
-                    t("vs"),
-                    " ",
-                    (_b2 = playerById(view.players, match.playerBId)) == null ? void 0 : _b2.name,
-                    " /",
-                    " ",
-                    t(match.status),
-                    match.table !== void 0 ? ` / ${t("Table")} ${match.table}` : ""
-                  ] }, match.id.toString());
-                })
-              ]
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed text-base-content/45", children: t(
-          "Choose any ready or playing match. Assigning a ready match does not start it."
-        ) }),
-        changed && current ? /* @__PURE__ */ jsxRuntimeExports.jsx("output", { className: "block text-xs leading-relaxed text-secondary", children: otherTable !== void 0 ? t("Table assignments will be exchanged with table {v1}.", {
-          v1: otherTable
-        }) : t(
-          "The current match returns to ready without a table. Results and bracket progress are preserved."
-        ) }) : changed && otherTable !== void 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("output", { className: "block text-xs leading-relaxed text-secondary", children: t("Moving this match frees table {v1}.", { v1: otherTable }) }) : null,
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Button,
-          {
-            type: "submit",
-            variant: "outline",
-            className: "w-full",
-            "data-ocid": `tournament.table_match_apply.${table.number}`,
-            "aria-label": t("Apply assignment to table {v1}", { v1: table.number }),
-            loading: pending,
-            disabled: !changed || !selectionAvailable,
-            children: t("Apply assignment")
-          }
-        )
-      ]
-    }
-  );
-}
-function StandardView({
-  view,
-  isAdmin,
-  pending,
-  onSelect,
-  onAssign
-}) {
-  const { t } = useI18n();
-  const next = view.nextMatches.map((id) => view.matches.find((match) => match.id === id)).filter((match) => !!match).slice(0, 5);
-  const queue = view.waitingQueue.map((id) => playerById(view.players, id)).filter((player) => player !== void 0);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-10", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-labelledby": "floor-title", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex items-center justify-between gap-4", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "h2",
-          {
-            id: "floor-title",
-            className: "font-display text-xl font-bold uppercase",
-            children: t("On the floor")
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[10px] text-base-content/40", children: countLabel(view.tableCount, "physicalTable") })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "div",
-        {
-          "data-ocid": "tournament.tables",
-          className: "table-floor grid gap-4 md:grid-cols-2 2xl:grid-cols-3",
-          children: view.tables.map((table) => {
-            const match = view.matches.find(
-              (item) => item.id === table.matchId
-            );
-            return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "article",
-              {
-                className: "border border-base-300 bg-base-200/20 p-4",
-                children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-4 flex items-center justify-between", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "technical-label flex items-center gap-2", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        Table2,
-                        {
-                          className: "size-4 text-primary",
-                          "aria-hidden": "true"
-                        }
-                      ),
-                      " ",
-                      t("Table"),
-                      " ",
-                      table.number
-                    ] }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      "span",
-                      {
-                        className: `technical-label text-[9px] ${table.status === "playing" ? "text-secondary" : "text-base-content/40"}`,
-                        children: t(table.status)
-                      }
-                    )
-                  ] }),
-                  match ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    MatchCard,
-                    {
-                      match,
-                      players: view.players,
-                      matches: view.matches,
-                      onSelect,
-                      isAdmin
-                    }
-                  ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-h-40 flex-col items-center justify-center border border-dashed border-base-300 text-center", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      Table2,
-                      {
-                        className: "mb-3 size-7 text-base-content/20",
-                        "aria-hidden": "true"
-                      }
-                    ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-lg font-bold uppercase", children: t("Table is clear.") }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-xs text-base-content/40", children: view.generated ? t("Ready for the next rally.") : t("Waiting for the tournament draw.") })
-                  ] }),
-                  isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    TableAssignment,
-                    {
-                      view,
-                      table,
-                      pending,
-                      onAssign
-                    }
-                  ) : null
-                ]
-              },
-              table.number
-            );
-          })
-        }
-      )
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-labelledby": "next-title", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex flex-wrap items-center justify-between gap-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "h2",
-          {
-            id: "next-title",
-            className: "font-display text-xl font-bold uppercase",
-            children: t("Next matches")
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "technical-label text-[9px] text-base-content/40", children: t(
-          "Skill compatibility → registration order → bracket availability"
-        ) })
-      ] }),
-      next.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "div",
-        {
-          "data-ocid": "tournament.next_matches",
-          className: "grid gap-4 md:grid-cols-2 xl:grid-cols-3",
-          children: next.map((match, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "p",
-              {
-                className: `technical-label mb-2 text-[10px] ${index2 === 0 ? "text-primary" : "text-base-content/40"}`,
-                children: t(
-                  ["Next", "Following", "Then", "After that", "On deck"][index2]
-                )
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              MatchCard,
-              {
-                match,
-                players: view.players,
-                matches: view.matches,
-                onSelect,
-                isAdmin
-              }
-            )
-          ] }, match.id.toString()))
-        }
-      ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3 border border-dashed border-base-300 p-6", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Clock3,
-          {
-            className: "mt-0.5 size-5 shrink-0 text-base-content/35",
-            "aria-hidden": "true"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display font-bold uppercase", children: view.complete ? t("The night has a winner.") : t("No decided matches waiting.") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-sm text-base-content/45", children: view.complete ? t("The complete results are in the full bracket.") : view.generated ? t(
-            "Upcoming pairings appear as their bracket dependencies finish."
-          ) : t(
-            "Add players and generate the bracket to decide the first games."
-          ) })
-        ] })
-      ] })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "aria-labelledby": "queue-title", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-5 flex items-center justify-between gap-4", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "h2",
-          {
-            id: "queue-title",
-            className: "font-display text-xl font-bold uppercase",
-            children: t("Waiting queue / next to play")
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[10px] text-base-content/40", children: t("{count} waiting", { count: queue.length }) })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-4 text-xs leading-relaxed text-base-content/45", children: t(
-        "Original registration numbers stay fixed between rounds. Manual priority is shown in the organizer history."
-      ) }),
-      queue.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "ol",
-        {
-          "data-ocid": "tournament.waiting_queue",
-          className: "grid divide-y divide-base-300 border-y border-base-300",
-          children: queue.map((player, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "li",
-            {
-              className: "flex flex-wrap items-center gap-4 py-4",
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-5 font-mono text-[10px] text-base-content/25", children: (index2 + 1).toString().padStart(2, "0") }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-12 font-mono text-xs text-primary", children: registrationLabel(player.registrationNumber) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "min-w-0 flex-1 break-words font-display font-bold", children: /* @__PURE__ */ jsxRuntimeExports.jsx(PlayerIdentity, { player, nameClassName: "break-words" }) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "technical-label border border-base-300 px-2 py-1 text-[10px]", children: [
-                  "L",
-                  player.skill
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono text-[10px] text-base-content/40", children: [
-                  t("Registered"),
-                  " ",
-                  tbilisiTime(player.registeredAt)
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/35", children: t(player.status) })
-              ]
-            },
-            player.id.toString()
-          ))
-        }
-      ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 border border-dashed border-base-300 p-6 text-sm text-base-content/45", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "size-5", "aria-hidden": "true" }),
-        view.players.length ? t("Everyone is playing, advanced or finished.") : t(
-          "The lineup is open. Players join the queue when registered."
-        )
-      ] })
-    ] })
-  ] });
-}
 const months = [
   ["იან.", "იანვარი"],
   ["თებ.", "თებერვალი"],
@@ -52648,39 +52777,49 @@ function TournamentDetailPage({
   tournamentId
 }) {
   const { t } = useI18n();
-  const fullscreen = useSearch({
+  const fullscreenLayout = useSearch({
     strict: false,
-    select: (search) => search.view === "bracket"
+    select: (search) => {
+      if (search.view === "bracket") {
+        return search.layout === "compact" ? "compact" : "extended";
+      }
+    }
   });
+  const fullscreen = fullscreenLayout !== void 0;
   const navigate = useNavigate();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient2 = useQueryClient();
   const queryKey = ["tournamentState", tournamentId.toString()];
-  const [display, setDisplay] = reactExports.useState("standard");
+  const [display, setDisplay] = reactExports.useState(
+    "standard"
+  );
+  const bracketLayout = fullscreenLayout ?? (display === "extended" ? "extended" : "compact");
   const [bracketFocus, setBracketFocus] = reactExports.useState();
   const focusMatchId = (bracketFocus == null ? void 0 : bracketFocus.tournamentId) === tournamentId ? bracketFocus.matchId : void 0;
   const changeFullscreen = reactExports.useCallback(
     (next) => {
-      setDisplay("extended");
       void navigate({
         to: "/tournaments/$tournamentId",
         params: { tournamentId: tournamentId.toString() },
         search: (previous) => ({
           ...previous,
-          view: next ? "bracket" : void 0
+          view: next ? "bracket" : void 0,
+          layout: next && bracketLayout === "compact" ? "compact" : void 0
         })
       });
     },
-    [navigate, tournamentId]
+    [bracketLayout, navigate, tournamentId]
   );
   const closeFullscreen = reactExports.useCallback(
     () => changeFullscreen(false),
     [changeFullscreen]
   );
   reactExports.useEffect(() => {
-    if (fullscreen) setDisplay("extended");
-  }, [fullscreen]);
+    if (fullscreenLayout) {
+      setDisplay(fullscreenLayout === "compact" ? "standard" : "extended");
+    }
+  }, [fullscreenLayout]);
   const [modal, setModal] = reactExports.useState(null);
   const [notice, setNotice] = reactExports.useState(null);
   const stateQuery = useQuery({
@@ -52728,7 +52867,7 @@ function TournamentDetailPage({
           tournamentId,
           matchId: (placedMatch == null ? void 0 : placedMatch.id) ?? action.matchId
         });
-        setDisplay("extended");
+        setDisplay((previous) => previous === "info" ? "standard" : previous);
         setNotice("Player added to the bracket. Their match is now in view.");
       }
       if ((variables.action.kind === "addPlayer" || variables.action.kind === "addExistingPlayer") && ((_b2 = variables.options) == null ? void 0 : _b2.placeNewPlayer)) {
@@ -52759,6 +52898,7 @@ function TournamentDetailPage({
       {
         tournamentId,
         title: view == null ? void 0 : view.tournament.title,
+        layout: bracketLayout,
         onClose: closeFullscreen,
         children: content
       }
@@ -52857,6 +52997,7 @@ function TournamentDetailPage({
           BracketGraph,
           {
             fullscreen: true,
+            variant: bracketLayout,
             isAdmin,
             focusMatchId,
             matches: view.matches,
@@ -52978,8 +53119,8 @@ function TournamentDetailPage({
       }
     ) : null,
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-8 flex flex-wrap items-center justify-between gap-4 border-y border-base-300 py-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("fieldset", { className: "flex flex-wrap gap-1", "aria-label": t("Tournament"), children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
             type: "button",
@@ -52988,11 +53129,7 @@ function TournamentDetailPage({
             "aria-pressed": display === "standard",
             className: `club-filter ${display === "standard" ? "is-active" : ""}`,
             onClick: () => setDisplay("standard"),
-            children: [
-              t("Standard"),
-              " ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 hidden font-normal opacity-50 sm:inline", children: t("/ Live floor") })
-            ]
+            children: t("Standard")
           }
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -53010,10 +53147,33 @@ function TournamentDetailPage({
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 hidden font-normal opacity-50 sm:inline", children: t("/ Full bracket") })
             ]
           }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            "data-ocid": "tournament.info_tab",
+            "aria-label": t("Info view"),
+            "aria-pressed": display === "info",
+            className: `club-filter ${display === "info" ? "is-active" : ""}`,
+            onClick: () => setDisplay("info"),
+            children: [
+              t("Info"),
+              " ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 hidden font-normal opacity-50 sm:inline", children: t("/ Live floor") })
+            ]
+          }
         )
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(CopyBracketLink, { tournamentId, compact: true }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          CopyBracketLink,
+          {
+            tournamentId,
+            layout: bracketLayout,
+            compact: true
+          }
+        ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
@@ -53041,8 +53201,8 @@ function TournamentDetailPage({
         ) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "technical-label text-[9px] text-base-content/35", children: t("Live tournament / public view") })
       ] })
     ] }),
-    display === "standard" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-      StandardView,
+    display === "info" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      InfoView,
       {
         view,
         isAdmin,
@@ -53053,12 +53213,14 @@ function TournamentDetailPage({
     ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
       BracketGraph,
       {
+        variant: bracketLayout,
         isAdmin,
         focusMatchId,
         matches: view.matches,
         players: view.players,
         onSelect: (match) => openModal({ kind: "match", matchId: match.id })
-      }
+      },
+      bracketLayout
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       MatchesPanel,
@@ -54802,7 +54964,7 @@ const tournamentsRoute = createRoute({
 const tournamentDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/tournaments/$tournamentId",
-  validateSearch: (search) => search.view === "bracket" ? { view: "bracket" } : {},
+  validateSearch: validateBracketSearch,
   component: TournamentRoomRoute
 });
 function TournamentRoomRoute() {
