@@ -368,6 +368,7 @@ describe("zooming to a player's match", () => {
       });
       const { viewport, onSelect } = renderSearch(matches, players, {
         variant,
+        height: 400,
       });
       await searchName("Nino");
       expect(

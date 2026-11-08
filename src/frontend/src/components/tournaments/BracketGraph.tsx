@@ -23,12 +23,12 @@ import {
 const BRACKET_DIMENSIONS = {
   compact: {
     cardWidth: 224,
-    cardHeight: 68,
+    cardHeight: 50,
     columnWidth: 272,
-    rowHeight: 84,
+    rowHeight: 66,
     headerHeight: 64,
     sectionPadding: 96,
-    entryOffsets: [31, 55],
+    entryOffsets: [13, 37],
   },
   extended: {
     cardWidth: 248,

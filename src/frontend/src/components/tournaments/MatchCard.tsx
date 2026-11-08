@@ -79,24 +79,12 @@ export function MatchCard({
       <button
         type="button"
         data-ocid={`match.card.${match.id}`}
-        className={`match-card grid h-full w-full grid-rows-[18px_repeat(2,minmax(0,1fr))] border bg-base-200 text-left ${border}`}
+        className={`match-card grid h-full w-full grid-rows-2 border bg-base-200 text-left ${border}`}
         onClick={() => onSelect(match)}
       >
-        <span className="technical-label flex min-w-0 items-center justify-between gap-2 px-2 text-[9px] text-base-content/60">
-          <span className="flex min-w-0 items-center gap-1.5">
-            <span className="truncate">{matchLabel(match)}</span>
-            {override ? (
-              <span title={t("Manual override")} className="text-secondary">
-                <Flag className="size-3" aria-hidden="true" />
-                <span className="sr-only">{t("Manual override")}</span>
-              </span>
-            ) : null}
-          </span>
-          <span
-            className={`flex shrink-0 items-center gap-1 ${match.status === "playing" ? "text-secondary" : "text-primary"}`}
-          >
-            {status}
-          </span>
+        <span className="sr-only">
+          {matchLabel(match)} / {status}
+          {override ? ` / ${t("Manual override")}` : ""}
         </span>
         {sides.map((side) => {
           const player = playerById(players, side.id);
@@ -109,7 +97,7 @@ export function MatchCard({
             <span
               key={side.slot}
               title={playerDetails}
-              className={`grid min-w-0 grid-cols-[2rem_minmax(0,1fr)_1.75rem] items-center border-t border-base-300 text-sm ${winner ? "bg-primary/10" : "bg-base-content/5"}`}
+              className={`grid min-w-0 grid-cols-[2rem_minmax(0,1fr)_1.75rem] items-center text-sm ${side.slot === "b" ? "border-t border-base-300" : ""} ${winner ? "bg-primary/10" : "bg-base-content/5"}`}
             >
               <span className="grid h-full place-items-center bg-base-content/5 font-mono text-[10px] text-base-content/60">
                 {player?.registrationNumber.toString() ?? "—"}
