@@ -50441,6 +50441,18 @@ function ProfilePage() {
     ] })
   ] }) });
 }
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = reactExports.useState(
+    () => typeof window !== "undefined" && window.innerWidth < breakpoint
+  );
+  reactExports.useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < breakpoint);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [breakpoint]);
+  return isMobile;
+}
 const SWIPE_EVENT = "web_app_setup_swipe_behavior";
 const TELEGRAM_WEB_ORIGIN = "https://web.telegram.org";
 class TelegramMiniAppService {
@@ -51031,6 +51043,7 @@ function BracketGraph({
   focusMatchId
 }) {
   const { t, locale } = useI18n();
+  const isMobile = useIsMobile();
   const hasBracket = matches.length > 0;
   reactExports.useEffect(() => {
     if (hasBracket && telegramMiniAppService.isInTelegramMiniApp()) {
@@ -51346,7 +51359,7 @@ function BracketGraph({
               " ",
               t("Winner advances")
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
+            !isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "span",
                 {
@@ -51356,7 +51369,7 @@ function BracketGraph({
               ),
               " ",
               t("Loser drops")
-            ] }),
+            ] }) : null,
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: t("Drag to pan / scroll or pinch to zoom") })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 border border-base-300 p-1", children: [
@@ -51464,7 +51477,7 @@ function BracketGraph({
                               { source: node.match.sourceA, slot: "a", offset: 69 },
                               { source: node.match.sourceB, slot: "b", offset: 111 }
                             ].map(({ source, slot, offset }) => {
-                              if (source.kind !== "winner" && source.kind !== "loser")
+                              if (source.kind !== "winner" && (source.kind !== "loser" || isMobile))
                                 return null;
                               const parent = byId.get(source.id.toString());
                               if (!parent) return null;

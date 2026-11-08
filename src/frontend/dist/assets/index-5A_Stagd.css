@@ -4775,10 +4775,6 @@
     flex-shrink: 0;
   }
 
-  .grow {
-    flex-grow: 1;
-  }
-
   .basis-48 {
     flex-basis: calc(var(--spacing) * 48);
   }
