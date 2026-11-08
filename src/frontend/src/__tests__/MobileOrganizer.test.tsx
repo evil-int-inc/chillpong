@@ -15,6 +15,7 @@ import {
 } from "@/backend";
 import { setLanguage } from "@/i18n";
 import { TournamentDetailPage } from "@/pages/TournamentDetailPage";
+import { validateBracketSearch } from "@/types/bracket-link";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   RouterProvider,
@@ -196,9 +197,7 @@ function renderRoom(fullscreen = false) {
     },
   });
   const rootRoute = createRootRoute({
-    validateSearch: (search: Record<string, unknown>) => ({
-      view: search.view === "bracket" ? "bracket" : undefined,
-    }),
+    validateSearch: validateBracketSearch,
     component: () => (
       <QueryClientProvider client={client}>
         <TournamentDetailPage tournamentId={1n} />
@@ -330,6 +329,9 @@ describe("mobile organizer match workflow", () => {
       state.actor.getTournamentState.mockResolvedValue(original);
       saveStates(completed, original);
       renderRoom();
+      await user.click(
+        await screen.findByRole("button", { name: "Info view" }),
+      );
       const initialCard = await screen.findByTestId("match.card.1");
       await user.click(initialCard);
       let dialog = screen.getByRole("dialog");
@@ -373,7 +375,7 @@ describe("mobile organizer match workflow", () => {
       await user.click(screen.getByRole("button", { name: "Extended view" }));
       expect(screen.getByTestId("match.card.1")).toHaveTextContent("11");
       expect(screen.getByTestId("match.card.1")).toHaveTextContent("7");
-      await user.click(screen.getByRole("button", { name: "Standard view" }));
+      await user.click(screen.getByRole("button", { name: "Info view" }));
       await user.click(
         screen.getByRole("button", { name: "Undo last action" }),
       );
@@ -407,6 +409,7 @@ describe("mobile organizer match workflow", () => {
     const user = userEvent.setup();
     saveStates(completedRoom());
     renderRoom();
+    await user.click(await screen.findByRole("button", { name: "Info view" }));
     const card = await screen.findByTestId("match.card.1");
     expect(within(card).getByText("Enter score")).toBeVisible();
     touch(card, "pointerdown");
@@ -479,6 +482,7 @@ describe("mobile organizer match workflow", () => {
     state.actor.getTournamentState.mockResolvedValue(ready);
     saveStates(assigned, playing);
     renderRoom();
+    await user.click(await screen.findByRole("button", { name: "Info view" }));
     const card = await screen.findByTestId("match.card.1");
     expect(within(card).getByText("Manage match")).toBeVisible();
     await user.click(card);
@@ -706,6 +710,7 @@ describe("mobile organizer match workflow", () => {
     state.actor.getTournamentState.mockResolvedValue(completedRoom());
     saveStates(completedRoom(11n, 9n), room());
     renderRoom();
+    await user.click(await screen.findByRole("button", { name: "Info view" }));
     const card = await screen.findByTestId("match.card.1");
     expect(within(card).getByText("Correct the result")).toBeVisible();
     await user.click(card);
@@ -750,7 +755,7 @@ describe("mobile organizer match workflow", () => {
     } satisfies TournamentCommand);
   });
 
-  it.each(["extended", "fullscreen"])(
+  it.each(["standard", "extended", "fullscreen"])(
     "opens the score form when a playing match is tapped in the %s bracket",
     async (display) => {
       const user = userEvent.setup();
@@ -762,7 +767,14 @@ describe("mobile organizer match workflow", () => {
         );
       }
       const card = await screen.findByTestId("match.card.1");
-      expect(within(card).getByText("Enter score")).toBeVisible();
+      if (display === "standard") {
+        expect(screen.getByTestId("tournament.bracket")).toHaveAttribute(
+          "data-variant",
+          "compact",
+        );
+      } else {
+        expect(within(card).getByText("Enter score")).toBeVisible();
+      }
       touch(card, "pointerdown");
       touch(card, "pointerup");
       fireEvent.click(card, { detail: 1 });
@@ -785,14 +797,14 @@ describe("mobile organizer match workflow", () => {
     },
   );
 
-  it.each(["Standard view", "Extended view"])(
+  it.each(["Standard view", "Extended view", "Info view"])(
     "keeps spectator match inspection read-only in %s",
     async (display) => {
       const user = userEvent.setup();
       state.auth.isAdmin = false;
       renderRoom();
       await screen.findByRole("heading", { name: "Phone Night Cup" });
-      if (display === "Extended view") {
+      if (display !== "Standard view") {
         await user.click(screen.getByRole("button", { name: display }));
       }
       const card = screen.getByTestId("match.card.1");
@@ -883,7 +895,6 @@ describe("mobile organizer match workflow", () => {
       expect(within(dialog).getByLabelText("Score B")).toHaveValue(7);
       expect(within(dialog).getByText(/L4.*#001/)).toBeVisible();
       expect(screen.getByTestId("match.card.1")).toHaveTextContent("Nina");
-      expect(screen.getByTestId("match.card.1")).toHaveTextContent("#001");
     },
   );
 

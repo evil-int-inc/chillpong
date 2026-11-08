@@ -2,6 +2,7 @@ import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { type LocalizedMessage, useI18n } from "@/i18n";
 import { telegramMiniAppService } from "@/services/telegram-mini-app.service";
+import type { BracketLayout } from "@/types/bracket-link";
 import {
   BRACKET_LABELS,
   type BracketLane,
@@ -19,10 +20,26 @@ import {
   useBracketNavigation,
 } from "./useBracketNavigation";
 
-const CARD_WIDTH = 248;
-const CARD_HEIGHT = 148;
-const COLUMN_WIDTH = 316;
-const ROW_HEIGHT = 184;
+const BRACKET_DIMENSIONS = {
+  compact: {
+    cardWidth: 224,
+    cardHeight: 68,
+    columnWidth: 272,
+    rowHeight: 84,
+    headerHeight: 64,
+    sectionPadding: 96,
+    entryOffsets: [31, 55],
+  },
+  extended: {
+    cardWidth: 248,
+    cardHeight: 148,
+    columnWidth: 316,
+    rowHeight: 184,
+    headerHeight: 82,
+    sectionPadding: 148,
+    entryOffsets: [69, 111],
+  },
+} as const;
 const LANES: BracketLane[] = ["winners", "losers", "grandFinal", "resetFinal"];
 
 function nextPlayerMatch(
@@ -44,7 +61,12 @@ function nextPlayerMatch(
 
 function centerMatch(
   viewport: HTMLDivElement,
-  layout: { width: number; height: number },
+  layout: {
+    width: number;
+    height: number;
+    cardWidth: number;
+    cardHeight: number;
+  },
   node: { x: number; y: number },
   zoom: number,
 ) {
@@ -52,14 +74,14 @@ function centerMatch(
     0,
     Math.min(
       layout.width * zoom - viewport.clientWidth,
-      (node.x + CARD_WIDTH / 2) * zoom - viewport.clientWidth / 2,
+      (node.x + layout.cardWidth / 2) * zoom - viewport.clientWidth / 2,
     ),
   );
   viewport.scrollTop = Math.max(
     0,
     Math.min(
       layout.height * zoom - viewport.clientHeight,
-      (node.y + CARD_HEIGHT / 2) * zoom - viewport.clientHeight / 2,
+      (node.y + layout.cardHeight / 2) * zoom - viewport.clientHeight / 2,
     ),
   );
 }
@@ -68,6 +90,7 @@ interface BracketGraphProps {
   matches: TournamentMatchView[];
   players: TournamentPlayerView[];
   onSelect: (match: TournamentMatchView) => void;
+  variant?: BracketLayout;
   fullscreen?: boolean;
   isAdmin?: boolean;
   focusMatchId?: bigint;
@@ -77,12 +100,14 @@ export function BracketGraph({
   matches,
   players,
   onSelect,
+  variant = "extended",
   fullscreen = false,
   isAdmin = false,
   focusMatchId,
 }: BracketGraphProps) {
   const { t, locale } = useI18n();
   const isMobile = useIsMobile();
+  const dimensions = BRACKET_DIMENSIONS[variant];
   const hasBracket = matches.length > 0;
   useEffect(() => {
     if (hasBracket && telegramMiniAppService.isInTelegramMiniApp()) {
@@ -109,6 +134,14 @@ export function BracketGraph({
   } = useBracketNavigation(matches.length > 0);
 
   const layout = useMemo(() => {
+    const {
+      cardWidth,
+      cardHeight,
+      columnWidth,
+      rowHeight,
+      headerHeight,
+      sectionPadding,
+    } = dimensions;
     const nodes: { match: TournamentMatchView; x: number; y: number }[] = [];
     const headings: {
       lane: BracketLane;
@@ -154,7 +187,7 @@ export function BracketGraph({
             laneMatches.filter((match) => depth(match) === column).length,
         ),
       );
-      const sectionHeight = Math.max(ROW_HEIGHT, count * ROW_HEIGHT);
+      const sectionHeight = Math.max(rowHeight, count * rowHeight);
       headings.push({
         lane,
         top,
@@ -185,25 +218,27 @@ export function BracketGraph({
         for (const [index, match] of roundMatches.entries()) {
           nodes.push({
             match,
-            x: 28 + column * COLUMN_WIDTH,
+            x: 28 + column * columnWidth,
             y:
               top +
-              82 +
+              headerHeight +
               ((index + 0.5) * sectionHeight) / roundMatches.length -
-              CARD_HEIGHT / 2,
+              cardHeight / 2,
           });
         }
       }
       columns = Math.max(columns, Math.max(...columnNumbers) + 1);
-      top += sectionHeight + 148;
+      top += sectionHeight + sectionPadding;
     }
     return {
       nodes,
       headings,
-      width: 56 + columns * COLUMN_WIDTH - (COLUMN_WIDTH - CARD_WIDTH),
+      cardWidth,
+      cardHeight,
+      width: 56 + (columns - 1) * columnWidth + cardWidth,
       height: top,
     };
-  }, [matches, t]);
+  }, [dimensions, matches, t]);
   const byId = new Map(
     layout.nodes.map((node) => [node.match.id.toString(), node]),
   );
@@ -243,8 +278,8 @@ export function BracketGraph({
             MIN_BRACKET_ZOOM,
             Math.min(
               1.4,
-              (viewport.clientWidth - 48) / CARD_WIDTH,
-              (viewport.clientHeight - 48) / CARD_HEIGHT,
+              (viewport.clientWidth - 48) / layout.cardWidth,
+              (viewport.clientHeight - 48) / layout.cardHeight,
             ),
           ),
         };
@@ -493,6 +528,7 @@ export function BracketGraph({
       <div
         ref={viewportRef}
         data-ocid="tournament.bracket"
+        data-variant={variant}
         data-panning={isPanning || undefined}
         className={`bracket-viewport overflow-auto border border-base-300 bg-base-100 ${fullscreen ? "min-h-0 flex-1" : "max-h-[75vh]"}`}
         aria-label={t("Scrollable bracket graph")}
@@ -519,8 +555,16 @@ export function BracketGraph({
             >
               {layout.nodes.flatMap((node) =>
                 [
-                  { source: node.match.sourceA, slot: "a", offset: 69 },
-                  { source: node.match.sourceB, slot: "b", offset: 111 },
+                  {
+                    source: node.match.sourceA,
+                    slot: "a",
+                    offset: dimensions.entryOffsets[0],
+                  },
+                  {
+                    source: node.match.sourceB,
+                    slot: "b",
+                    offset: dimensions.entryOffsets[1],
+                  },
                 ].map(({ source, slot, offset }) => {
                   if (
                     source.kind !== "winner" &&
@@ -529,16 +573,23 @@ export function BracketGraph({
                     return null;
                   const parent = byId.get(source.id.toString());
                   if (!parent) return null;
-                  const fromX = parent.x + CARD_WIDTH;
-                  const fromY = parent.y + CARD_HEIGHT / 2;
+                  const fromX = parent.x + layout.cardWidth;
+                  const fromY = parent.y + layout.cardHeight / 2;
                   const toX = node.x;
                   const toY = node.y + offset;
-                  const bend = fromX < toX ? (fromX + toX) / 2 : fromX + 30;
+                  const bend =
+                    fromX < toX
+                      ? (fromX + toX) / 2
+                      : Math.min(fromX + 30, layout.width - 1);
                   const crossLane = parent.match.bracket !== node.match.bracket;
+                  const path =
+                    variant === "compact"
+                      ? `M ${fromX} ${fromY} H ${bend} V ${toY} H ${toX}`
+                      : `M ${fromX} ${fromY} C ${bend} ${fromY}, ${bend} ${toY}, ${toX} ${toY}`;
                   return (
                     <path
                       key={`${node.match.id}-${slot}`}
-                      d={`M ${fromX} ${fromY} C ${bend} ${fromY}, ${bend} ${toY}, ${toX} ${toY}`}
+                      d={path}
                       fill="none"
                       stroke={
                         source.kind === "loser"
@@ -575,7 +626,7 @@ export function BracketGraph({
                     key={column.index}
                     className="technical-label absolute text-[10px] text-base-content/40"
                     style={{
-                      left: 28 + column.index * COLUMN_WIDTH,
+                      left: 28 + column.index * dimensions.columnWidth,
                       top: heading.top + 39,
                     }}
                   >
@@ -597,8 +648,8 @@ export function BracketGraph({
                 style={{
                   left: node.x,
                   top: node.y,
-                  width: CARD_WIDTH,
-                  height: CARD_HEIGHT,
+                  width: layout.cardWidth,
+                  height: layout.cardHeight,
                 }}
               >
                 <MatchCard
@@ -608,6 +659,7 @@ export function BracketGraph({
                   onSelect={onSelect}
                   isAdmin={isAdmin}
                   compact
+                  dense={variant === "compact"}
                 />
               </div>
             ))}

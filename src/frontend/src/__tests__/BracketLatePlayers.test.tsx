@@ -183,15 +183,21 @@ function assertVisibleDraw(matches: TournamentMatchView[]) {
 }
 
 describe("late entrants in the full bracket", () => {
-  it.each([false, true])(
-    "shows every repeated qualifier and late-round entrant with fullscreen=%s",
-    (fullscreen) => {
+  it.each([
+    { variant: "compact", fullscreen: false },
+    { variant: "compact", fullscreen: true },
+    { variant: "extended", fullscreen: false },
+    { variant: "extended", fullscreen: true },
+  ] as const)(
+    "shows every repeated qualifier in the $variant bracket with fullscreen=$fullscreen",
+    ({ variant, fullscreen }) => {
       const matches = insertedDraw();
       render(
         <BracketGraph
           matches={matches}
           players={players}
           onSelect={vi.fn()}
+          variant={variant}
           fullscreen={fullscreen}
         />,
       );

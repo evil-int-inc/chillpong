@@ -7,6 +7,7 @@ import { ProfilePage } from "@/pages/ProfilePage";
 import { TournamentDetailPage } from "@/pages/TournamentDetailPage";
 import { TournamentsPage } from "@/pages/TournamentsPage";
 import { UsersPage } from "@/pages/UsersPage";
+import { validateBracketSearch } from "@/types/bracket-link";
 import {
   Link,
   RouterProvider,
@@ -61,8 +62,7 @@ const tournamentsRoute = createRoute({
 const tournamentDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/tournaments/$tournamentId",
-  validateSearch: (search: Record<string, unknown>): { view?: "bracket" } =>
-    search.view === "bracket" ? { view: "bracket" } : {},
+  validateSearch: validateBracketSearch,
   component: TournamentRoomRoute,
 });
 

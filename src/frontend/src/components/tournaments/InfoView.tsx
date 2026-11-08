@@ -12,7 +12,7 @@ import { Clock3, Table2, Users } from "lucide-react";
 import { MatchCard } from "./MatchCard";
 import { TableAssignment } from "./TableAssignment";
 
-interface StandardViewProps {
+interface InfoViewProps {
   view: TournamentManagerView;
   isAdmin: boolean;
   pending: boolean;
@@ -20,13 +20,13 @@ interface StandardViewProps {
   onAssign: (matchId: bigint, table?: number) => void;
 }
 
-export function StandardView({
+export function InfoView({
   view,
   isAdmin,
   pending,
   onSelect,
   onAssign,
-}: StandardViewProps) {
+}: InfoViewProps) {
   const { t } = useI18n();
   const next = view.nextMatches
     .map((id) => view.matches.find((match) => match.id === id))

@@ -3,6 +3,7 @@ import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { BracketGraph } from "@/components/tournaments/BracketGraph";
 import { CopyBracketLink } from "@/components/tournaments/CopyBracketLink";
 import { FullscreenBracketFrame } from "@/components/tournaments/FullscreenBracketFrame";
+import { InfoView } from "@/components/tournaments/InfoView";
 import { MatchesPanel } from "@/components/tournaments/MatchesPanel";
 import {
   type ActionOptions,
@@ -10,7 +11,6 @@ import {
   type OrganizerModal,
 } from "@/components/tournaments/OrganizerDialogs";
 import { PlayersPanel } from "@/components/tournaments/PlayersPanel";
-import { StandardView } from "@/components/tournaments/StandardView";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { translateError, translateHistory, useI18n } from "@/i18n";
@@ -20,6 +20,7 @@ import {
   type OrganizerAction,
   tournamentManagerService,
 } from "@/services/tournament-manager";
+import type { BracketLayout } from "@/types/bracket-link";
 import {
   type Elimination,
   type TournamentManagerView,
@@ -193,16 +194,25 @@ export function TournamentDetailPage({
   tournamentId,
 }: { tournamentId: bigint }) {
   const { t } = useI18n();
-  const fullscreen = useSearch({
+  const fullscreenLayout = useSearch({
     strict: false,
-    select: (search) => search.view === "bracket",
+    select: (search): BracketLayout | undefined => {
+      if (search.view === "bracket") {
+        return search.layout === "compact" ? "compact" : "extended";
+      }
+    },
   });
+  const fullscreen = fullscreenLayout !== undefined;
   const navigate = useNavigate();
   const { actor, isFetching } = useActor(createActor);
   const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
   const queryKey = ["tournamentState", tournamentId.toString()] as const;
-  const [display, setDisplay] = useState<"standard" | "extended">("standard");
+  const [display, setDisplay] = useState<"standard" | "extended" | "info">(
+    "standard",
+  );
+  const bracketLayout =
+    fullscreenLayout ?? (display === "standard" ? "compact" : "extended");
   const [bracketFocus, setBracketFocus] = useState<{
     tournamentId: bigint;
     matchId: bigint;
@@ -213,25 +223,30 @@ export function TournamentDetailPage({
       : undefined;
   const changeFullscreen = useCallback(
     (next: boolean) => {
-      setDisplay("extended");
       void navigate({
         to: "/tournaments/$tournamentId",
         params: { tournamentId: tournamentId.toString() },
         search: (previous) => ({
           ...previous,
           view: next ? ("bracket" as const) : undefined,
+          layout:
+            next && bracketLayout === "compact"
+              ? ("compact" as const)
+              : undefined,
         }),
       });
     },
-    [navigate, tournamentId],
+    [bracketLayout, navigate, tournamentId],
   );
   const closeFullscreen = useCallback(
     () => changeFullscreen(false),
     [changeFullscreen],
   );
   useEffect(() => {
-    if (fullscreen) setDisplay("extended");
-  }, [fullscreen]);
+    if (fullscreenLayout) {
+      setDisplay(fullscreenLayout === "compact" ? "standard" : "extended");
+    }
+  }, [fullscreenLayout]);
   const [modal, setModal] = useState<OrganizerModal | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const stateQuery = useQuery({
@@ -286,7 +301,7 @@ export function TournamentDetailPage({
           tournamentId,
           matchId: placedMatch?.id ?? action.matchId,
         });
-        setDisplay("extended");
+        setDisplay((previous) => (previous === "info" ? "standard" : previous));
         setNotice("Player added to the bracket. Their match is now in view.");
       }
       if (
@@ -324,6 +339,7 @@ export function TournamentDetailPage({
       <FullscreenBracketFrame
         tournamentId={tournamentId}
         title={view?.tournament.title}
+        layout={bracketLayout}
         onClose={closeFullscreen}
       >
         {content}
@@ -430,6 +446,7 @@ export function TournamentDetailPage({
       <>
         <BracketGraph
           fullscreen
+          variant={bracketLayout}
           isAdmin={isAdmin}
           focusMatchId={focusMatchId}
           matches={view.matches}
@@ -546,7 +563,7 @@ export function TournamentDetailPage({
         </p>
       ) : null}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-y border-base-300 py-4">
-        <div className="flex gap-1">
+        <fieldset className="flex flex-wrap gap-1" aria-label={t("Tournament")}>
           <button
             type="button"
             data-ocid="tournament.standard_tab"
@@ -555,10 +572,7 @@ export function TournamentDetailPage({
             className={`club-filter ${display === "standard" ? "is-active" : ""}`}
             onClick={() => setDisplay("standard")}
           >
-            {t("Standard")}{" "}
-            <span className="ml-2 hidden font-normal opacity-50 sm:inline">
-              {t("/ Live floor")}
-            </span>
+            {t("Standard")}
           </button>
           <button
             type="button"
@@ -573,9 +587,26 @@ export function TournamentDetailPage({
               {t("/ Full bracket")}
             </span>
           </button>
-        </div>
+          <button
+            type="button"
+            data-ocid="tournament.info_tab"
+            aria-label={t("Info view")}
+            aria-pressed={display === "info"}
+            className={`club-filter ${display === "info" ? "is-active" : ""}`}
+            onClick={() => setDisplay("info")}
+          >
+            {t("Info")}{" "}
+            <span className="ml-2 hidden font-normal opacity-50 sm:inline">
+              {t("/ Live floor")}
+            </span>
+          </button>
+        </fieldset>
         <div className="flex flex-wrap items-center gap-2">
-          <CopyBracketLink tournamentId={tournamentId} compact />
+          <CopyBracketLink
+            tournamentId={tournamentId}
+            layout={bracketLayout}
+            compact
+          />
           <button
             type="button"
             data-ocid="tournament.open_fullscreen_button"
@@ -601,8 +632,8 @@ export function TournamentDetailPage({
           )}
         </div>
       </div>
-      {display === "standard" ? (
-        <StandardView
+      {display === "info" ? (
+        <InfoView
           view={view}
           isAdmin={isAdmin}
           pending={actionMutation.isPending}
@@ -613,6 +644,8 @@ export function TournamentDetailPage({
         />
       ) : (
         <BracketGraph
+          key={bracketLayout}
+          variant={bracketLayout}
           isAdmin={isAdmin}
           focusMatchId={focusMatchId}
           matches={view.matches}

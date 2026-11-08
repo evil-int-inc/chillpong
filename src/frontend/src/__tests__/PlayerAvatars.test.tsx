@@ -8,10 +8,10 @@ import {
 } from "@/backend";
 import { PlayerIdentity } from "@/components/players/PlayerIdentity";
 import { SharedPlayersDirectory } from "@/components/players/SharedPlayersDirectory";
+import { InfoView } from "@/components/tournaments/InfoView";
 import { MatchCard } from "@/components/tournaments/MatchCard";
 import { MatchesPanel } from "@/components/tournaments/MatchesPanel";
 import { PlayersPanel } from "@/components/tournaments/PlayersPanel";
-import { StandardView } from "@/components/tournaments/StandardView";
 import { PLAYERS_QUERY_KEY } from "@/services/players";
 import { normalizeTournamentState } from "@/services/tournament-manager";
 import type {
@@ -300,7 +300,7 @@ describe("linked player avatars", () => {
 
   it("shows photos on the floor, in the next matches and beside waiting players", () => {
     render(
-      <StandardView
+      <InfoView
         view={room()}
         isAdmin={false}
         pending={false}

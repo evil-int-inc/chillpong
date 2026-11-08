@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/Button";
 import { useI18n } from "@/i18n";
 import { cn } from "@/lib/utils";
-import { bracketUrl } from "@/types/bracket-link";
+import { type BracketLayout, bracketUrl } from "@/types/bracket-link";
 import { Check, Link2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface CopyBracketLinkProps {
   tournamentId: bigint | string;
   compact?: boolean;
+  layout?: BracketLayout;
   className?: string;
   "data-ocid"?: string;
 }
@@ -15,6 +16,7 @@ interface CopyBracketLinkProps {
 export function CopyBracketLink({
   tournamentId,
   compact = false,
+  layout,
   className,
   "data-ocid": ocid,
 }: CopyBracketLinkProps) {
@@ -23,7 +25,7 @@ export function CopyBracketLink({
     "idle",
   );
   const attempt = useRef(0);
-  const url = bracketUrl(tournamentId);
+  const url = bracketUrl(tournamentId, undefined, layout);
   const previousUrl = useRef(url);
 
   useEffect(() => {

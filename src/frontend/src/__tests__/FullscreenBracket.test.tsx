@@ -26,7 +26,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const state = vi.hoisted(() => ({
   isFetching: false,
@@ -142,6 +142,8 @@ beforeEach(() => {
   state.actor.getTournaments.mockResolvedValue([tournament]);
 });
 
+afterEach(() => vi.restoreAllMocks());
+
 describe("full-page tournament bracket routing", () => {
   it("opens a shared URL directly with the title and bracket, without the app chrome or player list", async () => {
     const { router } = renderRoute();
@@ -151,6 +153,10 @@ describe("full-page tournament bracket routing", () => {
     expect(
       screen.getByRole("region", { name: "Complete tournament bracket" }),
     ).toBeVisible();
+    expect(screen.getByTestId("tournament.bracket")).toHaveAttribute(
+      "data-variant",
+      "extended",
+    );
     expect(
       screen.getByRole("button", { name: "Close fullscreen bracket" }),
     ).toBeVisible();
@@ -210,25 +216,75 @@ describe("full-page tournament bracket routing", () => {
     ).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("enters fullscreen from the normal room and keeps the same mode when the shared URL is loaded again", async () => {
-    const user = userEvent.setup();
-    const first = renderRoute("/tournaments/0");
-    await screen.findByRole("heading", { name: "Warehouse Cup" });
-    expect(
-      screen.getByRole("button", { name: "Standard view" }),
-    ).toHaveAttribute("aria-pressed", "true");
-    await user.click(
-      screen.getByRole("button", { name: "Open fullscreen bracket" }),
-    );
-    await waitFor(expectFullPageLayout);
-    expect(first.router.state.location.search).toEqual({ view: "bracket" });
+  it.each([
+    {
+      viewLabel: "Standard view",
+      variant: "compact",
+      query: "?view=bracket&layout=compact",
+    },
+    {
+      viewLabel: "Extended view",
+      variant: "extended",
+      query: "?view=bracket",
+    },
+  ])(
+    "opens and shares the active $viewLabel fullscreen layout",
+    async ({ viewLabel, variant, query }) => {
+      const user = userEvent.setup();
+      const write = vi
+        .spyOn(navigator.clipboard, "writeText")
+        .mockResolvedValue();
+      const first = renderRoute("/tournaments/0");
+      await screen.findByRole("heading", { name: "Warehouse Cup" });
+      if (variant === "extended") {
+        await user.click(screen.getByRole("button", { name: viewLabel }));
+      }
+      expect(screen.getByRole("button", { name: viewLabel })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+      const sharedPath = `/tournaments/0${query}`;
+      const sharedUrl = `${window.location.origin}${sharedPath}`;
+      await user.click(
+        screen.getByRole("button", { name: "Copy bracket link" }),
+      );
+      expect(write).toHaveBeenLastCalledWith(sharedUrl);
+      await user.click(
+        screen.getByRole("button", { name: "Open fullscreen bracket" }),
+      );
+      await waitFor(expectFullPageLayout);
+      expect(first.router.state.location.href).toBe(sharedPath);
+      expect(screen.getByTestId("tournament.bracket")).toHaveAttribute(
+        "data-variant",
+        variant,
+      );
 
-    const sharedUrl = first.router.state.location.href;
-    first.unmount();
-    renderRoute(sharedUrl);
-    await screen.findByRole("heading", { name: "Warehouse Cup" });
-    expectFullPageLayout();
-  });
+      first.unmount();
+      const reopened = renderRoute(sharedPath);
+      await screen.findByRole("heading", { name: "Warehouse Cup" });
+      expectFullPageLayout();
+      expect(screen.getByTestId("tournament.bracket")).toHaveAttribute(
+        "data-variant",
+        variant,
+      );
+      write.mockClear();
+      await user.click(
+        screen.getByRole("button", { name: "Copy bracket link" }),
+      );
+      expect(write).toHaveBeenCalledExactlyOnceWith(sharedUrl);
+      await user.click(
+        screen.getByRole("button", { name: "Close fullscreen bracket" }),
+      );
+      await waitFor(() =>
+        expect(screen.queryByTestId("tournament.fullscreen_view")).toBeNull(),
+      );
+      expect(reopened.router.state.location.href).toBe("/tournaments/0");
+      expect(screen.getByRole("button", { name: viewLabel })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+    },
+  );
 
   it("keeps the fullscreen close control available before the draw is generated", async () => {
     state.actor.getTournamentState.mockResolvedValue({

@@ -303,6 +303,8 @@ export const ru = {
   "If later rounds depend on this result, a plain reset is rejected until downstream results are explicitly included.":
     "Если следующие раунды зависят от результата, сброс возможен только с явным включением последующих результатов.",
   "Include removed players": "Показать удалённых",
+  Info: "Информация",
+  "Info view": "Информация о турнире",
   Intermediate: "Средний",
   Joined: "В клубе с",
   "Keep the ball moving.": "Не останавливай мяч.",

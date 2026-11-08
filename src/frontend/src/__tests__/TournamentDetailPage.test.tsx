@@ -304,15 +304,33 @@ describe("live tournament room", () => {
     },
   );
 
-  it("lets spectators inspect the floor and complete bracket without organizer controls", async () => {
+  it("starts on the compact Standard bracket and lets spectators switch to Extended and Info", async () => {
     const user = userEvent.setup();
     renderRoom();
     await screen.findByRole("heading", { name: "Warehouse Cup" });
 
-    expect(screen.getByRole("heading", { name: "On the floor" })).toBeVisible();
-    const queue = screen.getByTestId("tournament.waiting_queue");
-    expect(within(queue).getByText("Mike")).toBeVisible();
-    expect(within(queue).getByText("Peter")).toBeVisible();
+    const viewButtons = screen.getAllByRole("button", {
+      name: /^(Standard|Extended|Info) view$/,
+    });
+    expect(viewButtons).toHaveLength(3);
+    expect(viewButtons[0]).toHaveAccessibleName("Standard view");
+    expect(viewButtons[1]).toHaveAccessibleName("Extended view");
+    expect(viewButtons[2]).toHaveAccessibleName("Info view");
+    expect(viewButtons[0]).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("tournament.bracket")).toHaveAttribute(
+      "data-variant",
+      "compact",
+    );
+    expect(screen.queryByTestId("tournament.tables")).toBeNull();
+    expect(
+      screen.getByRole("searchbox", { name: "Find a player in the bracket" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Copy bracket link" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Open fullscreen bracket" }),
+    ).toBeVisible();
     expect(screen.queryByRole("button", { name: "Add player" })).toBeNull();
     expect(
       screen.queryByRole("button", { name: "Undo last action" }),
@@ -333,6 +351,8 @@ describe("live tournament room", () => {
     expect(within(dialog).queryByLabelText("Score A")).toBeNull();
     await user.click(within(dialog).getByRole("button", { name: "Close" }));
 
+    await user.click(screen.getByRole("button", { name: "Zoom bracket out" }));
+    expect(screen.getByLabelText("Bracket zoom")).toHaveTextContent("90%");
     await user.click(screen.getByRole("button", { name: "Extended view" }));
     expect(
       screen.getByRole("region", { name: "Complete tournament bracket" }),
@@ -340,13 +360,20 @@ describe("live tournament room", () => {
     expect(
       screen.getByRole("button", { name: "Extended view" }),
     ).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("tournament.bracket")).toHaveAttribute(
+      "data-variant",
+      "extended",
+    );
     expect(screen.getByTestId("match.card.3")).toHaveTextContent(
       "Winner / W1.1",
     );
-    await user.click(screen.getByRole("button", { name: "Zoom bracket out" }));
-    expect(screen.getByLabelText("Bracket zoom")).toHaveTextContent("90%");
-    await user.click(screen.getByRole("button", { name: "Standard view" }));
+    await user.click(screen.getByRole("button", { name: "Info view" }));
+    expect(screen.getByRole("heading", { name: "On the floor" })).toBeVisible();
     expect(screen.getByRole("heading", { name: "Next matches" })).toBeVisible();
+    expect(screen.queryByTestId("tournament.bracket")).toBeNull();
+    const queue = screen.getByTestId("tournament.waiting_queue");
+    expect(within(queue).getByText("Mike")).toBeVisible();
+    expect(within(queue).getByText("Peter")).toBeVisible();
     expect(state.actor.applyTournamentCommand).not.toHaveBeenCalled();
   });
 
@@ -370,6 +397,7 @@ describe("live tournament room", () => {
       ),
     });
     renderRoom();
+    await user.click(await screen.findByRole("button", { name: "Info view" }));
     await user.click(
       (await screen.findAllByRole("button", { name: "Add player" }))[0]!,
     );
@@ -464,6 +492,7 @@ describe("live tournament room", () => {
       nextMatches: [4n],
     });
     renderRoom();
+    await user.click(await screen.findByRole("button", { name: "Info view" }));
     await user.click(
       (await screen.findAllByRole("button", { name: "Add player" }))[0]!,
     );
@@ -477,9 +506,10 @@ describe("live tournament room", () => {
     );
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(state.actor.applyTournamentCommand).toHaveBeenCalledTimes(1);
-    expect(
-      screen.getByRole("button", { name: "Standard view" }),
-    ).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Info view" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
     expect(
       within(screen.getByTestId("tournament.waiting_queue")).getByText(
         "Late Queue Entrant",
@@ -507,6 +537,9 @@ describe("live tournament room", () => {
       __kind__: "placePlayer",
       placePlayer: { playerId: 5n, matchId: 2n, slot: TournamentSlot.b },
     } satisfies TournamentCommand);
+    expect(
+      screen.getByRole("button", { name: "Standard view" }),
+    ).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByTestId("match.card.4")).toHaveTextContent(
       "Late Queue Entrant",
     );
@@ -594,7 +627,7 @@ describe("live tournament room", () => {
       placePlayer: { playerId: 5n, matchId: 2n, slot: TournamentSlot.a },
     } satisfies TournamentCommand);
     expect(
-      screen.getByRole("button", { name: "Extended view" }),
+      screen.getByRole("button", { name: "Standard view" }),
     ).toHaveAttribute("aria-pressed", "true");
     const bracket = screen.getByRole("region", {
       name: "Complete tournament bracket",
@@ -951,6 +984,7 @@ describe("live tournament room", () => {
     } satisfies TournamentCommand);
     expect(screen.getByTestId("match.card.1")).toHaveTextContent("11");
     expect(playerRow("John")).toHaveTextContent("eliminated");
+    await user.click(screen.getByRole("button", { name: "Info view" }));
     expect(
       within(screen.getByTestId("tournament.tables")).getByText("finished"),
     ).toBeVisible();

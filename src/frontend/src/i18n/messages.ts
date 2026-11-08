@@ -252,6 +252,8 @@ export const messages = [
   "Grand final",
   "If later rounds depend on this result, a plain reset is rejected until downstream results are explicitly included.",
   "Include removed players",
+  "Info",
+  "Info view",
   "Intermediate",
   "Joined",
   "Keep the ball moving.",

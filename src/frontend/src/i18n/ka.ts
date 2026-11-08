@@ -306,6 +306,8 @@ export const ka = {
   "If later rounds depend on this result, a plain reset is rejected until downstream results are explicitly included.":
     "თუ შემდგომი რაუნდები ამ შედეგზეა დამოკიდებული, განულება მხოლოდ მათი შედეგების ჩათვლითაა შესაძლებელი.",
   "Include removed players": "წაშლილი მოთამაშეების ჩვენება",
+  Info: "ინფორმაცია",
+  "Info view": "ტურნირის ინფორმაცია",
   Intermediate: "საშუალო დონე",
   Joined: "შემოუერთდა",
   "Keep the ball moving.": "ბურთი მოძრაობაში გქონდეს.",

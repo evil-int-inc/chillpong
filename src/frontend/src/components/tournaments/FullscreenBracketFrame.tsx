@@ -1,4 +1,5 @@
 import { useI18n } from "@/i18n";
+import type { BracketLayout } from "@/types/bracket-link";
 import { Link } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { type ReactNode, useEffect } from "react";
@@ -7,11 +8,13 @@ import { CopyBracketLink } from "./CopyBracketLink";
 export function FullscreenBracketFrame({
   tournamentId,
   title,
+  layout,
   onClose,
   children,
 }: {
   tournamentId: bigint;
   title?: string;
+  layout: BracketLayout;
   onClose: () => void;
   children: ReactNode;
 }) {
@@ -61,7 +64,7 @@ export function FullscreenBracketFrame({
             {title ?? t("Complete tournament bracket")}
           </h1>
         </div>
-        <CopyBracketLink tournamentId={tournamentId} compact />
+        <CopyBracketLink tournamentId={tournamentId} layout={layout} compact />
         <button
           type="button"
           data-ocid="tournament.close_fullscreen_button"

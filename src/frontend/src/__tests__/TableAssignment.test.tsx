@@ -1,5 +1,5 @@
 import { TournamentFormat, TournamentStatus } from "@/backend";
-import { StandardView } from "@/components/tournaments/StandardView";
+import { InfoView } from "@/components/tournaments/InfoView";
 import { TableAssignment } from "@/components/tournaments/TableAssignment";
 import { setLanguage } from "@/i18n";
 import type {
@@ -329,7 +329,7 @@ describe("floor assignment controls", () => {
       const user = userEvent.setup();
       const onAssign = vi.fn();
       render(
-        <StandardView
+        <InfoView
           view={room()}
           isAdmin
           pending={false}
@@ -365,7 +365,7 @@ describe("floor assignment controls", () => {
 
   it("keeps spectator floor cards read-only", () => {
     render(
-      <StandardView
+      <InfoView
         view={room()}
         isAdmin={false}
         pending={false}
