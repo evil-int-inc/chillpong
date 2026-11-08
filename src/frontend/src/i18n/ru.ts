@@ -11,6 +11,8 @@ export const ru = {
   "Find next match for {name} / {registration}":
     "Найти следующий матч игрока {name} / {registration}",
   "Showing match {match} for {name}.": "Показан матч {match} игрока {name}.",
+  "Showing last finished match {match} for {name}.":
+    "Показан последний завершённый матч {match} игрока {name}.",
   Matches: "Матчи",
   "THE MATCHES / ALL ROUNDS": "МАТЧИ / ВСЕ РАУНДЫ",
   "Search tournament matches": "Поиск матчей турнира",

@@ -14,6 +14,7 @@ export const messages = [
   "Several players match. Choose a player below.",
   "Find next match for {name} / {registration}",
   "Showing match {match} for {name}.",
+  "Showing last finished match {match} for {name}.",
   "Matches",
   "THE MATCHES / ALL ROUNDS",
   "Search tournament matches",

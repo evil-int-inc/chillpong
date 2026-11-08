@@ -12,6 +12,8 @@ export const ka = {
     "მოთამაშის {name} / {registration} შემდეგი მატჩის პოვნა",
   "Showing match {match} for {name}.":
     "ნაჩვენებია მოთამაშის {name} მატჩი {match}.",
+  "Showing last finished match {match} for {name}.":
+    "ნაჩვენებია მოთამაშის {name} ბოლო დასრულებული მატჩი {match}.",
   Matches: "მატჩები",
   "THE MATCHES / ALL ROUNDS": "მატჩები / ყველა რაუნდი",
   "Search tournament matches": "ტურნირის მატჩების ძებნა",

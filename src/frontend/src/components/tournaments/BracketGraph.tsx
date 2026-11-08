@@ -42,21 +42,27 @@ const BRACKET_DIMENSIONS = {
 } as const;
 const LANES: BracketLane[] = ["winners", "losers", "grandFinal", "resetFinal"];
 
-function nextPlayerMatch(
+function findPlayerMatch(
   matches: TournamentMatchView[],
   player: TournamentPlayerView,
 ) {
-  if (["removed", "eliminated", "champion"].includes(player.status)) return;
   const candidates = matches.filter(
     (match) => match.playerAId === player.id || match.playerBId === player.id,
   );
+  const inactive = ["removed", "eliminated", "champion"].includes(
+    player.status,
+  );
   for (const status of ["playing", "ready", "pending"] as const) {
+    if (inactive && status !== "playing") break;
     const eligible = candidates.filter((match) => match.status === status);
     const next =
       eligible.find((match) => match.id === player.currentMatchId) ??
       eligible[0];
     if (next) return next;
   }
+  // The canister returns matches in dependency order. A late qualifier may
+  // have a higher ID than the later match it feeds.
+  return candidates.reverse().find((match) => match.status === "completed");
 }
 
 function centerMatch(
@@ -306,7 +312,7 @@ export function BracketGraph({
     return () => observer?.disconnect();
   }, [searchFocus, layout, viewportRef, zoom, zoomTo]);
 
-  function findNextMatch(playerId: bigint) {
+  function focusPlayerMatch(playerId: bigint) {
     const player = players.find((item) => item.id === playerId);
     if (!player) {
       setChoices([]);
@@ -315,7 +321,7 @@ export function BracketGraph({
       return;
     }
     setChoices([]);
-    const match = nextPlayerMatch(matches, player);
+    const match = findPlayerMatch(matches, player);
     if (!match) {
       setSearchFocus(undefined);
       setFeedback({
@@ -328,7 +334,10 @@ export function BracketGraph({
     // A fresh request also refocuses the same player after manual pan/zoom.
     setSearchFocus({ matchId: match.id });
     setFeedback({
-      message: "Showing match {match} for {name}.",
+      message:
+        match.status === "completed"
+          ? "Showing last finished match {match} for {name}."
+          : "Showing match {match} for {name}.",
       params: {
         match: `${matchLabel(match)} / M${match.id}`,
         name: player.name,
@@ -346,7 +355,7 @@ export function BracketGraph({
       ? exact
       : players.filter((player) => normalize(player.name).includes(search));
     if (found.length === 1) {
-      findNextMatch(found[0].id);
+      focusPlayerMatch(found[0].id);
     } else {
       setSearchFocus(undefined);
       setChoices(found.map((player) => player.id));
@@ -436,7 +445,7 @@ export function BracketGraph({
                     registration,
                   })}
                   className="flex min-h-11 items-center justify-between gap-3 border border-base-300 px-3 py-2 text-left hover:border-primary/60"
-                  onClick={() => findNextMatch(id)}
+                  onClick={() => focusPlayerMatch(id)}
                 >
                   <span className="min-w-0 break-words font-display text-sm font-bold">
                     <PlayerIdentity

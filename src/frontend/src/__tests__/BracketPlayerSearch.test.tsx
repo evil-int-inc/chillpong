@@ -1,5 +1,6 @@
 import { BracketGraph } from "@/components/tournaments/BracketGraph";
 import { setLanguage, translate } from "@/i18n";
+import type { BracketLayout } from "@/types/bracket-link";
 import {
   type TournamentMatchView,
   type TournamentPlayerView,
@@ -59,7 +60,12 @@ const next = match(1n);
 function renderSearch(
   matches = [next],
   entrants = players,
-  options: { fullscreen?: boolean; width?: number; height?: number } = {},
+  options: {
+    fullscreen?: boolean;
+    height?: number;
+    variant?: BracketLayout;
+    width?: number;
+  } = {},
 ) {
   const onSelect = vi.fn();
   const props = {
@@ -67,6 +73,7 @@ function renderSearch(
     players: entrants,
     onSelect,
     fullscreen: options.fullscreen,
+    variant: options.variant,
   };
   const result = render(<BracketGraph {...props} />);
   const viewport = screen.getByTestId("tournament.bracket");
@@ -120,12 +127,18 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("finding a player's next match in the full bracket", () => {
-  it.each([false, true])(
-    "offers name search in the embedded and full-page graph (fullscreen=%s)",
-    async (fullscreen) => {
+describe("finding a player's match in the full bracket", () => {
+  it.each([
+    { variant: "compact", fullscreen: false },
+    { variant: "extended", fullscreen: false },
+    { variant: "compact", fullscreen: true },
+    { variant: "extended", fullscreen: true },
+  ] as const)(
+    "offers name search in the $variant graph (fullscreen=$fullscreen)",
+    async ({ variant, fullscreen }) => {
       const { input, button, onSelect } = renderSearch([next], players, {
         fullscreen,
+        variant,
       });
       expect(input).toBeVisible();
       expect(button).toBeDisabled();
@@ -209,17 +222,28 @@ describe("finding a player's next match in the full bracket", () => {
   });
 
   it.each(["removed", "eliminated", "champion"] as const)(
-    "reports no upcoming match for a %s player despite old participant references",
+    "shows the last finished match for a %s player despite stale upcoming references",
     async (status) => {
-      renderSearch([next], [player(1n, "Nino", { status }), players[1]!]);
+      renderSearch(
+        [
+          match(1n, { status: "completed" }),
+          match(2n),
+          match(3n, { status: "pending" }),
+        ],
+        [player(1n, "Nino", { status, currentMatchId: 2n }), players[1]!],
+      );
       await searchName("Nino");
-      expect(screen.getByText("No upcoming match for Nino.")).toBeVisible();
-      expect(focusedMatch(1n)).toBeNull();
+      expect(
+        screen.getByText("Showing last finished match W1.1 / M1 for Nino."),
+      ).toBeVisible();
+      expect(focusedMatch(1n)).toHaveAttribute("data-focused-match", "true");
+      expect(focusedMatch(2n)).toBeNull();
+      expect(focusedMatch(3n)).toBeNull();
     },
   );
 
-  it.each(["completed", "bye", "void"] as const)(
-    "does not send a player to a %s historical match",
+  it.each(["bye", "void"] as const)(
+    "does not treat a %s match as a finished game",
     async (status) => {
       renderSearch([match(1n, { status })]);
       await searchName("Nino");
@@ -251,6 +275,7 @@ describe("finding a player's next match in the full bracket", () => {
       const matches = statuses.map((status, index) =>
         match(BigInt(index + 1), { status }),
       );
+      matches.push(match(9n, { status: "completed" }));
       // A stale currentMatchId may not bypass the next-match status priorities.
       renderSearch(matches, [
         player(1n, "Nino", { currentMatchId: 1n }),
@@ -261,6 +286,7 @@ describe("finding a player's next match in the full bracket", () => {
         "data-focused-match",
         "true",
       );
+      expect(focusedMatch(9n)).toBeNull();
     },
   );
 
@@ -317,6 +343,56 @@ function largeDraw() {
 }
 
 describe("zooming to a player's match", () => {
+  it.each(["compact", "extended"] as const)(
+    "zooms and centers the last finished match in the %s graph after a higher-ID qualifier",
+    async (variant) => {
+      const matches = largeDraw().map((item) => {
+        if (item.id === 21n) {
+          return {
+            ...item,
+            id: 99n,
+            playerAId: 1n,
+            status: "completed" as const,
+            winnerId: 1n,
+          };
+        }
+        if (item.id === 22n) {
+          return {
+            ...item,
+            sourceA: { kind: "winner" as const, id: 99n },
+            status: "completed" as const,
+            winnerId: 2n,
+          };
+        }
+        return item;
+      });
+      const { viewport, onSelect } = renderSearch(matches, players, {
+        variant,
+      });
+      await searchName("Nino");
+      expect(
+        screen.getByText("Showing last finished match W4.1 / M22 for Nino."),
+      ).toBeVisible();
+      expect(focusedMatch(99n)).toBeNull();
+      expect(screen.getByLabelText("Bracket zoom")).toHaveTextContent("140%");
+      const focused = focusedMatch(22n) as HTMLElement;
+      expect(focused).toHaveAttribute("data-focused-match", "true");
+      const centerX =
+        Number.parseFloat(focused.style.left) +
+        Number.parseFloat(focused.style.width) / 2;
+      const centerY =
+        Number.parseFloat(focused.style.top) +
+        Number.parseFloat(focused.style.height) / 2;
+      expect(viewport.scrollLeft + viewport.clientWidth / 2).toBeCloseTo(
+        centerX * 1.4,
+      );
+      expect(viewport.scrollTop + viewport.clientHeight / 2).toBeCloseTo(
+        centerY * 1.4,
+      );
+      expect(onSelect).not.toHaveBeenCalled();
+    },
+  );
+
   it("waits for the bracket viewport to become visible before consuming the search", async () => {
     let resized: (() => void) | undefined;
     const disconnect = vi.fn();
