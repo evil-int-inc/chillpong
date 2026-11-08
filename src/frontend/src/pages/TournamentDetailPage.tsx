@@ -212,7 +212,7 @@ export function TournamentDetailPage({
     "standard",
   );
   const bracketLayout =
-    fullscreenLayout ?? (display === "standard" ? "compact" : "extended");
+    fullscreenLayout ?? (display === "extended" ? "extended" : "compact");
   const [bracketFocus, setBracketFocus] = useState<{
     tournamentId: bigint;
     matchId: bigint;

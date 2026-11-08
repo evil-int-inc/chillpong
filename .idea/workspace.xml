@@ -4,13 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="feature/standart-view">
-      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-5A_Stagd.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/assets/index-C3ZziNEb.css" afterDir="false" />
+    <list default="true" id="ddd8a1d3-ba9e-41a8-86c2-c846b232a63f" name="Changes" comment="bugfix/searh-bar-in-bracket-view">
+      <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-5A_Stagd.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/dist/assets/index-C4zC7aMS.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/frontend/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/dist/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/BracketPlayerSearch.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/BracketPlayerSearch.test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/tournaments/BracketGraph.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/i18n/messages.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/CopyBracketLink.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/CopyBracketLink.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/__tests__/FullscreenBracket.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/__tests__/FullscreenBracket.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/pages/TournamentDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/types/bracket-link.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/types/bracket-link.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +82,7 @@
       <workItem from="1792096952493" duration="4048000" />
       <workItem from="1793456776500" duration="6520000" />
       <workItem from="1793543948069" duration="2104000" />
-      <workItem from="1794176817227" duration="2152000" />
+      <workItem from="1794176817227" duration="2599000" />
     </task>
     <task id="LOCAL-00001" summary="feature/redesign">
       <option name="closed" value="true" />
@@ -235,7 +236,15 @@
       <option name="project" value="LOCAL" />
       <updated>1794178554310</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="bugfix/searh-bar-in-bracket-view">
+      <option name="closed" value="true" />
+      <created>1794179601052</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1794179601052</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TerminalProjectNonSharedOptionsProvider">
@@ -282,6 +291,7 @@
     <MESSAGE value="bugfix/tournament-status-and-player-deletion" />
     <MESSAGE value="bugfix/do-not-add-player-in-old-bye-slots" />
     <MESSAGE value="feature/standart-view" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature/standart-view" />
+    <MESSAGE value="bugfix/searh-bar-in-bracket-view" />
+    <option name="LAST_COMMIT_MESSAGE" value="bugfix/searh-bar-in-bracket-view" />
   </component>
 </project>

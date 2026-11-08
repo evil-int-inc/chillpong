@@ -286,6 +286,20 @@ describe("full-page tournament bracket routing", () => {
     },
   );
 
+  it("shares the Standard fullscreen bracket from Info", async () => {
+    const user = userEvent.setup();
+    const write = vi
+      .spyOn(navigator.clipboard, "writeText")
+      .mockResolvedValue();
+    renderRoute("/tournaments/0");
+    await screen.findByRole("heading", { name: "Warehouse Cup" });
+    await user.click(screen.getByRole("button", { name: "Info view" }));
+    await user.click(screen.getByRole("button", { name: "Copy bracket link" }));
+    expect(write).toHaveBeenCalledExactlyOnceWith(
+      `${window.location.origin}/tournaments/0?view=bracket&layout=compact`,
+    );
+  });
+
   it("keeps the fullscreen close control available before the draw is generated", async () => {
     state.actor.getTournamentState.mockResolvedValue({
       ...room,

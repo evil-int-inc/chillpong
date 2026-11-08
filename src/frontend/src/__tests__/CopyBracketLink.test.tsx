@@ -62,10 +62,10 @@ afterEach(() => {
 });
 
 describe("shareable full bracket links", () => {
-  it("uses the same-origin full bracket URL, including tournament zero", () => {
-    expect(bracketPath(0n)).toBe("/tournaments/0?view=bracket");
+  it("defaults to the same-origin Standard fullscreen URL, including tournament zero", () => {
+    expect(bracketPath(0n)).toBe("/tournaments/0?view=bracket&layout=compact");
     expect(bracketUrl("8", "https://chillpong.caffeine.xyz")).toBe(
-      "https://chillpong.caffeine.xyz/tournaments/8?view=bracket",
+      "https://chillpong.caffeine.xyz/tournaments/8?view=bracket&layout=compact",
     );
   });
 
@@ -85,7 +85,7 @@ describe("shareable full bracket links", () => {
     );
 
     expect(write).toHaveBeenCalledWith(
-      `${window.location.origin}/tournaments/0?view=bracket`,
+      `${window.location.origin}/tournaments/0?view=bracket&layout=compact`,
     );
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(window.location.href).toBe(currentLocation);
@@ -94,7 +94,7 @@ describe("shareable full bracket links", () => {
     );
   });
 
-  it("copies the selected tournament URL from its details modal", async () => {
+  it("copies the selected tournament's Standard URL from its details modal", async () => {
     const user = userEvent.setup();
     const write = vi
       .spyOn(navigator.clipboard, "writeText")
@@ -110,7 +110,7 @@ describe("shareable full bracket links", () => {
     );
 
     expect(write).toHaveBeenCalledWith(
-      `${window.location.origin}/tournaments/8?view=bracket`,
+      `${window.location.origin}/tournaments/8?view=bracket&layout=compact`,
     );
     expect(dialog).toHaveAttribute("open");
     expect(within(dialog).getByRole("status")).toHaveTextContent(
@@ -135,7 +135,7 @@ describe("shareable full bracket links", () => {
       name: "Full bracket URL",
     }) as HTMLInputElement;
     expect(input).toHaveValue(
-      `${window.location.origin}/tournaments/0?view=bracket`,
+      `${window.location.origin}/tournaments/0?view=bracket&layout=compact`,
     );
     expect(input).toHaveAttribute("readonly");
     await user.click(input);
@@ -157,7 +157,9 @@ describe("shareable full bracket links", () => {
       );
       expect(
         screen.getByRole("textbox", { name: "Full bracket URL" }),
-      ).toHaveValue(`${window.location.origin}/tournaments/8?view=bracket`);
+      ).toHaveValue(
+        `${window.location.origin}/tournaments/8?view=bracket&layout=compact`,
+      );
       expect(screen.getByRole("status")).toBeEmptyDOMElement();
     } finally {
       Object.defineProperty(navigator, "clipboard", {
